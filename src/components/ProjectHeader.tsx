@@ -112,11 +112,11 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
                 </Button>
               </motion.div>
             </DialogTrigger>
-            <DialogContent className="neomorph-raised border-0 max-w-md">
-              <DialogHeader>
+            <DialogContent className="neomorph-raised border-0 max-w-md max-h-[85vh] flex flex-col">
+              <DialogHeader className="flex-shrink-0">
                 <DialogTitle className="text-xl">Project Settings</DialogTitle>
               </DialogHeader>
-              <div className="space-y-6">
+              <div className="space-y-6 overflow-y-auto flex-1 pr-2">
                 <div>
                   <label className="text-sm font-semibold mb-3 block text-foreground">Project Title</label>
                   <Input
@@ -145,11 +145,11 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
                     className="neomorph-inset border-0 resize-none"
                   />
                 </div>
-                <div className="flex justify-end gap-3 pt-4">
+                <div className="flex justify-end gap-3 pt-4 pb-2">
                   <Button 
                     variant="outline" 
                     onClick={() => setIsEditing(false)}
-                    className="neomorph-button border-0 px-6"
+                    className="neomorph-button border-0 px-6 text-foreground hover:text-foreground"
                   >
                     Cancel
                   </Button>

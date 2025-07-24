@@ -62,6 +62,12 @@
       -webkit-overflow-scrolling: touch;
     }
     
+    /* iOS scrolling fix */
+    .ios-scroll {
+      -webkit-overflow-scrolling: touch;
+      overflow: auto;
+    }
+    
     .neomorph-raised {
       box-shadow: 
         6px 6px 12px var(--shadow-dark),

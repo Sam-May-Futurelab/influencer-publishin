@@ -18,8 +18,14 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
   const [customTitle, setCustomTitle] = useState('');
 
   const handleTemplateSelect = (template: EbookTemplate) => {
-    setSelectedTemplate(template);
-    setCustomTitle(template.name);
+    // If clicking the same template, deselect it
+    if (selectedTemplate?.id === template.id) {
+      setSelectedTemplate(null);
+      setCustomTitle('');
+    } else {
+      setSelectedTemplate(template);
+      setCustomTitle(template.name);
+    }
   };
 
   const handleCreateFromTemplate = () => {
@@ -33,13 +39,13 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
   const categories = [...new Set(ebookTemplates.map(t => t.category))];
 
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-6xl max-h-[90vh] bg-background rounded-3xl neomorph-raised overflow-hidden"
+        className="w-full max-w-6xl h-[90vh] bg-background rounded-3xl neomorph-raised overflow-hidden flex flex-col"
       >
-        <div className="p-8 border-b border-border/50">
+        <div className="p-6 lg:p-8 border-b border-border/50 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-xl neomorph-flat">
@@ -60,24 +66,32 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
           </div>
         </div>
 
-        <div className="flex h-[calc(90vh-120px)]">
+        <div className="flex flex-col lg:flex-row flex-1 min-h-0">
           {/* Template List */}
-          <div className="w-2/3 p-6 overflow-y-auto">
-            <div className="space-y-6">
-              {categories.map(category => (
-                <div key={category}>
-                  <h3 className="text-lg font-semibold mb-4 text-primary">{category}</h3>
-                  <div className="grid gap-4">
-                    {ebookTemplates
-                      .filter(template => template.category === category)
-                      .map(template => (
-                        <motion.div
-                          key={template.id}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <Card 
-                            className={`cursor-pointer transition-all neomorph-button border-0 ${
+          <div className={`${selectedTemplate ? 'lg:w-2/3' : 'w-full'} flex flex-col min-h-0`}>
+            {selectedTemplate && (
+              <div className="lg:hidden p-4 border-b border-border/30 bg-muted/30">
+                <p className="text-xs text-muted-foreground text-center">
+                  Tap the selected template again to deselect it
+                </p>
+              </div>
+            )}
+            <div className="p-4 lg:p-6 overflow-y-auto flex-1 ios-scroll" style={{WebkitOverflowScrolling: 'touch'}}>
+              <div className="space-y-6 pb-4">
+                {categories.map(category => (
+                  <div key={category}>
+                    <h3 className="text-lg font-semibold mb-4 text-primary">{category}</h3>
+                    <div className="grid gap-4">
+                      {ebookTemplates
+                        .filter(template => template.category === category)
+                        .map(template => (
+                          <motion.div
+                            key={template.id}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Card 
+                              className={`cursor-pointer transition-all neomorph-button border-0 ${
                               selectedTemplate?.id === template.id 
                                 ? 'ring-2 ring-primary shadow-inner' 
                                 : ''
@@ -143,23 +157,41 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
               ))}
             </div>
           </div>
+          </div>
 
-          {/* Template Preview */}
-          <div className="w-1/3 border-l border-border/50 p-6 bg-muted/20">
-            {selectedTemplate ? (
-              <motion.div
-                key={selectedTemplate.id}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="space-y-6"
-              >
-                <div className="text-center">
-                  <div className="text-4xl mb-3">{selectedTemplate.icon}</div>
-                  <h3 className="text-xl font-bold">{selectedTemplate.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {selectedTemplate.description}
-                  </p>
-                </div>
+          {/* Template Preview - Only show when template is selected */}
+          {selectedTemplate && (
+            <div className="lg:w-1/3 border-t lg:border-t-0 lg:border-l border-border/50 bg-muted/20 flex flex-col min-h-0">
+              {/* Preview Header with Close Button */}
+              <div className="p-4 lg:p-6 border-b border-border/30 flex items-center justify-between flex-shrink-0">
+                <h3 className="font-semibold text-foreground">Template Preview</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedTemplate(null);
+                    setCustomTitle('');
+                  }}
+                  className="h-8 w-8 p-0 neomorph-button border-0 text-foreground hover:text-foreground"
+                >
+                  ✕
+                </Button>
+              </div>
+              
+              <div className="p-4 lg:p-6 overflow-y-auto flex-1 ios-scroll" style={{WebkitOverflowScrolling: 'touch'}}>
+                <motion.div
+                  key={selectedTemplate.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-6 pb-4"
+                >
+                  <div className="text-center">
+                    <div className="text-4xl mb-3">{selectedTemplate.icon}</div>
+                    <h3 className="text-xl font-bold">{selectedTemplate.name}</h3>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {selectedTemplate.description}
+                    </p>
+                  </div>
 
                 <div className="space-y-4">
                   <div>
@@ -215,14 +247,10 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
                     Create from Template
                   </Button>
                 </div>
-              </motion.div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
-                <BookOpen size={48} className="mb-4 opacity-50" />
-                <p>Select a template to see preview and customization options</p>
+                </motion.div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </motion.div>
     </div>
