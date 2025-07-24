@@ -1348,6 +1348,841 @@ Pick one cuisine style (Italian, Asian, Mexican):
       },
     ],
   },
+  {
+    id: 'stock-trading-basics',
+    name: 'Stock Trading Fundamentals',
+    description: 'Learn the basics of stock market analysis, trading strategies, and risk management.',
+    category: 'Finance',
+    icon: '📈',
+    brandConfig: {
+      primaryColor: '#059669',
+      secondaryColor: '#10B981',
+      accentColor: '#D1FAE5',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '60 minutes',
+    targetAudience: 'Beginner traders',
+    chapters: [
+      {
+        title: 'Introduction to Stock Trading',
+        content: `# Getting Started with Stock Trading
+
+**Important Disclaimer: This content is for educational purposes only and does not constitute financial advice. Always consult with a qualified financial advisor before making investment decisions.**
+
+## What is Stock Trading?
+Stock trading involves buying and selling shares of publicly traded companies. The goal is to profit from price movements while managing risk.
+
+## Key Concepts to Understand
+- Market fundamentals
+- Risk tolerance assessment
+- Basic chart reading
+- Position sizing principles
+
+## Before You Start
+- Only invest money you can afford to lose
+- Educate yourself thoroughly
+- Start with paper trading
+- Develop a trading plan`,
+        order: 0,
+      },
+      {
+        title: 'Market Analysis Basics',
+        content: `# Understanding Market Analysis
+
+## Fundamental Analysis
+Learn to evaluate a company's financial health through:
+- Revenue and profit trends
+- Debt-to-equity ratios
+- Market position and competition
+- Industry outlook
+
+## Technical Analysis Introduction
+Basic chart patterns and indicators:
+- Support and resistance levels
+- Moving averages
+- Volume analysis
+- Trend identification
+
+*Remember: No analysis method guarantees success. Always use proper risk management.*`,
+        order: 1,
+      },
+      {
+        title: 'Risk Management Essentials',
+        content: `# Protecting Your Capital
+
+## The Golden Rules
+1. Never risk more than you can afford to lose
+2. Use stop-loss orders
+3. Diversify your positions
+4. Keep detailed records
+
+## Position Sizing
+- Start small while learning
+- Risk only 1-2% per trade
+- Scale position sizes with experience
+- Consider portfolio correlation
+
+## Emotional Discipline
+Trading psychology is crucial for long-term success. Develop systems to manage fear and greed.`,
+        order: 2,
+      },
+    ],
+  },
+  {
+    id: 'crypto-fundamentals',
+    name: 'Cryptocurrency Fundamentals',
+    description: 'Understanding blockchain technology, crypto markets, and digital asset basics.',
+    category: 'Finance',
+    icon: '₿',
+    brandConfig: {
+      primaryColor: '#F59E0B',
+      secondaryColor: '#FBBF24',
+      accentColor: '#FEF3C7',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '50 minutes',
+    targetAudience: 'Crypto beginners',
+    chapters: [
+      {
+        title: 'What is Cryptocurrency?',
+        content: `# Understanding Cryptocurrency
+
+**Important Disclaimer: This content is for educational purposes only and does not constitute financial advice. Cryptocurrency investments are highly volatile and risky.**
+
+## Blockchain Basics
+Cryptocurrency is built on blockchain technology:
+- Decentralized ledger system
+- Cryptographic security
+- Peer-to-peer transactions
+- Immutable record keeping
+
+## Key Characteristics
+- Limited supply (for many cryptocurrencies)
+- Global accessibility
+- 24/7 market operation
+- High volatility
+- Regulatory uncertainty
+
+## Getting Started Safely
+- Only invest what you can afford to lose completely
+- Research thoroughly before investing
+- Use reputable exchanges
+- Secure your private keys`,
+        order: 0,
+      },
+      {
+        title: 'Blockchain Technology Explained',
+        content: `# How Blockchain Works
+
+## The Technology Behind Crypto
+- Distributed network of computers
+- Consensus mechanisms
+- Mining and validation
+- Smart contracts
+
+## Benefits and Limitations
+Benefits:
+- Transparency
+- Security
+- Decentralization
+- Global access
+
+Limitations:
+- Energy consumption
+- Scalability challenges
+- Regulatory uncertainty
+- Technical complexity
+
+*Understanding the technology helps make informed decisions about digital assets.*`,
+        order: 1,
+      },
+      {
+        title: 'Staying Safe in Crypto',
+        content: `# Security and Risk Management
+
+## Wallet Security
+- Hardware vs software wallets
+- Private key management
+- Backup procedures
+- Two-factor authentication
+
+## Common Scams to Avoid
+- Phishing attempts
+- Fake exchanges
+- Pump and dump schemes
+- Social media scams
+
+## Investment Principles
+- Dollar-cost averaging
+- Portfolio diversification
+- Long-term perspective
+- Continuous education
+
+Remember: The crypto space is highly speculative and volatile. Never invest more than you can afford to lose.`,
+        order: 2,
+      },
+    ],
+  },
+  {
+    id: 'gut-health-guide',
+    name: 'The Complete Gut Health Guide',
+    description: 'Comprehensive guide to improving digestive health, microbiome balance, and overall wellness.',
+    category: 'Health & Wellness',
+    icon: '🌱',
+    brandConfig: {
+      primaryColor: '#65A30D',
+      secondaryColor: '#84CC16',
+      accentColor: '#ECFCCB',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '40 minutes',
+    targetAudience: 'Health-conscious individuals',
+    chapters: [
+      {
+        title: 'Understanding Your Gut Health',
+        content: `# The Foundation of Wellness
+
+Your gut health affects everything from immunity to mood. This guide will help you understand and optimize your digestive system.
+
+## Why Gut Health Matters
+- 70% of immune system is in the gut
+- Gut-brain connection affects mood
+- Nutrient absorption and energy levels
+- Inflammation and overall health
+
+## Signs of Poor Gut Health
+- Digestive discomfort
+- Frequent infections
+- Mood fluctuations
+- Skin problems
+- Food sensitivities
+
+## The Microbiome
+Your gut contains trillions of beneficial bacteria that need proper care and feeding.`,
+        order: 0,
+      },
+      {
+        title: 'Foods for Gut Health',
+        content: `# Nourishing Your Microbiome
+
+## Prebiotic Foods
+Feed beneficial bacteria with:
+- Garlic and onions
+- Asparagus and artichokes
+- Bananas and apples
+- Oats and barley
+
+## Probiotic Foods
+Add beneficial bacteria with:
+- Yogurt and kefir
+- Sauerkraut and kimchi
+- Kombucha and miso
+- Tempeh and pickles
+
+## Foods to Limit
+- Processed foods
+- Excessive sugar
+- Artificial sweeteners
+- Overuse of antibiotics
+
+*Gradual changes work best for lasting gut health improvements.*`,
+        order: 1,
+      },
+      {
+        title: 'Lifestyle Factors for Gut Health',
+        content: `# Beyond Diet: Holistic Gut Care
+
+## Stress Management
+- Regular meditation or relaxation
+- Adequate sleep (7-9 hours)
+- Regular exercise
+- Social connections
+
+## Eating Habits
+- Chew food thoroughly
+- Eat mindfully without distractions
+- Regular meal timing
+- Proper hydration
+
+## Environmental Factors
+- Limit unnecessary antibiotics
+- Reduce exposure to toxins
+- Spend time in nature
+- Consider probiotic supplements
+
+Building gut health is a journey. Small, consistent changes lead to significant improvements over time.`,
+        order: 2,
+      },
+    ],
+  },
+  {
+    id: 'small-business-boost',
+    name: 'Small Business Growth Accelerator',
+    description: 'Practical strategies to grow your small business, increase revenue, and scale operations.',
+    category: 'Business',
+    icon: '🚀',
+    brandConfig: {
+      primaryColor: '#7C3AED',
+      secondaryColor: '#8B5CF6',
+      accentColor: '#EDE9FE',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '55 minutes',
+    targetAudience: 'Small business owners',
+    chapters: [
+      {
+        title: 'Growth Mindset for Business',
+        content: `# Building a Growth-Oriented Business
+
+Transform your small business into a thriving enterprise with proven strategies and actionable insights.
+
+## Foundation for Growth
+- Clear vision and mission
+- Understanding your unique value proposition
+- Customer-centric approach
+- Scalable systems and processes
+
+## Common Growth Challenges
+- Limited resources
+- Time management
+- Competition
+- Customer acquisition
+- Cash flow management
+
+## The Growth Framework
+1. Assess current position
+2. Identify opportunities
+3. Create action plan
+4. Execute systematically
+5. Measure and adjust
+
+*Success comes from consistent execution of fundamental business principles.*`,
+        order: 0,
+      },
+      {
+        title: 'Customer Acquisition & Retention',
+        content: `# Building Your Customer Base
+
+## Understanding Your Ideal Customer
+- Create detailed buyer personas
+- Research pain points and needs
+- Identify where they spend time
+- Understand decision-making process
+
+## Acquisition Strategies
+- Referral programs
+- Content marketing
+- Local networking
+- Strategic partnerships
+- Social media presence
+
+## Retention Tactics
+- Exceptional customer service
+- Regular communication
+- Loyalty programs
+- Continuous value delivery
+- Feedback collection and action
+
+## Measuring Success
+- Customer acquisition cost (CAC)
+- Customer lifetime value (CLV)
+- Retention rates
+- Net promoter score (NPS)
+
+Focus on delighting existing customers while systematically acquiring new ones.`,
+        order: 1,
+      },
+      {
+        title: 'Operations & Financial Management',
+        content: `# Scaling Your Operations
+
+## Systems for Growth
+- Document core processes
+- Automate repetitive tasks
+- Implement quality controls
+- Create training materials
+
+## Financial Health
+- Track key metrics daily
+- Manage cash flow proactively
+- Understand profit margins
+- Plan for seasonal variations
+
+## Technology & Tools
+- Customer relationship management (CRM)
+- Accounting software
+- Project management tools
+- Communication platforms
+
+## Team Building
+- Hire for culture fit
+- Provide clear expectations
+- Invest in training
+- Create growth opportunities
+
+Strong operations enable sustainable growth while maintaining quality and customer satisfaction.`,
+        order: 2,
+      },
+    ],
+  },
+  {
+    id: 'digital-marketing-mastery',
+    name: 'Digital Marketing Mastery',
+    description: 'Complete guide to modern digital marketing strategies, from social media to email campaigns.',
+    category: 'Marketing',
+    icon: '📱',
+    brandConfig: {
+      primaryColor: '#EC4899',
+      secondaryColor: '#F472B6',
+      accentColor: '#FCE7F3',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '65 minutes',
+    targetAudience: 'Marketers and business owners',
+    chapters: [
+      {
+        title: 'Digital Marketing Foundations',
+        content: `# The Digital Marketing Landscape
+
+Master the essential elements of effective digital marketing in today's connected world.
+
+## Core Components
+- Content marketing
+- Social media marketing
+- Email marketing
+- Search engine optimization
+- Paid advertising
+- Analytics and measurement
+
+## Setting Marketing Goals
+- SMART objectives (Specific, Measurable, Achievable, Relevant, Time-bound)
+- Align with business objectives
+- Define target audience clearly
+- Establish key performance indicators
+
+## Understanding Your Audience
+- Demographics and psychographics
+- Online behavior patterns
+- Preferred communication channels
+- Pain points and motivations
+
+## Building Your Marketing Stack
+Essential tools for modern marketing success.`,
+        order: 0,
+      },
+      {
+        title: 'Content & Social Media Strategy',
+        content: `# Creating Engaging Content
+
+## Content Marketing Principles
+- Provide genuine value
+- Maintain consistent voice and style
+- Tell compelling stories
+- Use various content formats
+
+## Social Media Best Practices
+Platform-specific strategies:
+- Instagram: Visual storytelling
+- LinkedIn: Professional networking
+- TikTok: Entertaining, trend-based content
+- Facebook: Community building
+- Twitter: Real-time engagement
+
+## Content Calendar Planning
+- Batch content creation
+- Mix promotional and educational content
+- Leverage trending topics
+- Plan for seasonal events
+
+## Engagement Strategies
+- Respond promptly to comments
+- Ask questions to encourage interaction
+- Share user-generated content
+- Collaborate with influencers
+
+Consistent, valuable content builds trust and authority in your market.`,
+        order: 1,
+      },
+      {
+        title: 'Analytics & Optimization',
+        content: `# Measuring Marketing Success
+
+## Key Metrics to Track
+- Reach and impressions
+- Engagement rates
+- Click-through rates
+- Conversion rates
+- Return on investment (ROI)
+
+## Analytics Tools
+- Google Analytics
+- Social media insights
+- Email marketing metrics
+- Customer feedback surveys
+
+## A/B Testing
+- Test headlines and subject lines
+- Compare content formats
+- Optimize posting times
+- Experiment with calls-to-action
+
+## Continuous Improvement
+- Regular performance reviews
+- Competitor analysis
+- Industry trend monitoring
+- Customer feedback integration
+
+Data-driven decisions lead to more effective marketing campaigns and better results.`,
+        order: 2,
+      },
+    ],
+  },
+  {
+    id: 'seo-optimization-guide',
+    name: 'SEO Optimization Guide',
+    description: 'Practical SEO strategies to improve search rankings, drive organic traffic, and grow online visibility.',
+    category: 'Marketing',
+    icon: '🔍',
+    brandConfig: {
+      primaryColor: '#0EA5E9',
+      secondaryColor: '#38BDF8',
+      accentColor: '#E0F2FE',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '50 minutes',
+    targetAudience: 'Website owners and marketers',
+    chapters: [
+      {
+        title: 'SEO Fundamentals',
+        content: `# Understanding Search Engine Optimization
+
+Improve your website's visibility in search results with proven SEO strategies.
+
+## How Search Engines Work
+- Crawling and indexing
+- Ranking algorithms
+- User intent understanding
+- Quality signal evaluation
+
+## SEO Pillars
+1. **Technical SEO**: Site structure and performance
+2. **On-Page SEO**: Content optimization
+3. **Off-Page SEO**: Authority building
+4. **User Experience**: Site usability and engagement
+
+## Setting SEO Goals
+- Increase organic traffic
+- Improve keyword rankings
+- Enhance local visibility
+- Build domain authority
+
+## Common SEO Myths
+Separate fact from fiction in the ever-evolving world of search optimization.`,
+        order: 0,
+      },
+      {
+        title: 'Keyword Research & Content Strategy',
+        content: `# Finding and Targeting the Right Keywords
+
+## Keyword Research Process
+- Brainstorm seed keywords
+- Use keyword research tools
+- Analyze competitor keywords
+- Assess search intent and difficulty
+
+## Types of Keywords
+- Short-tail vs long-tail
+- Commercial vs informational
+- Local vs global
+- Branded vs non-branded
+
+## Content Optimization
+- Create valuable, comprehensive content
+- Use keywords naturally
+- Optimize title tags and meta descriptions
+- Structure content with headers
+- Include relevant internal and external links
+
+## Content Planning
+- Develop topic clusters
+- Create content calendars
+- Address user questions
+- Update existing content regularly
+
+Quality content that serves user intent is the foundation of successful SEO.`,
+        order: 1,
+      },
+      {
+        title: 'Technical SEO & Performance',
+        content: `# Technical Optimization
+
+## Site Performance
+- Page loading speed optimization
+- Mobile responsiveness
+- Core Web Vitals
+- Image optimization
+
+## Site Structure
+- Clean URL structure
+- Logical navigation
+- XML sitemaps
+- Robots.txt optimization
+
+## Technical Auditing
+- Crawl error identification
+- Duplicate content issues
+- Broken link detection
+- Schema markup implementation
+
+## Local SEO (if applicable)
+- Google My Business optimization
+- Local citations
+- Customer reviews
+- Location-based content
+
+## Monitoring & Maintenance
+- Regular technical audits
+- Performance monitoring
+- Algorithm update awareness
+- Competitive analysis
+
+Technical excellence provides the foundation for content to rank well in search results.`,
+        order: 2,
+      },
+    ],
+  },
+  {
+    id: 'influencer-mastery',
+    name: 'Influencer Marketing Mastery',
+    description: 'Build your personal brand, grow your following, and monetize your influence across social platforms.',
+    category: 'Social Media',
+    icon: '✨',
+    brandConfig: {
+      primaryColor: '#F59E0B',
+      secondaryColor: '#FBBF24',
+      accentColor: '#FEF3C7',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '45 minutes',
+    targetAudience: 'Aspiring influencers',
+    chapters: [
+      {
+        title: 'Building Your Personal Brand',
+        content: `# Creating an Authentic Influence
+
+Transform your passion into a powerful personal brand that attracts and engages your ideal audience.
+
+## Defining Your Niche
+- Identify your unique expertise
+- Research market demand
+- Analyze competitor landscape
+- Define your unique value proposition
+
+## Brand Elements
+- Consistent visual identity
+- Authentic voice and tone
+- Core values and messaging
+- Content themes and topics
+
+## Platform Selection
+Choose platforms where your audience is most active:
+- Instagram: Visual storytelling
+- TikTok: Creative, entertaining content
+- YouTube: Long-form educational content
+- LinkedIn: Professional networking
+
+## Content Pillars
+Develop 3-5 main content categories that align with your brand and audience interests.`,
+        order: 0,
+      },
+      {
+        title: 'Growing Your Audience',
+        content: `# Strategic Audience Building
+
+## Content Strategy
+- Post consistently on schedule
+- Create thumb-stopping content
+- Use trending hashtags strategically
+- Engage with your community actively
+
+## Collaboration Tactics
+- Partner with other influencers
+- Guest appearances on podcasts
+- Cross-platform promotion
+- Community challenges and campaigns
+
+## Engagement Best Practices
+- Respond to comments promptly
+- Create content that encourages interaction
+- Share behind-the-scenes content
+- Host live sessions regularly
+
+## Analytics & Optimization
+- Track follower growth and engagement
+- Analyze top-performing content
+- Understand audience demographics
+- Adjust strategy based on data
+
+Authentic engagement builds stronger relationships than follower count alone.`,
+        order: 1,
+      },
+      {
+        title: 'Monetization Strategies',
+        content: `# Turning Influence into Income
+
+## Revenue Streams
+- Sponsored content and partnerships
+- Affiliate marketing programs
+- Digital product sales
+- Course and coaching services
+- Brand ambassador programs
+
+## Working with Brands
+- Create a media kit
+- Set fair pricing for your rates
+- Maintain transparency with disclosure
+- Deliver value beyond follower count
+
+## Building Long-term Success
+- Diversify income sources
+- Invest in your education
+- Build genuine relationships
+- Stay authentic to your values
+
+## Legal Considerations
+- FTC disclosure requirements
+- Contract negotiations
+- Intellectual property protection
+- Tax implications of influencer income
+
+Success as an influencer requires treating it as a legitimate business with proper planning and execution.`,
+        order: 2,
+      },
+    ],
+  },
+  {
+    id: 'tiktok-growth-hacks',
+    name: 'TikTok Growth Hacks',
+    description: 'Proven strategies to boost your TikTok views, increase followers, and go viral on the platform.',
+    category: 'Social Media',
+    icon: '🎵',
+    brandConfig: {
+      primaryColor: '#EF4444',
+      secondaryColor: '#F87171',
+      accentColor: '#FEE2E2',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '35 minutes',
+    targetAudience: 'TikTok creators',
+    chapters: [
+      {
+        title: 'Understanding the TikTok Algorithm',
+        content: `# Cracking the TikTok Code
+
+Master the platform's algorithm to maximize your content's reach and engagement.
+
+## How TikTok's Algorithm Works
+- User interaction signals
+- Video completion rates
+- Hashtag and sound usage
+- Account and device settings
+
+## Key Ranking Factors
+- Watch time and completion rate
+- Likes, comments, and shares
+- Profile visits and follows
+- Video replays
+
+## Algorithm-Friendly Content
+- Hook viewers in first 3 seconds
+- Create content that encourages rewatching
+- Use trending sounds and effects
+- Post when your audience is most active
+
+## Understanding the For You Page
+How content gets discovered and what makes videos go viral.`,
+        order: 0,
+      },
+      {
+        title: 'Content Creation Strategies',
+        content: `# Creating Viral-Worthy Content
+
+## Trending Content Types
+- Dance and music videos
+- Educational "how-to" content
+- Behind-the-scenes footage
+- Challenges and duets
+- Storytelling and mini-vlogs
+
+## Video Production Tips
+- Use good lighting (natural light works great)
+- Keep videos short and engaging
+- Add captions for accessibility
+- Use multiple camera angles
+- Edit for maximum impact
+
+## Trending Elements to Leverage
+- Popular sounds and music
+- Current hashtag challenges
+- Seasonal and holiday content
+- News and pop culture references
+
+## Content Planning
+- Batch filming sessions
+- Create content calendars
+- Mix trending and evergreen content
+- Repurpose content across formats
+
+Consistency and trend awareness are key to sustained TikTok growth.`,
+        order: 1,
+      },
+      {
+        title: 'Growth Optimization Tactics',
+        content: `# Maximizing Your TikTok Growth
+
+## Posting Strategy
+- Optimal posting times for your audience
+- Consistent posting schedule
+- Cross-promotion on other platforms
+- Engaging with trending topics quickly
+
+## Hashtag Optimization
+- Mix of trending and niche hashtags
+- 3-5 relevant hashtags per video
+- Create branded hashtags
+- Research hashtag performance
+
+## Community Building
+- Respond to comments quickly
+- Create content based on audience requests
+- Collaborate with other creators
+- Engage with your niche community
+
+## Analytics & Improvement
+- Track video performance metrics
+- Identify your best-performing content
+- Test different content formats
+- Analyze audience demographics
+
+## Advanced Growth Tactics
+- TikTok Live streaming
+- Duets and stitches with popular creators
+- Participating in TikTok challenges
+- Using TikTok's creative effects
+
+Remember: Authenticity and entertainment value drive TikTok success more than polished production.`,
+        order: 2,
+      },
+    ],
+  },
 ];
 
 export function createProjectFromTemplate(template: EbookTemplate, customTitle?: string): EbookProject {
