@@ -32,12 +32,13 @@ function App() {
 
   useEffect(() => {
     if (projects.length > 0) {
-      // Migrate existing projects to include brand config and author
-      const needsMigration = projects.some(p => !p.brandConfig || p.author === undefined);
+      // Migrate existing projects to include brand config, author, and category
+      const needsMigration = projects.some(p => !p.brandConfig || p.author === undefined || p.category === undefined);
       if (needsMigration) {
         const migratedProjects = projects.map(project => ({
           ...project,
           author: project.author || '',
+          category: project.category || 'general',
           brandConfig: project.brandConfig || { ...defaultBrandConfig },
         }));
         setProjects(() => migratedProjects);
@@ -56,6 +57,7 @@ function App() {
       title: title.trim() || 'Untitled Ebook',
       description: '',
       author: '',
+      category: 'general',
       chapters: [],
       brandConfig: { ...defaultBrandConfig },
       createdAt: new Date(),
@@ -292,6 +294,7 @@ function App() {
           onChapterCreate={createChapter}
           onChapterUpdate={updateChapter}
           onChapterDelete={deleteChapter}
+          ebookCategory={currentProject.category || 'general'}
         />
       </main>
 

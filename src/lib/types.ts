@@ -22,13 +22,14 @@ export interface EbookProject {
   title: string;
   description: string;
   author: string;
+  category?: string;
   chapters: Chapter[];
   brandConfig: BrandConfig;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type InputMode = 'text' | 'voice';
+export type InputMode = 'text' | 'voice' | 'ai';
 
 export interface VoiceRecording {
   isRecording: boolean;

@@ -5,8 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Mic, MicOff, Edit3, Trash2, GripVertical, BookOpen } from '@phosphor-icons/react';
+import { Plus, Mic, MicOff, Edit3, Trash2, GripVertical, BookOpen, Sparkles } from '@phosphor-icons/react';
 import { useVoiceRecording } from '@/hooks/use-voice-recording';
+import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { Chapter, InputMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,6 +19,7 @@ interface ChapterEditorProps {
   onChapterCreate: () => void;
   onChapterUpdate: (id: string, updates: Partial<Chapter>) => void;
   onChapterDelete: (id: string) => void;
+  ebookCategory?: string;
 }
 
 export function ChapterEditor({
@@ -27,10 +29,12 @@ export function ChapterEditor({
   onChapterCreate,
   onChapterUpdate,
   onChapterDelete,
+  ebookCategory = 'general',
 }: ChapterEditorProps) {
   const [inputMode, setInputMode] = useState<InputMode>('text');
   const [editingTitle, setEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState('');
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
   
   const {
     isRecording,
@@ -69,6 +73,15 @@ export function ChapterEditor({
   const handleContentChange = (content: string) => {
     if (currentChapter) {
       onChapterUpdate(currentChapter.id, { content });
+    }
+  };
+
+  const handleAIContentGenerated = (generatedContent: string) => {
+    if (currentChapter) {
+      const newContent = currentChapter.content 
+        ? `${currentChapter.content}\n\n${generatedContent}`
+        : generatedContent;
+      onChapterUpdate(currentChapter.id, { content: newContent });
     }
   };
 
@@ -233,15 +246,58 @@ export function ChapterEditor({
                       </Badge>
                     )}
                   </TabsTrigger>
+                  <TabsTrigger 
+                    value="ai" 
+                    className="gap-2 neomorph-button border-0 data-[state=active]:neomorph-inset data-[state=active]:bg-background"
+                  >
+                    <Sparkles size={16} />
+                    AI Assistant
+                  </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="text" className="mt-6">
-                  <Textarea
-                    placeholder="Start writing your chapter content here..."
-                    value={currentChapter.content}
-                    onChange={(e) => handleContentChange(e.target.value)}
-                    className="min-h-[500px] resize-none neomorph-inset border-0 text-base leading-relaxed"
-                  />
+                  <div className="space-y-4">
+                    {/* AI Assistant Toggle */}
+                    <div className="flex justify-end">
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShowAIAssistant(!showAIAssistant)}
+                          className="gap-2 neomorph-button border-0"
+                        >
+                          <Sparkles size={14} />
+                          {showAIAssistant ? 'Hide' : 'Show'} AI Assistant
+                        </Button>
+                      </motion.div>
+                    </div>
+
+                    {/* AI Assistant Panel */}
+                    <AnimatePresence>
+                      {showAIAssistant && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <AIContentAssistant
+                            chapterTitle={currentChapter.title}
+                            ebookCategory={ebookCategory}
+                            onContentGenerated={handleAIContentGenerated}
+                            className="mb-6"
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <Textarea
+                      placeholder="Start writing your chapter content here... or use the AI Assistant above to generate content from keywords"
+                      value={currentChapter.content}
+                      onChange={(e) => handleContentChange(e.target.value)}
+                      className="min-h-[500px] resize-none neomorph-inset border-0 text-base leading-relaxed"
+                    />
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="voice" className="mt-6">
@@ -302,6 +358,31 @@ export function ChapterEditor({
                       onChange={(e) => handleContentChange(e.target.value)}
                       className="min-h-[400px] resize-none neomorph-inset border-0 text-base leading-relaxed"
                     />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="ai" className="mt-6">
+                  <div className="space-y-6">
+                    <AIContentAssistant
+                      chapterTitle={currentChapter.title}
+                      ebookCategory={ebookCategory}
+                      onContentGenerated={handleAIContentGenerated}
+                    />
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-foreground">Chapter Content</h3>
+                        <Badge variant="secondary" className="text-xs neomorph-flat border-0">
+                          {currentChapter.content.split(' ').filter(w => w.length > 0).length} words
+                        </Badge>
+                      </div>
+                      <Textarea
+                        placeholder="AI-generated content will appear here, or you can edit directly..."
+                        value={currentChapter.content}
+                        onChange={(e) => handleContentChange(e.target.value)}
+                        className="min-h-[400px] resize-none neomorph-inset border-0 text-base leading-relaxed"
+                      />
+                    </div>
                   </div>
                 </TabsContent>
               </Tabs>
