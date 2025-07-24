@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Sparkles, Palette, Star } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
-import { exportToPDF } from '@/lib/export';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
@@ -145,16 +144,8 @@ function App() {
   };
 
   const handleExport = async () => {
-    if (!currentProject) return;
-
-    try {
-      toast.loading('Generating PDF...', { id: 'export' });
-      await exportToPDF(currentProject);
-      toast.success('PDF export complete!', { id: 'export' });
-    } catch (error) {
-      console.error('Export failed:', error);
-      toast.error('Export failed. Please try again.', { id: 'export' });
-    }
+    // This function is no longer needed as export is handled by ExportDialog
+    // Keeping for backward compatibility, but it's not used
   };
 
   if (showWelcome || !currentProject) {
@@ -282,7 +273,6 @@ function App() {
       <ProjectHeader
         project={currentProject}
         onProjectUpdate={updateProject}
-        onExport={handleExport}
         onBrandCustomize={() => setShowBrandCustomizer(true)}
       />
       

@@ -4,19 +4,20 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DownloadSimple, Edit3, FileText, Settings, Palette } from '@phosphor-icons/react';
+import { DownloadSimple, FileText, Settings, Palette } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
+import { ExportDialog } from '@/components/ExportDialog';
 import { motion } from 'framer-motion';
 
 interface ProjectHeaderProps {
   project: EbookProject;
   onProjectUpdate: (updates: Partial<EbookProject>) => void;
-  onExport: () => void;
   onBrandCustomize: () => void;
 }
 
-export function ProjectHeader({ project, onProjectUpdate, onExport, onBrandCustomize }: ProjectHeaderProps) {
+export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: ProjectHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
   const [tempTitle, setTempTitle] = useState(project.title);
   const [tempDescription, setTempDescription] = useState(project.description);
   const [tempAuthor, setTempAuthor] = useState(project.author);
@@ -160,15 +161,21 @@ export function ProjectHeader({ project, onProjectUpdate, onExport, onBrandCusto
 
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
-              onClick={onExport} 
+              onClick={() => setShowExportDialog(true)} 
               className="gap-2 neomorph-button border-0 h-12 px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground"
             >
               <DownloadSimple size={18} />
-              Export PDF
+              Export Ebook
             </Button>
           </motion.div>
         </div>
       </div>
+
+      <ExportDialog
+        project={project}
+        isOpen={showExportDialog}
+        onClose={() => setShowExportDialog(false)}
+      />
     </motion.header>
   );
 }

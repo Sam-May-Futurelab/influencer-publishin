@@ -1,5 +1,25 @@
 import { EbookProject } from '@/lib/types';
 
+export type ExportFormat = 'pdf' | 'epub' | 'docx';
+
+export async function exportToFormat(project: EbookProject, format: ExportFormat): Promise<void> {
+  try {
+    switch (format) {
+      case 'pdf':
+        return await exportToPDF(project);
+      case 'epub':
+        return await exportToEPUB(project);
+      case 'docx':
+        return await exportToDocx(project);
+      default:
+        throw new Error(`Unsupported export format: ${format}`);
+    }
+  } catch (error) {
+    console.error(`Export to ${format} failed:`, error);
+    throw error;
+  }
+}
+
 export async function exportToPDF(project: EbookProject): Promise<void> {
   try {
     const doc = generateHTML(project);
@@ -18,7 +38,27 @@ export async function exportToPDF(project: EbookProject): Promise<void> {
     }, 500);
     
   } catch (error) {
-    console.error('Export failed:', error);
+    console.error('PDF export failed:', error);
+    throw error;
+  }
+}
+
+export async function exportToEPUB(project: EbookProject): Promise<void> {
+  try {
+    const epubContent = generateEPUBContent(project);
+    downloadFile(epubContent, `${project.title}.epub`, 'application/epub+zip');
+  } catch (error) {
+    console.error('EPUB export failed:', error);
+    throw error;
+  }
+}
+
+export async function exportToDocx(project: EbookProject): Promise<void> {
+  try {
+    const docxContent = generateDocxContent(project);
+    downloadFile(docxContent, `${project.title}.docx`, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+  } catch (error) {
+    console.error('DOCX export failed:', error);
     throw error;
   }
 }
@@ -318,4 +358,264 @@ function getTotalWordCount(project: EbookProject): number {
   return project.chapters.reduce((total, chapter) => {
     return total + (chapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0);
   }, 0);
+}
+
+function downloadFile(content: string, filename: string, mimeType: string): void {
+  const blob = new Blob([content], { type: mimeType });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+}
+
+function generateEPUBContent(project: EbookProject): string {
+  const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
+  const brand = project.brandConfig;
+  
+  // Generate EPUB-compatible HTML structure
+  const content = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>${escapeHtml(project.title)}</title>
+  <style type="text/css">
+    body {
+      font-family: ${brand?.fontFamily || 'serif'};
+      line-height: 1.6;
+      color: #2c2c2c;
+      margin: 1em;
+    }
+    
+    .title-page {
+      text-align: center;
+      margin: 2em 0;
+      page-break-after: always;
+    }
+    
+    .main-title {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      color: ${brand?.primaryColor || '#8B5CF6'};
+    }
+    
+    .author {
+      font-size: 1.2em;
+      margin-bottom: 1em;
+      font-style: italic;
+    }
+    
+    .description {
+      font-size: 1em;
+      margin-bottom: 2em;
+      text-align: justify;
+    }
+    
+    .chapter {
+      margin-bottom: 2em;
+      page-break-before: always;
+    }
+    
+    .chapter-title {
+      font-size: 1.8em;
+      font-weight: bold;
+      margin-bottom: 1em;
+      color: ${brand?.primaryColor || '#8B5CF6'};
+      border-bottom: 2px solid ${brand?.accentColor || '#C4B5FD'};
+      padding-bottom: 0.5em;
+    }
+    
+    .chapter-number {
+      font-size: 0.9em;
+      color: ${brand?.secondaryColor || '#A78BFA'};
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      text-transform: uppercase;
+    }
+    
+    .chapter-content {
+      text-align: justify;
+      line-height: 1.7;
+    }
+    
+    .chapter-content p {
+      margin-bottom: 1em;
+      text-indent: 1.5em;
+    }
+    
+    .chapter-content p:first-child {
+      text-indent: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="title-page">
+    <h1 class="main-title">${escapeHtml(project.title)}</h1>
+    ${project.author ? `<p class="author">by ${escapeHtml(project.author)}</p>` : ''}
+    ${project.description ? `<div class="description">${escapeHtml(project.description)}</div>` : ''}
+  </div>
+  
+  ${sortedChapters.map((chapter, index) => `
+    <div class="chapter">
+      <div class="chapter-number">Chapter ${index + 1}</div>
+      <h2 class="chapter-title">${escapeHtml(chapter.title)}</h2>
+      <div class="chapter-content">
+        ${formatContentForEPUB(chapter.content)}
+      </div>
+    </div>
+  `).join('')}
+</body>
+</html>`;
+
+  return content;
+}
+
+function generateDocxContent(project: EbookProject): string {
+  const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
+  const brand = project.brandConfig;
+  
+  // Generate simplified HTML that can be saved as .docx (will be opened in Word)
+  const content = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>${escapeHtml(project.title)}</title>
+  <style>
+    body {
+      font-family: ${brand?.fontFamily || 'Calibri, sans-serif'};
+      line-height: 1.6;
+      color: #2c2c2c;
+      margin: 1in;
+      font-size: 12pt;
+    }
+    
+    .title-page {
+      text-align: center;
+      margin-bottom: 3em;
+      page-break-after: always;
+    }
+    
+    .main-title {
+      font-size: 24pt;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      color: ${brand?.primaryColor || '#8B5CF6'};
+    }
+    
+    .author {
+      font-size: 14pt;
+      margin-bottom: 1em;
+      font-style: italic;
+    }
+    
+    .description {
+      font-size: 12pt;
+      margin-bottom: 2em;
+      text-align: justify;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .stats {
+      font-size: 10pt;
+      color: #666;
+    }
+    
+    .chapter {
+      margin-bottom: 2em;
+      page-break-before: always;
+    }
+    
+    .chapter:first-child {
+      page-break-before: auto;
+    }
+    
+    .chapter-title {
+      font-size: 18pt;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      color: ${brand?.primaryColor || '#8B5CF6'};
+      border-bottom: 2pt solid ${brand?.accentColor || '#C4B5FD'};
+      padding-bottom: 0.25em;
+    }
+    
+    .chapter-number {
+      font-size: 10pt;
+      color: ${brand?.secondaryColor || '#A78BFA'};
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      text-transform: uppercase;
+    }
+    
+    .chapter-content {
+      text-align: justify;
+      line-height: 1.7;
+      font-size: 12pt;
+    }
+    
+    .chapter-content p {
+      margin-bottom: 12pt;
+      text-indent: 0.5in;
+    }
+    
+    .chapter-content p:first-child {
+      text-indent: 0;
+    }
+    
+    @page {
+      margin: 1in;
+      size: letter;
+    }
+  </style>
+</head>
+<body>
+  <div class="title-page">
+    <h1 class="main-title">${escapeHtml(project.title)}</h1>
+    ${project.author ? `<p class="author">by ${escapeHtml(project.author)}</p>` : ''}
+    ${project.description ? `<div class="description">${escapeHtml(project.description)}</div>` : ''}
+    <div class="stats">
+      ${sortedChapters.length} Chapter${sortedChapters.length !== 1 ? 's' : ''} • 
+      ${getTotalWordCount(project).toLocaleString()} Words
+    </div>
+  </div>
+  
+  ${sortedChapters.map((chapter, index) => `
+    <div class="chapter">
+      <div class="chapter-number">Chapter ${index + 1}</div>
+      <h2 class="chapter-title">${escapeHtml(chapter.title)}</h2>
+      <div class="chapter-content">
+        ${formatContentForWord(chapter.content)}
+      </div>
+    </div>
+  `).join('')}
+</body>
+</html>`;
+
+  return content;
+}
+
+function formatContentForEPUB(content: string): string {
+  if (!content) return '<p><em>No content yet...</em></p>';
+  
+  return content
+    .split('\n\n')
+    .filter(paragraph => paragraph.trim())
+    .map(paragraph => `<p>${escapeHtml(paragraph.trim())}</p>`)
+    .join('');
+}
+
+function formatContentForWord(content: string): string {
+  if (!content) return '<p><em>No content yet...</em></p>';
+  
+  return content
+    .split('\n\n')
+    .filter(paragraph => paragraph.trim())
+    .map(paragraph => `<p>${escapeHtml(paragraph.trim())}</p>`)
+    .join('');
 }
