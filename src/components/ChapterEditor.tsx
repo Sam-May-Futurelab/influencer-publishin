@@ -422,7 +422,7 @@ export function ChapterEditor({
                         <span>
                           {currentChapter.content.length > 0 ? '✅ Content ready' : '⏳ Waiting for content'}
                         </span>
-                        <span className="text-xs">Last updated: {currentChapter.updatedAt.toLocaleTimeString()}</span>
+                        <span className="text-xs">Last updated: {new Date(currentChapter.updatedAt).toLocaleTimeString()}</span>
                       </div>
                     </div>
                   </div>
