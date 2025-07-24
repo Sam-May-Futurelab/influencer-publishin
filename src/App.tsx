@@ -282,7 +282,7 @@ function App() {
         onBrandCustomize={() => setShowBrandCustomizer(true)}
       />
       
-      <main className="h-[calc(100vh-80px)] p-3 lg:p-6 overflow-hidden">
+      <main className="p-3 lg:p-6 pb-6 lg:pb-8">
         <ChapterEditor
           chapters={currentProject.chapters}
           currentChapter={currentChapter}

@@ -4,6 +4,11 @@
 @layer base {
   body {
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+  }
+  
+  html {
+    scroll-behavior: smooth;
   }
   
   * {
@@ -52,6 +57,11 @@
 
   /* Mobile-specific adjustments */
   @media (max-width: 1024px) {
+    /* Enable momentum scrolling on iOS */
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+    
     .neomorph-raised {
       box-shadow: 
         6px 6px 12px var(--shadow-dark),

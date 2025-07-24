@@ -91,12 +91,12 @@ export function ChapterEditor({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-full gap-4 lg:gap-8">
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 min-h-0">
       {/* Chapter Sidebar */}
       <motion.div 
         initial={{ x: -20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        className="w-full lg:w-80 flex flex-col lg:h-full"
+        className="w-full lg:w-80 flex flex-col"
       >
         <div className="flex items-center justify-between mb-4 lg:mb-6">
           <h2 className="text-lg lg:text-xl font-bold text-foreground">Chapters</h2>
@@ -114,7 +114,7 @@ export function ChapterEditor({
           </motion.div>
         </div>
         
-        <div className="space-y-2 lg:space-y-3 flex-1 overflow-auto max-h-40 lg:max-h-none">
+        <div className="space-y-2 lg:space-y-3 overflow-auto max-h-60 lg:max-h-96">
           <AnimatePresence>
             {chapters.map((chapter, index) => (
               <motion.div
@@ -183,7 +183,7 @@ export function ChapterEditor({
       <motion.div 
         initial={{ x: 20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        className="flex-1 flex flex-col min-h-0"
+        className="flex-1 flex flex-col w-full"
       >
         {currentChapter ? (
           <>
@@ -315,7 +315,7 @@ export function ChapterEditor({
                       placeholder="Start writing your chapter content here... or use the AI Assistant above to generate content from keywords"
                       value={currentChapter.content}
                       onChange={(e) => handleContentChange(e.target.value)}
-                      className="min-h-[300px] lg:min-h-[500px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
+                      className="min-h-[250px] lg:min-h-[400px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
                     />
                     
                     {/* Word count indicator */}
@@ -390,7 +390,7 @@ export function ChapterEditor({
                       placeholder="Your voice content will appear here, or type directly..."
                       value={currentChapter.content}
                       onChange={(e) => handleContentChange(e.target.value)}
-                      className="min-h-[300px] lg:min-h-[400px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
+                      className="min-h-[200px] lg:min-h-[300px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
                     />
                   </div>
                 </TabsContent>
@@ -414,7 +414,7 @@ export function ChapterEditor({
                         placeholder="AI-generated content will appear here, or you can edit directly..."
                         value={currentChapter.content}
                         onChange={(e) => handleContentChange(e.target.value)}
-                        className="min-h-[300px] lg:min-h-[400px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
+                        className="min-h-[200px] lg:min-h-[300px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
                       />
                       
                       {/* Content status */}
