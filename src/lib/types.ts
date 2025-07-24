@@ -7,11 +7,23 @@ export interface Chapter {
   updatedAt: Date;
 }
 
+export interface BrandConfig {
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  logoUrl?: string;
+  fontFamily: string;
+  coverStyle: 'minimal' | 'gradient' | 'image';
+  coverImageUrl?: string;
+}
+
 export interface EbookProject {
   id: string;
   title: string;
   description: string;
+  author: string;
   chapters: Chapter[];
+  brandConfig: BrandConfig;
   createdAt: Date;
   updatedAt: Date;
 }

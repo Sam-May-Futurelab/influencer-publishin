@@ -25,6 +25,25 @@ export async function exportToPDF(project: EbookProject): Promise<void> {
 
 function generateHTML(project: EbookProject): string {
   const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
+  const brand = project.brandConfig;
+  
+  // Generate cover background based on style
+  const getCoverStyle = () => {
+    switch (brand?.coverStyle) {
+      case 'gradient':
+        return `background: linear-gradient(135deg, ${brand.primaryColor} 0%, ${brand.secondaryColor} 100%);`;
+      case 'image':
+        return brand.coverImageUrl 
+          ? `background: url('${brand.coverImageUrl}') center/cover no-repeat;` 
+          : `background: ${brand?.primaryColor || '#8B5CF6'};`;
+      case 'minimal':
+      default:
+        return `background: ${brand?.primaryColor || '#8B5CF6'};`;
+    }
+  };
+
+  const fontFamily = brand?.fontFamily || 'Inter, sans-serif';
+  const fontUrl = getFontUrl(fontFamily);
   
   return `
     <!DOCTYPE html>
@@ -33,7 +52,7 @@ function generateHTML(project: EbookProject): string {
       <meta charset="UTF-8">
       <title>${project.title}</title>
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        ${fontUrl ? `@import url('${fontUrl}');` : ''}
         
         * {
           margin: 0;
@@ -42,7 +61,7 @@ function generateHTML(project: EbookProject): string {
         }
         
         body {
-          font-family: 'Inter', sans-serif;
+          font-family: ${fontFamily};
           line-height: 1.6;
           color: #2c2c2c;
           background: white;
@@ -57,64 +76,145 @@ function generateHTML(project: EbookProject): string {
         }
         
         .title-page {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          min-height: 9in;
           text-align: center;
-          margin-bottom: 2in;
+          ${getCoverStyle()}
+          color: white;
+          border-radius: 20px;
+          margin: -1in;
+          margin-bottom: 0;
+          padding: 2in;
           page-break-after: always;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .title-page::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.3);
+          z-index: 1;
+        }
+        
+        .title-page-content {
+          position: relative;
+          z-index: 2;
+        }
+        
+        .logo {
+          max-width: 120px;
+          max-height: 80px;
+          margin-bottom: 2em;
+          filter: brightness(0) invert(1);
         }
         
         .main-title {
-          font-size: 2.5em;
-          font-weight: 700;
+          font-size: 3.5em;
+          font-weight: 800;
           margin-bottom: 0.5em;
-          color: #4c1d95;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+          line-height: 1.1;
+        }
+        
+        .author {
+          font-size: 1.4em;
+          font-weight: 300;
+          margin-bottom: 1em;
+          opacity: 0.9;
         }
         
         .description {
           font-size: 1.2em;
-          color: #6b7280;
           margin-bottom: 2em;
-          max-width: 500px;
+          max-width: 600px;
           margin-left: auto;
           margin-right: auto;
+          opacity: 0.95;
+          line-height: 1.5;
+        }
+        
+        .stats {
+          font-size: 1em;
+          opacity: 0.8;
+          font-weight: 300;
+        }
+        
+        .content-page {
+          margin-top: 1in;
         }
         
         .chapter {
-          margin-bottom: 2em;
+          margin-bottom: 3em;
           page-break-inside: avoid;
         }
         
         .chapter-title {
-          font-size: 1.8em;
-          font-weight: 600;
+          font-size: 2.2em;
+          font-weight: 700;
           margin-bottom: 1em;
-          color: #4c1d95;
-          border-bottom: 2px solid #e5e7eb;
+          color: ${brand?.primaryColor || '#8B5CF6'};
+          border-bottom: 3px solid ${brand?.accentColor || '#C4B5FD'};
           padding-bottom: 0.5em;
+          page-break-after: avoid;
         }
         
         .chapter-number {
-          font-size: 0.8em;
-          color: #d97706;
-          font-weight: 500;
-          margin-bottom: 0.25em;
+          font-size: 1em;
+          color: ${brand?.secondaryColor || '#A78BFA'};
+          font-weight: 600;
+          margin-bottom: 0.5em;
+          text-transform: uppercase;
+          letter-spacing: 1px;
         }
         
         .chapter-content {
-          font-size: 1em;
+          font-size: 1.1em;
           line-height: 1.8;
           text-align: justify;
+          color: #374151;
         }
         
         .chapter-content p {
-          margin-bottom: 1em;
+          margin-bottom: 1.2em;
+        }
+        
+        .chapter-content p:first-child::first-letter {
+          font-size: 3em;
+          font-weight: 700;
+          color: ${brand?.primaryColor || '#8B5CF6'};
+          float: left;
+          line-height: 1;
+          margin-right: 8px;
+          margin-top: 4px;
         }
         
         .footer {
           position: fixed;
           bottom: 0.5in;
-          right: 1in;
-          font-size: 0.8em;
+          left: 0;
+          right: 0;
+          text-align: center;
+          font-size: 0.9em;
           color: #9ca3af;
+          background: white;
+          padding: 10px 0;
+        }
+        
+        .page-number {
+          position: fixed;
+          bottom: 0.5in;
+          right: 1in;
+          font-size: 0.9em;
+          color: ${brand?.primaryColor || '#8B5CF6'};
+          font-weight: 500;
         }
         
         @media print {
@@ -126,6 +226,15 @@ function generateHTML(project: EbookProject): string {
           .container {
             margin: 0;
             padding: 0.75in;
+          }
+          
+          .title-page {
+            margin: -0.75in;
+            margin-bottom: 0;
+          }
+          
+          .content-page {
+            margin-top: 0;
           }
           
           .chapter {
@@ -141,31 +250,52 @@ function generateHTML(project: EbookProject): string {
     <body>
       <div class="container">
         <div class="title-page">
-          <h1 class="main-title">${escapeHtml(project.title)}</h1>
-          ${project.description ? `<p class="description">${escapeHtml(project.description)}</p>` : ''}
-          <p style="margin-top: 2em; color: #9ca3af;">
-            ${sortedChapters.length} Chapter${sortedChapters.length !== 1 ? 's' : ''} • 
-            ${getTotalWordCount(project)} Words
-          </p>
-        </div>
-        
-        ${sortedChapters.map((chapter, index) => `
-          <div class="chapter">
-            <div class="chapter-number">Chapter ${index + 1}</div>
-            <h2 class="chapter-title">${escapeHtml(chapter.title)}</h2>
-            <div class="chapter-content">
-              ${formatContent(chapter.content)}
+          <div class="title-page-content">
+            ${brand?.logoUrl ? `<img src="${brand.logoUrl}" alt="Logo" class="logo" />` : ''}
+            <h1 class="main-title">${escapeHtml(project.title)}</h1>
+            ${project.author ? `<p class="author">by ${escapeHtml(project.author)}</p>` : ''}
+            ${project.description ? `<p class="description">${escapeHtml(project.description)}</p>` : ''}
+            <div class="stats">
+              ${sortedChapters.length} Chapter${sortedChapters.length !== 1 ? 's' : ''} • 
+              ${getTotalWordCount(project).toLocaleString()} Words • 
+              ~${Math.ceil(getTotalWordCount(project) / 250)} Pages
             </div>
           </div>
-        `).join('')}
+        </div>
+        
+        <div class="content-page">
+          ${sortedChapters.map((chapter, index) => `
+            <div class="chapter">
+              <div class="chapter-number">Chapter ${index + 1}</div>
+              <h2 class="chapter-title">${escapeHtml(chapter.title)}</h2>
+              <div class="chapter-content">
+                ${formatContent(chapter.content)}
+              </div>
+            </div>
+          `).join('')}
+        </div>
       </div>
       
       <div class="footer">
-        Generated by EbookCrafter
+        Generated with EbookCrafter • ${new Date().toLocaleDateString()}
       </div>
     </body>
     </html>
   `;
+}
+
+function getFontUrl(fontFamily: string): string | null {
+  const fontMap: Record<string, string> = {
+    'Inter, sans-serif': 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
+    'Roboto, sans-serif': 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap',
+    'Open Sans, sans-serif': 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap',
+    'Lato, sans-serif': 'https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap',
+    'Montserrat, sans-serif': 'https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap',
+    'Playfair Display, serif': 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap',
+    'Merriweather, serif': 'https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap',
+  };
+  
+  return fontMap[fontFamily] || null;
 }
 
 function escapeHtml(text: string): string {
