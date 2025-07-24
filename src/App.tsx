@@ -3,10 +3,11 @@ import { useKV } from '@github/spark/hooks';
 import { ChapterEditor } from '@/components/ChapterEditor';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { BrandCustomizer } from '@/components/BrandCustomizer';
+import { TemplateGallery } from '@/components/TemplateGallery';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Sparkles, Palette } from '@phosphor-icons/react';
+import { BookOpen, Sparkles, Palette, Star } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
 import { exportToPDF } from '@/lib/export';
 import { toast } from 'sonner';
@@ -27,6 +28,7 @@ function App() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
+  const [showTemplateGallery, setShowTemplateGallery] = useState(false);
 
   useEffect(() => {
     if (projects.length > 0) {
@@ -65,6 +67,14 @@ function App() {
     setShowWelcome(false);
     setNewProjectTitle('');
     toast.success('New ebook project created!');
+  };
+
+  const createProjectFromTemplate = (project: EbookProject) => {
+    setProjects(currentProjects => [...currentProjects, project]);
+    setCurrentProject(project);
+    setShowWelcome(false);
+    setShowTemplateGallery(false);
+    toast.success('Ebook created from template!');
   };
 
   const updateProject = (updates: Partial<EbookProject>) => {
@@ -176,28 +186,49 @@ function App() {
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div>
-                <Input
-                  placeholder="Enter your ebook title..."
-                  value={newProjectTitle}
-                  onChange={(e) => setNewProjectTitle(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && newProjectTitle.trim()) {
-                      createProject(newProjectTitle);
-                    }
-                  }}
-                  className="neomorph-inset border-0 text-center text-lg h-14"
-                />
+              <div className="grid gap-4">
+                <div>
+                  <Input
+                    placeholder="Enter your ebook title..."
+                    value={newProjectTitle}
+                    onChange={(e) => setNewProjectTitle(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && newProjectTitle.trim()) {
+                        createProject(newProjectTitle);
+                      }
+                    }}
+                    className="neomorph-inset border-0 text-center text-lg h-14"
+                  />
+                </div>
+                <Button 
+                  onClick={() => createProject(newProjectTitle)}
+                  disabled={!newProjectTitle.trim()}
+                  className="w-full gap-3 h-14 text-lg neomorph-button border-0"
+                  size="lg"
+                >
+                  <BookOpen size={20} />
+                  Create Blank Ebook
+                </Button>
+                
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-border/50" />
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="bg-background px-4 text-muted-foreground">or</span>
+                  </div>
+                </div>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => setShowTemplateGallery(true)}
+                  className="w-full gap-3 h-14 text-lg neomorph-button border-0"
+                  size="lg"
+                >
+                  <Star size={20} />
+                  Choose from Templates
+                </Button>
               </div>
-              <Button 
-                onClick={() => createProject(newProjectTitle)}
-                disabled={!newProjectTitle.trim()}
-                className="w-full gap-3 h-14 text-lg neomorph-button border-0"
-                size="lg"
-              >
-                <BookOpen size={20} />
-                Create Your First Ebook
-              </Button>
               
               {projects.length > 0 && (
                 <motion.div 
@@ -270,6 +301,13 @@ function App() {
         isOpen={showBrandCustomizer}
         onClose={() => setShowBrandCustomizer(false)}
       />
+
+      {showTemplateGallery && (
+        <TemplateGallery
+          onSelectTemplate={createProjectFromTemplate}
+          onClose={() => setShowTemplateGallery(false)}
+        />
+      )}
     </div>
   );
 }
