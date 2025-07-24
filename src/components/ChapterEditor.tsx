@@ -21,6 +21,8 @@ interface ChapterEditorProps {
   onChapterCreate: () => void;
   onChapterUpdate: (id: string, updates: Partial<Chapter>) => void;
   onChapterDelete: (id: string) => void;
+  onRecordWritingSession?: (projectId: string, chapterId: string, wordsAdded: number) => void;
+  projectId?: string;
   ebookCategory?: string;
 }
 
@@ -31,6 +33,8 @@ export function ChapterEditor({
   onChapterCreate,
   onChapterUpdate,
   onChapterDelete,
+  onRecordWritingSession,
+  projectId,
   ebookCategory = 'general',
 }: ChapterEditorProps) {
   const [inputMode, setInputMode] = useState<InputMode>('ai');
@@ -50,10 +54,20 @@ export function ChapterEditor({
   } = useAutoSave({
     onSave: async () => {
       if (currentChapter && pendingContent !== currentChapter.content) {
+        // Calculate words added/removed
+        const oldWordCount = currentChapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0;
+        const newWordCount = pendingContent?.split(/\s+/).filter(word => word.length > 0).length || 0;
+        const wordsAdded = newWordCount - oldWordCount;
+
         onChapterUpdate(currentChapter.id, { 
           content: pendingContent,
           updatedAt: new Date()
         });
+
+        // Record writing session if words were added
+        if (wordsAdded > 0 && onRecordWritingSession && projectId) {
+          onRecordWritingSession(projectId, currentChapter.id, wordsAdded);
+        }
       }
     },
     delay: 30000, // 30 seconds

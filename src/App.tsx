@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
+import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { ChapterEditor } from '@/components/ChapterEditor';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { Header } from '@/components/Header';
@@ -29,6 +30,9 @@ function App() {
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'project'>('dashboard');
+
+  // Writing analytics
+  const { recordWritingSession } = useWritingAnalytics(projects);
 
   useEffect(() => {
     if (projects.length > 0) {
@@ -298,6 +302,8 @@ function App() {
               onChapterCreate={createChapter}
               onChapterUpdate={updateChapter}
               onChapterDelete={deleteChapter}
+              onRecordWritingSession={recordWritingSession}
+              projectId={currentProject.id}
               ebookCategory={currentProject.category || 'general'}
             />
           </main>

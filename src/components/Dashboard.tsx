@@ -12,10 +12,14 @@ import {
   MagnifyingGlass,
   GridFour,
   ListBullets,
-  Clock
+  Clock,
+  Trophy,
+  Target
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
+import { WritingGoalsComponent } from '@/components/WritingGoals';
+import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 
 interface DashboardProps {
   projects: EbookProject[];
@@ -33,6 +37,16 @@ export function Dashboard({
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  // Writing analytics
+  const {
+    goals,
+    stats,
+    progress,
+    recentAchievements,
+    wroteToday,
+    updateGoals,
+  } = useWritingAnalytics(projects);
 
   const filteredProjects = projects.filter(project =>
     project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -165,6 +179,55 @@ export function Dashboard({
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Writing Goals Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+      >
+        <WritingGoalsComponent
+          goals={goals}
+          stats={stats}
+          progress={progress}
+          onUpdateGoals={updateGoals}
+        />
+      </motion.div>
+
+      {/* Recent Achievements */}
+      {recentAchievements.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Card className="neomorph-flat border-0">
+            <CardContent className="p-4 lg:p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-xl neomorph-inset">
+                  <Trophy size={20} className="text-yellow-500" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Recent Achievements</h3>
+                  <p className="text-sm text-muted-foreground">Celebrate your writing milestones!</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {recentAchievements.map((achievement) => (
+                  <Badge
+                    key={achievement.id}
+                    variant="secondary"
+                    className="neomorph-flat border-0 gap-2"
+                  >
+                    <span>{achievement.icon}</span>
+                    <span>{achievement.title}</span>
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Projects Section */}
       {projects.length > 0 && (
