@@ -4,6 +4,7 @@ import { ChapterEditor } from '@/components/ChapterEditor';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { Header } from '@/components/Header';
 import { Dashboard } from '@/components/Dashboard';
+import { ProjectsPage } from '@/components/ProjectsPage';
 import { BrandCustomizer } from '@/components/BrandCustomizer';
 import { TemplateGallery } from '@/components/TemplateGallery';
 import { Button } from '@/components/ui/button';
@@ -25,9 +26,8 @@ function App() {
   const [currentProject, setCurrentProject] = useState<EbookProject | null>(null);
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
-  const [showTemplateGallery, setShowTemplateGallery] = useState(false);
   const [currentSection, setCurrentSection] = useState('dashboard');
-  const [viewMode, setViewMode] = useState<'dashboard' | 'project'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'project'>('dashboard');
 
   useEffect(() => {
     if (projects.length > 0) {
@@ -59,6 +59,20 @@ function App() {
     setCurrentSection('dashboard');
   };
 
+  const goToProjectsPage = () => {
+    setCurrentProject(null);
+    setCurrentChapter(null);
+    setViewMode('projects');
+    setCurrentSection('projects');
+  };
+
+  const goToTemplatesPage = () => {
+    setCurrentProject(null);
+    setCurrentChapter(null);
+    setViewMode('templates');
+    setCurrentSection('templates');
+  };
+
   const createProject = (title: string) => {
     const newProject: EbookProject = {
       id: crypto.randomUUID(),
@@ -80,7 +94,6 @@ function App() {
   const createProjectFromTemplate = (project: EbookProject) => {
     setProjects(currentProjects => [...currentProjects, project]);
     selectProject(project);
-    setShowTemplateGallery(false);
     toast.success('Ebook created from template!');
   };
 
@@ -101,6 +114,24 @@ function App() {
 
   const updateBrandConfig = (brandConfig: BrandConfig) => {
     updateProject({ brandConfig });
+  };
+
+  const deleteProject = (projectId: string) => {
+    setProjects(currentProjects => currentProjects.filter(p => p.id !== projectId));
+    toast.success('Project deleted successfully');
+  };
+
+  const duplicateProject = (project: EbookProject) => {
+    const duplicatedProject: EbookProject = {
+      ...project,
+      id: crypto.randomUUID(),
+      title: `${project.title} (Copy)`,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
+    setProjects(currentProjects => [...currentProjects, duplicatedProject]);
+    toast.success('Project duplicated successfully');
   };
 
   const createChapter = () => {
@@ -156,10 +187,10 @@ function App() {
         returnToDashboard();
         break;
       case 'projects':
-        returnToDashboard();
+        goToProjectsPage();
         break;
       case 'templates':
-        setShowTemplateGallery(true);
+        goToTemplatesPage();
         break;
       case 'settings':
         // Could show settings
@@ -183,7 +214,32 @@ function App() {
             projects={projects}
             onSelectProject={selectProject}
             onCreateProject={createProject}
-            onShowTemplateGallery={() => setShowTemplateGallery(true)}
+            onShowTemplateGallery={goToTemplatesPage}
+          />
+        </main>
+      ) : viewMode === 'projects' ? (
+        <main className="p-3 lg:p-6 pb-6 lg:pb-8">
+          <ProjectsPage
+            projects={projects}
+            onSelectProject={selectProject}
+            onCreateProject={createProject}
+            onShowTemplateGallery={goToTemplatesPage}
+            onDeleteProject={deleteProject}
+            onDuplicateProject={duplicateProject}
+          />
+        </main>
+      ) : viewMode === 'templates' ? (
+        <main className="p-3 lg:p-6 pb-6 lg:pb-8">
+          <TemplateGallery
+            onSelectTemplate={createProjectFromTemplate}
+            onClose={() => {
+              // Go back to where we came from
+              if (currentSection === 'projects') {
+                goToProjectsPage();
+              } else {
+                returnToDashboard();
+              }
+            }}
           />
         </main>
       ) : currentProject ? (
@@ -192,11 +248,26 @@ function App() {
             <Button
               variant="outline"
               size="sm"
-              onClick={returnToDashboard}
+              onClick={() => {
+                if (viewMode === 'project') {
+                  // Go back to where we came from (dashboard, projects, or templates)
+                  if (currentSection === 'projects') {
+                    goToProjectsPage();
+                  } else if (currentSection === 'templates') {
+                    goToTemplatesPage();
+                  } else {
+                    returnToDashboard();
+                  }
+                }
+              }}
               className="neomorph-button border-0 gap-2"
             >
               <ArrowLeft size={16} />
-              <span className="hidden lg:inline">Back to Dashboard</span>
+              <span className="hidden lg:inline">
+                {currentSection === 'projects' ? 'Back to Projects' : 
+                 currentSection === 'templates' ? 'Back to Templates' : 
+                 'Back to Dashboard'}
+              </span>
               <span className="lg:hidden">Back</span>
             </Button>
           </div>
@@ -227,13 +298,6 @@ function App() {
           />
         </>
       ) : null}
-
-      {showTemplateGallery && (
-        <TemplateGallery
-          onSelectTemplate={createProjectFromTemplate}
-          onClose={() => setShowTemplateGallery(false)}
-        />
-      )}
     </div>
   );
 }

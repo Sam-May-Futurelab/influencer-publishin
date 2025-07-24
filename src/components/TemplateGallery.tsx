@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Clock, Users, Star } from '@phosphor-icons/react';
+import { BookOpen, Clock, Users, Star, MagnifyingGlass, GridFour, ListBullets } from '@phosphor-icons/react';
 import { ebookTemplates, createProjectFromTemplate, EbookTemplate } from '@/lib/templates';
 import { EbookProject } from '@/lib/types';
 
@@ -16,6 +16,9 @@ interface TemplateGalleryProps {
 export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryProps) {
   const [selectedTemplate, setSelectedTemplate] = useState<EbookTemplate | null>(null);
   const [customTitle, setCustomTitle] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const handleTemplateSelect = (template: EbookTemplate) => {
     // If clicking the same template, deselect it
@@ -37,222 +40,223 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
   };
 
   const categories = [...new Set(ebookTemplates.map(t => t.category))];
+  
+  const filteredTemplates = ebookTemplates.filter(template => {
+    const matchesSearch = template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         template.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-6xl h-[90vh] bg-background rounded-3xl neomorph-raised overflow-hidden flex flex-col"
+    <div className="space-y-6 lg:space-y-8">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center space-y-4"
       >
-        <div className="p-6 lg:p-8 border-b border-border/50 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl neomorph-flat">
-                <Star size={24} className="text-primary" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold">Choose Your Template</h2>
-                <p className="text-muted-foreground">Start with professionally crafted content structures</p>
-              </div>
-            </div>
-            <Button 
-              variant="ghost" 
-              onClick={onClose}
-              className="neomorph-button border-0"
+        <h1 className="text-2xl lg:text-4xl font-bold">Choose a Template</h1>
+        <p className="text-muted-foreground text-sm lg:text-base max-w-2xl mx-auto">
+          Start with a professionally designed template to accelerate your ebook creation process.
+        </p>
+      </motion.div>
+
+      {/* Controls */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col lg:flex-row gap-4 lg:items-center justify-between"
+      >
+        {/* Search */}
+        <div className="relative flex-1 lg:max-w-md">
+          <MagnifyingGlass size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search templates..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 neomorph-inset border-0 text-sm"
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Category Filter */}
+          <div className="flex rounded-lg neomorph-inset p-1 overflow-x-auto">
+            <Button
+              variant={selectedCategory === 'all' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setSelectedCategory('all')}
+              className="h-8 px-3 text-xs whitespace-nowrap"
             >
-              ✕
+              All
+            </Button>
+            {categories.map((category) => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setSelectedCategory(category)}
+                className="h-8 px-3 text-xs whitespace-nowrap capitalize"
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+
+          {/* View Mode */}
+          <div className="flex rounded-lg neomorph-inset p-1">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+              className="h-8 px-3"
+            >
+              <GridFour size={14} />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className="h-8 px-3"
+            >
+              <ListBullets size={14} />
             </Button>
           </div>
         </div>
+      </motion.div>
 
-        <div className="flex flex-col lg:flex-row flex-1 min-h-0">
-          {/* Template List */}
-          <div className={`${selectedTemplate ? 'lg:w-2/3' : 'w-full'} flex flex-col min-h-0`}>
-            {selectedTemplate && (
-              <div className="lg:hidden p-4 border-b border-border/30 bg-muted/30">
-                <p className="text-xs text-muted-foreground text-center">
-                  Tap the selected template again to deselect it
-                </p>
-              </div>
-            )}
-            <div className="p-4 lg:p-6 overflow-y-auto flex-1 ios-scroll" style={{WebkitOverflowScrolling: 'touch'}}>
-              <div className="space-y-6 pb-4">
-                {categories.map(category => (
-                  <div key={category}>
-                    <h3 className="text-lg font-semibold mb-4 text-primary">{category}</h3>
-                    <div className="grid gap-4">
-                      {ebookTemplates
-                        .filter(template => template.category === category)
-                        .map(template => (
-                          <motion.div
-                            key={template.id}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <Card 
-                              className={`cursor-pointer transition-all neomorph-button border-0 ${
-                              selectedTemplate?.id === template.id 
-                                ? 'ring-2 ring-primary shadow-inner' 
-                                : ''
-                            }`}
-                            onClick={() => handleTemplateSelect(template)}
-                          >
-                            <CardHeader className="pb-3">
-                              <div className="flex items-start justify-between">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-2xl">{template.icon}</span>
-                                  <div>
-                                    <CardTitle className="text-lg">{template.name}</CardTitle>
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                      {template.description}
-                                    </p>
-                                  </div>
-                                </div>
-                                <Badge 
-                                  variant="secondary"
-                                  className="neomorph-flat border-0"
-                                >
-                                  {template.chapters.length} chapters
-                                </Badge>
-                              </div>
-                            </CardHeader>
-                            <CardContent className="pt-0">
-                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                  <Clock size={16} />
-                                  <span>{template.estimatedReadTime}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Users size={16} />
-                                  <span>{template.targetAudience}</span>
-                                </div>
-                              </div>
-                              <div className="mt-3 flex flex-wrap gap-2">
-                                {template.chapters.slice(0, 3).map((chapter, index) => (
-                                  <Badge 
-                                    key={index}
-                                    variant="outline"
-                                    className="text-xs neomorph-flat border-0"
-                                  >
-                                    {chapter.title}
-                                  </Badge>
-                                ))}
-                                {template.chapters.length > 3 && (
-                                  <Badge 
-                                    variant="outline"
-                                    className="text-xs neomorph-flat border-0"
-                                  >
-                                    +{template.chapters.length - 3} more
-                                  </Badge>
-                                )}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </motion.div>
-                      ))
-                    }
+      {/* Template Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+        {filteredTemplates.map((template, index) => (
+          <motion.div
+            key={template.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+          >
+            <Card 
+              className={`cursor-pointer border-2 transition-all duration-300 ${
+                selectedTemplate?.id === template.id
+                  ? 'border-primary neomorph-raised' 
+                  : 'border-transparent neomorph-flat hover:neomorph-raised'
+              }`}
+              onClick={() => handleTemplateSelect(template)}
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="text-2xl">{template.icon}</div>
+                  <div className="flex items-center gap-1">
+                    <Star size={12} className="text-yellow-500" />
+                    <span className="text-xs text-muted-foreground">4.8</span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-          </div>
+                <CardTitle className="text-lg">{template.name}</CardTitle>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {template.description}
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex flex-wrap gap-1">
+                  <Badge variant="secondary" className="text-xs">{template.category}</Badge>
+                  <Badge variant="outline" className="text-xs">
+                    <Clock size={10} className="mr-1" />
+                    {template.estimatedReadTime}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs">
+                    <Users size={10} className="mr-1" />
+                    {template.targetAudience}
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{template.chapters.length} chapters</span>
+                  <span>~{template.chapters.reduce((sum, ch) => sum + (ch.content?.split(' ').length || 0), 0).toLocaleString()} words</span>
+                </div>
+                
+                <div className="flex gap-1">
+                  <div 
+                    className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                    style={{ backgroundColor: template.brandConfig.primaryColor }}
+                  />
+                  <div 
+                    className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                    style={{ backgroundColor: template.brandConfig.secondaryColor }}
+                  />
+                  <div 
+                    className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                    style={{ backgroundColor: template.brandConfig.accentColor }}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
 
-          {/* Template Preview - Only show when template is selected */}
-          {selectedTemplate && (
-            <div className="lg:w-1/3 border-t lg:border-t-0 lg:border-l border-border/50 bg-muted/20 flex flex-col min-h-0">
-              {/* Preview Header with Close Button */}
-              <div className="p-4 lg:p-6 border-b border-border/30 flex items-center justify-between flex-shrink-0">
-                <h3 className="font-semibold text-foreground">Template Preview</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedTemplate(null);
-                    setCustomTitle('');
-                  }}
-                  className="h-8 w-8 p-0 neomorph-button border-0 text-foreground hover:text-foreground"
-                >
-                  ✕
-                </Button>
+      {filteredTemplates.length === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center py-12"
+        >
+          <BookOpen size={64} className="mx-auto mb-6 text-muted-foreground opacity-50" />
+          <h3 className="text-lg font-semibold mb-2">No templates found</h3>
+          <p className="text-muted-foreground mb-6">
+            Try adjusting your search or category filters.
+          </p>
+        </motion.div>
+      )}
+
+      {/* Selected Template Details & Creation */}
+      {selectedTemplate && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed bottom-0 left-0 right-0 p-4 lg:p-6 bg-background border-t border-border neomorph-raised"
+        >
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-6">
+              <div className="flex items-center gap-4 flex-1">
+                <div className="text-3xl">{selectedTemplate.icon}</div>
+                <div>
+                  <h3 className="font-bold text-lg">{selectedTemplate.name}</h3>
+                  <p className="text-sm text-muted-foreground">{selectedTemplate.description}</p>
+                </div>
               </div>
               
-              <div className="p-4 lg:p-6 overflow-y-auto flex-1 ios-scroll" style={{WebkitOverflowScrolling: 'touch'}}>
-                <motion.div
-                  key={selectedTemplate.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="space-y-6 pb-4"
-                >
-                  <div className="text-center">
-                    <div className="text-4xl mb-3">{selectedTemplate.icon}</div>
-                    <h3 className="text-xl font-bold">{selectedTemplate.name}</h3>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      {selectedTemplate.description}
-                    </p>
-                  </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">Brand Colors</h4>
-                    <div className="flex gap-2">
-                      <div 
-                        className="w-8 h-8 rounded-lg neomorph-flat"
-                        style={{ backgroundColor: selectedTemplate.brandConfig.primaryColor }}
-                      />
-                      <div 
-                        className="w-8 h-8 rounded-lg neomorph-flat"
-                        style={{ backgroundColor: selectedTemplate.brandConfig.secondaryColor }}
-                      />
-                      <div 
-                        className="w-8 h-8 rounded-lg neomorph-flat"
-                        style={{ backgroundColor: selectedTemplate.brandConfig.accentColor }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-semibold mb-2">Chapter Overview</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {selectedTemplate.chapters.map((chapter, index) => (
-                        <div 
-                          key={index}
-                          className="flex items-center gap-2 text-sm p-2 rounded-lg neomorph-flat"
-                        >
-                          <span className="text-primary font-medium">{index + 1}.</span>
-                          <span>{chapter.title}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-semibold mb-2">Customize Title</h4>
-                    <Input
-                      value={customTitle}
-                      onChange={(e) => setCustomTitle(e.target.value)}
-                      placeholder="Enter your ebook title..."
-                      className="neomorph-inset border-0"
-                    />
-                  </div>
-
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+                <Input
+                  placeholder="Customize title..."
+                  value={customTitle}
+                  onChange={(e) => setCustomTitle(e.target.value)}
+                  className="neomorph-inset border-0 min-w-0 lg:w-64"
+                />
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSelectedTemplate(null);
+                      setCustomTitle('');
+                    }}
+                    className="neomorph-button border-0"
+                  >
+                    Cancel
+                  </Button>
                   <Button
                     onClick={handleCreateFromTemplate}
                     disabled={!customTitle.trim()}
-                    className="w-full gap-2 neomorph-button border-0"
-                    size="lg"
+                    className="neomorph-button border-0 gap-2"
                   >
-                    <BookOpen size={20} />
-                    Create from Template
+                    <BookOpen size={16} />
+                    Create Ebook
                   </Button>
                 </div>
-                </motion.div>
               </div>
             </div>
-          )}
-        </div>
-      </motion.div>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
