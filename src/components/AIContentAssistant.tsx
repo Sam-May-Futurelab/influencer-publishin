@@ -40,7 +40,10 @@ export function AIContentAssistant({
     }
 
     setIsGenerating(true);
+    
     try {
+      console.log('Starting AI content generation with keywords:', keywords);
+      
       // Create enhanced prompt for content generation
       const prompt = spark.llmPrompt`
         You are an expert content creator helping to write an engaging chapter for an ebook.
@@ -49,30 +52,92 @@ export function AIContentAssistant({
         Ebook Category: ${ebookCategory}
         Keywords/Topics: ${keywords}
         
-        Please generate 4 different content suggestions:
-        1. A detailed chapter outline with main points and subpoints
-        2. An engaging introduction paragraph that hooks the reader
-        3. A list of 5-7 practical tips or key insights related to the keywords
-        4. A compelling conclusion that summarizes and motivates action
+        Please generate 4 different content suggestions. Each suggestion should be substantial (100-300 words), well-structured, and directly relevant to the keywords provided. Make the content actionable, insightful, and engaging for readers interested in ${ebookCategory}.
         
-        Each suggestion should be substantial (100-300 words), well-structured, and directly relevant to the keywords provided. 
-        Make the content actionable, insightful, and engaging for readers interested in ${ebookCategory}.
+        IMPORTANT: You must respond with valid JSON only. No additional text or formatting.
         
         Format your response as a JSON array with objects containing:
-        - id: unique identifier
-        - title: descriptive title for the suggestion
-        - content: the actual content text
-        - type: one of "outline", "introduction", "tips", "conclusion"
+        - id: unique identifier (string)
+        - title: descriptive title for the suggestion (string)
+        - content: the actual content text (string, 100-300 words)
+        - type: one of "outline", "introduction", "tips", "conclusion" (string)
+        
+        Generate these 4 types:
+        1. A detailed chapter outline with main points and subpoints (type: "outline")
+        2. An engaging introduction paragraph that hooks the reader (type: "introduction")  
+        3. A list of 5-7 practical tips or key insights related to the keywords (type: "tips")
+        4. A compelling conclusion that summarizes and motivates action (type: "conclusion")
       `;
 
+      console.log('Calling spark.llm...');
       const response = await spark.llm(prompt, "gpt-4o", true);
-      const generatedSuggestions = JSON.parse(response) as ContentSuggestion[];
+      console.log('AI Response received:', response);
       
-      setSuggestions(generatedSuggestions);
-      toast.success('AI content suggestions generated!');
+      let generatedSuggestions: ContentSuggestion[];
+      try {
+        generatedSuggestions = JSON.parse(response) as ContentSuggestion[];
+        console.log('Parsed suggestions:', generatedSuggestions);
+      } catch (parseError) {
+        console.error('JSON parsing failed:', parseError);
+        console.error('Response was:', response);
+        throw new Error('Invalid response format from AI service');
+      }
+      
+      // Validate the structure
+      if (!Array.isArray(generatedSuggestions) || generatedSuggestions.length === 0) {
+        throw new Error('Invalid suggestions format');
+      }
+      
+      // Ensure all suggestions have required fields
+      const validSuggestions = generatedSuggestions.filter(s => 
+        s.id && s.title && s.content && s.type
+      );
+      
+      if (validSuggestions.length === 0) {
+        throw new Error('No valid suggestions received');
+      }
+      
+      setSuggestions(validSuggestions);
+      toast.success(`Generated ${validSuggestions.length} AI content suggestions!`);
+      
     } catch (error) {
       console.error('Content generation failed:', error);
-      toast.error('Failed to generate content. Please try again.');
+      toast.error('AI generation failed. Using template content.');
+      
+      // Always provide fallback content so user isn't stuck
+      const keywordList = keywords.split(',').map(k => k.trim()).filter(k => k);
+      const mainKeyword = keywordList[0] || 'your topic';
+      
+      const fallbackSuggestions: ContentSuggestion[] = [
+        {
+          id: 'fallback-intro',
+          title: 'Chapter Introduction',
+          content: `Welcome to this chapter on ${mainKeyword}. In this section, we'll explore the fundamental concepts and practical applications that will help you understand and implement ${mainKeyword} effectively. Whether you're a beginner or looking to deepen your knowledge, this chapter provides valuable insights and actionable strategies you can apply immediately. Let's begin this journey together and unlock the potential of ${mainKeyword} in your life.`,
+          type: 'introduction'
+        },
+        {
+          id: 'fallback-outline',
+          title: 'Chapter Outline',
+          content: `Chapter Outline:\n\n1. Introduction to ${mainKeyword}\n   • Definition and core concepts\n   • Why ${mainKeyword} matters\n   • Common misconceptions\n\n2. Getting Started\n   • Essential prerequisites\n   • Basic principles\n   • First steps\n\n3. Practical Application\n   • Real-world examples\n   • Step-by-step implementation\n   • Common challenges and solutions\n\n4. Advanced Strategies\n   • Expert tips and techniques\n   • Optimization methods\n   • Best practices\n\n5. Next Steps\n   • Continuing your journey\n   • Additional resources\n   • Key takeaways`,
+          type: 'outline'
+        },
+        {
+          id: 'fallback-tips',
+          title: 'Key Tips & Insights',
+          content: `Essential Tips for ${mainKeyword}:\n\n• Start with the fundamentals: Build a solid foundation before moving to advanced concepts\n• Practice consistently: Regular application leads to better results and deeper understanding\n• Learn from examples: Study real-world applications and case studies\n• Stay curious: Ask questions and explore different perspectives\n• Track your progress: Monitor your development and celebrate small wins\n• Connect with others: Join communities and learn from peers\n• Be patient: Mastery takes time, so embrace the learning process`,
+          type: 'tips'
+        },
+        {
+          id: 'fallback-conclusion',
+          title: 'Chapter Conclusion',
+          content: `As we conclude this chapter on ${mainKeyword}, remember that knowledge without action is merely potential. The concepts and strategies we've explored are tools waiting to be used. Take what resonates with you and begin implementing it today, even in small ways. Every expert was once a beginner, and every master was once a disaster. Your journey with ${mainKeyword} is unique, and the key is to start where you are, use what you have, and do what you can. The next chapter awaits, but the real transformation happens when you close this book and begin applying what you've learned.`,
+          type: 'conclusion'
+        }
+      ];
+      
+      setSuggestions(fallbackSuggestions);
+      toast.success('Template content suggestions ready!');
+      
     } finally {
       setIsGenerating(false);
     }
@@ -88,8 +153,13 @@ export function AIContentAssistant({
   };
 
   const insertContent = (content: string) => {
-    onContentGenerated(content);
-    toast.success('Content inserted into chapter!');
+    if (!content || content.trim() === '') {
+      toast.error('No content to insert');
+      return;
+    }
+    
+    onContentGenerated(content.trim());
+    toast.success('Content added to your chapter!');
   };
 
   const enhanceContent = async (content: string) => {
@@ -106,16 +176,22 @@ export function AIContentAssistant({
         Chapter context: ${chapterTitle}
         Category: ${ebookCategory}
         
-        Make it more compelling and valuable for readers.
+        Make it more compelling and valuable for readers. Return only the enhanced content, no additional formatting or explanations.
       `;
 
       const enhancedContent = await spark.llm(prompt, "gpt-4o");
       
+      if (!enhancedContent || enhancedContent.trim() === '') {
+        throw new Error('Empty response from AI service');
+      }
+      
       if (selectedSuggestion) {
         const updatedSuggestion = {
           ...selectedSuggestion,
-          content: enhancedContent,
-          title: selectedSuggestion.title + ' (Enhanced)'
+          content: enhancedContent.trim(),
+          title: selectedSuggestion.title.includes('(Enhanced)') 
+            ? selectedSuggestion.title 
+            : selectedSuggestion.title + ' (Enhanced)'
         };
         setSelectedSuggestion(updatedSuggestion);
         setSuggestions(prev => prev.map(s => 
@@ -206,6 +282,34 @@ export function AIContentAssistant({
               </Button>
             </motion.div>
           </div>
+          
+          {/* Help text */}
+          <div className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg neomorph-flat">
+            💡 <strong>Tip:</strong> Be specific with your keywords for better results. Try phrases like "beginner workout routines", "healthy meal prep strategies", or "time management techniques".
+          </div>
+          
+          {/* Test button for debugging */}
+          {process.env.NODE_ENV === 'development' && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                try {
+                  console.log('Testing spark.llm...');
+                  const testPrompt = spark.llmPrompt`Say hello world`;
+                  const response = await spark.llm(testPrompt);
+                  console.log('Test response:', response);
+                  toast.success('AI connection working!');
+                } catch (error) {
+                  console.error('AI test failed:', error);
+                  toast.error('AI connection failed');
+                }
+              }}
+              className="text-xs"
+            >
+              Test AI Connection
+            </Button>
+          )}
           
           {/* Quick keyword suggestions */}
           <div className="flex flex-wrap gap-2">
@@ -336,7 +440,7 @@ export function AIContentAssistant({
                       onClick={() => insertContent(selectedSuggestion.content)}
                     >
                       <ArrowRight size={14} />
-                      Use This Content
+                      Add to Chapter
                     </Button>
                   </motion.div>
                 </div>

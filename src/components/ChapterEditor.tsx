@@ -77,11 +77,15 @@ export function ChapterEditor({
   };
 
   const handleAIContentGenerated = (generatedContent: string) => {
-    if (currentChapter) {
-      const newContent = currentChapter.content 
-        ? `${currentChapter.content}\n\n${generatedContent}`
-        : generatedContent;
+    if (currentChapter && generatedContent && generatedContent.trim()) {
+      const trimmedContent = generatedContent.trim();
+      const newContent = currentChapter.content.trim()
+        ? `${currentChapter.content.trim()}\n\n${trimmedContent}`
+        : trimmedContent;
       onChapterUpdate(currentChapter.id, { content: newContent });
+      toast.success('AI content added to chapter!');
+    } else {
+      toast.error('No content to add');
     }
   };
 
@@ -297,6 +301,14 @@ export function ChapterEditor({
                       onChange={(e) => handleContentChange(e.target.value)}
                       className="min-h-[500px] resize-none neomorph-inset border-0 text-base leading-relaxed"
                     />
+                    
+                    {/* Word count indicator */}
+                    <div className="flex justify-between items-center pt-2 text-xs text-muted-foreground">
+                      <span>{currentChapter.content.split(' ').filter(w => w.length > 0).length} words</span>
+                      <span>
+                        {currentChapter.content.length > 0 ? 'Content ready for export' : 'Start typing or use AI to generate content'}
+                      </span>
+                    </div>
                   </div>
                 </TabsContent>
 
@@ -382,6 +394,14 @@ export function ChapterEditor({
                         onChange={(e) => handleContentChange(e.target.value)}
                         className="min-h-[400px] resize-none neomorph-inset border-0 text-base leading-relaxed"
                       />
+                      
+                      {/* Content status */}
+                      <div className="flex justify-between items-center pt-2 text-xs text-muted-foreground">
+                        <span>
+                          {currentChapter.content.length > 0 ? '✅ Content ready' : '⏳ Waiting for content'}
+                        </span>
+                        <span>Last updated: {currentChapter.updatedAt.toLocaleTimeString()}</span>
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
