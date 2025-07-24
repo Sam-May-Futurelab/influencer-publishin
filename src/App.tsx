@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { ChapterEditor } from '@/components/ChapterEditor';
 import { ProjectHeader } from '@/components/ProjectHeader';
+import { Header } from '@/components/Header';
 import { BrandCustomizer } from '@/components/BrandCustomizer';
 import { TemplateGallery } from '@/components/TemplateGallery';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,7 @@ function App() {
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
   const [showTemplateGallery, setShowTemplateGallery] = useState(false);
+  const [currentSection, setCurrentSection] = useState('dashboard');
 
   useEffect(() => {
     if (projects.length > 0) {
@@ -274,8 +276,35 @@ function App() {
     );
   }
 
+  const handleNavigation = (section: string) => {
+    setCurrentSection(section);
+    // Add logic here for different sections if needed
+    switch (section) {
+      case 'dashboard':
+        // Could show dashboard view
+        break;
+      case 'projects':
+        // Could show projects list
+        break;
+      case 'templates':
+        setShowTemplateGallery(true);
+        break;
+      case 'settings':
+        // Could show settings
+        break;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background font-['Inter']">
+      <Header
+        logoText="Influencer Publishing"
+        onNavigate={handleNavigation}
+        currentSection={currentSection}
+        userName={currentProject?.author || "Creator"}
+        notifications={0}
+      />
+      
       <ProjectHeader
         project={currentProject}
         onProjectUpdate={updateProject}

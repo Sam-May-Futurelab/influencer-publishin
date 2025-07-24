@@ -5,8 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Microphone, MicrophoneSlash, PencilSimple, Trash, DotsSixVertical, BookOpen, Star } from '@phosphor-icons/react';
-import { useVoiceRecording } from '@/hooks/use-voice-recording';
+import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star } from '@phosphor-icons/react';
 import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { Chapter, InputMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -32,19 +31,10 @@ export function ChapterEditor({
   onChapterDelete,
   ebookCategory = 'general',
 }: ChapterEditorProps) {
-  const [inputMode, setInputMode] = useState<InputMode>('text');
+  const [inputMode, setInputMode] = useState<InputMode>('ai');
   const [editingTitle, setEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState('');
   const [showAIAssistant, setShowAIAssistant] = useState(false);
-  
-  const {
-    isRecording,
-    transcript,
-    isSupported,
-    startRecording,
-    stopRecording,
-    clearTranscript,
-  } = useVoiceRecording();
 
   const handleTitleEdit = (chapter: Chapter) => {
     setEditingTitle(true);
@@ -56,19 +46,6 @@ export function ChapterEditor({
       onChapterUpdate(currentChapter.id, { title: tempTitle.trim() });
     }
     setEditingTitle(false);
-  };
-
-  const handleVoiceToggle = () => {
-    if (isRecording) {
-      stopRecording();
-      if (transcript && currentChapter) {
-        const newContent = currentChapter.content + (currentChapter.content ? '\n\n' : '') + transcript;
-        onChapterUpdate(currentChapter.id, { content: newContent });
-        clearTranscript();
-      }
-    } else {
-      startRecording();
-    }
   };
 
   const handleContentChange = (content: string) => {
@@ -236,31 +213,6 @@ export function ChapterEditor({
               <Tabs value={inputMode} onValueChange={(value) => setInputMode(value as InputMode)}>
                 <TabsList className="neomorph-flat border-0 bg-muted/50 p-1 h-10 lg:h-12 w-full lg:w-auto">
                   <TabsTrigger 
-                    value="text" 
-                    className="gap-1 lg:gap-2 neomorph-button border-0 data-[state=active]:neomorph-inset data-[state=active]:bg-background text-xs lg:text-sm px-2 lg:px-3"
-                  >
-                    <PencilSimple size={14} className="lg:hidden" />
-                    <PencilSimple size={16} className="hidden lg:block" />
-                    <span className="hidden sm:inline">Text Editor</span>
-                    <span className="sm:hidden">Text</span>
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="voice" 
-                    className="gap-1 lg:gap-2 neomorph-button border-0 data-[state=active]:neomorph-inset data-[state=active]:bg-background text-xs lg:text-sm px-2 lg:px-3" 
-                    disabled={!isSupported}
-                  >
-                    <Microphone size={14} className="lg:hidden" />
-                    <Microphone size={16} className="hidden lg:block" />
-                    <span className="hidden sm:inline">Voice Input</span>
-                    <span className="sm:hidden">Voice</span>
-                    {!isSupported && (
-                      <Badge variant="destructive" className="ml-1 lg:ml-2 text-xs">
-                        <span className="hidden lg:inline">Not Supported</span>
-                        <span className="lg:hidden">X</span>
-                      </Badge>
-                    )}
-                  </TabsTrigger>
-                  <TabsTrigger 
                     value="ai" 
                     className="gap-1 lg:gap-2 neomorph-button border-0 data-[state=active]:neomorph-inset data-[state=active]:bg-background text-xs lg:text-sm px-2 lg:px-3"
                   >
@@ -268,6 +220,15 @@ export function ChapterEditor({
                     <Star size={16} className="hidden lg:block" />
                     <span className="hidden sm:inline">AI Assistant</span>
                     <span className="sm:hidden">AI</span>
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="text" 
+                    className="gap-1 lg:gap-2 neomorph-button border-0 data-[state=active]:neomorph-inset data-[state=active]:bg-background text-xs lg:text-sm px-2 lg:px-3"
+                  >
+                    <PencilSimple size={14} className="lg:hidden" />
+                    <PencilSimple size={16} className="hidden lg:block" />
+                    <span className="hidden sm:inline">Text Editor</span>
+                    <span className="sm:hidden">Text</span>
                   </TabsTrigger>
                 </TabsList>
 
@@ -325,73 +286,6 @@ export function ChapterEditor({
                         {currentChapter.content.length > 0 ? 'Content ready for export' : 'Start typing or use AI to generate content'}
                       </span>
                     </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="voice" className="mt-4 lg:mt-6">
-                  <div className="space-y-4 lg:space-y-6">
-                    <div className="flex items-center gap-2 lg:gap-4">
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button
-                          onClick={handleVoiceToggle}
-                          variant={isRecording ? "destructive" : "default"}
-                          className="gap-2 lg:gap-3 h-10 lg:h-12 px-4 lg:px-6 neomorph-button border-0 text-sm lg:text-base"
-                          disabled={!isSupported}
-                        >
-                          {isRecording ? <MicrophoneSlash size={16} className="lg:hidden" /> : <Microphone size={16} className="lg:hidden" />}
-                          {isRecording ? <MicrophoneSlash size={18} className="hidden lg:block" /> : <Microphone size={18} className="hidden lg:block" />}
-                          <span className="hidden sm:inline">
-                            {isRecording ? 'Stop Recording' : 'Start Recording'}
-                          </span>
-                          <span className="sm:hidden">
-                            {isRecording ? 'Stop' : 'Record'}
-                          </span>
-                        </Button>
-                      </motion.div>
-                      
-                      <AnimatePresence>
-                        {isRecording && (
-                          <motion.div 
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            className="flex items-center gap-2 lg:gap-3 text-xs lg:text-sm text-muted-foreground"
-                          >
-                            <div className="w-2 lg:w-3 h-2 lg:h-3 bg-red-500 rounded-full animate-pulse" />
-                            <span className="font-medium">Recording in progress...</span>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    <AnimatePresence>
-                      {transcript && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -20 }}
-                        >
-                          <Card className="neomorph-flat border-0">
-                            <CardHeader className="pb-3">
-                              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                                <div className="w-2 h-2 bg-accent rounded-full" />
-                                Live Transcript
-                              </h3>
-                            </CardHeader>
-                            <CardContent className="pt-0">
-                              <p className="text-sm leading-relaxed">{transcript}</p>
-                            </CardContent>
-                          </Card>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
-                    <Textarea
-                      placeholder="Your voice content will appear here, or type directly..."
-                      value={currentChapter.content}
-                      onChange={(e) => handleContentChange(e.target.value)}
-                      className="min-h-[200px] lg:min-h-[300px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
-                    />
                   </div>
                 </TabsContent>
 

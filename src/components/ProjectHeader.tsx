@@ -91,7 +91,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
             <Button 
               variant="outline" 
               size="sm" 
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
               onClick={onBrandCustomize}
             >
               <Palette size={14} className="lg:hidden" />
@@ -104,7 +104,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
           <Dialog open={isEditing} onOpenChange={setIsEditing}>
             <DialogTrigger asChild>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="sm" className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm">
+                <Button variant="outline" size="sm" className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground">
                   <Gear size={14} className="lg:hidden" />
                   <Gear size={18} className="hidden lg:block" />
                   <span className="hidden sm:inline">Project Settings</span>

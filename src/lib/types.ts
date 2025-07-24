@@ -29,10 +29,4 @@ export interface EbookProject {
   updatedAt: Date;
 }
 
-export type InputMode = 'text' | 'voice' | 'ai';
-
-export interface VoiceRecording {
-  isRecording: boolean;
-  transcript: string;
-  isProcessing: boolean;
-}
+export type InputMode = 'text' | 'ai';
