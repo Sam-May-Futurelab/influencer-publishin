@@ -150,7 +150,7 @@ function App() {
 
   if (showWelcome || !currentProject) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <div className="min-h-screen bg-background flex items-center justify-center p-3 lg:p-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -159,27 +159,29 @@ function App() {
           <Card className="w-full max-w-md neomorph-raised border-0">
             <CardHeader className="text-center">
               <motion.div 
-                className="flex items-center justify-center gap-3 mb-6"
+                className="flex items-center justify-center gap-2 lg:gap-3 mb-4 lg:mb-6"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring" }}
               >
-                <div className="p-3 rounded-xl neomorph-flat">
-                  <BookOpen size={32} className="text-primary" />
+                <div className="p-2 lg:p-3 rounded-xl neomorph-flat">
+                  <BookOpen size={24} className="lg:hidden text-primary" />
+                  <BookOpen size={32} className="hidden lg:block text-primary" />
                 </div>
-                <div className="p-2 rounded-xl neomorph-flat">
-                  <Sparkles size={24} className="text-accent" />
+                <div className="p-1.5 lg:p-2 rounded-xl neomorph-flat">
+                  <Sparkles size={18} className="lg:hidden text-accent" />
+                  <Sparkles size={24} className="hidden lg:block text-accent" />
                 </div>
               </motion.div>
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <CardTitle className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 EbookCrafter
               </CardTitle>
-              <p className="text-muted-foreground mt-2">
+              <p className="text-muted-foreground mt-2 text-sm lg:text-base">
                 Transform your expertise into professional ebooks and guides with beautiful branding that you can sell.
               </p>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-4">
+            <CardContent className="space-y-4 lg:space-y-6">
+              <div className="grid gap-3 lg:gap-4">
                 <div>
                   <Input
                     placeholder="Enter your ebook title..."
@@ -190,17 +192,19 @@ function App() {
                         createProject(newProjectTitle);
                       }
                     }}
-                    className="neomorph-inset border-0 text-center text-lg h-14"
+                    className="neomorph-inset border-0 text-center text-base lg:text-lg h-12 lg:h-14"
                   />
                 </div>
                 <Button 
                   onClick={() => createProject(newProjectTitle)}
                   disabled={!newProjectTitle.trim()}
-                  className="w-full gap-3 h-14 text-lg neomorph-button border-0"
+                  className="w-full gap-2 lg:gap-3 h-12 lg:h-14 text-base lg:text-lg neomorph-button border-0"
                   size="lg"
                 >
-                  <BookOpen size={20} />
-                  Create Blank Ebook
+                  <BookOpen size={18} className="lg:hidden" />
+                  <BookOpen size={20} className="hidden lg:block" />
+                  <span className="hidden sm:inline">Create Blank Ebook</span>
+                  <span className="sm:hidden">Create Ebook</span>
                 </Button>
                 
                 <div className="relative">
@@ -215,11 +219,13 @@ function App() {
                 <Button 
                   variant="outline"
                   onClick={() => setShowTemplateGallery(true)}
-                  className="w-full gap-3 h-14 text-lg neomorph-button border-0"
+                  className="w-full gap-2 lg:gap-3 h-12 lg:h-14 text-base lg:text-lg neomorph-button border-0"
                   size="lg"
                 >
-                  <Star size={20} />
-                  Choose from Templates
+                  <Star size={18} className="lg:hidden" />
+                  <Star size={20} className="hidden lg:block" />
+                  <span className="hidden sm:inline">Choose from Templates</span>
+                  <span className="sm:hidden">Templates</span>
                 </Button>
               </div>
               
@@ -229,10 +235,10 @@ function App() {
                   animate={{ opacity: 1 }}
                   className="pt-6 border-t border-border/50"
                 >
-                  <p className="text-sm text-muted-foreground mb-4 text-center">
+                  <p className="text-xs lg:text-sm text-muted-foreground mb-3 lg:mb-4 text-center">
                     Or continue with existing project:
                   </p>
-                  <div className="space-y-3">
+                  <div className="space-y-2 lg:space-y-3">
                     {projects.map((project, index) => (
                       <motion.div
                         key={project.id}
@@ -242,18 +248,18 @@ function App() {
                       >
                         <Button
                           variant="outline"
-                          className="w-full justify-start neomorph-button border-0 h-12"
+                          className="w-full justify-start neomorph-button border-0 h-10 lg:h-12"
                           onClick={() => {
                             setCurrentProject(project);
                             setShowWelcome(false);
                           }}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2 lg:gap-3">
                             <div 
-                              className="w-3 h-3 rounded-full"
+                              className="w-2.5 lg:w-3 h-2.5 lg:h-3 rounded-full"
                               style={{ backgroundColor: project.brandConfig?.primaryColor || defaultBrandConfig.primaryColor }}
                             />
-                            <span className="font-medium">{project.title}</span>
+                            <span className="font-medium text-sm lg:text-base truncate">{project.title}</span>
                           </div>
                         </Button>
                       </motion.div>
@@ -276,7 +282,7 @@ function App() {
         onBrandCustomize={() => setShowBrandCustomizer(true)}
       />
       
-      <main className="h-[calc(100vh-80px)] p-6">
+      <main className="h-[calc(100vh-80px)] p-3 lg:p-6 overflow-hidden">
         <ChapterEditor
           chapters={currentProject.chapters}
           currentChapter={currentChapter}

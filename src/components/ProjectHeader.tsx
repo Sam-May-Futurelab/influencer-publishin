@@ -41,69 +41,74 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
     <motion.header 
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="bg-card neomorph-flat border-0 mx-6 mt-6 rounded-2xl px-8 py-6"
+      className="bg-card neomorph-flat border-0 mx-3 lg:mx-6 mt-3 lg:mt-6 rounded-2xl px-4 lg:px-8 py-4 lg:py-6"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-6">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 lg:gap-0">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-6 w-full lg:w-auto">
           <motion.div 
-            className="flex items-center gap-4"
+            className="flex items-center gap-3 lg:gap-4"
             whileHover={{ scale: 1.02 }}
           >
-            <div className="p-3 rounded-xl neomorph-flat">
-              <FileText size={28} className="text-primary" />
+            <div className="p-2 lg:p-3 rounded-xl neomorph-flat">
+              <FileText size={20} className="lg:hidden text-primary" />
+              <FileText size={28} className="hidden lg:block text-primary" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">{project.title}</h1>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg lg:text-2xl font-bold text-foreground truncate">{project.title}</h1>
               {project.description && (
-                <p className="text-muted-foreground mt-1">{project.description}</p>
+                <p className="text-muted-foreground mt-1 text-sm lg:text-base line-clamp-1 lg:line-clamp-none">{project.description}</p>
               )}
               {project.author && (
-                <p className="text-sm text-muted-foreground">by {project.author}</p>
+                <p className="text-xs lg:text-sm text-muted-foreground">by {project.author}</p>
               )}
             </div>
           </motion.div>
           
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2 lg:gap-3 w-full lg:w-auto">
             <Badge 
               variant="secondary" 
-              className="neomorph-flat border-0 px-4 py-2 text-sm font-medium"
+              className="neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium"
             >
               {project.chapters.length} {project.chapters.length === 1 ? 'Chapter' : 'Chapters'}
             </Badge>
             <Badge 
               variant="outline" 
-              className="neomorph-flat border-0 px-4 py-2 text-sm font-medium"
+              className="neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium"
             >
               {wordCount.toLocaleString()} words
             </Badge>
             <Badge 
               variant="outline" 
-              className="neomorph-flat border-0 px-4 py-2 text-sm font-medium"
+              className="neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium"
             >
               ~{estimatedPages} pages
             </Badge>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 lg:gap-3 w-full lg:w-auto">
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
               variant="outline" 
               size="sm" 
-              className="gap-2 neomorph-button border-0 h-12 px-6"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm"
               onClick={onBrandCustomize}
             >
-              <Palette size={18} />
-              Brand Style
+              <Palette size={14} className="lg:hidden" />
+              <Palette size={18} className="hidden lg:block" />
+              <span className="hidden sm:inline">Brand Style</span>
+              <span className="sm:hidden">Brand</span>
             </Button>
           </motion.div>
 
           <Dialog open={isEditing} onOpenChange={setIsEditing}>
             <DialogTrigger asChild>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="sm" className="gap-2 neomorph-button border-0 h-12 px-6">
-                  <Settings size={18} />
-                  Project Settings
+                <Button variant="outline" size="sm" className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm">
+                  <Settings size={14} className="lg:hidden" />
+                  <Settings size={18} className="hidden lg:block" />
+                  <span className="hidden sm:inline">Project Settings</span>
+                  <span className="sm:hidden">Settings</span>
                 </Button>
               </motion.div>
             </DialogTrigger>
@@ -162,10 +167,12 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
               onClick={() => setShowExportDialog(true)} 
-              className="gap-2 neomorph-button border-0 h-12 px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground text-xs lg:text-sm flex-1 lg:flex-none"
             >
-              <DownloadSimple size={18} />
-              Export Ebook
+              <DownloadSimple size={14} className="lg:hidden" />
+              <DownloadSimple size={18} className="hidden lg:block" />
+              <span className="hidden sm:inline">Export Ebook</span>
+              <span className="sm:hidden">Export</span>
             </Button>
           </motion.div>
         </div>
