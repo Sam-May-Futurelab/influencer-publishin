@@ -11,6 +11,7 @@ import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { Chapter, InputMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 
 interface ChapterEditorProps {
   chapters: Chapter[];
