@@ -85,7 +85,18 @@ export function ChapterEditor({
 
     if (sourceIndex === destinationIndex) return;
 
+    // Provide immediate feedback
+    const sourceChapter = chapters[sourceIndex];
+    toast.success(`"${sourceChapter.title}" moved to position ${destinationIndex + 1}`);
+    
     onChapterReorder(sourceIndex, destinationIndex);
+  };
+
+  const handleDragStart = () => {
+    // Provide haptic feedback on mobile
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
   };
 
   const handleTitleEdit = (chapter: Chapter) => {
@@ -141,7 +152,14 @@ export function ChapterEditor({
         className="w-full lg:w-80 flex flex-col"
       >
         <div className="flex items-center justify-between mb-4 lg:mb-6">
-          <h2 className="text-lg lg:text-xl font-bold text-foreground">Chapters</h2>
+          <div>
+            <h2 className="text-lg lg:text-xl font-bold text-foreground">Chapters</h2>
+            {chapters.length > 1 && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Drag chapters to reorder them
+              </p>
+            )}
+          </div>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
               onClick={onChapterCreate} 
@@ -156,11 +174,14 @@ export function ChapterEditor({
           </motion.div>
         </div>
         
-        <DragDropContext onDragEnd={handleDragEnd}>
+        <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
           <Droppable droppableId="chapters">
-            {(provided) => (
+            {(provided, snapshot) => (
               <div 
-                className="space-y-2 lg:space-y-3 overflow-auto max-h-60 lg:max-h-96"
+                className={cn(
+                  "space-y-2 lg:space-y-3 overflow-auto max-h-60 lg:max-h-96 transition-all duration-200 chapter-list",
+                  snapshot.isDraggingOver && "bg-primary/5 rounded-lg"
+                )}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
@@ -175,19 +196,38 @@ export function ChapterEditor({
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ delay: index * 0.05 }}
-                          whileHover={{ scale: snapshot.isDragging ? 1 : 1.02 }}
+                          whileHover={{ 
+                            scale: snapshot.isDragging ? 1 : 1.02,
+                            transition: { duration: 0.2 }
+                          }}
                           style={{
                             ...provided.draggableProps.style,
                             transform: snapshot.isDragging 
                               ? provided.draggableProps.style?.transform 
                               : 'none'
                           }}
+                          className={cn(
+                            "relative",
+                            snapshot.isDragging && "z-50"
+                          )}
                         >
+                          {/* Drop indicator */}
+                          {snapshot.isDragging && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 4 }}
+                              className="absolute -top-1 left-0 right-0 bg-primary rounded-full mx-4"
+                            />
+                          )}
+                          
                           <Card
                             className={cn(
-                              "cursor-pointer transition-all duration-200 neomorph-flat border-0 overflow-hidden",
+                              "cursor-pointer transition-all duration-200 border-0 overflow-hidden",
                               currentChapter?.id === chapter.id && "ring-2 ring-primary/30 neomorph-inset",
-                              snapshot.isDragging && "shadow-lg neomorph-pressed opacity-90 z-50"
+                              snapshot.isDragging 
+                                ? "shadow-2xl neomorph-pressed opacity-95 scale-105 rotate-2 bg-background/95 backdrop-blur-sm" 
+                                : "neomorph-flat hover:shadow-md",
+                              !snapshot.isDragging && "hover:neomorph-hover"
                             )}
                             onClick={() => !snapshot.isDragging && onChapterSelect(chapter)}
                           >
@@ -195,19 +235,40 @@ export function ChapterEditor({
                               <div className="flex items-start gap-2 lg:gap-3">
                                 <div 
                                   {...provided.dragHandleProps}
-                                  className="p-1 rounded-lg neomorph-flat mt-1 cursor-grab active:cursor-grabbing hover:bg-muted/50 transition-colors"
+                                  className={cn(
+                                    "p-2 rounded-lg mt-1 cursor-grab active:cursor-grabbing transition-all duration-200 touch-manipulation drag-handle",
+                                    snapshot.isDragging 
+                                      ? "neomorph-pressed bg-primary/10 scale-110" 
+                                      : "neomorph-flat hover:neomorph-inset hover:bg-muted/50 hover:scale-105"
+                                  )}
                                 >
-                                  <DotsSixVertical size={14} className="text-muted-foreground" />
+                                  <DotsSixVertical 
+                                    size={16} 
+                                    className={cn(
+                                      "transition-colors duration-200",
+                                      snapshot.isDragging 
+                                        ? "text-primary" 
+                                        : "text-muted-foreground hover:text-foreground"
+                                    )} 
+                                  />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-center gap-2 lg:gap-3 mb-1 lg:mb-2">
                                     <Badge 
                                       variant="secondary" 
-                                      className="text-xs font-semibold neomorph-flat border-0 px-1.5 lg:px-2 py-0.5 lg:py-1"
+                                      className={cn(
+                                        "text-xs font-semibold border-0 px-1.5 lg:px-2 py-0.5 lg:py-1 transition-all duration-200",
+                                        snapshot.isDragging 
+                                          ? "neomorph-inset bg-primary text-primary-foreground" 
+                                          : "neomorph-flat"
+                                      )}
                                     >
                                       {index + 1}
                                     </Badge>
-                                    <h3 className="font-semibold truncate text-foreground text-sm lg:text-base">
+                                    <h3 className={cn(
+                                      "font-semibold truncate text-sm lg:text-base transition-colors duration-200",
+                                      snapshot.isDragging ? "text-primary" : "text-foreground"
+                                    )}>
                                       {chapter.title}
                                     </h3>
                                   </div>
@@ -221,7 +282,7 @@ export function ChapterEditor({
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      className="h-6 w-6 lg:h-6 lg:w-6 p-0 neomorph-button hover:bg-destructive/10"
+                                      className="h-6 w-6 lg:h-6 lg:w-6 p-0 neomorph-button hover:bg-destructive/10 transition-all duration-200"
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         onChapterDelete(chapter.id);
