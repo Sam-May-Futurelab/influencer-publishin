@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useKV } from '@github/spark/hooks';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 import { ChapterEditor } from '@/components/ChapterEditor';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { BrandCustomizer } from '@/components/BrandCustomizer';
@@ -7,7 +7,7 @@ import { TemplateGallery } from '@/components/TemplateGallery';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Sparkles, Palette, Star } from '@phosphor-icons/react';
+import { BookOpen, Star, Palette, Star as StarIcon } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -21,7 +21,7 @@ const defaultBrandConfig: BrandConfig = {
 };
 
 function App() {
-  const [projects, setProjects] = useKV<EbookProject[]>('ebook-projects', []);
+  const [projects, setProjects] = useLocalStorage<EbookProject[]>('ebook-projects', []);
   const [currentProject, setCurrentProject] = useState<EbookProject | null>(null);
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
@@ -169,8 +169,8 @@ function App() {
                   <BookOpen size={32} className="hidden lg:block text-primary" />
                 </div>
                 <div className="p-1.5 lg:p-2 rounded-xl neomorph-flat">
-                  <Sparkles size={18} className="lg:hidden text-accent" />
-                  <Sparkles size={24} className="hidden lg:block text-accent" />
+                  <Star size={18} className="lg:hidden text-accent" />
+                  <Star size={24} className="hidden lg:block text-accent" />
                 </div>
               </motion.div>
               <CardTitle className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">

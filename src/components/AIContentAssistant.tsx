@@ -4,9 +4,25 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, ArrowRight, Copy, Plus, Wand2, Lightbulb } from '@phosphor-icons/react';
+import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+
+// Mock AI function - replace with actual AI integration
+const mockAIGeneration = async (prompt: string): Promise<string> => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  return `This is a sample AI-generated content based on your request. In a real implementation, this would be replaced with actual AI service integration.
+
+Here are some key points to consider:
+• Focus on creating valuable content for your audience
+• Use clear and engaging language
+• Include actionable insights and tips
+• Structure your content with proper headings and bullet points
+
+This mock response helps you continue developing your app while you set up your preferred AI service integration.`;
+};
 
 interface AIContentAssistantProps {
   chapterTitle: string;
@@ -45,7 +61,7 @@ export function AIContentAssistant({
       console.log('Starting AI content generation with keywords:', keywords);
       
       // Create enhanced prompt for content generation
-      const prompt = spark.llmPrompt`
+      const prompt = `
         You are an expert content creator helping to write an engaging chapter for an ebook.
         
         Chapter Title: ${chapterTitle}
@@ -69,19 +85,38 @@ export function AIContentAssistant({
         4. A compelling conclusion that summarizes and motivates action (type: "conclusion")
       `;
 
-      console.log('Calling spark.llm...');
-      const response = await spark.llm(prompt, "gpt-4o", true);
+      console.log('Calling mock AI generation...');
+      const response = await mockAIGeneration(prompt);
       console.log('AI Response received:', response);
       
-      let generatedSuggestions: ContentSuggestion[];
-      try {
-        generatedSuggestions = JSON.parse(response) as ContentSuggestion[];
-        console.log('Parsed suggestions:', generatedSuggestions);
-      } catch (parseError) {
-        console.error('JSON parsing failed:', parseError);
-        console.error('Response was:', response);
-        throw new Error('Invalid response format from AI service');
-      }
+      // For now, create mock suggestions since we're using a mock function
+      const generatedSuggestions: ContentSuggestion[] = [
+        {
+          id: '1',
+          title: "Introduction to " + chapterTitle,
+          content: response,
+          type: "introduction"
+        },
+        {
+          id: '2',
+          title: "Key Concepts",
+          content: "Key concepts and actionable insights related to " + keywords,
+          type: "tips"
+        },
+        {
+          id: '3',
+          title: "Practical Examples",
+          content: "Real-world examples and case studies to illustrate the concepts.",
+          type: "outline"
+        },
+        {
+          id: '4',
+          title: "Summary and Action Steps",
+          content: "Conclusion with clear next steps for implementation.",
+          type: "conclusion"
+        }
+      ];
+      console.log('Generated suggestions:', generatedSuggestions);
       
       // Validate the structure
       if (!Array.isArray(generatedSuggestions) || generatedSuggestions.length === 0) {
@@ -165,7 +200,7 @@ export function AIContentAssistant({
   const enhanceContent = async (content: string) => {
     setIsGenerating(true);
     try {
-      const prompt = spark.llmPrompt`
+      const prompt = `
         Please enhance and expand the following content to be more detailed, engaging, and actionable.
         Keep the same structure but add more depth, examples, and practical insights.
         Target length: 300-500 words.
@@ -179,7 +214,7 @@ export function AIContentAssistant({
         Make it more compelling and valuable for readers. Return only the enhanced content, no additional formatting or explanations.
       `;
 
-      const enhancedContent = await spark.llm(prompt, "gpt-4o");
+      const enhancedContent = await mockAIGeneration(prompt);
       
       if (!enhancedContent || enhancedContent.trim() === '') {
         throw new Error('Empty response from AI service');
@@ -233,7 +268,7 @@ export function AIContentAssistant({
       <CardHeader>
         <CardTitle className="flex items-center gap-3 text-lg">
           <div className="p-2 rounded-lg neomorph-flat">
-            <Sparkles size={20} className="text-primary" />
+            <Star size={20} className="text-primary" />
           </div>
           AI Content Assistant
         </CardTitle>
@@ -269,13 +304,13 @@ export function AIContentAssistant({
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     >
-                      <Wand2 size={16} />
+                      <MagicWand size={16} />
                     </motion.div>
                     Generating...
                   </>
                 ) : (
                   <>
-                    <Sparkles size={16} />
+                    <Star size={16} />
                     Generate
                   </>
                 )}
@@ -289,15 +324,15 @@ export function AIContentAssistant({
           </div>
           
           {/* Test button for debugging */}
-          {process.env.NODE_ENV === 'development' && (
+          {typeof window !== 'undefined' && window.location.hostname === 'localhost' && (
             <Button
               variant="outline"
               size="sm"
               onClick={async () => {
                 try {
-                  console.log('Testing spark.llm...');
-                  const testPrompt = spark.llmPrompt`Say hello world`;
-                  const response = await spark.llm(testPrompt);
+                  console.log('Testing mock AI...');
+                  const testPrompt = 'Say hello world';
+                  const response = await mockAIGeneration(testPrompt);
                   console.log('Test response:', response);
                   toast.success('AI connection working!');
                 } catch (error) {
@@ -429,7 +464,7 @@ export function AIContentAssistant({
                       onClick={() => enhanceContent(selectedSuggestion.content)}
                       disabled={isGenerating}
                     >
-                      <Wand2 size={14} />
+                      <MagicWand size={14} />
                       Enhance
                     </Button>
                   </motion.div>

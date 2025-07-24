@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FilePdf, FileDoc, BookOpen, Download, Sparkles } from '@phosphor-icons/react';
+import { FilePdf, FileDoc, BookOpen, Download, Star } from '@phosphor-icons/react';
 import { ExportFormat, exportToFormat } from '@/lib/export';
 import { EbookProject } from '@/lib/types';
 import { toast } from 'sonner';
@@ -130,7 +130,7 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
                             <h3 className="text-xl font-semibold">{option.title}</h3>
                             {option.recommended && (
                               <Badge variant="secondary" className="gap-1 neomorph-flat border-0">
-                                <Sparkles size={12} />
+                                <Star size={12} />
                                 Recommended
                               </Badge>
                             )}

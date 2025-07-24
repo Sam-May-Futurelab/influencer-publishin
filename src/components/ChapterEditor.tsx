@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Mic, MicOff, Edit3, Trash2, GripVertical, BookOpen, Sparkles } from '@phosphor-icons/react';
+import { Plus, Microphone, MicrophoneSlash, PencilSimple, Trash, DotsSixVertical, BookOpen, Star } from '@phosphor-icons/react';
 import { useVoiceRecording } from '@/hooks/use-voice-recording';
 import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { Chapter, InputMode } from '@/lib/types';
@@ -135,7 +135,7 @@ export function ChapterEditor({
                   <CardContent className="p-3 lg:p-5">
                     <div className="flex items-start gap-2 lg:gap-3">
                       <div className="p-1 rounded-lg neomorph-flat mt-1 hidden lg:block">
-                        <GripVertical size={14} className="text-muted-foreground" />
+                        <DotsSixVertical size={14} className="text-muted-foreground" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 lg:gap-3 mb-1 lg:mb-2">
@@ -165,8 +165,8 @@ export function ChapterEditor({
                               onChapterDelete(chapter.id);
                             }}
                           >
-                            <Trash2 size={10} className="lg:hidden text-muted-foreground hover:text-destructive" />
-                            <Trash2 size={12} className="hidden lg:block text-muted-foreground hover:text-destructive" />
+                            <Trash size={10} className="lg:hidden text-muted-foreground hover:text-destructive" />
+                            <Trash size={12} className="hidden lg:block text-muted-foreground hover:text-destructive" />
                           </Button>
                         </div>
                       </div>
@@ -223,8 +223,8 @@ export function ChapterEditor({
                       className="neomorph-button border-0 flex-shrink-0"
                       onClick={() => handleTitleEdit(currentChapter)}
                     >
-                      <Edit3 size={14} className="lg:hidden" />
-                      <Edit3 size={16} className="hidden lg:block" />
+                      <PencilSimple size={14} className="lg:hidden" />
+                      <PencilSimple size={16} className="hidden lg:block" />
                     </Button>
                   </motion.div>
                 </div>
@@ -239,8 +239,8 @@ export function ChapterEditor({
                     value="text" 
                     className="gap-1 lg:gap-2 neomorph-button border-0 data-[state=active]:neomorph-inset data-[state=active]:bg-background text-xs lg:text-sm px-2 lg:px-3"
                   >
-                    <Edit3 size={14} className="lg:hidden" />
-                    <Edit3 size={16} className="hidden lg:block" />
+                    <PencilSimple size={14} className="lg:hidden" />
+                    <PencilSimple size={16} className="hidden lg:block" />
                     <span className="hidden sm:inline">Text Editor</span>
                     <span className="sm:hidden">Text</span>
                   </TabsTrigger>
@@ -249,8 +249,8 @@ export function ChapterEditor({
                     className="gap-1 lg:gap-2 neomorph-button border-0 data-[state=active]:neomorph-inset data-[state=active]:bg-background text-xs lg:text-sm px-2 lg:px-3" 
                     disabled={!isSupported}
                   >
-                    <Mic size={14} className="lg:hidden" />
-                    <Mic size={16} className="hidden lg:block" />
+                    <Microphone size={14} className="lg:hidden" />
+                    <Microphone size={16} className="hidden lg:block" />
                     <span className="hidden sm:inline">Voice Input</span>
                     <span className="sm:hidden">Voice</span>
                     {!isSupported && (
@@ -264,8 +264,8 @@ export function ChapterEditor({
                     value="ai" 
                     className="gap-1 lg:gap-2 neomorph-button border-0 data-[state=active]:neomorph-inset data-[state=active]:bg-background text-xs lg:text-sm px-2 lg:px-3"
                   >
-                    <Sparkles size={14} className="lg:hidden" />
-                    <Sparkles size={16} className="hidden lg:block" />
+                    <Star size={14} className="lg:hidden" />
+                    <Star size={16} className="hidden lg:block" />
                     <span className="hidden sm:inline">AI Assistant</span>
                     <span className="sm:hidden">AI</span>
                   </TabsTrigger>
@@ -282,8 +282,8 @@ export function ChapterEditor({
                           onClick={() => setShowAIAssistant(!showAIAssistant)}
                           className="gap-1 lg:gap-2 neomorph-button border-0 text-xs lg:text-sm px-2 lg:px-3"
                         >
-                          <Sparkles size={12} className="lg:hidden" />
-                          <Sparkles size={14} className="hidden lg:block" />
+                          <Star size={12} className="lg:hidden" />
+                          <Star size={14} className="hidden lg:block" />
                           <span className="hidden sm:inline">
                             {showAIAssistant ? 'Hide' : 'Show'} AI Assistant
                           </span>
@@ -338,8 +338,8 @@ export function ChapterEditor({
                           className="gap-2 lg:gap-3 h-10 lg:h-12 px-4 lg:px-6 neomorph-button border-0 text-sm lg:text-base"
                           disabled={!isSupported}
                         >
-                          {isRecording ? <MicOff size={16} className="lg:hidden" /> : <Mic size={16} className="lg:hidden" />}
-                          {isRecording ? <MicOff size={18} className="hidden lg:block" /> : <Mic size={18} className="hidden lg:block" />}
+                          {isRecording ? <MicrophoneSlash size={16} className="lg:hidden" /> : <Microphone size={16} className="lg:hidden" />}
+                          {isRecording ? <MicrophoneSlash size={18} className="hidden lg:block" /> : <Microphone size={18} className="hidden lg:block" />}
                           <span className="hidden sm:inline">
                             {isRecording ? 'Stop Recording' : 'Start Recording'}
                           </span>

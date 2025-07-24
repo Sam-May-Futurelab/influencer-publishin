@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Clock, Users, Sparkles } from '@phosphor-icons/react';
+import { BookOpen, Clock, Users, Star } from '@phosphor-icons/react';
 import { ebookTemplates, createProjectFromTemplate, EbookTemplate } from '@/lib/templates';
 import { EbookProject } from '@/lib/types';
 
@@ -43,7 +43,7 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-xl neomorph-flat">
-                <Sparkles size={24} className="text-primary" />
+                <Star size={24} className="text-primary" />
               </div>
               <div>
                 <h2 className="text-2xl font-bold">Choose Your Template</h2>

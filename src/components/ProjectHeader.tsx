@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DownloadSimple, FileText, Settings, Palette } from '@phosphor-icons/react';
+import { DownloadSimple, FileText, Gear, Palette } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { ExportDialog } from '@/components/ExportDialog';
 import { motion } from 'framer-motion';
@@ -105,8 +105,8 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
             <DialogTrigger asChild>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button variant="outline" size="sm" className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm">
-                  <Settings size={14} className="lg:hidden" />
-                  <Settings size={18} className="hidden lg:block" />
+                  <Gear size={14} className="lg:hidden" />
+                  <Gear size={18} className="hidden lg:block" />
                   <span className="hidden sm:inline">Project Settings</span>
                   <span className="sm:hidden">Settings</span>
                 </Button>

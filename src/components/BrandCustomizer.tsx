@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Palette, Type, Image, Eye } from '@phosphor-icons/react';
+import { Palette, TextT, Image, Eye } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 
 interface BrandCustomizerProps {
@@ -186,7 +186,7 @@ export function BrandCustomizer({ brandConfig, onUpdate, isOpen, onClose }: Bran
             {/* Typography */}
             <div className="space-y-3">
               <Label className="text-sm font-medium flex items-center gap-2">
-                <Type size={16} />
+                <TextT size={16} />
                 Typography
               </Label>
               <Select 
