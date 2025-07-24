@@ -4,9 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DownloadSimple, FileText, Gear, Palette } from '@phosphor-icons/react';
+import { DownloadSimple, FileText, Gear, Palette, Eye } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { ExportDialog } from '@/components/ExportDialog';
+import { PreviewDialog } from '@/components/PreviewDialog';
 import { motion } from 'framer-motion';
 
 interface ProjectHeaderProps {
@@ -18,6 +19,7 @@ interface ProjectHeaderProps {
 export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: ProjectHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
+  const [showPreviewDialog, setShowPreviewDialog] = useState(false);
   const [tempTitle, setTempTitle] = useState(project.title);
   const [tempDescription, setTempDescription] = useState(project.description);
   const [tempAuthor, setTempAuthor] = useState(project.author);
@@ -166,6 +168,20 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
 
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
+              onClick={() => setShowPreviewDialog(true)} 
+              variant="outline"
+              size="sm"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
+            >
+              <Eye size={14} className="lg:hidden" />
+              <Eye size={18} className="hidden lg:block" />
+              <span className="hidden sm:inline">Preview</span>
+              <span className="sm:hidden">Preview</span>
+            </Button>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button 
               onClick={() => setShowExportDialog(true)} 
               className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground text-xs lg:text-sm flex-1 lg:flex-none"
             >
@@ -182,6 +198,12 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
         project={project}
         isOpen={showExportDialog}
         onClose={() => setShowExportDialog(false)}
+      />
+      
+      <PreviewDialog
+        project={project}
+        isOpen={showPreviewDialog}
+        onClose={() => setShowPreviewDialog(false)}
       />
     </motion.header>
   );

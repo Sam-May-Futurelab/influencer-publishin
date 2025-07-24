@@ -312,20 +312,26 @@ export function ProjectsPage({
                       
                       {/* Actions */}
                       <div className={viewMode === 'grid' 
-                        ? "flex items-center justify-between pt-2 border-t border-border/20" 
+                        ? "flex flex-col items-center gap-3 pt-3 border-t border-border/20" 
                         : "flex items-center gap-2"
                       }>
                         <Button
                           onClick={() => onSelectProject(project)}
                           variant="outline"
                           size="sm"
-                          className="neomorph-button border-0 gap-2 flex-1 lg:flex-none"
+                          className={viewMode === 'grid' 
+                            ? "neomorph-button border-0 gap-2 w-full justify-center" 
+                            : "neomorph-button border-0 gap-2 flex-1 lg:flex-none"
+                          }
                         >
                           <BookOpen size={14} />
                           <span className="text-xs">Open</span>
                         </Button>
                         
-                        <div className="flex items-center gap-1">
+                        <div className={viewMode === 'grid' 
+                          ? "flex items-center justify-center gap-1" 
+                          : "flex items-center gap-1"
+                        }>
                           {onDuplicateProject && (
                             <Button
                               onClick={() => onDuplicateProject(project)}
