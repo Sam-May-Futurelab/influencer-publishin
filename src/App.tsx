@@ -5,6 +5,7 @@ import { ProjectHeader } from '@/components/ProjectHeader';
 import { Header } from '@/components/Header';
 import { Dashboard } from '@/components/Dashboard';
 import { ProjectsPage } from '@/components/ProjectsPage';
+import { SettingsPage } from '@/components/SettingsPage';
 import { BrandCustomizer } from '@/components/BrandCustomizer';
 import { TemplateGallery } from '@/components/TemplateGallery';
 import { Button } from '@/components/ui/button';
@@ -27,7 +28,7 @@ function App() {
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
   const [currentSection, setCurrentSection] = useState('dashboard');
-  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'project'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'project'>('dashboard');
 
   useEffect(() => {
     if (projects.length > 0) {
@@ -71,6 +72,13 @@ function App() {
     setCurrentChapter(null);
     setViewMode('templates');
     setCurrentSection('templates');
+  };
+
+  const goToSettingsPage = () => {
+    setCurrentProject(null);
+    setCurrentChapter(null);
+    setViewMode('settings');
+    setCurrentSection('settings');
   };
 
   const createProject = (title: string) => {
@@ -193,7 +201,7 @@ function App() {
         goToTemplatesPage();
         break;
       case 'settings':
-        // Could show settings
+        goToSettingsPage();
         break;
     }
   };
@@ -241,6 +249,10 @@ function App() {
               }
             }}
           />
+        </main>
+      ) : viewMode === 'settings' ? (
+        <main className="p-3 lg:p-6 pb-6 lg:pb-8">
+          <SettingsPage onBack={returnToDashboard} />
         </main>
       ) : currentProject ? (
         <>

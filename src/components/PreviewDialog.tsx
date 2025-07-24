@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { BookOpen, X } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
@@ -41,34 +40,40 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-full h-[80vh] neomorph-raised border-0 p-0 gap-0">
-        <DialogHeader className="p-4 lg:p-6 border-b border-border/20">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl neomorph-inset">
-                <BookOpen size={20} className="text-primary" />
-              </div>
-              <div>
-                <DialogTitle className="text-lg lg:text-xl font-bold">
-                  {project.title} - Preview
-                </DialogTitle>
-                <p className="text-sm text-muted-foreground">
-                  {sortedChapters.length} chapters • {getWordCount().toLocaleString()} words
-                </p>
-              </div>
+      <DialogContent className="max-w-4xl w-full h-[80vh] neomorph-raised border-0 p-0 gap-0 [&>button]:hidden">
+        <DialogHeader className="p-4 lg:p-6 border-b border-border/20 relative">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl neomorph-inset">
+              <BookOpen size={20} className="text-primary" />
             </div>
+            <div>
+              <DialogTitle className="text-lg lg:text-xl font-bold">
+                {project.title} - Preview
+              </DialogTitle>
+              <p className="text-sm text-muted-foreground">
+                {sortedChapters.length} chapters • {getWordCount().toLocaleString()} words
+              </p>
+            </div>
+          </div>
+          
+          {/* Custom styled close button */}
+          <motion.div 
+            className="absolute top-4 right-4 lg:top-6 lg:right-6"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="neomorph-button border-0 h-8 w-8 p-0"
+              className="neomorph-button border-0 h-10 w-10 p-0 rounded-full bg-background/80 backdrop-blur-sm hover:bg-primary/10 transition-all duration-200 shadow-lg"
             >
-              <X size={16} />
+              <X size={18} className="text-muted-foreground hover:text-primary transition-colors" />
             </Button>
-          </div>
+          </motion.div>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 p-6">
+        <div className="flex-1 overflow-y-auto p-6 max-h-[calc(80vh-120px)]">
           <div className="max-w-3xl mx-auto space-y-8">
             {/* Title Page */}
             <motion.div
@@ -174,7 +179,7 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
               </div>
             )}
           </div>
-        </ScrollArea>
+        </div>
       </DialogContent>
     </Dialog>
   );
