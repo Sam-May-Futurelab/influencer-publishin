@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,10 +7,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star } from '@phosphor-icons/react';
 import { AIContentAssistant } from '@/components/AIContentAssistant';
+import { SaveIndicator } from '@/components/SaveIndicator';
 import { Chapter, InputMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { useAutoSave } from '@/hooks/use-auto-save';
 
 interface ChapterEditorProps {
   chapters: Chapter[];
@@ -35,6 +37,28 @@ export function ChapterEditor({
   const [editingTitle, setEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState('');
   const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [pendingContent, setPendingContent] = useState('');
+
+  // Auto-save functionality
+  const {
+    saving,
+    lastSaved,
+    hasUnsavedChanges,
+    forceSave,
+    markAsChanged,
+    markAsSaved
+  } = useAutoSave({
+    onSave: async () => {
+      if (currentChapter && pendingContent !== currentChapter.content) {
+        onChapterUpdate(currentChapter.id, { 
+          content: pendingContent,
+          updatedAt: new Date()
+        });
+      }
+    },
+    delay: 30000, // 30 seconds
+    enabled: !!currentChapter
+  });
 
   const handleTitleEdit = (chapter: Chapter) => {
     setEditingTitle(true);
@@ -44,28 +68,41 @@ export function ChapterEditor({
   const handleTitleSave = () => {
     if (currentChapter && tempTitle.trim()) {
       onChapterUpdate(currentChapter.id, { title: tempTitle.trim() });
+      toast.success('Chapter title updated!');
     }
     setEditingTitle(false);
   };
 
   const handleContentChange = (content: string) => {
     if (currentChapter) {
-      onChapterUpdate(currentChapter.id, { content });
+      setPendingContent(content);
+      markAsChanged();
     }
   };
 
   const handleAIContentGenerated = (generatedContent: string) => {
     if (currentChapter && generatedContent && generatedContent.trim()) {
       const trimmedContent = generatedContent.trim();
-      const newContent = currentChapter.content.trim()
-        ? `${currentChapter.content.trim()}\n\n${trimmedContent}`
+      const currentContent = pendingContent || currentChapter.content;
+      const newContent = currentContent.trim()
+        ? `${currentContent.trim()}\n\n${trimmedContent}`
         : trimmedContent;
-      onChapterUpdate(currentChapter.id, { content: newContent });
+      
+      setPendingContent(newContent);
+      markAsChanged();
       toast.success('AI content added to chapter!');
     } else {
       toast.error('No content to add');
     }
   };
+
+  // Initialize pending content when current chapter changes
+  useEffect(() => {
+    if (currentChapter) {
+      setPendingContent(currentChapter.content);
+      markAsSaved(); // Reset auto-save state for new chapter
+    }
+  }, [currentChapter?.id, currentChapter?.content, markAsSaved]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 min-h-0">
@@ -193,17 +230,37 @@ export function ChapterEditor({
               ) : (
                 <div className="flex-1 flex items-center gap-2 lg:gap-3">
                   <h1 className="text-2xl lg:text-3xl font-bold text-foreground truncate">{currentChapter.title}</h1>
-                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="neomorph-button border-0 flex-shrink-0"
-                      onClick={() => handleTitleEdit(currentChapter)}
-                    >
-                      <PencilSimple size={14} className="lg:hidden" />
-                      <PencilSimple size={16} className="hidden lg:block" />
-                    </Button>
-                  </motion.div>
+                  <div className="flex items-center gap-2">
+                    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="neomorph-button border-0 flex-shrink-0"
+                        onClick={() => handleTitleEdit(currentChapter)}
+                      >
+                        <PencilSimple size={14} className="lg:hidden" />
+                        <PencilSimple size={16} className="hidden lg:block" />
+                      </Button>
+                    </motion.div>
+                    {hasUnsavedChanges && (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        whileHover={{ scale: 1.05 }} 
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={forceSave}
+                          disabled={saving}
+                          className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-2 lg:px-3"
+                        >
+                          {saving ? 'Saving...' : 'Save Now'}
+                        </Button>
+                      </motion.div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -274,16 +331,25 @@ export function ChapterEditor({
 
                     <Textarea
                       placeholder="Start writing your chapter content here... or use the AI Assistant above to generate content from keywords"
-                      value={currentChapter.content}
+                      value={pendingContent}
                       onChange={(e) => handleContentChange(e.target.value)}
                       className="min-h-[250px] lg:min-h-[400px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
                     />
                     
-                    {/* Word count indicator */}
-                    <div className="flex justify-between items-center pt-2 text-xs text-muted-foreground">
-                      <span>{currentChapter.content.split(' ').filter(w => w.length > 0).length} words</span>
-                      <span>
-                        {currentChapter.content.length > 0 ? 'Content ready for export' : 'Start typing or use AI to generate content'}
+                    {/* Word count and save indicator */}
+                    <div className="flex justify-between items-center pt-2 text-xs">
+                      <div className="flex items-center gap-4">
+                        <span className="text-muted-foreground">
+                          {pendingContent.split(' ').filter(w => w.length > 0).length} words
+                        </span>
+                        <SaveIndicator 
+                          saving={saving}
+                          lastSaved={lastSaved}
+                          hasUnsavedChanges={hasUnsavedChanges}
+                        />
+                      </div>
+                      <span className="text-muted-foreground">
+                        {pendingContent.length > 0 ? 'Content ready for export' : 'Start typing or use AI to generate content'}
                       </span>
                     </div>
                   </div>
@@ -301,22 +367,29 @@ export function ChapterEditor({
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-semibold text-foreground">Chapter Content</h3>
                         <Badge variant="secondary" className="text-xs neomorph-flat border-0">
-                          {currentChapter.content.split(' ').filter(w => w.length > 0).length} words
+                          {pendingContent.split(' ').filter(w => w.length > 0).length} words
                         </Badge>
                       </div>
                       <Textarea
                         placeholder="AI-generated content will appear here, or you can edit directly..."
-                        value={currentChapter.content}
+                        value={pendingContent}
                         onChange={(e) => handleContentChange(e.target.value)}
                         className="min-h-[200px] lg:min-h-[300px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
                       />
                       
-                      {/* Content status */}
-                      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center pt-2 text-xs text-muted-foreground gap-1 lg:gap-0">
-                        <span>
-                          {currentChapter.content.length > 0 ? '✅ Content ready' : '⏳ Waiting for content'}
-                        </span>
-                        <span className="text-xs">Last updated: {new Date(currentChapter.updatedAt).toLocaleTimeString()}</span>
+                      {/* Content status and save indicator */}
+                      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center pt-2 text-xs gap-2 lg:gap-0">
+                        <div className="flex items-center gap-4">
+                          <span className="text-muted-foreground">
+                            {pendingContent.length > 0 ? '✅ Content ready' : '⏳ Waiting for content'}
+                          </span>
+                          <SaveIndicator 
+                            saving={saving}
+                            lastSaved={lastSaved}
+                            hasUnsavedChanges={hasUnsavedChanges}
+                          />
+                        </div>
+                        <span className="text-xs text-muted-foreground">Last updated: {new Date(currentChapter.updatedAt).toLocaleTimeString()}</span>
                       </div>
                     </div>
                   </div>
