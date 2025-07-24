@@ -192,6 +192,24 @@ function App() {
     toast.success('Chapter deleted');
   };
 
+  const reorderChapters = (startIndex: number, endIndex: number) => {
+    if (!currentProject) return;
+
+    const result = Array.from(currentProject.chapters);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    // Update order property for all chapters
+    const reorderedChapters = result.map((chapter, index) => ({
+      ...chapter,
+      order: index,
+      updatedAt: new Date(),
+    }));
+
+    updateProject({ chapters: reorderedChapters });
+    toast.success('Chapters reordered!');
+  };
+
   const handleNavigation = (section: string) => {
     setCurrentSection(section);
     switch (section) {
@@ -302,6 +320,7 @@ function App() {
               onChapterCreate={createChapter}
               onChapterUpdate={updateChapter}
               onChapterDelete={deleteChapter}
+              onChapterReorder={reorderChapters}
               onRecordWritingSession={recordWritingSession}
               projectId={currentProject.id}
               ebookCategory={currentProject.category || 'general'}

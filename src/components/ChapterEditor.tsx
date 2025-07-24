@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAutoSave } from '@/hooks/use-auto-save';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 interface ChapterEditorProps {
   chapters: Chapter[];
@@ -21,6 +22,7 @@ interface ChapterEditorProps {
   onChapterCreate: () => void;
   onChapterUpdate: (id: string, updates: Partial<Chapter>) => void;
   onChapterDelete: (id: string) => void;
+  onChapterReorder: (startIndex: number, endIndex: number) => void;
   onRecordWritingSession?: (projectId: string, chapterId: string, wordsAdded: number) => void;
   projectId?: string;
   ebookCategory?: string;
@@ -33,6 +35,7 @@ export function ChapterEditor({
   onChapterCreate,
   onChapterUpdate,
   onChapterDelete,
+  onChapterReorder,
   onRecordWritingSession,
   projectId,
   ebookCategory = 'general',
@@ -73,6 +76,17 @@ export function ChapterEditor({
     delay: 30000, // 30 seconds
     enabled: !!currentChapter
   });
+
+  const handleDragEnd = (result: any) => {
+    if (!result.destination) return;
+
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+
+    if (sourceIndex === destinationIndex) return;
+
+    onChapterReorder(sourceIndex, destinationIndex);
+  };
 
   const handleTitleEdit = (chapter: Chapter) => {
     setEditingTitle(true);
@@ -142,69 +156,95 @@ export function ChapterEditor({
           </motion.div>
         </div>
         
-        <div className="space-y-2 lg:space-y-3 overflow-auto max-h-60 lg:max-h-96">
-          <AnimatePresence>
-            {chapters.map((chapter, index) => (
-              <motion.div
-                key={chapter.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ scale: 1.02 }}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="chapters">
+            {(provided) => (
+              <div 
+                className="space-y-2 lg:space-y-3 overflow-auto max-h-60 lg:max-h-96"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
               >
-                <Card
-                  className={cn(
-                    "cursor-pointer transition-all duration-200 neomorph-flat border-0 overflow-hidden",
-                    currentChapter?.id === chapter.id && "ring-2 ring-primary/30 neomorph-inset"
-                  )}
-                  onClick={() => onChapterSelect(chapter)}
-                >
-                  <CardContent className="p-3 lg:p-5">
-                    <div className="flex items-start gap-2 lg:gap-3">
-                      <div className="p-1 rounded-lg neomorph-flat mt-1 hidden lg:block">
-                        <DotsSixVertical size={14} className="text-muted-foreground" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 lg:gap-3 mb-1 lg:mb-2">
-                          <Badge 
-                            variant="secondary" 
-                            className="text-xs font-semibold neomorph-flat border-0 px-1.5 lg:px-2 py-0.5 lg:py-1"
+                <AnimatePresence>
+                  {chapters.map((chapter, index) => (
+                    <Draggable key={chapter.id} draggableId={chapter.id} index={index}>
+                      {(provided, snapshot) => (
+                        <motion.div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ delay: index * 0.05 }}
+                          whileHover={{ scale: snapshot.isDragging ? 1 : 1.02 }}
+                          style={{
+                            ...provided.draggableProps.style,
+                            transform: snapshot.isDragging 
+                              ? provided.draggableProps.style?.transform 
+                              : 'none'
+                          }}
+                        >
+                          <Card
+                            className={cn(
+                              "cursor-pointer transition-all duration-200 neomorph-flat border-0 overflow-hidden",
+                              currentChapter?.id === chapter.id && "ring-2 ring-primary/30 neomorph-inset",
+                              snapshot.isDragging && "shadow-lg neomorph-pressed opacity-90 z-50"
+                            )}
+                            onClick={() => !snapshot.isDragging && onChapterSelect(chapter)}
                           >
-                            {index + 1}
-                          </Badge>
-                          <h3 className="font-semibold truncate text-foreground text-sm lg:text-base">
-                            {chapter.title}
-                          </h3>
-                        </div>
-                        <p className="text-xs lg:text-sm text-muted-foreground line-clamp-2">
-                          {chapter.content || 'No content yet...'}
-                        </p>
-                        <div className="flex justify-between items-center mt-2 lg:mt-3">
-                          <span className="text-xs text-muted-foreground">
-                            {chapter.content.split(' ').filter(w => w.length > 0).length} words
-                          </span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 w-6 lg:h-6 lg:w-6 p-0 neomorph-button hover:bg-destructive/10"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onChapterDelete(chapter.id);
-                            }}
-                          >
-                            <Trash size={10} className="lg:hidden text-muted-foreground hover:text-destructive" />
-                            <Trash size={12} className="hidden lg:block text-muted-foreground hover:text-destructive" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                            <CardContent className="p-3 lg:p-5">
+                              <div className="flex items-start gap-2 lg:gap-3">
+                                <div 
+                                  {...provided.dragHandleProps}
+                                  className="p-1 rounded-lg neomorph-flat mt-1 cursor-grab active:cursor-grabbing hover:bg-muted/50 transition-colors"
+                                >
+                                  <DotsSixVertical size={14} className="text-muted-foreground" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 lg:gap-3 mb-1 lg:mb-2">
+                                    <Badge 
+                                      variant="secondary" 
+                                      className="text-xs font-semibold neomorph-flat border-0 px-1.5 lg:px-2 py-0.5 lg:py-1"
+                                    >
+                                      {index + 1}
+                                    </Badge>
+                                    <h3 className="font-semibold truncate text-foreground text-sm lg:text-base">
+                                      {chapter.title}
+                                    </h3>
+                                  </div>
+                                  <p className="text-xs lg:text-sm text-muted-foreground line-clamp-2">
+                                    {chapter.content || 'No content yet...'}
+                                  </p>
+                                  <div className="flex justify-between items-center mt-2 lg:mt-3">
+                                    <span className="text-xs text-muted-foreground">
+                                      {chapter.content.split(' ').filter(w => w.length > 0).length} words
+                                    </span>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-6 w-6 lg:h-6 lg:w-6 p-0 neomorph-button hover:bg-destructive/10"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        onChapterDelete(chapter.id);
+                                      }}
+                                    >
+                                      <Trash size={10} className="lg:hidden text-muted-foreground hover:text-destructive" />
+                                      <Trash size={12} className="hidden lg:block text-muted-foreground hover:text-destructive" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      )}
+                    </Draggable>
+                  ))}
+                </AnimatePresence>
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </motion.div>
 
       {/* Main Editor */}
