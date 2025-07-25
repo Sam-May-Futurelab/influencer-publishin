@@ -2,6 +2,14 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { 
   House, 
   BookOpen, 
   Palette, 
@@ -11,7 +19,8 @@ import {
   List,
   X,
   SignOut,
-  Crown
+  Crown,
+  CaretDown
 } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -166,31 +175,65 @@ export function Header({
                 whileTap={{ scale: 0.95 }}
                 className="hidden sm:flex"
               >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="gap-2 h-10 px-3 neomorph-button border-0 text-foreground hover:text-foreground"
-                >
-                  {user.photoURL ? (
-                    <div className="w-6 h-6 rounded-full overflow-hidden neomorph-flat">
-                      <img 
-                        src={user.photoURL} 
-                        alt={user.displayName || user.email || 'User'} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-6 h-6 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
-                      <User size={14} className="text-primary" />
-                    </div>
-                  )}
-                  <span className="text-sm font-medium">
-                    {user.displayName || user.email?.split('@')[0] || 'User'}
-                  </span>
-                  {userProfile?.isPremium && (
-                    <Crown size={14} className="text-yellow-500" />
-                  )}
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="gap-2 h-10 px-3 neomorph-button border-0 text-foreground hover:text-foreground"
+                    >
+                      {user.photoURL ? (
+                        <div className="w-6 h-6 rounded-full overflow-hidden neomorph-flat">
+                          <img 
+                            src={user.photoURL} 
+                            alt={user.displayName || user.email || 'User'} 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-6 h-6 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
+                          <User size={14} className="text-primary" />
+                        </div>
+                      )}
+                      <span className="text-sm font-medium">
+                        {user.displayName || user.email?.split('@')[0] || 'User'}
+                      </span>
+                      {userProfile?.isPremium && (
+                        <Crown size={14} className="text-yellow-500" />
+                      )}
+                      <CaretDown size={12} className="text-muted-foreground" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {user?.displayName || 'User'}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user?.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => onNavigate?.('profile')}>
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onNavigate?.('settings')}>
+                      <Gear className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={signOut}
+                      className="text-red-600 focus:text-red-600"
+                    >
+                      <SignOut className="mr-2 h-4 w-4" />
+                      <span>Sign out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </motion.div>
             ) : (
               <AuthModal>

@@ -7,6 +7,7 @@ import { Header } from '@/components/Header';
 import { Dashboard } from '@/components/Dashboard';
 import { ProjectsPage } from '@/components/ProjectsPage';
 import { SettingsPage } from '@/components/SettingsPage';
+import { ProfilePage } from '@/components/ProfilePage';
 import { BrandCustomizer } from '@/components/BrandCustomizer';
 import { TemplateGallery } from '@/components/TemplateGallery';
 import { Button } from '@/components/ui/button';
@@ -29,7 +30,7 @@ function App() {
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
   const [currentSection, setCurrentSection] = useState('dashboard');
-  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'project'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'profile' | 'project'>('dashboard');
 
   // Writing analytics
   const { recordWritingSession } = useWritingAnalytics(projects);
@@ -83,6 +84,13 @@ function App() {
     setCurrentChapter(null);
     setViewMode('settings');
     setCurrentSection('settings');
+  };
+
+  const goToProfilePage = () => {
+    setCurrentProject(null);
+    setCurrentChapter(null);
+    setViewMode('profile');
+    setCurrentSection('profile');
   };
 
   const createProject = (title: string) => {
@@ -225,13 +233,16 @@ function App() {
       case 'settings':
         goToSettingsPage();
         break;
+      case 'profile':
+        goToProfilePage();
+        break;
     }
   };
 
   return (
     <div className="min-h-screen bg-background font-['Inter']">
       <Header
-        logoText="Influencer Publishing"
+        logoText="InkFluenceAI"
         onNavigate={handleNavigation}
         currentSection={currentSection}
         notifications={0}
@@ -274,6 +285,10 @@ function App() {
       ) : viewMode === 'settings' ? (
         <main className="p-3 lg:p-6 pb-6 lg:pb-8">
           <SettingsPage onBack={returnToDashboard} />
+        </main>
+      ) : viewMode === 'profile' ? (
+        <main className="p-0">
+          <ProfilePage onNavigate={handleNavigation} />
         </main>
       ) : currentProject ? (
         <>

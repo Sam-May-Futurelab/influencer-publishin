@@ -1,6 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from 'firebase/auth';
-import { onAuthStateChange, getUserProfile, UserProfile } from '@/lib/auth';
+import { 
+  onAuthStateChange, 
+  getUserProfile, 
+  UserProfile, 
+  updateUserProfile as updateUserProfileAPI, 
+  updateUserAvatar as updateUserAvatarAPI 
+} from '@/lib/auth';
 
 interface AuthContextType {
   user: User | null;
@@ -8,6 +14,8 @@ interface AuthContextType {
   loading: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
+  updateUserAvatar: (photoURL: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,12 +69,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUserProfile(null);
   };
 
+  const updateUserProfile = async (updates: Partial<UserProfile>) => {
+    if (!user) return false;
+    
+    const success = await updateUserProfileAPI(user.uid, updates);
+    if (success) {
+      await refreshProfile();
+    }
+    return success;
+  };
+
+  const updateUserAvatar = async (photoURL: string) => {
+    if (!user) return false;
+    
+    const success = await updateUserAvatarAPI(user.uid, photoURL);
+    if (success) {
+      await refreshProfile();
+    }
+    return success;
+  };
+
   const value: AuthContextType = {
     user,
     userProfile,
     loading,
     signOut,
-    refreshProfile
+    refreshProfile,
+    updateUserProfile,
+    updateUserAvatar
   };
 
   return (

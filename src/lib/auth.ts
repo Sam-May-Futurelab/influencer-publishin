@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
+  updateProfile,
   User
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
@@ -17,6 +18,7 @@ export interface UserProfile {
   photoURL?: string;
   isPremium: boolean;
   subscriptionStatus: 'free' | 'premium' | 'trial';
+  subscriptionType?: 'monthly' | 'yearly';
   pagesUsed: number;
   maxPages: number;
   createdAt: any;
@@ -167,4 +169,40 @@ export const upgradeToPremium = async (uid: string) => {
 // Auth state observer
 export const onAuthStateChange = (callback: (user: User | null) => void) => {
   return onAuthStateChanged(auth, callback);
+};
+
+// Update user profile
+export const updateUserProfile = async (uid: string, updates: Partial<UserProfile>) => {
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      ...updates,
+      lastLoginAt: serverTimestamp()
+    }, { merge: true });
+    
+    return true;
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    return false;
+  }
+};
+
+// Update user avatar
+export const updateUserAvatar = async (uid: string, photoURL: string) => {
+  try {
+    // Update in Firestore
+    await setDoc(doc(db, 'users', uid), {
+      photoURL,
+      lastLoginAt: serverTimestamp()
+    }, { merge: true });
+    
+    // Update in Firebase Auth
+    if (auth.currentUser) {
+      await updateProfile(auth.currentUser, { photoURL });
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error updating user avatar:', error);
+    return false;
+  }
 };
