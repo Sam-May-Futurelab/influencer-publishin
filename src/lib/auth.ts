@@ -1,0 +1,170 @@
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  User
+} from 'firebase/auth';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from './firebase';
+
+export interface UserProfile {
+  uid: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+  isPremium: boolean;
+  subscriptionStatus: 'free' | 'premium' | 'trial';
+  pagesUsed: number;
+  maxPages: number;
+  createdAt: any;
+  lastLoginAt: any;
+}
+
+// Authentication functions
+export const signUp = async (email: string, password: string) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    
+    // Create user profile in Firestore
+    await createUserProfile(user);
+    
+    return user;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const signIn = async (email: string, password: string) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    
+    // Update last login
+    await updateLastLogin(userCredential.user.uid);
+    
+    return userCredential.user;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const signInWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    const userCredential = await signInWithPopup(auth, provider);
+    const user = userCredential.user;
+    
+    // Check if user profile exists, create if not
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (!userDoc.exists()) {
+      await createUserProfile(user);
+    } else {
+      await updateLastLogin(user.uid);
+    }
+    
+    return user;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const logOut = async () => {
+  try {
+    await signOut(auth);
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+// User profile management
+export const createUserProfile = async (user: User) => {
+  const userProfile: UserProfile = {
+    uid: user.uid,
+    email: user.email || '',
+    displayName: user.displayName || '',
+    photoURL: user.photoURL || '',
+    isPremium: false,
+    subscriptionStatus: 'free',
+    pagesUsed: 0,
+    maxPages: 4, // Free tier limit
+    createdAt: serverTimestamp(),
+    lastLoginAt: serverTimestamp()
+  };
+  
+  await setDoc(doc(db, 'users', user.uid), userProfile);
+  return userProfile;
+};
+
+export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', uid));
+    if (userDoc.exists()) {
+      return userDoc.data() as UserProfile;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting user profile:', error);
+    return null;
+  }
+};
+
+export const updateLastLogin = async (uid: string) => {
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      lastLoginAt: serverTimestamp()
+    }, { merge: true });
+  } catch (error) {
+    console.error('Error updating last login:', error);
+  }
+};
+
+// Usage tracking
+export const incrementPageUsage = async (uid: string) => {
+  try {
+    const userProfile = await getUserProfile(uid);
+    if (!userProfile) return false;
+    
+    if (userProfile.isPremium) {
+      // Premium users have unlimited pages
+      return true;
+    }
+    
+    if (userProfile.pagesUsed >= userProfile.maxPages) {
+      // Free tier limit reached
+      return false;
+    }
+    
+    // Increment page usage
+    await setDoc(doc(db, 'users', uid), {
+      pagesUsed: userProfile.pagesUsed + 1
+    }, { merge: true });
+    
+    return true;
+  } catch (error) {
+    console.error('Error incrementing page usage:', error);
+    return false;
+  }
+};
+
+export const upgradeToPremium = async (uid: string) => {
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      isPremium: true,
+      subscriptionStatus: 'premium',
+      maxPages: -1 // Unlimited
+    }, { merge: true });
+    
+    return true;
+  } catch (error) {
+    console.error('Error upgrading to premium:', error);
+    return false;
+  }
+};
+
+// Auth state observer
+export const onAuthStateChange = (callback: (user: User | null) => void) => {
+  return onAuthStateChanged(auth, callback);
+};

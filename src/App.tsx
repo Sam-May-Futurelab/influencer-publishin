@@ -234,7 +234,6 @@ function App() {
         logoText="Influencer Publishing"
         onNavigate={handleNavigation}
         currentSection={currentSection}
-        userName={currentProject?.author || "Creator"}
         notifications={0}
       />
       

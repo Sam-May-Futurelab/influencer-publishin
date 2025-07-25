@@ -9,18 +9,21 @@ import {
   User, 
   Bell,
   List,
-  X
+  X,
+  SignOut,
+  Crown
 } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/use-auth';
+import { AuthModal } from '@/components/AuthModal';
+import { UsageTracker } from '@/components/UsageTracker';
 
 interface HeaderProps {
   logoUrl?: string;
   logoText?: string;
   onNavigate?: (section: string) => void;
   currentSection?: string;
-  userAvatar?: string;
-  userName?: string;
   notifications?: number;
 }
 
@@ -29,11 +32,10 @@ export function Header({
   logoText = "Publishing Platform",
   onNavigate,
   currentSection = "dashboard",
-  userAvatar,
-  userName = "User",
   notifications = 0
 }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, userProfile, signOut } = useAuth();
 
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: House },
@@ -45,6 +47,15 @@ export function Header({
   const handleNavigate = (section: string) => {
     onNavigate?.(section);
     setIsMobileMenuOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setIsMobileMenuOpen(false);
+    } catch (error) {
+      console.error('Sign out failed:', error);
+    }
   };
 
   return (
@@ -149,32 +160,52 @@ export function Header({
             </motion.div>
 
             {/* User Profile */}
-            <motion.div 
-              whileHover={{ scale: 1.05 }} 
-              whileTap={{ scale: 0.95 }}
-              className="hidden sm:flex"
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 h-10 px-3 neomorph-button border-0 text-foreground hover:text-foreground"
+            {user ? (
+              <motion.div 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }}
+                className="hidden sm:flex"
               >
-                {userAvatar ? (
-                  <div className="w-6 h-6 rounded-full overflow-hidden neomorph-flat">
-                    <img 
-                      src={userAvatar} 
-                      alt={userName} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-6 h-6 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
-                    <User size={14} className="text-primary" />
-                  </div>
-                )}
-                <span className="text-sm font-medium">{userName}</span>
-              </Button>
-            </motion.div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 h-10 px-3 neomorph-button border-0 text-foreground hover:text-foreground"
+                >
+                  {user.photoURL ? (
+                    <div className="w-6 h-6 rounded-full overflow-hidden neomorph-flat">
+                      <img 
+                        src={user.photoURL} 
+                        alt={user.displayName || user.email || 'User'} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-6 h-6 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
+                      <User size={14} className="text-primary" />
+                    </div>
+                  )}
+                  <span className="text-sm font-medium">
+                    {user.displayName || user.email?.split('@')[0] || 'User'}
+                  </span>
+                  {userProfile?.isPremium && (
+                    <Crown size={14} className="text-yellow-500" />
+                  )}
+                </Button>
+              </motion.div>
+            ) : (
+              <AuthModal>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="gap-2 h-10 px-4 neomorph-button border-0"
+                  >
+                    <User size={16} />
+                    Sign In
+                  </Button>
+                </motion.div>
+              </AuthModal>
+            )}
 
             {/* Mobile Menu Toggle */}
             <motion.div 
@@ -237,25 +268,69 @@ export function Header({
                 
                 {/* Mobile User Section */}
                 <div className="mt-4 pt-4 border-t border-border/40">
-                  <div className="flex items-center gap-3 px-4 py-2">
-                    {userAvatar ? (
-                      <div className="w-8 h-8 rounded-full overflow-hidden neomorph-flat">
-                        <img 
-                          src={userAvatar} 
-                          alt={userName} 
-                          className="w-full h-full object-cover"
-                        />
+                  {user ? (
+                    <>
+                      <div className="flex items-center gap-3 px-4 py-2">
+                        {user.photoURL ? (
+                          <div className="w-8 h-8 rounded-full overflow-hidden neomorph-flat">
+                            <img 
+                              src={user.photoURL} 
+                              alt={user.displayName || user.email || 'User'} 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-8 h-8 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
+                            <User size={16} className="text-primary" />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-medium text-foreground">
+                              {user.displayName || user.email?.split('@')[0] || 'User'}
+                            </p>
+                            {userProfile?.isPremium && (
+                              <Crown size={12} className="text-yellow-500" />
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {userProfile?.subscriptionStatus === 'premium' ? 'Premium User' : 'Free Trial'}
+                          </p>
+                        </div>
                       </div>
-                    ) : (
-                      <div className="w-8 h-8 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
-                        <User size={16} className="text-primary" />
+                      
+                      {/* Usage Tracker in Mobile */}
+                      <div className="px-4 py-2">
+                        <UsageTracker className="mb-3" />
                       </div>
-                    )}
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{userName}</p>
-                      <p className="text-xs text-muted-foreground">Signed in</p>
+                      
+                      {/* Sign Out Button */}
+                      <div className="px-4 pb-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleSignOut}
+                          className="w-full gap-2 neomorph-button border-0"
+                        >
+                          <SignOut size={16} />
+                          Sign Out
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="px-4 py-2">
+                      <AuthModal>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="w-full gap-2 neomorph-button border-0"
+                        >
+                          <User size={16} />
+                          Sign In
+                        </Button>
+                      </AuthModal>
                     </div>
-                  </div>
+                  )}
                 </div>
               </nav>
             </motion.div>
