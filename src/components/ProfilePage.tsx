@@ -32,6 +32,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
 import { useLocalStorage } from '@/hooks/use-local-storage';
+import { usePayments } from '@/hooks/use-payments';
 
 interface ProfilePageProps {
   onNavigate?: (section: string) => void;
@@ -39,6 +40,7 @@ interface ProfilePageProps {
 
 export function ProfilePage({ onNavigate }: ProfilePageProps) {
   const { user, userProfile, updateUserProfile, signOut, refreshProfile } = useAuth();
+  const { purchaseSubscription, purchasing, canPurchase, loading: paymentsLoading } = usePayments();
   const [projects] = useLocalStorage('ebook-projects', []);
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(user?.displayName || '');
@@ -97,6 +99,25 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
       onNavigate?.('dashboard');
     } catch (error) {
       toast.error('Failed to delete account');
+    }
+  };
+
+  const handleUpgrade = async (planId: 'monthly' | 'yearly') => {
+    if (!canPurchase) {
+      if (paymentsLoading) {
+        toast.info('Payment system is loading. Please wait...');
+      } else if (userProfile?.isPremium) {
+        toast.info('You already have Premium!');
+      } else {
+        toast.error('Payment system not available. Please try again later.');
+      }
+      return;
+    }
+
+    const success = await purchaseSubscription(planId);
+    if (success) {
+      // Success message is already shown by the hook
+      console.log(`Successfully upgraded to ${planId} plan`);
     }
   };
 
@@ -367,10 +388,16 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
 
                         <Button
                           className={`w-full ${plan.current ? 'bg-gray-100 text-gray-600 cursor-default' : plan.popular ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700' : ''} neomorph-button border-0`}
-                          disabled={plan.current}
+                          disabled={plan.current || purchasing}
                           onClick={() => {
                             if (!plan.current) {
-                              toast.info(`Upgrading to ${plan.name} - Payment integration coming soon!`);
+                              if (plan.id === 'monthly') {
+                                handleUpgrade('monthly');
+                              } else if (plan.id === 'yearly') {
+                                handleUpgrade('yearly');
+                              } else {
+                                toast.info('Downgrade feature coming soon!');
+                              }
                             }
                           }}
                         >
@@ -381,6 +408,17 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                             </>
                           ) : plan.id === 'free' ? (
                             'Downgrade'
+                          ) : purchasing ? (
+                            <>
+                              <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                className="mr-2"
+                              >
+                                <CreditCard size={16} />
+                              </motion.div>
+                              Processing...
+                            </>
                           ) : (
                             <>
                               <CreditCard size={16} className="mr-2" />

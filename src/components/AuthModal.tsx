@@ -12,15 +12,26 @@ import { signUp, signIn, signInWithGoogle } from '@/lib/auth';
 import { useAuth } from '@/hooks/use-auth';
 
 interface AuthModalProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   defaultTab?: 'signin' | 'signup';
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function AuthModal({ children, defaultTab = 'signin' }: AuthModalProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function AuthModal({ 
+  children, 
+  defaultTab = 'signin', 
+  isOpen: externalIsOpen,
+  onOpenChange: externalOnOpenChange 
+}: AuthModalProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState(defaultTab);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Use external state if provided, otherwise use internal state
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const setIsOpen = externalOnOpenChange !== undefined ? externalOnOpenChange : setInternalIsOpen;
   
   // Form state
   const [email, setEmail] = useState('');

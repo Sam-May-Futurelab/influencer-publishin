@@ -13,6 +13,8 @@ import { ProfilePage } from '@/components/ProfilePage';
 import { BrandCustomizer } from '@/components/BrandCustomizer';
 import { TemplateGallery } from '@/components/TemplateGallery';
 import { UsageTracker } from '@/components/UsageTracker';
+import { AuthGuardDialog } from '@/components/AuthGuardDialog';
+import { AuthModal } from '@/components/AuthModal';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
@@ -35,6 +37,9 @@ function App() {
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'profile' | 'project'>('dashboard');
+  const [showAuthGuard, setShowAuthGuard] = useState(false);
+  const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Writing analytics
   const { recordWritingSession } = useWritingAnalytics(projects);
@@ -70,6 +75,16 @@ function App() {
       }
     }
   }, [user, userProfile, projects, refreshProfile]);
+
+  // Helper function to show auth guard
+  const requireAuth = (action: string) => {
+    if (!user) {
+      setAuthGuardAction(action);
+      setShowAuthGuard(true);
+      return false;
+    }
+    return true;
+  };
 
   const selectProject = (project: EbookProject) => {
     setCurrentProject(project);
@@ -114,6 +129,9 @@ function App() {
   };
 
   const createProject = (title: string) => {
+    // Check authentication first
+    if (!requireAuth("create a new eBook project")) return;
+    
     const newProject: EbookProject = {
       id: crypto.randomUUID(),
       title: title.trim() || 'Untitled Ebook',
@@ -132,6 +150,9 @@ function App() {
   };
 
   const createProjectFromTemplate = (project: EbookProject) => {
+    // Check authentication first
+    if (!requireAuth("create an eBook from template")) return;
+    
     setProjects(currentProjects => [...currentProjects, project]);
     selectProject(project);
     toast.success('Ebook created from template!');
@@ -175,7 +196,10 @@ function App() {
   };
 
   const createChapter = async () => {
-    if (!currentProject || !user) return;
+    if (!currentProject) return;
+    
+    // Check authentication first
+    if (!requireAuth("create a new chapter")) return;
 
     // Check if user can create more pages
     if (!userProfile?.isPremium) {
@@ -189,7 +213,7 @@ function App() {
     }
 
     // Try to increment page usage
-    const canCreatePage = await incrementPageUsage(user.uid);
+    const canCreatePage = await incrementPageUsage(user!.uid);
     if (!canCreatePage) {
       toast.error('Page limit reached! Upgrade to Premium for unlimited pages.');
       return;
@@ -395,6 +419,21 @@ function App() {
           />
         </>
       ) : null}
+
+      <AuthGuardDialog
+        isOpen={showAuthGuard}
+        onClose={() => setShowAuthGuard(false)}
+        onSignIn={() => {
+          setShowAuthGuard(false);
+          setShowAuthModal(true);
+        }}
+        action={authGuardAction}
+      />
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onOpenChange={setShowAuthModal}
+      />
     </div>
   );
 }

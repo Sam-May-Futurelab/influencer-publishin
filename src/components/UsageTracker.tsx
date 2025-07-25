@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Crown, TrendUp, FileText, Sparkle } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
+import { usePayments } from '@/hooks/use-payments';
 
 interface UsageTrackerProps {
   onUpgradeClick?: () => void;
@@ -13,6 +14,7 @@ interface UsageTrackerProps {
 
 export function UsageTracker({ onUpgradeClick, className = '' }: UsageTrackerProps) {
   const { userProfile } = useAuth();
+  const { purchaseSubscription, purchasing, canPurchase } = usePayments();
 
   if (!userProfile) return null;
 
@@ -96,11 +98,32 @@ export function UsageTracker({ onUpgradeClick, className = '' }: UsageTrackerPro
                   </div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button 
-                      onClick={onUpgradeClick}
+                      onClick={() => {
+                        if (canPurchase) {
+                          purchaseSubscription('monthly');
+                        } else {
+                          onUpgradeClick?.();
+                        }
+                      }}
+                      disabled={purchasing}
                       className="w-full gap-2 neomorph-button border-0 bg-gradient-to-r from-primary to-accent text-white"
                     >
-                      <Crown size={14} />
-                      Upgrade to Premium
+                      {purchasing ? (
+                        <>
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          >
+                            <Crown size={14} />
+                          </motion.div>
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <Crown size={14} />
+                          Upgrade to Premium
+                        </>
+                      )}
                     </Button>
                   </motion.div>
                 </div>
