@@ -8,6 +8,7 @@ import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb } from '@phosphor-ic
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { generateAIContent, enhanceContent, type ContentSuggestion } from '@/lib/openai-service';
+import { AILoading } from '@/components/AILoading';
 
 interface AIContentAssistantProps {
   chapterTitle: string;
@@ -201,7 +202,8 @@ export function AIContentAssistant({
                     >
                       <MagicWand size={16} />
                     </motion.div>
-                    Generating...
+                    <span className="hidden sm:inline">Creating magic...</span>
+                    <span className="sm:hidden">Creating...</span>
                   </>
                 ) : (
                   <>
@@ -256,9 +258,16 @@ export function AIContentAssistant({
           </div>
         </div>
 
+        {/* Loading State */}
+        <AnimatePresence>
+          {isGenerating && (
+            <AILoading className="py-8 lg:py-12" />
+          )}
+        </AnimatePresence>
+
         {/* Generated Suggestions */}
         <AnimatePresence>
-          {suggestions.length > 0 && (
+          {suggestions.length > 0 && !isGenerating && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -358,8 +367,23 @@ export function AIContentAssistant({
                       onClick={() => enhanceContentHandler(selectedSuggestion.content)}
                       disabled={isGenerating}
                     >
-                      <MagicWand size={14} />
-                      Enhance
+                      {isGenerating ? (
+                        <>
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          >
+                            <MagicWand size={14} />
+                          </motion.div>
+                          <span className="hidden sm:inline">Enhancing...</span>
+                          <span className="sm:hidden">...</span>
+                        </>
+                      ) : (
+                        <>
+                          <MagicWand size={14} />
+                          Enhance
+                        </>
+                      )}
                     </Button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

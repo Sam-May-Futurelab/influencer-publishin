@@ -129,7 +129,10 @@ export function ChapterEditor({
       
       setPendingContent(newContent);
       markAsChanged();
-      toast.success('AI content added to chapter!');
+      toast.success('✨ AI magic added to your chapter!', {
+        description: 'Your new content is ready to edit and customize.',
+        duration: 3000
+      });
     } else {
       toast.error('No content to add');
     }
