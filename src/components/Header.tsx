@@ -347,13 +347,25 @@ export function Header({
                         <UsageTracker className="mb-3" />
                       </div>
                       
-                      {/* Sign Out Button */}
-                      <div className="px-4 pb-2">
+                      {/* Mobile Profile and Sign Out Buttons */}
+                      <div className="px-4 pb-2 space-y-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            onNavigate?.('profile');
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className="w-full gap-2 neomorph-button border-0"
+                        >
+                          <User size={16} />
+                          Profile
+                        </Button>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={handleSignOut}
-                          className="w-full gap-2 neomorph-button border-0"
+                          className="w-full gap-2 neomorph-button border-0 text-red-600 hover:text-red-700"
                         >
                           <SignOut size={16} />
                           Sign Out

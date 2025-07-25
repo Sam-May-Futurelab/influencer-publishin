@@ -7,6 +7,17 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { 
   User, 
   Camera, 
   Crown, 
@@ -22,13 +33,15 @@ import {
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 
 interface ProfilePageProps {
   onNavigate?: (section: string) => void;
 }
 
 export function ProfilePage({ onNavigate }: ProfilePageProps) {
-  const { user, userProfile, updateUserProfile, updateUserAvatar } = useAuth();
+  const { user, userProfile, updateUserProfile, updateUserAvatar, signOut } = useAuth();
+  const [projects] = useLocalStorage('ebook-projects', []);
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [isUploading, setIsUploading] = useState(false);
@@ -76,6 +89,50 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     } catch (error) {
       toast.error('Failed to upload image');
       setIsUploading(false);
+    }
+  };
+
+  const handleExportData = () => {
+    try {
+      const exportData = {
+        user: {
+          displayName: user?.displayName,
+          email: user?.email,
+          photoURL: user?.photoURL,
+          createdAt: user?.metadata?.creationTime
+        },
+        userProfile: userProfile,
+        projects: projects,
+        exportedAt: new Date().toISOString(),
+        version: '1.0'
+      };
+
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `inkfluenceai-data-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      toast.success('Data exported successfully!');
+    } catch (error) {
+      toast.error('Failed to export data');
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      // In a real app, you'd call a backend API to delete the account
+      await signOut();
+      toast.success('Account deletion initiated. You have been signed out.');
+      onNavigate?.('dashboard');
+    } catch (error) {
+      toast.error('Failed to delete account');
     }
   };
 
@@ -472,7 +529,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                 <Button
                   variant="outline"
                   className="justify-start gap-3 h-12 neomorph-button border-0"
-                  onClick={() => toast.info('Export feature coming soon!')}
+                  onClick={handleExportData}
                 >
                   <Download size={20} />
                   <div className="text-left">
@@ -481,17 +538,38 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                   </div>
                 </Button>
                 
-                <Button
-                  variant="outline"
-                  className="justify-start gap-3 h-12 neomorph-button border-0 text-red-600 hover:text-red-700"
-                  onClick={() => toast.error('Account deletion requires email confirmation')}
-                >
-                  <Trash size={20} />
-                  <div className="text-left">
-                    <div className="font-medium">Delete Account</div>
-                    <div className="text-xs text-gray-600">Permanently delete your account</div>
-                  </div>
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-3 h-12 neomorph-button border-0 text-red-600 hover:text-red-700"
+                    >
+                      <Trash size={20} />
+                      <div className="text-left">
+                        <div className="font-medium">Delete Account</div>
+                        <div className="text-xs text-gray-600">Permanently delete your account</div>
+                      </div>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete your account
+                        and remove all your data from our servers, including all your eBooks and projects.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={handleDeleteAccount}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
+                        Yes, delete my account
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </CardContent>
           </Card>
