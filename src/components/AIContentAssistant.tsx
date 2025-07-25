@@ -7,35 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-
-// Mock AI function - replace with actual AI integration
-const mockAIGeneration = async (prompt: string): Promise<string> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  
-  return `This is a sample AI-generated content based on your request. In a real implementation, this would be replaced with actual AI service integration.
-
-Here are some key points to consider:
-• Focus on creating valuable content for your audience
-• Use clear and engaging language
-• Include actionable insights and tips
-• Structure your content with proper headings and bullet points
-
-This mock response helps you continue developing your app while you set up your preferred AI service integration.`;
-};
+import { generateAIContent, enhanceContent, type ContentSuggestion } from '@/lib/openai-service';
 
 interface AIContentAssistantProps {
   chapterTitle: string;
   ebookCategory?: string;
   onContentGenerated: (content: string) => void;
   className?: string;
-}
-
-interface ContentSuggestion {
-  id: string;
-  title: string;
-  content: string;
-  type: 'outline' | 'introduction' | 'tips' | 'conclusion';
 }
 
 export function AIContentAssistant({ 
@@ -60,86 +38,17 @@ export function AIContentAssistant({
     try {
       console.log('Starting AI content generation with keywords:', keywords);
       
-      // Create enhanced prompt for content generation
-      const prompt = `
-        You are an expert content creator helping to write an engaging chapter for an ebook.
-        
-        Chapter Title: ${chapterTitle}
-        Ebook Category: ${ebookCategory}
-        Keywords/Topics: ${keywords}
-        
-        Please generate 4 different content suggestions. Each suggestion should be substantial (100-300 words), well-structured, and directly relevant to the keywords provided. Make the content actionable, insightful, and engaging for readers interested in ${ebookCategory}.
-        
-        IMPORTANT: You must respond with valid JSON only. No additional text or formatting.
-        
-        Format your response as a JSON array with objects containing:
-        - id: unique identifier (string)
-        - title: descriptive title for the suggestion (string)
-        - content: the actual content text (string, 100-300 words)
-        - type: one of "outline", "introduction", "tips", "conclusion" (string)
-        
-        Generate these 4 types:
-        1. A detailed chapter outline with main points and subpoints (type: "outline")
-        2. An engaging introduction paragraph that hooks the reader (type: "introduction")  
-        3. A list of 5-7 practical tips or key insights related to the keywords (type: "tips")
-        4. A compelling conclusion that summarizes and motivates action (type: "conclusion")
-      `;
-
-      console.log('Calling mock AI generation...');
-      const response = await mockAIGeneration(prompt);
-      console.log('AI Response received:', response);
+      // Use real OpenAI service
+      const suggestions = await generateAIContent(keywords, chapterTitle, ebookCategory);
       
-      // For now, create mock suggestions since we're using a mock function
-      const generatedSuggestions: ContentSuggestion[] = [
-        {
-          id: '1',
-          title: "Introduction to " + chapterTitle,
-          content: response,
-          type: "introduction"
-        },
-        {
-          id: '2',
-          title: "Key Concepts",
-          content: "Key concepts and actionable insights related to " + keywords,
-          type: "tips"
-        },
-        {
-          id: '3',
-          title: "Practical Examples",
-          content: "Real-world examples and case studies to illustrate the concepts.",
-          type: "outline"
-        },
-        {
-          id: '4',
-          title: "Summary and Action Steps",
-          content: "Conclusion with clear next steps for implementation.",
-          type: "conclusion"
-        }
-      ];
-      console.log('Generated suggestions:', generatedSuggestions);
-      
-      // Validate the structure
-      if (!Array.isArray(generatedSuggestions) || generatedSuggestions.length === 0) {
-        throw new Error('Invalid suggestions format');
-      }
-      
-      // Ensure all suggestions have required fields
-      const validSuggestions = generatedSuggestions.filter(s => 
-        s.id && s.title && s.content && s.type
-      );
-      
-      if (validSuggestions.length === 0) {
-        throw new Error('No valid suggestions received');
-      }
-      
-      setSuggestions(validSuggestions);
-      toast.success(`Generated ${validSuggestions.length} AI content suggestions!`);
+      setSuggestions(suggestions);
+      toast.success(`Generated ${suggestions.length} AI content suggestions!`);
       
     } catch (error) {
       console.error('Content generation failed:', error);
-      toast.error('AI generation failed. Using template content.');
+      toast.error('AI generation failed. Please check your API key and try again.');
       
-      // Always provide fallback content so user isn't stuck
+      // Provide fallback content on error
       const keywordList = keywords.split(',').map(k => k.trim()).filter(k => k);
       const mainKeyword = keywordList[0] || 'your topic';
       
@@ -197,24 +106,10 @@ export function AIContentAssistant({
     toast.success('Content added to your chapter!');
   };
 
-  const enhanceContent = async (content: string) => {
+  const enhanceContentHandler = async (content: string) => {
     setIsGenerating(true);
     try {
-      const prompt = `
-        Please enhance and expand the following content to be more detailed, engaging, and actionable.
-        Keep the same structure but add more depth, examples, and practical insights.
-        Target length: 300-500 words.
-        
-        Original content:
-        ${content}
-        
-        Chapter context: ${chapterTitle}
-        Category: ${ebookCategory}
-        
-        Make it more compelling and valuable for readers. Return only the enhanced content, no additional formatting or explanations.
-      `;
-
-      const enhancedContent = await mockAIGeneration(prompt);
+      const enhancedContent = await enhanceContent(content, chapterTitle, ebookCategory);
       
       if (!enhancedContent || enhancedContent.trim() === '') {
         throw new Error('Empty response from AI service');
@@ -330,19 +225,18 @@ export function AIContentAssistant({
               size="sm"
               onClick={async () => {
                 try {
-                  console.log('Testing mock AI...');
-                  const testPrompt = 'Say hello world';
-                  const response = await mockAIGeneration(testPrompt);
-                  console.log('Test response:', response);
-                  toast.success('AI connection working!');
+                  console.log('Testing OpenAI connection...');
+                  const testSuggestions = await generateAIContent('test keywords', 'Test Chapter', 'general');
+                  console.log('Test response:', testSuggestions);
+                  toast.success('OpenAI connection working!');
                 } catch (error) {
-                  console.error('AI test failed:', error);
-                  toast.error('AI connection failed');
+                  console.error('OpenAI test failed:', error);
+                  toast.error('OpenAI connection failed - check your API key');
                 }
               }}
               className="text-xs"
             >
-              Test AI Connection
+              Test OpenAI Connection
             </Button>
           )}
           
@@ -461,7 +355,7 @@ export function AIContentAssistant({
                       variant="outline"
                       size="sm"
                       className="gap-2 neomorph-button border-0"
-                      onClick={() => enhanceContent(selectedSuggestion.content)}
+                      onClick={() => enhanceContentHandler(selectedSuggestion.content)}
                       disabled={isGenerating}
                     >
                       <MagicWand size={14} />
