@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
+import { useAuth } from '@/hooks/use-auth';
+import { incrementPageUsage, syncPageUsage } from '@/lib/auth';
 import { ChapterEditor } from '@/components/ChapterEditor';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { Header } from '@/components/Header';
@@ -10,6 +12,7 @@ import { SettingsPage } from '@/components/SettingsPage';
 import { ProfilePage } from '@/components/ProfilePage';
 import { BrandCustomizer } from '@/components/BrandCustomizer';
 import { TemplateGallery } from '@/components/TemplateGallery';
+import { UsageTracker } from '@/components/UsageTracker';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
@@ -25,6 +28,7 @@ const defaultBrandConfig: BrandConfig = {
 };
 
 function App() {
+  const { user, userProfile, refreshProfile } = useAuth();
   const [projects, setProjects] = useLocalStorage<EbookProject[]>('ebook-projects', []);
   const [currentProject, setCurrentProject] = useState<EbookProject | null>(null);
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
@@ -50,6 +54,22 @@ function App() {
       }
     }
   }, [projects]);
+
+  // Sync page usage with actual project data
+  useEffect(() => {
+    if (user && userProfile && projects.length > 0) {
+      const actualPagesUsed = projects.reduce((total, project) => {
+        return total + project.chapters.length;
+      }, 0);
+      
+      // If the stored usage doesn't match actual usage, sync it
+      if (userProfile.pagesUsed !== actualPagesUsed) {
+        syncPageUsage(user.uid, actualPagesUsed).then(() => {
+          refreshProfile();
+        });
+      }
+    }
+  }, [user, userProfile, projects, refreshProfile]);
 
   const selectProject = (project: EbookProject) => {
     setCurrentProject(project);
@@ -154,8 +174,26 @@ function App() {
     toast.success('Project duplicated successfully');
   };
 
-  const createChapter = () => {
-    if (!currentProject) return;
+  const createChapter = async () => {
+    if (!currentProject || !user) return;
+
+    // Check if user can create more pages
+    if (!userProfile?.isPremium) {
+      const currentUsage = userProfile?.pagesUsed || 0;
+      const maxPages = userProfile?.maxPages || 4;
+      
+      if (currentUsage >= maxPages) {
+        toast.error('Page limit reached! Upgrade to Premium for unlimited pages.');
+        return;
+      }
+    }
+
+    // Try to increment page usage
+    const canCreatePage = await incrementPageUsage(user.uid);
+    if (!canCreatePage) {
+      toast.error('Page limit reached! Upgrade to Premium for unlimited pages.');
+      return;
+    }
 
     const newChapter: Chapter = {
       id: crypto.randomUUID(),
@@ -169,6 +207,10 @@ function App() {
     const updatedChapters = [...currentProject.chapters, newChapter];
     updateProject({ chapters: updatedChapters });
     setCurrentChapter(newChapter);
+    
+    // Refresh profile to update page usage in UI
+    await refreshProfile();
+    
     toast.success('New chapter created!');
   };
 
@@ -326,7 +368,11 @@ function App() {
             onBrandCustomize={() => setShowBrandCustomizer(true)}
           />
           
-          <main className="p-3 lg:p-6 pb-6 lg:pb-8">
+          <main className="p-3 lg:p-6 pb-6 lg:pb-8 space-y-6">
+            <UsageTracker 
+              onUpgradeClick={() => setCurrentSection('profile')}
+            />
+            
             <ChapterEditor
               chapters={currentProject.chapters}
               currentChapter={currentChapter}

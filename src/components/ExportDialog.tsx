@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { FilePdf, FileDoc, BookOpen, Download, Star } from '@phosphor-icons/react';
 import { ExportFormat, exportToFormat } from '@/lib/export';
 import { EbookProject } from '@/lib/types';
+import { useAuth } from '@/hooks/use-auth';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
@@ -50,9 +51,21 @@ const exportOptions: ExportOption[] = [
 ];
 
 export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
+  const { userProfile } = useAuth();
   const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
 
   const handleExport = async (format: ExportFormat) => {
+    // Check if user has premium access or is within free tier limits
+    if (!userProfile?.isPremium) {
+      const totalPages = project.chapters.length;
+      const freePageLimit = userProfile?.maxPages || 4;
+      
+      if (totalPages > freePageLimit) {
+        toast.error(`Export requires Premium! You have ${totalPages} pages but free tier allows ${freePageLimit}. Upgrade to export.`);
+        return;
+      }
+    }
+
     try {
       setExportingFormat(format);
       toast.loading(`Generating ${format.toUpperCase()}...`, { id: 'export' });

@@ -174,6 +174,14 @@ export const onAuthStateChange = (callback: (user: User | null) => void) => {
 // Update user profile
 export const updateUserProfile = async (uid: string, updates: Partial<UserProfile>) => {
   try {
+    // If displayName is being updated, also update Firebase Auth first
+    if (updates.displayName && auth.currentUser) {
+      await updateProfile(auth.currentUser, { 
+        displayName: updates.displayName 
+      });
+    }
+    
+    // Update in Firestore
     await setDoc(doc(db, 'users', uid), {
       ...updates,
       lastLoginAt: serverTimestamp()
@@ -203,6 +211,21 @@ export const updateUserAvatar = async (uid: string, photoURL: string) => {
     return true;
   } catch (error) {
     console.error('Error updating user avatar:', error);
+    return false;
+  }
+};
+
+// Sync page usage with actual project data (for migration/correction)
+export const syncPageUsage = async (uid: string, actualPagesUsed: number) => {
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      pagesUsed: actualPagesUsed,
+      lastLoginAt: serverTimestamp()
+    }, { merge: true });
+    
+    return true;
+  } catch (error) {
+    console.error('Error syncing page usage:', error);
     return false;
   }
 };

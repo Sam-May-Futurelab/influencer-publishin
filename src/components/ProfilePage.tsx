@@ -38,7 +38,7 @@ interface ProfilePageProps {
 }
 
 export function ProfilePage({ onNavigate }: ProfilePageProps) {
-  const { user, userProfile, updateUserProfile, signOut } = useAuth();
+  const { user, userProfile, updateUserProfile, signOut, refreshProfile } = useAuth();
   const [projects] = useLocalStorage('ebook-projects', []);
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(user?.displayName || '');
@@ -48,6 +48,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
   const handleSaveProfile = async () => {
     try {
       await updateUserProfile({ displayName });
+      await refreshProfile(); // Refresh the profile to get updated data
       setIsEditing(false);
       toast.success('Profile updated successfully!');
     } catch (error) {
@@ -468,7 +469,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Button
                   variant="outline"
-                  className="justify-start gap-3 h-12 neomorph-button border-0"
+                  className="justify-start gap-3 h-12 neomorph-button border-0 text-black hover:text-black"
                   onClick={handleExportData}
                 >
                   <Download size={20} />
