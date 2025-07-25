@@ -19,12 +19,10 @@ import {
 } from '@/components/ui/alert-dialog';
 import { 
   User, 
-  Camera, 
   Crown, 
   CreditCard, 
   Shield, 
   Bell,
-  Palette,
   Download,
   Trash,
   Check,
@@ -40,14 +38,12 @@ interface ProfilePageProps {
 }
 
 export function ProfilePage({ onNavigate }: ProfilePageProps) {
-  const { user, userProfile, updateUserProfile, updateUserAvatar, signOut } = useAuth();
+  const { user, userProfile, updateUserProfile, signOut } = useAuth();
   const [projects] = useLocalStorage('ebook-projects', []);
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(user?.displayName || '');
-  const [isUploading, setIsUploading] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveProfile = async () => {
     try {
@@ -56,39 +52,6 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
       toast.success('Profile updated successfully!');
     } catch (error) {
       toast.error('Failed to update profile');
-    }
-  };
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Image must be less than 5MB');
-      return;
-    }
-
-    setIsUploading(true);
-    try {
-      // Convert to base64 for now (in production, you'd upload to Firebase Storage)
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const imageUrl = e.target?.result as string;
-        await updateUserAvatar(imageUrl);
-        toast.success('Profile picture updated!');
-        setIsUploading(false);
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
-      toast.error('Failed to upload image');
-      setIsUploading(false);
     }
   };
 
@@ -228,35 +191,12 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-blue-100 to-indigo-200 rounded-full flex items-center justify-center">
-                        <User size={24} className="text-primary" />
+                        <span className="text-2xl font-semibold text-primary">
+                          {user?.displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+                        </span>
                       </div>
                     )}
                   </div>
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploading}
-                    className="absolute -bottom-1 -right-1 w-8 h-8 bg-primary text-white rounded-full neomorph-button border-0 flex items-center justify-center"
-                  >
-                    {isUploading ? (
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      >
-                        <Camera size={14} />
-                      </motion.div>
-                    ) : (
-                      <Camera size={14} />
-                    )}
-                  </motion.button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
                 </div>
                 
                 <div className="flex-1">
