@@ -1,5 +1,29 @@
 # 🔐 OpenAI API Setup Instructions
 
+> ⚠️ **IMPORTANT**: This guide is **OUTDATED**. We now use Vercel serverless functions for security.
+> 
+> **👉 See `VERCEL_API_SETUP.md` for current setup instructions.**
+
+---
+
+## Why This Changed
+
+Previously, the OpenAI API key was stored in the browser (insecure). Now it's stored securely on Vercel's servers.
+
+## Current Setup (Recommended)
+
+Follow the guide in `VERCEL_API_SETUP.md` which covers:
+1. Deploying to Vercel (FREE)
+2. Securely storing your API key
+3. Testing the integration
+
+---
+
+## Legacy Instructions (For Reference Only)
+
+<details>
+<summary>Old Setup Method (Not Recommended - API Key Exposed)</summary>
+
 ## Step 1: Get Your OpenAI API Key
 
 1. Go to [OpenAI API Keys](https://platform.openai.com/api-keys)
@@ -22,32 +46,27 @@
 npm run dev
 ```
 
-## ✅ Test the Integration
+## ⚠️ Security Warning
 
-1. Open the app in your browser
-2. Create a new project and chapter
-3. Go to the AI Assistant tab
-4. Enter some keywords and click "Generate"
-5. You should see real AI-generated content!
+This method exposes your API key in the browser and is **NOT RECOMMENDED** for production.
 
-## 🚨 Security Notes
+</details>
 
-- **Never commit your `.env` file to git** (it's already in `.gitignore`)
-- **Never share your API key publicly**
-- **Revoke old keys if they're compromised**
-- **Monitor your OpenAI usage** at https://platform.openai.com/usage
+---
 
-## 💰 Cost Information
+## 💰 Cost Information (Still Relevant)
 
 - GPT-3.5-turbo costs ~$0.001-0.002 per request
 - GPT-4 costs more but gives better results
-- You can set usage limits in your OpenAI dashboard
+- You can set usage limits in your OpenAI dashboard: https://platform.openai.com/usage
 
-## 🔧 Troubleshooting
+## � Current Security Features
 
-### "API key not configured" error
-- Check that your `.env` file exists and has the correct key
-- Restart the dev server after adding the key
+With the new Vercel setup:
+- ✅ API key stored securely on server
+- ✅ Never exposed to browser
+- ✅ Request logging and monitoring
+- ✅ Rate limiting capability
 
 ### "API request failed" error
 - Check your OpenAI account has credits
