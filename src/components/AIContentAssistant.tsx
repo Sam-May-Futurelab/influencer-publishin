@@ -5,15 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb, X, Info } from '@phosphor-icons/react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb, X, Info, SlidersHorizontal } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { generateAIContent, enhanceContent, type ContentSuggestion } from '@/lib/openai-service';
+import { generateAIContent, enhanceContent, type ContentSuggestion, type Tone, type Length, type Format } from '@/lib/openai-service-secure';
 import { AILoading } from '@/components/AILoading';
 
 interface AIContentAssistantProps {
   chapterTitle: string;
   ebookCategory?: string;
+  targetAudience?: string;
   onContentGenerated: (content: string) => void;
   className?: string;
 }
@@ -21,6 +24,7 @@ interface AIContentAssistantProps {
 export function AIContentAssistant({ 
   chapterTitle, 
   ebookCategory = 'general',
+  targetAudience,
   onContentGenerated, 
   className = '' 
 }: AIContentAssistantProps) {
@@ -28,6 +32,12 @@ export function AIContentAssistant({
   const [isGenerating, setIsGenerating] = useState(false);
   const [suggestions, setSuggestions] = useState<ContentSuggestion[]>([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState<ContentSuggestion | null>(null);
+  
+  // AI Enhancement Controls
+  const [tone, setTone] = useState<Tone>('friendly');
+  const [length, setLength] = useState<Length>('standard');
+  const [format, setFormat] = useState<Format>('narrative');
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Clear suggestions when chapter changes
   useEffect(() => {
@@ -46,10 +56,26 @@ export function AIContentAssistant({
     setIsGenerating(true);
     
     try {
-      console.log('Starting AI content generation with keywords:', keywords);
+      console.log('Starting AI content generation with enhanced options:', {
+        keywords,
+        genre: ebookCategory,
+        tone,
+        length,
+        format
+      });
       
-      // Use real OpenAI service
-      const suggestions = await generateAIContent(keywords, chapterTitle, ebookCategory);
+      // Use enhanced AI service with new parameters
+      const suggestions = await generateAIContent({
+        keywords,
+        chapterTitle,
+        genre: ebookCategory,
+        tone,
+        length,
+        format,
+        context: {
+          targetAudience,
+        }
+      });
       
       setSuggestions(suggestions);
       toast.success(`Generated ${suggestions.length} AI content suggestions!`);
@@ -119,7 +145,15 @@ export function AIContentAssistant({
   const enhanceContentHandler = async (content: string) => {
     setIsGenerating(true);
     try {
-      const enhancedContent = await enhanceContent(content, chapterTitle, ebookCategory);
+      const enhancedContent = await enhanceContent(content, chapterTitle, {
+        genre: ebookCategory,
+        tone,
+        length,
+        format,
+        context: {
+          targetAudience,
+        }
+      });
       
       if (!enhancedContent || enhancedContent.trim() === '') {
         throw new Error('Empty response from AI service');
@@ -240,6 +274,98 @@ export function AIContentAssistant({
                 )}
               </Button>
             </motion.div>
+          </div>
+
+          {/* Advanced AI Controls */}
+          <div className="space-y-2">
+            <button
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <SlidersHorizontal size={12} />
+              <span>{showAdvanced ? 'Hide' : 'Show'} AI Controls</span>
+            </button>
+
+            <AnimatePresence>
+              {showAdvanced && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="grid grid-cols-3 gap-2 pt-2">
+                    {/* Tone Control */}
+                    <div className="space-y-1">
+                      <Label htmlFor="tone" className="text-xs text-muted-foreground">
+                        Tone
+                      </Label>
+                      <Select value={tone} onValueChange={(value) => setTone(value as Tone)}>
+                        <SelectTrigger id="tone" className="h-8 text-xs neomorph-inset border-0">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="friendly">😊 Friendly</SelectItem>
+                          <SelectItem value="professional">💼 Professional</SelectItem>
+                          <SelectItem value="motivational">🚀 Motivational</SelectItem>
+                          <SelectItem value="direct">🎯 Direct</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Length Control */}
+                    <div className="space-y-1">
+                      <Label htmlFor="length" className="text-xs text-muted-foreground">
+                        Length
+                      </Label>
+                      <Select value={length} onValueChange={(value) => setLength(value as Length)}>
+                        <SelectTrigger id="length" className="h-8 text-xs neomorph-inset border-0">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="brief">📄 Brief</SelectItem>
+                          <SelectItem value="standard">📋 Standard</SelectItem>
+                          <SelectItem value="detailed">📖 Detailed</SelectItem>
+                          <SelectItem value="comprehensive">📚 Comprehensive</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Format Control */}
+                    <div className="space-y-1">
+                      <Label htmlFor="format" className="text-xs text-muted-foreground">
+                        Format
+                      </Label>
+                      <Select value={format} onValueChange={(value) => setFormat(value as Format)}>
+                        <SelectTrigger id="format" className="h-8 text-xs neomorph-inset border-0">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="narrative">📝 Narrative</SelectItem>
+                          <SelectItem value="intro">👋 Introduction</SelectItem>
+                          <SelectItem value="bullets">• Bullet Points</SelectItem>
+                          <SelectItem value="steps">1️⃣ Step-by-Step</SelectItem>
+                          <SelectItem value="qa">❓ Q&A Format</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Current Settings Display */}
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    <Badge variant="secondary" className="text-xs">
+                      {ebookCategory || 'General'}
+                    </Badge>
+                    {targetAudience && (
+                      <Badge variant="outline" className="text-xs">
+                        {targetAudience}
+                      </Badge>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
           

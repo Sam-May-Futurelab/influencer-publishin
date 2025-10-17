@@ -23,6 +23,7 @@ export interface EbookProject {
   description: string;
   author: string;
   category?: string;
+  targetAudience?: string;
   chapters: Chapter[];
   brandConfig: BrandConfig;
   customWatermark?: string; // Project-specific watermark (overrides global settings)

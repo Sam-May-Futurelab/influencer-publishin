@@ -14,7 +14,18 @@ export default async function handler(req, res) {
   }
 
   // Get data from request
-  const { keywords, chapterTitle, contentType = 'suggestions', userId } = req.body;
+  const { 
+    keywords, 
+    chapterTitle, 
+    contentType = 'suggestions', 
+    userId,
+    // New enhancement parameters
+    genre = 'general',
+    tone = 'friendly',
+    length = 'standard',
+    format = 'narrative',
+    context = {}
+  } = req.body;
 
   // Basic validation
   if (!keywords || keywords.length === 0) {
@@ -29,37 +40,103 @@ export default async function handler(req, res) {
     let prompt = '';
     let maxTokens = 2000;
 
+    // Dynamic token allocation based on length parameter
+    const tokenLimits = {
+      brief: 800,
+      standard: 1500,
+      detailed: 2500,
+      comprehensive: 3500
+    };
+
+    // Build context string from metadata
+    const contextInfo = [];
+    if (genre && genre !== 'general') {
+      contextInfo.push(`Genre: ${genre}`);
+    }
+    if (context.targetAudience) {
+      contextInfo.push(`Target Audience: ${context.targetAudience}`);
+    }
+    if (context.bookDescription) {
+      contextInfo.push(`Book Description: ${context.bookDescription}`);
+    }
+    const contextString = contextInfo.length > 0 
+      ? `\n\nContext:\n${contextInfo.join('\n')}` 
+      : '';
+
+    // Tone descriptors for better prompts
+    const toneDescriptors = {
+      friendly: 'warm, conversational, and approachable',
+      professional: 'clear, authoritative, and polished',
+      motivational: 'inspiring, energetic, and empowering',
+      direct: 'concise, straightforward, and action-oriented'
+    };
+
+    // Format-specific instructions
+    const formatInstructions = {
+      intro: 'Write an engaging introduction that hooks the reader and sets up the chapter topic.',
+      bullets: 'Use bullet points for clarity. Each point should be actionable and specific.',
+      steps: 'Present information as a numbered step-by-step guide that readers can follow easily.',
+      qa: 'Structure content as questions and answers to address common reader concerns.',
+      narrative: 'Use storytelling and narrative flow to make the content engaging and memorable.'
+    };
+
     if (contentType === 'suggestions') {
-      prompt = `You are a professional ebook writer assistant. Based on the following keywords and chapter context, generate 5-7 creative and engaging content suggestions that would be perfect for this chapter.
+      const toneDesc = toneDescriptors[tone] || 'engaging and helpful';
+      const formatInstr = formatInstructions[format] || 'Make it engaging and valuable.';
+      
+      prompt = `You are a professional ebook writer assistant specializing in ${genre} content.${contextString}
+
+Write with a ${toneDesc} tone that resonates with readers.
 
 Chapter: "${chapterTitle}"
 Keywords: ${keywords.join(', ')}
 
+Generate 5-7 creative and engaging content suggestions for this chapter. ${formatInstr}
+
 For each suggestion:
 - Make it specific and actionable
-- Keep it between 20-40 words
-- Focus on valuable insights or engaging storytelling
-- Vary the types of content (tips, stories, examples, explanations)
+- Keep it between 20-50 words
+- Match the ${tone} tone
+- Use the ${format} format style
+- Focus on valuable insights for the target audience
+- Vary the approaches (tips, stories, examples, explanations)
 
 Return ONLY a JSON array of strings, no other text. Example format:
 ["Suggestion 1 text here", "Suggestion 2 text here", ...]`;
       
+      maxTokens = tokenLimits[length] || 1500;
+      
     } else if (contentType === 'enhance') {
-      prompt = `You are a professional ebook editor. Improve and expand the following chapter content while maintaining its core message and style.
+      const toneDesc = toneDescriptors[tone] || 'engaging and helpful';
+      const formatInstr = formatInstructions[format] || 'Make it engaging and valuable.';
+      const lengthGuide = {
+        brief: '150-250 words',
+        standard: '300-500 words',
+        detailed: '500-800 words',
+        comprehensive: '800-1200 words'
+      };
+      const targetLength = lengthGuide[length] || '300-500 words';
+      
+      prompt = `You are a professional ebook editor specializing in ${genre} content.${contextString}
+
+Write with a ${toneDesc} tone that resonates with readers.
 
 Chapter: "${chapterTitle}"
 Original Content: ${keywords.join(' ')}
 
-Guidelines:
+Improve and expand this content with these guidelines:
+- Target length: ${targetLength}
+- Tone: ${toneDesc}
+- Format: ${formatInstr}
 - Enhance clarity and readability
 - Add engaging examples or anecdotes where appropriate
 - Improve flow and structure
 - Keep the author's voice and intent
-- Expand to approximately 300-500 words
-- Use proper paragraphs and formatting
+- Make it valuable for the target audience
 
 Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`;
-      maxTokens = 1500;
+      
+      maxTokens = tokenLimits[length] || 1500;
     }
 
     const completion = await openai.chat.completions.create({
@@ -67,7 +144,7 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
       messages: [
         {
           role: 'system',
-          content: 'You are a professional ebook writing assistant. Provide helpful, creative, and engaging content suggestions.',
+          content: `You are a professional ebook writing assistant specializing in ${genre} content. Write in a ${toneDescriptors[tone] || 'engaging'} tone. Provide helpful, creative, and engaging content suggestions that match the specified format and length.`,
         },
         {
           role: 'user',
@@ -88,6 +165,10 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
     console.log('AI Content Generated', {
       userId: userId || 'anonymous',
       contentType,
+      genre,
+      tone,
+      length,
+      format,
       tokensUsed: completion.usage?.total_tokens || 0,
       timestamp: new Date().toISOString(),
     });

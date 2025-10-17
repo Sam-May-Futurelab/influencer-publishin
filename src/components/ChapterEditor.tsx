@@ -25,6 +25,7 @@ interface ChapterEditorProps {
   onRecordWritingSession?: (projectId: string, chapterId: string, wordsAdded: number) => void;
   projectId?: string;
   ebookCategory?: string;
+  targetAudience?: string;
   projectTitle?: string;
   projectAuthor?: string;
   projectDescription?: string;
@@ -42,6 +43,7 @@ export function ChapterEditor({
   onRecordWritingSession,
   projectId,
   ebookCategory = 'general',
+  targetAudience,
   projectTitle = 'Untitled Project',
   projectAuthor = '',
   projectDescription = '',
@@ -390,6 +392,7 @@ export function ChapterEditor({
                     <AIContentAssistant
                       chapterTitle={currentChapter.title}
                       ebookCategory={ebookCategory}
+                      targetAudience={targetAudience}
                       onContentGenerated={handleAIContentGenerated}
                     />
                     

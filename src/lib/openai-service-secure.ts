@@ -8,6 +8,23 @@ export interface ContentSuggestion {
   type: 'outline' | 'introduction' | 'tips' | 'conclusion';
 }
 
+export type Tone = 'friendly' | 'professional' | 'motivational' | 'direct';
+export type Length = 'brief' | 'standard' | 'detailed' | 'comprehensive';
+export type Format = 'intro' | 'bullets' | 'steps' | 'qa' | 'narrative';
+
+export interface AIContentOptions {
+  keywords: string;
+  chapterTitle: string;
+  genre?: string;
+  tone?: Tone;
+  length?: Length;
+  format?: Format;
+  context?: {
+    targetAudience?: string;
+    bookDescription?: string;
+  };
+}
+
 // Get the API endpoint based on environment
 const getApiEndpoint = () => {
   // In production (Vercel), use /api route
@@ -23,10 +40,25 @@ const getApiEndpoint = () => {
  * This keeps the OpenAI API key secure on the server
  */
 export async function generateAIContent(
-  keywords: string,
-  chapterTitle: string,
-  ebookCategory: string = 'general'
+  options: AIContentOptions | string, // Support legacy string parameter
+  chapterTitle?: string,
+  ebookCategory?: string
 ): Promise<ContentSuggestion[]> {
+  // Support both new object API and legacy string API
+  let requestOptions: AIContentOptions;
+  
+  if (typeof options === 'string') {
+    // Legacy API: generateAIContent(keywords, chapterTitle, ebookCategory)
+    requestOptions = {
+      keywords: options,
+      chapterTitle: chapterTitle || '',
+      genre: ebookCategory || 'general',
+    };
+  } else {
+    // New API: generateAIContent({ keywords, chapterTitle, tone, length, ... })
+    requestOptions = options;
+  }
+
   try {
     const endpoint = getApiEndpoint();
     
@@ -36,9 +68,14 @@ export async function generateAIContent(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        keywords: keywords.split(',').map(k => k.trim()),
-        chapterTitle,
+        keywords: requestOptions.keywords.split(',').map(k => k.trim()),
+        chapterTitle: requestOptions.chapterTitle,
         contentType: 'suggestions',
+        genre: requestOptions.genre || 'general',
+        tone: requestOptions.tone || 'friendly',
+        length: requestOptions.length || 'standard',
+        format: requestOptions.format || 'narrative',
+        context: requestOptions.context || {},
       }),
     });
 
@@ -72,7 +109,7 @@ export async function generateAIContent(
     console.error('AI Content Generation Error:', error);
 
     // Return fallback suggestions
-    return getFallbackSuggestions(keywords, chapterTitle);
+    return getFallbackSuggestions(requestOptions.keywords, requestOptions.chapterTitle);
   }
 }
 
@@ -81,7 +118,17 @@ export async function generateAIContent(
  */
 export async function enhanceContent(
   originalContent: string,
-  chapterTitle: string
+  chapterTitle: string,
+  options?: {
+    genre?: string;
+    tone?: Tone;
+    length?: Length;
+    format?: Format;
+    context?: {
+      targetAudience?: string;
+      bookDescription?: string;
+    };
+  }
 ): Promise<string> {
   try {
     const endpoint = getApiEndpoint();
@@ -95,6 +142,11 @@ export async function enhanceContent(
         keywords: [originalContent],
         chapterTitle,
         contentType: 'enhance',
+        genre: options?.genre || 'general',
+        tone: options?.tone || 'friendly',
+        length: options?.length || 'standard',
+        format: options?.format || 'narrative',
+        context: options?.context || {},
       }),
     });
 

@@ -634,6 +634,7 @@ function App() {
                 onRecordWritingSession={recordWritingSession}
                 projectId={currentProject.id}
                 ebookCategory={currentProject.category || 'general'}
+                targetAudience={currentProject.targetAudience}
                 projectTitle={currentProject.title}
                 projectAuthor={currentProject.author}
                 projectDescription={currentProject.description}
