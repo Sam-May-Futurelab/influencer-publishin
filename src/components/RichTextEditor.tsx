@@ -16,7 +16,8 @@ import {
   ListNumbers,
   ArrowULeftUp,
   ArrowURightUp,
-  TextAa
+  TextAa,
+  Sparkle
 } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -27,6 +28,7 @@ interface RichTextEditorProps {
   placeholder?: string;
   className?: string;
   minHeight?: string;
+  onAIAssistantClick?: () => void;
 }
 
 export function RichTextEditor({
@@ -34,7 +36,8 @@ export function RichTextEditor({
   onChange,
   placeholder = 'Start writing...',
   className,
-  minHeight = '400px'
+  minHeight = '400px',
+  onAIAssistantClick
 }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -100,6 +103,27 @@ export function RichTextEditor({
     <div className={cn("neomorph-inset rounded-lg border-0 bg-background", className)}>
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-1 p-2 border-b border-border/50">
+        {/* AI Assistant Button - Prominent placement */}
+        {onAIAssistantClick && (
+          <>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                onClick={onAIAssistantClick}
+                className="h-8 px-3 gap-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 border-0"
+                size="sm"
+                type="button"
+              >
+                <Sparkle size={16} weight="fill" />
+                <span className="font-medium">AI Assistant</span>
+              </Button>
+            </motion.div>
+            <Separator orientation="vertical" className="h-6 mx-1" />
+          </>
+        )}
+
         {/* Undo/Redo */}
         <ToolbarButton
           onClick={() => editor.chain().focus().undo().run()}

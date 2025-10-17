@@ -372,6 +372,7 @@ export function ChapterEditor({
                     placeholder="Start writing your chapter content here..."
                     minHeight="250px"
                     className="lg:min-h-[400px]"
+                    onAIAssistantClick={() => setInputMode('ai')}
                   />
                   
                   {/* Save indicator */}
