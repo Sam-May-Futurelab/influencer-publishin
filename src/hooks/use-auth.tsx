@@ -4,8 +4,7 @@ import {
   onAuthStateChange, 
   getUserProfile, 
   UserProfile, 
-  updateUserProfile as updateUserProfileAPI, 
-  updateUserAvatar as updateUserAvatarAPI 
+  updateUserProfile as updateUserProfileAPI 
 } from '@/lib/auth';
 
 interface AuthContextType {
@@ -15,7 +14,6 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
-  updateUserAvatar: (photoURL: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -79,24 +77,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return success;
   };
 
-  const updateUserAvatar = async (photoURL: string) => {
-    if (!user) return false;
-    
-    const success = await updateUserAvatarAPI(user.uid, photoURL);
-    if (success) {
-      await refreshProfile();
-    }
-    return success;
-  };
-
   const value: AuthContextType = {
     user,
     userProfile,
     loading,
     signOut,
     refreshProfile,
-    updateUserProfile,
-    updateUserAvatar
+    updateUserProfile
   };
 
   return (

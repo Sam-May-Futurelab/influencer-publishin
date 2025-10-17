@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocalStorage } from './use-local-storage';
+import { useAuth } from './use-auth';
+import { updateWritingStats, updateWritingGoals } from '@/lib/auth';
 import { 
   WritingGoals, 
   WritingStats, 
@@ -19,10 +21,21 @@ import {
 import { toast } from 'sonner';
 
 export function useWritingAnalytics(projects: EbookProject[]) {
+  const { user, userProfile } = useAuth();
   const [goals, setGoals] = useLocalStorage<WritingGoals>('writing-goals', defaultWritingGoals);
   const [sessions, setSessions] = useLocalStorage<WritingSession[]>('writing-sessions', []);
   const [achievements, setAchievements] = useLocalStorage<Achievement[]>('achievements', []);
   const [stats, setStats] = useState<WritingStats>(defaultWritingStats);
+
+  // Initialize from Firebase if available
+  useEffect(() => {
+    if (userProfile?.writingGoals) {
+      setGoals({ ...goals, ...userProfile.writingGoals, enabled: goals.enabled });
+    }
+    if (userProfile?.writingStats) {
+      setStats({ ...stats, ...userProfile.writingStats });
+    }
+  }, [userProfile]);
 
   // Calculate total words across all projects
   const totalWords = projects.reduce((total, project) => {
@@ -38,6 +51,16 @@ export function useWritingAnalytics(projects: EbookProject[]) {
   useEffect(() => {
     const newStats = calculateWritingStats(sessions, stats);
     setStats(newStats);
+    
+    // Sync to Firebase
+    if (user && newStats) {
+      updateWritingStats(user.uid, {
+        totalWords: totalWords,
+        currentStreak: newStats.currentStreak,
+        longestStreak: newStats.longestStreak,
+        lastWriteDate: newStats.lastWritingDate,
+      });
+    }
   }, [sessions]);
 
   // Check for new achievements
@@ -86,8 +109,18 @@ export function useWritingAnalytics(projects: EbookProject[]) {
 
   // Update goals
   const updateGoals = useCallback((newGoals: Partial<WritingGoals>) => {
-    setGoals(prev => ({ ...prev, ...newGoals }));
-  }, [setGoals]);
+    const updatedGoals = { ...goals, ...newGoals };
+    setGoals(updatedGoals);
+    
+    // Sync to Firebase
+    if (user) {
+      updateWritingGoals(user.uid, {
+        daily: updatedGoals.dailyWordTarget,
+        weekly: updatedGoals.weeklyWordTarget,
+        monthly: updatedGoals.monthlyWordTarget,
+      });
+    }
+  }, [setGoals, goals, user]);
 
   // Get progress toward goals
   const progress = calculateGoalProgress(stats, goals);

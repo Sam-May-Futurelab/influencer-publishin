@@ -15,7 +15,6 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName?: string;
-  photoURL?: string;
   isPremium: boolean;
   subscriptionStatus: 'free' | 'premium' | 'trial';
   subscriptionType?: 'monthly' | 'yearly';
@@ -23,6 +22,25 @@ export interface UserProfile {
   maxPages: number;
   createdAt: any;
   lastLoginAt: any;
+  // Writing Analytics
+  writingStats?: {
+    totalWords: number;
+    currentStreak: number;
+    longestStreak: number;
+    lastWriteDate: string | null;
+  };
+  // Writing Goals
+  writingGoals?: {
+    daily: number;
+    weekly: number;
+    monthly: number;
+  };
+  // User Preferences
+  preferences?: {
+    emailNotifications: boolean;
+    pushNotifications: boolean;
+    theme: 'light' | 'dark';
+  };
 }
 
 // Authentication functions
@@ -87,13 +105,31 @@ export const createUserProfile = async (user: User) => {
     uid: user.uid,
     email: user.email || '',
     displayName: user.displayName || '',
-    photoURL: user.photoURL || '',
     isPremium: false,
     subscriptionStatus: 'free',
     pagesUsed: 0,
     maxPages: 4, // Free tier limit
     createdAt: serverTimestamp(),
-    lastLoginAt: serverTimestamp()
+    lastLoginAt: serverTimestamp(),
+    // Initialize writing analytics
+    writingStats: {
+      totalWords: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      lastWriteDate: null,
+    },
+    // Initialize writing goals
+    writingGoals: {
+      daily: 500,
+      weekly: 3500,
+      monthly: 15000,
+    },
+    // Initialize preferences
+    preferences: {
+      emailNotifications: true,
+      pushNotifications: true,
+      theme: 'light',
+    },
   };
   
   await setDoc(doc(db, 'users', user.uid), userProfile);
@@ -194,27 +230,6 @@ export const updateUserProfile = async (uid: string, updates: Partial<UserProfil
   }
 };
 
-// Update user avatar
-export const updateUserAvatar = async (uid: string, photoURL: string) => {
-  try {
-    // Update in Firestore
-    await setDoc(doc(db, 'users', uid), {
-      photoURL,
-      lastLoginAt: serverTimestamp()
-    }, { merge: true });
-    
-    // Update in Firebase Auth
-    if (auth.currentUser) {
-      await updateProfile(auth.currentUser, { photoURL });
-    }
-    
-    return true;
-  } catch (error) {
-    console.error('Error updating user avatar:', error);
-    return false;
-  }
-};
-
 // Sync page usage with actual project data (for migration/correction)
 export const syncPageUsage = async (uid: string, actualPagesUsed: number) => {
   try {
@@ -226,6 +241,49 @@ export const syncPageUsage = async (uid: string, actualPagesUsed: number) => {
     return true;
   } catch (error) {
     console.error('Error syncing page usage:', error);
+    return false;
+  }
+};
+
+// Writing Analytics Functions
+export const updateWritingStats = async (uid: string, stats: UserProfile['writingStats']) => {
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      writingStats: stats,
+      lastLoginAt: serverTimestamp()
+    }, { merge: true });
+    
+    return true;
+  } catch (error) {
+    console.error('Error updating writing stats:', error);
+    return false;
+  }
+};
+
+export const updateWritingGoals = async (uid: string, goals: UserProfile['writingGoals']) => {
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      writingGoals: goals,
+      lastLoginAt: serverTimestamp()
+    }, { merge: true });
+    
+    return true;
+  } catch (error) {
+    console.error('Error updating writing goals:', error);
+    return false;
+  }
+};
+
+export const updateUserPreferences = async (uid: string, preferences: UserProfile['preferences']) => {
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      preferences: preferences,
+      lastLoginAt: serverTimestamp()
+    }, { merge: true });
+    
+    return true;
+  } catch (error) {
+    console.error('Error updating user preferences:', error);
     return false;
   }
 };
