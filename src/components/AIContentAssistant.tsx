@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb } from '@phosphor-icons/react';
+import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb, X } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { generateAIContent, enhanceContent, type ContentSuggestion } from '@/lib/openai-service';
@@ -228,7 +228,8 @@ export function AIContentAssistant({
             >
               <h3 className="font-semibold text-foreground flex items-center gap-2">
                 <Lightbulb size={16} className="text-accent" />
-                Content Suggestions
+                AI Generated Content
+                <span className="text-xs font-normal text-muted-foreground">(Click to preview, then add to your chapter)</span>
               </h3>
               
               <div className="grid gap-3">
@@ -241,52 +242,49 @@ export function AIContentAssistant({
                   >
                     <Card
                       className={`cursor-pointer transition-all duration-200 neomorph-flat border-0 hover:neomorph-raised ${
-                        selectedSuggestion?.id === suggestion.id ? 'ring-2 ring-primary/30' : ''
+                        selectedSuggestion?.id === suggestion.id ? 'ring-2 ring-primary' : ''
                       }`}
                       onClick={() => setSelectedSuggestion(suggestion)}
                     >
                       <CardContent className="p-4">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <span className="text-lg">{getTypeIcon(suggestion.type)}</span>
-                            <div>
-                              <h4 className="font-medium text-foreground">{suggestion.title}</h4>
-                              <Badge 
-                                variant="secondary" 
-                                className={`text-xs mt-1 ${getTypeColor(suggestion.type)} border-0`}
-                              >
-                                {suggestion.type}
-                              </Badge>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center gap-3 flex-1 min-w-0">
+                            <span className="text-2xl flex-shrink-0">{getTypeIcon(suggestion.type)}</span>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-foreground mb-1">{suggestion.title}</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                {suggestion.content}
+                              </p>
                             </div>
                           </div>
-                          <div className="flex gap-1">
+                          <div className="flex gap-2 flex-shrink-0">
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                              <Button
+                                size="sm"
+                                className="gap-2 neomorph-button border-0 bg-primary text-primary-foreground hover:bg-primary/90"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  insertContent(suggestion.content);
+                                }}
+                              >
+                                <Plus size={16} weight="bold" />
+                                <span className="hidden sm:inline">Add to Chapter</span>
+                                <span className="sm:hidden">Add</span>
+                              </Button>
+                            </motion.div>
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="sm"
-                              className="h-8 w-8 p-0 neomorph-button"
+                              className="h-9 w-9 p-0 neomorph-button border-0"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 copyToClipboard(suggestion.content);
                               }}
                             >
-                              <Copy size={14} />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0 neomorph-button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                insertContent(suggestion.content);
-                              }}
-                            >
-                              <Plus size={14} />
+                              <Copy size={16} />
                             </Button>
                           </div>
                         </div>
-                        <p className="text-sm text-muted-foreground line-clamp-3">
-                          {suggestion.content}
-                        </p>
                       </CardContent>
                     </Card>
                   </motion.div>
@@ -296,72 +294,62 @@ export function AIContentAssistant({
           )}
         </AnimatePresence>
 
-        {/* Selected Suggestion Detail */}
+        {/* Selected Suggestion Detail - Expanded View */}
         <AnimatePresence>
           {selectedSuggestion && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-4"
+              className="space-y-3"
             >
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-foreground flex items-center gap-2">
-                  <span>{getTypeIcon(selectedSuggestion.type)}</span>
-                  {selectedSuggestion.title}
-                </h3>
-                <div className="flex gap-2">
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Card className="neomorph-inset border-0 bg-muted/30">
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{getTypeIcon(selectedSuggestion.type)}</span>
+                      <h4 className="font-semibold text-foreground">{selectedSuggestion.title}</h4>
+                      <Badge variant="secondary" className="text-xs border-0">
+                        Preview
+                      </Badge>
+                    </div>
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
-                      className="gap-2 neomorph-button border-0"
-                      onClick={() => enhanceContentHandler(selectedSuggestion.content)}
-                      disabled={isGenerating}
+                      className="h-8 w-8 p-0"
+                      onClick={() => setSelectedSuggestion(null)}
                     >
-                      {isGenerating ? (
-                        <>
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          >
-                            <MagicWand size={14} />
-                          </motion.div>
-                          <span className="hidden sm:inline">Enhancing...</span>
-                          <span className="sm:hidden">...</span>
-                        </>
-                      ) : (
-                        <>
-                          <MagicWand size={14} />
-                          Enhance
-                        </>
-                      )}
+                      <X size={16} />
                     </Button>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button
-                      size="sm"
-                      className="gap-2 neomorph-button border-0"
-                      onClick={() => insertContent(selectedSuggestion.content)}
-                    >
-                      <ArrowRight size={14} />
-                      Add to Chapter
-                    </Button>
-                  </motion.div>
-                </div>
-              </div>
-              
-              <Card className="neomorph-inset border-0">
-                <CardContent className="p-4">
+                  </div>
+                  
                   <Textarea
                     value={selectedSuggestion.content}
-                    onChange={(e) => setSelectedSuggestion({
-                      ...selectedSuggestion,
-                      content: e.target.value
-                    })}
-                    className="min-h-[200px] resize-none border-0 bg-transparent text-sm leading-relaxed"
-                    placeholder="Content will appear here..."
+                    readOnly
+                    className="min-h-[150px] resize-none neomorph-inset border-0 text-sm bg-background"
                   />
+                  
+                  <div className="flex gap-2 pt-2">
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
+                      <Button
+                        className="w-full gap-2 neomorph-button border-0 bg-gradient-to-r from-primary to-accent text-white"
+                        onClick={() => insertContent(selectedSuggestion.content)}
+                      >
+                        <Plus size={18} weight="bold" />
+                        Add This Content to My Chapter
+                      </Button>
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button
+                        variant="outline"
+                        className="gap-2 neomorph-button border-0"
+                        onClick={() => copyToClipboard(selectedSuggestion.content)}
+                      >
+                        <Copy size={16} />
+                        Copy
+                      </Button>
+                    </motion.div>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
