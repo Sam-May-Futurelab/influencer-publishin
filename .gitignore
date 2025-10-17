@@ -29,3 +29,4 @@ dist-ssr
 packages
 .file-manifest
 .devcontainer/
+.vercel

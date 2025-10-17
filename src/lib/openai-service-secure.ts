@@ -1,7 +1,5 @@
-import { getFunctions, httpsCallable } from 'firebase/functions';
-import app from './firebase';
-
-const functions = getFunctions(app);
+// Secure AI Service - Calls serverless function to keep API key safe
+// This works with Vercel/Netlify serverless functions (100% FREE)
 
 export interface ContentSuggestion {
   id: string;
@@ -10,8 +8,18 @@ export interface ContentSuggestion {
   type: 'outline' | 'introduction' | 'tips' | 'conclusion';
 }
 
+// Get the API endpoint based on environment
+const getApiEndpoint = () => {
+  // In production (Vercel), use /api route
+  if (import.meta.env.PROD) {
+    return '/api/generate-ai-content';
+  }
+  // In development, use Vercel dev server or fallback
+  return import.meta.env.VITE_API_ENDPOINT || 'http://localhost:3000/api/generate-ai-content';
+};
+
 /**
- * Generate AI content suggestions via secure Cloud Function
+ * Generate AI content suggestions via secure serverless function
  * This keeps the OpenAI API key secure on the server
  */
 export async function generateAIContent(
@@ -20,23 +28,32 @@ export async function generateAIContent(
   ebookCategory: string = 'general'
 ): Promise<ContentSuggestion[]> {
   try {
-    // Call the secure Cloud Function
-    const generateContent = httpsCallable(functions, 'generateAIContent');
+    const endpoint = getApiEndpoint();
     
-    const result = await generateContent({
-      keywords: keywords.split(',').map(k => k.trim()),
-      chapterTitle,
-      contentType: 'suggestions'
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        keywords: keywords.split(',').map(k => k.trim()),
+        chapterTitle,
+        contentType: 'suggestions',
+      }),
     });
 
-    const data = result.data as { success: boolean; content: string[]; tokensUsed: number };
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
 
     if (!data.success || !data.content) {
       throw new Error('Failed to generate AI content');
     }
 
     // Transform the suggestions array into ContentSuggestion format
-    const suggestions: ContentSuggestion[] = data.content.slice(0, 4).map((content, index) => ({
+    const suggestions: ContentSuggestion[] = data.content.slice(0, 4).map((content: string, index: number) => ({
       id: `suggestion-${Date.now()}-${index}`,
       title: index === 0 ? 'Chapter Outline' :
              index === 1 ? 'Engaging Introduction' :
@@ -54,37 +71,38 @@ export async function generateAIContent(
   } catch (error: any) {
     console.error('AI Content Generation Error:', error);
 
-    // Handle specific Firebase errors
-    if (error.code === 'unauthenticated') {
-      throw new Error('You must be signed in to use AI content generation');
-    }
-
-    if (error.code === 'resource-exhausted') {
-      throw new Error('AI service quota exceeded. Please try again later.');
-    }
-
     // Return fallback suggestions
     return getFallbackSuggestions(keywords, chapterTitle);
   }
 }
 
 /**
- * Enhance existing content via secure Cloud Function
+ * Enhance existing content via secure serverless function
  */
 export async function enhanceContent(
   originalContent: string,
   chapterTitle: string
 ): Promise<string> {
   try {
-    const generateContent = httpsCallable(functions, 'generateAIContent');
+    const endpoint = getApiEndpoint();
     
-    const result = await generateContent({
-      keywords: [originalContent],
-      chapterTitle,
-      contentType: 'enhance'
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        keywords: [originalContent],
+        chapterTitle,
+        contentType: 'enhance',
+      }),
     });
 
-    const data = result.data as { success: boolean; content: string; tokensUsed: number };
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
 
     if (!data.success || !data.content) {
       throw new Error('Failed to enhance content');
@@ -94,14 +112,6 @@ export async function enhanceContent(
 
   } catch (error: any) {
     console.error('Content Enhancement Error:', error);
-
-    if (error.code === 'unauthenticated') {
-      throw new Error('You must be signed in to use AI content enhancement');
-    }
-
-    if (error.code === 'resource-exhausted') {
-      throw new Error('AI service quota exceeded. Please try again later.');
-    }
 
     // Return original content if enhancement fails
     return originalContent;

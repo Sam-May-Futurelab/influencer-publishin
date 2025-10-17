@@ -1,42 +1,28 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
-const OpenAI = require('openai');
+// Vercel Serverless Function for AI Content Generation
+// This keeps your OpenAI API key secure on the server
+import OpenAI from 'openai';
 
-admin.initializeApp();
-
-// Initialize OpenAI with API key from environment config
+// Initialize OpenAI with API key from environment variable
 const openai = new OpenAI({
-  apiKey: functions.config().openai.key,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
-/**
- * Generate AI content suggestions based on keywords and chapter title
- * This endpoint is secured - only authenticated users can call it
- */
-exports.generateAIContent = functions.https.onCall(async (data, context) => {
-  // Verify user is authenticated
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
-      'unauthenticated',
-      'User must be authenticated to generate AI content'
-    );
+export default async function handler(req, res) {
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { keywords, chapterTitle, contentType = 'suggestions' } = data;
+  // Get data from request
+  const { keywords, chapterTitle, contentType = 'suggestions', userId } = req.body;
 
-  // Validate input
+  // Basic validation
   if (!keywords || keywords.length === 0) {
-    throw new functions.https.HttpsError(
-      'invalid-argument',
-      'Keywords are required'
-    );
+    return res.status(400).json({ error: 'Keywords are required' });
   }
 
   if (!chapterTitle) {
-    throw new functions.https.HttpsError(
-      'invalid-argument',
-      'Chapter title is required'
-    );
+    return res.status(400).json({ error: 'Chapter title is required' });
   }
 
   try {
@@ -98,47 +84,32 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
       throw new Error('No content generated from OpenAI');
     }
 
-    // Log usage for monitoring
-    functions.logger.info('AI Content Generated', {
-      userId: context.auth.uid,
+    // Log usage for monitoring (optional)
+    console.log('AI Content Generated', {
+      userId: userId || 'anonymous',
       contentType,
       tokensUsed: completion.usage?.total_tokens || 0,
+      timestamp: new Date().toISOString(),
     });
 
-    return {
+    return res.status(200).json({
       success: true,
       content: contentType === 'suggestions' ? JSON.parse(content) : content,
       tokensUsed: completion.usage?.total_tokens || 0,
-    };
+    });
 
   } catch (error) {
-    functions.logger.error('AI Generation Error', {
-      userId: context.auth.uid,
-      error: error.message,
-    });
+    console.error('AI Generation Error:', error);
 
     // Return user-friendly error
     if (error.code === 'insufficient_quota') {
-      throw new functions.https.HttpsError(
-        'resource-exhausted',
-        'AI service quota exceeded. Please try again later.'
-      );
+      return res.status(429).json({
+        error: 'AI service quota exceeded. Please try again later.',
+      });
     }
 
-    throw new functions.https.HttpsError(
-      'internal',
-      'Failed to generate AI content. Please try again.'
-    );
+    return res.status(500).json({
+      error: 'Failed to generate AI content. Please try again.',
+    });
   }
-});
-
-/**
- * Health check endpoint for monitoring
- */
-exports.healthCheck = functions.https.onRequest((req, res) => {
-  res.status(200).json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    service: 'InkFluence AI Functions',
-  });
-});
+}
