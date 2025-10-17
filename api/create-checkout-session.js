@@ -30,6 +30,12 @@ export default async (req, res) => {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
+    // Get the frontend URL and ensure it's valid
+    const frontendUrl = process.env.FRONTEND_URL || req.headers.origin || 'https://inkfluence-ai.vercel.app';
+    const baseUrl = frontendUrl.replace(/\/$/, ''); // Remove trailing slash
+    
+    console.log('Frontend URL:', baseUrl);
+
     // Create or retrieve Stripe customer
     let customer;
     const existingCustomers = await stripe.customers.list({
@@ -59,8 +65,8 @@ export default async (req, res) => {
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.FRONTEND_URL || req.headers.origin}/app?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.FRONTEND_URL || req.headers.origin}/app?canceled=true`,
+      success_url: `${baseUrl}/app?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/app?canceled=true`,
       metadata: {
         firebaseUserId: userId,
       },
