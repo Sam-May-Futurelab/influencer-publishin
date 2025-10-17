@@ -405,6 +405,7 @@ function App() {
     
     // Check authentication first
     if (!requireAuth("create a new chapter")) return;
+    if (!user) return;
 
     // Check if user can create more pages
     if (!userProfile?.isPremium) {
@@ -418,7 +419,7 @@ function App() {
     }
 
     // Try to increment page usage
-    const canCreatePage = await incrementPageUsage(user!.uid);
+    const canCreatePage = await incrementPageUsage(user.uid);
     if (!canCreatePage) {
       toast.error('Page limit reached! Upgrade to Premium for unlimited pages.');
       return;
