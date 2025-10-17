@@ -30,3 +30,4 @@ packages
 .file-manifest
 .devcontainer/
 .vercel
+.env*.local

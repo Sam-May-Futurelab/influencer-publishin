@@ -25,6 +25,7 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
       return;
     }
 
+    console.log('Starting upgrade with:', { priceId, userId: user.uid, email: user.email });
     setLoading(planId);
 
     try {
@@ -35,6 +36,7 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
       );
 
       if ('error' in result) {
+        console.error('Checkout error:', result.error);
         toast.error(result.error);
         setLoading(null);
         return;
