@@ -1,17 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { useAuth } from '@/hooks/use-auth';
 import { incrementPageUsage, syncPageUsage } from '@/lib/auth';
-import { ChapterEditor } from '@/components/ChapterEditor';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { Header } from '@/components/Header';
-import { Dashboard } from '@/components/Dashboard';
-import { ProjectsPage } from '@/components/ProjectsPage';
-import { SettingsPage } from '@/components/SettingsPage';
-import { ProfilePage } from '@/components/ProfilePage';
-import { BrandCustomizer } from '@/components/BrandCustomizer';
-import { TemplateGallery } from '@/components/TemplateGallery';
 import { UsageTracker } from '@/components/UsageTracker';
 import { AuthGuardDialog } from '@/components/AuthGuardDialog';
 import { AuthModal } from '@/components/AuthModal';
@@ -20,6 +13,24 @@ import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+
+// Lazy load page components for code splitting
+const Dashboard = lazy(() => import('@/components/Dashboard').then(module => ({ default: module.Dashboard })));
+const ProjectsPage = lazy(() => import('@/components/ProjectsPage').then(module => ({ default: module.ProjectsPage })));
+const TemplateGallery = lazy(() => import('@/components/TemplateGallery').then(module => ({ default: module.TemplateGallery })));
+const SettingsPage = lazy(() => import('@/components/SettingsPage').then(module => ({ default: module.SettingsPage })));
+const ProfilePage = lazy(() => import('@/components/ProfilePage').then(module => ({ default: module.ProfilePage })));
+
+// Lazy load heavy components
+const ChapterEditor = lazy(() => import('@/components/ChapterEditor').then(module => ({ default: module.ChapterEditor })));
+const BrandCustomizer = lazy(() => import('@/components/BrandCustomizer').then(module => ({ default: module.BrandCustomizer })));
+
+// Loading component for Suspense fallback
+const PageLoading = () => (
+  <div className="flex items-center justify-center min-h-[400px]">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+);
 
 const defaultBrandConfig: BrandConfig = {
   primaryColor: '#8B5CF6',
@@ -316,45 +327,55 @@ function App() {
       
       {viewMode === 'dashboard' ? (
         <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-          <Dashboard
-            projects={projects}
-            onSelectProject={selectProject}
-            onCreateProject={createProject}
-            onShowTemplateGallery={goToTemplatesPage}
-          />
+          <Suspense fallback={<PageLoading />}>
+            <Dashboard
+              projects={projects}
+              onSelectProject={selectProject}
+              onCreateProject={createProject}
+              onShowTemplateGallery={goToTemplatesPage}
+            />
+          </Suspense>
         </main>
       ) : viewMode === 'projects' ? (
         <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-          <ProjectsPage
-            projects={projects}
-            onSelectProject={selectProject}
-            onCreateProject={createProject}
-            onShowTemplateGallery={goToTemplatesPage}
-            onDeleteProject={deleteProject}
-            onDuplicateProject={duplicateProject}
-          />
+          <Suspense fallback={<PageLoading />}>
+            <ProjectsPage
+              projects={projects}
+              onSelectProject={selectProject}
+              onCreateProject={createProject}
+              onShowTemplateGallery={goToTemplatesPage}
+              onDeleteProject={deleteProject}
+              onDuplicateProject={duplicateProject}
+            />
+          </Suspense>
         </main>
       ) : viewMode === 'templates' ? (
         <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-          <TemplateGallery
-            onSelectTemplate={createProjectFromTemplate}
-            onClose={() => {
-              // Go back to where we came from
-              if (currentSection === 'projects') {
-                goToProjectsPage();
-              } else {
-                returnToDashboard();
-              }
-            }}
-          />
+          <Suspense fallback={<PageLoading />}>
+            <TemplateGallery
+              onSelectTemplate={createProjectFromTemplate}
+              onClose={() => {
+                // Go back to where we came from
+                if (currentSection === 'projects') {
+                  goToProjectsPage();
+                } else {
+                  returnToDashboard();
+                }
+              }}
+            />
+          </Suspense>
         </main>
       ) : viewMode === 'settings' ? (
         <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-          <SettingsPage onBack={returnToDashboard} />
+          <Suspense fallback={<PageLoading />}>
+            <SettingsPage onBack={returnToDashboard} />
+          </Suspense>
         </main>
       ) : viewMode === 'profile' ? (
         <main className="p-0">
-          <ProfilePage onNavigate={handleNavigation} />
+          <Suspense fallback={<PageLoading />}>
+            <ProfilePage onNavigate={handleNavigation} />
+          </Suspense>
         </main>
       ) : currentProject ? (
         <>
@@ -397,26 +418,30 @@ function App() {
               onUpgradeClick={() => setCurrentSection('profile')}
             />
             
-            <ChapterEditor
-              chapters={currentProject.chapters}
-              currentChapter={currentChapter}
-              onChapterSelect={setCurrentChapter}
-              onChapterCreate={createChapter}
-              onChapterUpdate={updateChapter}
-              onChapterDelete={deleteChapter}
-              onChapterReorder={reorderChapters}
-              onRecordWritingSession={recordWritingSession}
-              projectId={currentProject.id}
-              ebookCategory={currentProject.category || 'general'}
-            />
+            <Suspense fallback={<PageLoading />}>
+              <ChapterEditor
+                chapters={currentProject.chapters}
+                currentChapter={currentChapter}
+                onChapterSelect={setCurrentChapter}
+                onChapterCreate={createChapter}
+                onChapterUpdate={updateChapter}
+                onChapterDelete={deleteChapter}
+                onChapterReorder={reorderChapters}
+                onRecordWritingSession={recordWritingSession}
+                projectId={currentProject.id}
+                ebookCategory={currentProject.category || 'general'}
+              />
+            </Suspense>
           </main>
 
-          <BrandCustomizer
-            brandConfig={currentProject.brandConfig || defaultBrandConfig}
-            onUpdate={updateBrandConfig}
-            isOpen={showBrandCustomizer}
-            onClose={() => setShowBrandCustomizer(false)}
-          />
+          <Suspense fallback={<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>}>
+            <BrandCustomizer
+              brandConfig={currentProject.brandConfig || defaultBrandConfig}
+              onUpdate={updateBrandConfig}
+              isOpen={showBrandCustomizer}
+              onClose={() => setShowBrandCustomizer(false)}
+            />
+          </Suspense>
         </>
       ) : null}
 
