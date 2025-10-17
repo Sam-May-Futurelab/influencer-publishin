@@ -637,7 +637,7 @@ function App() {
           
           <main className="p-3 lg:p-6 pb-6 lg:pb-8 space-y-6">
             <UsageTracker 
-              onUpgradeClick={() => setCurrentSection('profile')}
+              onUpgradeClick={() => setShowUpgradeModal(true)}
             />
             
             <Suspense fallback={<PageLoading />}>

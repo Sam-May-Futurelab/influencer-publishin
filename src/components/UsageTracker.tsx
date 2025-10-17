@@ -104,32 +104,11 @@ export function UsageTracker({ onUpgradeClick, className = '', forceShow = false
                   </div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button 
-                      onClick={() => {
-                        if (canPurchase) {
-                          purchaseSubscription('monthly');
-                        } else {
-                          onUpgradeClick?.();
-                        }
-                      }}
-                      disabled={purchasing}
+                      onClick={onUpgradeClick}
                       className="w-full gap-2 neomorph-button border-0 bg-gradient-to-r from-primary to-accent text-white"
                     >
-                      {purchasing ? (
-                        <>
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          >
-                            <Crown size={14} />
-                          </motion.div>
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          <Crown size={14} />
-                          Upgrade to Premium
-                        </>
-                      )}
+                      <Crown size={14} />
+                      Upgrade to Premium
                     </Button>
                   </motion.div>
                 </div>
