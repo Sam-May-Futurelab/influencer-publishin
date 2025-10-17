@@ -145,7 +145,7 @@ export function Dashboard({
             <Button
               onClick={onShowTemplateGallery}
               variant="outline"
-              className="w-full neomorph-button border-0 text-sm min-h-[40px]"
+              className="w-full neomorph-button border-0 text-sm min-h-[40px] hover:text-black"
             >
               <BookOpen size={16} />
               Browse Templates
@@ -376,7 +376,7 @@ export function Dashboard({
           </p>
           <Button
             onClick={onShowTemplateGallery}
-            className="neomorph-button border-0 gap-2"
+            className="neomorph-button border-0 gap-2 hover:text-black"
           >
             <BookOpen size={16} />
             Browse Templates

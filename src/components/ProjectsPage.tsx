@@ -411,7 +411,7 @@ export function ProjectsPage({
               <Button
                 onClick={onShowTemplateGallery}
                 variant="outline"
-                className="neomorph-button border-0 gap-2"
+                className="neomorph-button border-0 gap-2 hover:text-black"
               >
                 <BookOpen size={16} />
                 Browse Templates
