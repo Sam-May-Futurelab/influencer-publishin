@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { 
   BookOpen, 
   Plus, 
@@ -43,6 +45,8 @@ export function ProjectsPage({
   const [sortBy, setSortBy] = useState<'updated' | 'created' | 'title'>('updated');
   const [filterBy, setFilterBy] = useState<'all' | 'active' | 'draft'>('all');
   const [previewProject, setPreviewProject] = useState<EbookProject | null>(null);
+  const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
+  const [newProjectTitle, setNewProjectTitle] = useState('');
 
   const filteredAndSortedProjects = projects
     .filter(project => {
@@ -122,10 +126,7 @@ export function ProjectsPage({
             <span className="text-sm">Use Template</span>
           </Button>
           <Button
-            onClick={() => {
-              const title = prompt('Enter project title:');
-              if (title?.trim()) onCreateProject(title.trim());
-            }}
+            onClick={() => setShowNewProjectDialog(true)}
             className="neomorph-button border-0 gap-2"
           >
             <Plus size={16} />
@@ -441,6 +442,69 @@ export function ProjectsPage({
           onClose={() => setPreviewProject(null)}
         />
       )}
+
+      {/* New Project Dialog */}
+      <Dialog open={showNewProjectDialog} onOpenChange={setShowNewProjectDialog}>
+        <DialogContent className="neomorph-flat border-0 sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Plus size={20} className="text-primary" />
+              Create New Project
+            </DialogTitle>
+            <DialogDescription>
+              Start a new ebook project. You can customize all details later.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 pt-4">
+            <div className="space-y-2">
+              <Label htmlFor="project-title">Project Title</Label>
+              <Input
+                id="project-title"
+                placeholder="e.g., My Amazing Ebook"
+                value={newProjectTitle}
+                onChange={(e) => setNewProjectTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && newProjectTitle.trim()) {
+                    onCreateProject(newProjectTitle.trim());
+                    setNewProjectTitle('');
+                    setShowNewProjectDialog(false);
+                  }
+                }}
+                className="neomorph-inset border-0"
+                autoFocus
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setNewProjectTitle('');
+                  setShowNewProjectDialog(false);
+                }}
+                className="neomorph-flat border-0"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  if (newProjectTitle.trim()) {
+                    onCreateProject(newProjectTitle.trim());
+                    setNewProjectTitle('');
+                    setShowNewProjectDialog(false);
+                  }
+                }}
+                disabled={!newProjectTitle.trim()}
+                className="neomorph-button border-0 gap-2"
+              >
+                <Plus size={16} />
+                Create Project
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
