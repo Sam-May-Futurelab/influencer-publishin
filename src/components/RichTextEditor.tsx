@@ -198,11 +198,6 @@ export function RichTextEditor({
           <span>{editor.storage.characterCount?.words() || 0} words</span>
           <span>{editor.storage.characterCount?.characters() || 0} characters</span>
         </div>
-        <div className="flex items-center gap-2">
-          {editor.can().undo() && (
-            <span className="text-primary">• Unsaved changes</span>
-          )}
-        </div>
       </div>
     </div>
   );
