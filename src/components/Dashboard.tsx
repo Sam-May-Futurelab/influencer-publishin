@@ -204,24 +204,50 @@ export function Dashboard({
           <Card className="neomorph-flat border-0">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-xl neomorph-inset">
-                  <Trophy size={20} className="text-yellow-500" />
-                </div>
+                <motion.div 
+                  className="p-2 rounded-xl neomorph-flat"
+                  animate={{ 
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 3
+                  }}
+                >
+                  <Trophy size={20} className="text-yellow-500" weight="fill" />
+                </motion.div>
                 <div>
                   <h3 className="font-semibold">Recent Achievements</h3>
-                  <p className="text-sm text-muted-foreground">Celebrate your writing milestones!</p>
+                  <p className="text-sm text-muted-foreground">Celebrate your writing milestones! 🎉</p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                {recentAchievements.map((achievement) => (
-                  <Badge
+                {recentAchievements.map((achievement, index) => (
+                  <motion.div
                     key={achievement.id}
-                    variant="secondary"
-                    className="neomorph-flat border-0 gap-2"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
                   >
-                    <span>{achievement.icon}</span>
-                    <span>{achievement.title}</span>
-                  </Badge>
+                    <div className="neomorph-flat border-0 rounded-lg px-3 py-2 flex items-center gap-2 hover:neomorph-raised transition-all duration-200 cursor-default">
+                      <motion.span 
+                        className="text-xl"
+                        animate={{ 
+                          scale: [1, 1.15, 1],
+                        }}
+                        transition={{ 
+                          duration: 1.5,
+                          repeat: Infinity,
+                          repeatDelay: 2 + index * 0.5
+                        }}
+                      >
+                        {achievement.icon}
+                      </motion.span>
+                      <span className="font-medium text-sm text-foreground">{achievement.title}</span>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             </CardContent>

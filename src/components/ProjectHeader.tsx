@@ -4,25 +4,35 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DownloadSimple, FileText, Gear, Palette, Eye } from '@phosphor-icons/react';
+import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { ExportDialog } from '@/components/ExportDialog';
 import { PreviewDialog } from '@/components/PreviewDialog';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/hooks/use-auth';
 
 interface ProjectHeaderProps {
   project: EbookProject;
   onProjectUpdate: (updates: Partial<EbookProject>) => void;
   onBrandCustomize: () => void;
+  onUpgradeClick?: () => void;
 }
 
-export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: ProjectHeaderProps) {
+export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUpgradeClick }: ProjectHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
   const [tempTitle, setTempTitle] = useState(project.title);
   const [tempDescription, setTempDescription] = useState(project.description);
   const [tempAuthor, setTempAuthor] = useState(project.author);
+  const { userProfile } = useAuth();
+
+  const isPremium = userProfile?.isPremium || false;
+  const pagesUsed = userProfile?.pagesUsed || 0;
+  const maxPages = userProfile?.maxPages || 10;
+  const pagesRemaining = maxPages - pagesUsed;
+  const usagePercentage = (pagesUsed / maxPages) * 100;
+  const isUnlimited = isPremium;
 
   const handleSave = () => {
     onProjectUpdate({
@@ -85,6 +95,31 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize }: Pr
             >
               ~{estimatedPages} pages
             </Badge>
+            
+            {/* Compact Usage Badge */}
+            {isPremium ? (
+              <Badge 
+                variant="outline"
+                className="neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1"
+              >
+                <Crown size={12} weight="fill" className="text-amber-600 dark:text-yellow-400" />
+                <span className="font-semibold">Unlimited</span>
+              </Badge>
+            ) : (
+              <Badge 
+                onClick={usagePercentage >= 70 ? onUpgradeClick : undefined}
+                className={`neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium flex items-center gap-1 ${
+                  usagePercentage >= 100 
+                    ? 'bg-red-500/20 text-red-700 dark:text-red-400 cursor-pointer hover:bg-red-500/30' 
+                    : usagePercentage >= 70 
+                    ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 cursor-pointer hover:bg-yellow-500/30' 
+                    : 'bg-green-500/20 text-green-700 dark:text-green-400'
+                }`}
+              >
+                <FileText size={12} />
+                <span>{pagesRemaining} of {maxPages} pages left</span>
+              </Badge>
+            )}
           </div>
         </div>
 

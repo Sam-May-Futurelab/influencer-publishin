@@ -10,9 +10,10 @@ import { usePayments } from '@/hooks/use-payments';
 interface UsageTrackerProps {
   onUpgradeClick?: () => void;
   className?: string;
+  forceShow?: boolean; // Show even for premium users or low usage
 }
 
-export function UsageTracker({ onUpgradeClick, className = '' }: UsageTrackerProps) {
+export function UsageTracker({ onUpgradeClick, className = '', forceShow = false }: UsageTrackerProps) {
   const { userProfile } = useAuth();
   const { purchaseSubscription, purchasing, canPurchase } = usePayments();
 
@@ -22,6 +23,11 @@ export function UsageTracker({ onUpgradeClick, className = '' }: UsageTrackerPro
   const isUnlimited = maxPages === -1 || isPremium;
   const usagePercentage = isUnlimited ? 0 : Math.min((pagesUsed / maxPages) * 100, 100);
   const pagesRemaining = isUnlimited ? 'Unlimited' : Math.max(maxPages - pagesUsed, 0);
+
+  // Only show if forced, or if user is not premium and usage is high (70% or more)
+  const shouldShow = forceShow || (!isPremium && usagePercentage >= 70);
+  
+  if (!shouldShow) return null;
 
   const getStatusColor = () => {
     if (isPremium) return 'bg-gradient-to-r from-yellow-400 to-orange-500';
