@@ -82,13 +82,13 @@ export default async function handler(req, res) {
 
     if (contentType === 'suggestions') {
       // Determine word count based on length setting
-      const wordCounts = {
-        brief: '100-150 words',
-        standard: '200-300 words',
-        detailed: '300-400 words',
-        comprehensive: '500-700 words'
+      const wordCountTargets = {
+        brief: { min: 100, max: 150, description: '100-150 words' },
+        standard: { min: 200, max: 300, description: '200-300 words' },
+        detailed: { min: 300, max: 400, description: '300-400 words' },
+        comprehensive: { min: 500, max: 700, description: '500-700 words' }
       };
-      const targetWords = wordCounts[length] || '200-300 words';
+      const wordTarget = wordCountTargets[length] || wordCountTargets.standard;
       
       // Build a natural, effective prompt
       const genreContext = genre && genre !== 'general' ? ` for a ${genre} ebook` : '';
@@ -96,24 +96,42 @@ export default async function handler(req, res) {
       
       prompt = `You are a professional ebook content writer${genreContext}${audienceContext}.
 
-Chapter Title: "${chapterTitle}"
-Topics to cover: ${keywords.join(', ')}
+Chapter: "${chapterTitle}"
+Topics: ${keywords.join(', ')}
 
-Generate 4 distinct, well-written content pieces for this chapter. Each piece should be ${targetWords} long and serve a different purpose:
+CRITICAL REQUIREMENT: Each piece MUST be between ${wordTarget.min}-${wordTarget.max} words. This is MANDATORY. Count your words carefully.
 
-1. An engaging chapter introduction that hooks the reader
-2. A detailed explanation of the main concepts with examples
-3. Practical tips and actionable advice readers can use immediately
-4. A compelling conclusion that reinforces key takeaways
+Generate 4 content pieces:
 
-Important guidelines:
-- Write in a ${toneDescriptors[tone] || 'engaging, conversational'} style
-- Each piece should be substantive and valuable (${targetWords})
-- Include specific examples, not generic advice
-- Make content immediately useful and actionable
-- Use natural paragraph breaks for readability
+1. Chapter Introduction (${wordTarget.description})
+   - Hook the reader immediately
+   - Set clear expectations
+   - Make them want to continue reading
+   
+2. Main Explanation (${wordTarget.description})
+   - Detailed coverage of key concepts
+   - Include 2-3 specific examples
+   - Break down complex ideas
+   
+3. Practical Tips (${wordTarget.description})
+   - 3-5 actionable tips readers can use today
+   - Specific, not generic advice
+   - Real-world application examples
+   
+4. Conclusion (${wordTarget.description})
+   - Reinforce key takeaways
+   - Motivate action
+   - Connect to next steps
 
-Return ONLY a JSON array of 4 strings (each ${targetWords}). No markdown, no formatting markers.`;
+Style: ${toneDescriptors[tone] || 'engaging, conversational'}
+
+IMPORTANT: 
+- Each piece must be AT LEAST ${wordTarget.min} words
+- Each piece should be close to ${wordTarget.max} words
+- Be specific and detailed, not brief or generic
+- Use multiple paragraphs for longer pieces
+
+Return ONLY a JSON array of 4 strings. Each string must be ${wordTarget.description}.`;
       
       maxTokens = tokenLimits[length] || 1500;
       
