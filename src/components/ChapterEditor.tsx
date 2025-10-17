@@ -558,6 +558,50 @@ export function ChapterEditor({
           </motion.div>
         )}
       </motion.div>
+      
+      {/* Floating Save Button - Always accessible when changes exist */}
+      <AnimatePresence>
+        {hasUnsavedChanges && currentChapter && (
+          <motion.div
+            initial={{ opacity: 0, y: 100, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 100, scale: 0.8 }}
+            className="fixed bottom-6 right-6 z-50"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button
+              size="lg"
+              onClick={forceSave}
+              disabled={saving}
+              className="neomorph-button border-0 h-14 w-14 rounded-full shadow-2xl bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-0 relative group"
+              title={saving ? 'Saving...' : 'Save Now'}
+            >
+              <motion.div
+                animate={saving ? { rotate: 360 } : {}}
+                transition={saving ? { duration: 1, repeat: Infinity, ease: "linear" } : {}}
+              >
+                <FloppyDisk size={24} weight="fill" />
+              </motion.div>
+              
+              {/* Tooltip */}
+              <span className="absolute right-full mr-3 px-3 py-1.5 bg-foreground text-background text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                {saving ? 'Saving changes...' : 'Click to save now'}
+              </span>
+              
+              {/* Pulse effect when unsaved */}
+              {!saving && (
+                <motion.span
+                  className="absolute inset-0 rounded-full bg-green-500"
+                  initial={{ scale: 1, opacity: 0.5 }}
+                  animate={{ scale: 1.5, opacity: 0 }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              )}
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
