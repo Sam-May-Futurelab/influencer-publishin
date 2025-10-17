@@ -53,7 +53,8 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'Priority support',
       'Custom branding',
       'Advanced export options',
-      'Remove watermarks'
+      'Remove watermarks',
+      'Early access to new features'
     ],
     popular: true
   },
@@ -71,7 +72,8 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'Priority support',
       'Custom branding',
       'Advanced export options',
-      'Remove watermarks'
+      'Remove watermarks',
+      'Early access to new features'
     ]
   }
 ];
@@ -96,6 +98,8 @@ export class StripePaymentService {
     userEmail: string
   ): Promise<{ url: string } | { error: string }> {
     try {
+      console.log('Creating checkout session with:', { priceId, userId, userEmail });
+      
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
@@ -107,6 +111,14 @@ export class StripePaymentService {
           userEmail,
         }),
       });
+
+      // Try to parse as JSON, but handle HTML error pages
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        console.error('Non-JSON response:', text.substring(0, 200));
+        throw new Error('Server error - please check Vercel logs');
+      }
 
       const data = await response.json();
       

@@ -371,6 +371,38 @@ function App() {
     }
   };
 
+  const renameProject = async (projectId: string, newTitle: string) => {
+    if (!user || !newTitle.trim()) return;
+
+    try {
+      // Update in state
+      setProjects(currentProjects => 
+        currentProjects.map(p => 
+          p.id === projectId 
+            ? { ...p, title: newTitle.trim(), updatedAt: new Date() }
+            : p
+        )
+      );
+
+      // If it's the current project, update that too
+      if (currentProject?.id === projectId) {
+        setCurrentProject(prev => prev ? { ...prev, title: newTitle.trim(), updatedAt: new Date() } : null);
+      }
+
+      // Save to Firebase
+      const projectToUpdate = projects.find(p => p.id === projectId);
+      if (projectToUpdate) {
+        const updatedProject = { ...projectToUpdate, title: newTitle.trim(), updatedAt: new Date() };
+        await saveProject(user.uid, updatedProject);
+      }
+
+      toast.success('Project renamed successfully');
+    } catch (error) {
+      console.error('Error renaming project:', error);
+      toast.error('Failed to rename project');
+    }
+  };
+
   const handleDeleteCurrentProject = async () => {
     if (!currentProject || !user) return;
 
@@ -564,6 +596,7 @@ function App() {
                 onCreateProject={createProject}
                 onShowTemplateGallery={goToTemplatesPage}
                 onDeleteProject={deleteProject}
+                onRenameProject={renameProject}
                 onDuplicateProject={duplicateProject}
               />
             )}

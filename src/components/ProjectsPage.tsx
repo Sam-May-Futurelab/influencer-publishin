@@ -30,6 +30,7 @@ interface ProjectsPageProps {
   onCreateProject: (title: string) => void;
   onShowTemplateGallery: () => void;
   onDeleteProject?: (projectId: string) => void;
+  onRenameProject?: (projectId: string, newTitle: string) => void;
   onDuplicateProject?: (project: EbookProject) => void;
 }
 
@@ -39,6 +40,7 @@ export function ProjectsPage({
   onCreateProject, 
   onShowTemplateGallery,
   onDeleteProject,
+  onRenameProject,
   onDuplicateProject
 }: ProjectsPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -528,9 +530,8 @@ export function ProjectsPage({
                 value={renameTitle}
                 onChange={(e) => setRenameTitle(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && renameTitle.trim() && projectToRename) {
-                    // Handle rename - would need to be passed as prop
-                    console.log('Rename to:', renameTitle);
+                  if (e.key === 'Enter' && renameTitle.trim() && projectToRename && onRenameProject) {
+                    onRenameProject(projectToRename.id, renameTitle);
                     setShowRenameDialog(false);
                     setRenameTitle('');
                     setProjectToRename(null);
@@ -555,9 +556,8 @@ export function ProjectsPage({
               </Button>
               <Button
                 onClick={() => {
-                  if (renameTitle.trim() && projectToRename) {
-                    // Handle rename - would need to be passed as prop
-                    console.log('Rename to:', renameTitle);
+                  if (renameTitle.trim() && projectToRename && onRenameProject) {
+                    onRenameProject(projectToRename.id, renameTitle);
                     setShowRenameDialog(false);
                     setRenameTitle('');
                     setProjectToRename(null);
