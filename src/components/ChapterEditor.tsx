@@ -135,6 +135,19 @@ export function ChapterEditor({
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 min-h-0 relative">
+      {/* Collapse/Expand Toggle - Always visible */}
+      <div className="absolute left-0 top-0 z-10 lg:relative lg:w-auto flex items-start pt-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className="neomorph-button border-0 h-10 w-10 p-0 rounded-full shadow-lg hover:scale-110 transition-transform"
+          title={sidebarCollapsed ? "Show chapters" : "Hide chapters"}
+        >
+          {sidebarCollapsed ? <CaretRight size={18} weight="bold" /> : <CaretLeft size={18} weight="bold" />}
+        </Button>
+      </div>
+
       {/* Collapsible Chapter Sidebar */}
       <AnimatePresence>
         {!sidebarCollapsed && (
@@ -143,7 +156,7 @@ export function ChapterEditor({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="w-full lg:w-72 flex flex-col neomorph-inset rounded-xl p-4 bg-background/50 backdrop-blur-sm"
+            className="w-full lg:w-72 flex flex-col neomorph-inset rounded-xl p-4 bg-background/50 backdrop-blur-sm ml-12 lg:ml-0"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-bold text-foreground">Chapters</h2>
@@ -247,19 +260,6 @@ export function ChapterEditor({
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Collapse/Expand Toggle */}
-      <div className="flex items-center">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="neomorph-button border-0 h-10 w-10 p-0 rounded-full shadow-lg hover:scale-110 transition-transform"
-          title={sidebarCollapsed ? "Show chapters" : "Hide chapters"}
-        >
-          {sidebarCollapsed ? <CaretRight size={18} weight="bold" /> : <CaretLeft size={18} weight="bold" />}
-        </Button>
-      </div>
 
       {/* Main Editor */}
       <motion.div 
