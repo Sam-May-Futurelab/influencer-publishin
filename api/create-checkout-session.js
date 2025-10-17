@@ -31,8 +31,14 @@ export default async (req, res) => {
     }
 
     // Get the frontend URL and ensure it's valid
-    const frontendUrl = process.env.FRONTEND_URL || req.headers.origin || 'https://inkfluence-ai.vercel.app';
-    const baseUrl = frontendUrl.replace(/\/$/, ''); // Remove trailing slash
+    let frontendUrl = process.env.FRONTEND_URL || req.headers.origin || 'https://inkfluence-ai.vercel.app';
+    // Remove trailing slash, newlines, and any whitespace
+    const baseUrl = frontendUrl.trim().replace(/[\n\r]/g, '').replace(/\/$/, '');
+    
+    const successUrl = `${baseUrl}/app?success=true&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${baseUrl}/app?canceled=true`;
+    
+    console.log('Creating checkout with URLs:', { baseUrl, successUrl, cancelUrl });
     
     console.log('Frontend URL:', baseUrl);
 
@@ -65,8 +71,8 @@ export default async (req, res) => {
         },
       ],
       mode: 'subscription',
-      success_url: `${baseUrl}/app?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/app?canceled=true`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
       metadata: {
         firebaseUserId: userId,
       },

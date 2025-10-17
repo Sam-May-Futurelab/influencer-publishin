@@ -31,3 +31,4 @@ packages
 .devcontainer/
 .vercel
 .env*.local
+.env.production
