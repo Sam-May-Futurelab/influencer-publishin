@@ -67,4 +67,10 @@ export interface Achievement {
   type: 'words' | 'streak' | 'projects' | 'chapters';
 }
 
+export interface UsageLimit {
+  dailyGenerations: number;
+  usedToday: number;
+  lastResetDate: string; // YYYY-MM-DD format
+}
+
 export type InputMode = 'text' | 'ai' | 'preview';

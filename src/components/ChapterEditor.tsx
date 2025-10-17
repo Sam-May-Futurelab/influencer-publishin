@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAutoSave } from '@/hooks/use-auto-save';
+import { useAuth } from '@/hooks/use-auth';
 
 interface ChapterEditorProps {
   chapters: Chapter[];
@@ -49,6 +50,9 @@ export function ChapterEditor({
   projectDescription = '',
   brandConfig,
 }: ChapterEditorProps) {
+  const { userProfile } = useAuth();
+  const isPremium = userProfile?.isPremium || false;
+  
   const [inputMode, setInputMode] = useState<InputMode>('text');
   const [editingTitle, setEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState('');
@@ -396,6 +400,7 @@ export function ChapterEditor({
                       chapterNumber={chapters.findIndex(ch => ch.id === currentChapter.id) + 1}
                       totalChapters={chapters.length}
                       onContentGenerated={handleAIContentGenerated}
+                      isPremium={isPremium}
                     />
                     
                     <div className="space-y-2 lg:space-y-3">

@@ -12,6 +12,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { generateAIContent, enhanceContent, type ContentSuggestion, type Tone, type Length, type Format } from '@/lib/openai-service-secure';
 import { AILoading } from '@/components/AILoading';
+import { useAuth } from '@/hooks/use-auth';
+import { useUsageTracking } from '@/hooks/use-usage-tracking';
 
 interface AIContentAssistantProps {
   chapterTitle: string;
@@ -21,6 +23,7 @@ interface AIContentAssistantProps {
   totalChapters?: number;
   onContentGenerated: (content: string) => void;
   className?: string;
+  isPremium?: boolean;
 }
 
 export function AIContentAssistant({ 
@@ -30,8 +33,12 @@ export function AIContentAssistant({
   chapterNumber,
   totalChapters,
   onContentGenerated, 
-  className = '' 
+  className = '',
+  isPremium = false
 }: AIContentAssistantProps) {
+  const { user } = useAuth();
+  const { canGenerate, remainingGenerations, incrementUsage, loading: usageLoading } = useUsageTracking(user?.uid || null, isPremium);
+  
   const [keywords, setKeywords] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [suggestions, setSuggestions] = useState<ContentSuggestion[]>([]);
@@ -42,9 +49,6 @@ export function AIContentAssistant({
   const [length, setLength] = useState<Length>('standard');
   const [format, setFormat] = useState<Format>('narrative');
   const [showAdvanced, setShowAdvanced] = useState(false);
-  
-  // Premium check - always true for now (can connect to payment system later)
-  const isPremium = true;
 
   // Clear suggestions when chapter changes
   useEffect(() => {
@@ -57,6 +61,17 @@ export function AIContentAssistant({
   const generateContent = async () => {
     if (!keywords.trim()) {
       toast.error('Please enter some keywords first');
+      return;
+    }
+
+    // Check usage limit
+    if (!canGenerate) {
+      toast.error(
+        isPremium 
+          ? 'Daily limit reached. Try again tomorrow!' 
+          : 'Free limit reached. Upgrade to Premium for 50 generations/day!',
+        { duration: 4000 }
+      );
       return;
     }
 
@@ -85,6 +100,9 @@ export function AIContentAssistant({
           totalChapters,
         }
       });
+      
+      // Increment usage counter after successful generation
+      await incrementUsage();
       
       // Add to existing suggestions instead of replacing (allows multiple clicks)
       setSuggestions(prev => [...newSuggestions, ...prev]);
@@ -199,33 +217,56 @@ export function AIContentAssistant({
       <CardContent className="p-4 space-y-4">
         {/* Compact Header with Input */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2 mb-2">
-            <Star size={16} className="text-primary" weight="fill" />
-            <h3 className="text-sm font-semibold">AI Writing Assistant</h3>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="text-muted-foreground hover:text-foreground transition-colors">
-                    <Info size={14} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent className="max-w-xs neomorph-flat border-0 p-3">
-                  <div className="space-y-2 text-xs">
-                    <p className="font-semibold text-primary">How to use AI Assistant:</p>
-                    <ol className="space-y-1 list-decimal list-inside">
-                      <li>Enter keywords or topics for your chapter</li>
-                      <li>Click "Generate" to create AI suggestions</li>
-                      <li>Preview different content options</li>
-                      <li>Click "Enhance" to improve any suggestion</li>
-                      <li>Click "Insert" to add content to your chapter</li>
-                    </ol>
-                    <p className="text-muted-foreground italic mt-2">
-                      💡 Tip: Use specific keywords for better results!
-                    </p>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <div className="flex items-center gap-2">
+              <Star size={16} className="text-primary" weight="fill" />
+              <h3 className="text-sm font-semibold">AI Writing Assistant</h3>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button className="text-muted-foreground hover:text-foreground transition-colors">
+                      <Info size={14} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs neomorph-flat border-0 p-3">
+                    <div className="space-y-2 text-xs">
+                      <p className="font-semibold text-primary">How to use AI Assistant:</p>
+                      <ol className="space-y-1 list-decimal list-inside">
+                        <li>Enter keywords or topics for your chapter</li>
+                        <li>Click "Generate" to create AI suggestions</li>
+                        <li>Preview different content options</li>
+                        <li>Click "Enhance" to improve any suggestion</li>
+                        <li>Click "Insert" to add content to your chapter</li>
+                      </ol>
+                      <p className="text-muted-foreground italic mt-2">
+                        💡 Tip: Use specific keywords for better results!
+                      </p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            
+            {/* Usage Counter */}
+            {!usageLoading && (
+              <div className="flex items-center gap-1.5">
+                <span className={`text-xs font-medium ${remainingGenerations === 0 ? 'text-red-500' : remainingGenerations <= 1 ? 'text-orange-500' : 'text-muted-foreground'}`}>
+                  {remainingGenerations}/{isPremium ? 50 : 3} left today
+                </span>
+                {!isPremium && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Crown size={14} className="text-amber-500" weight="fill" />
+                      </TooltipTrigger>
+                      <TooltipContent className="neomorph-flat border-0 p-2">
+                        <p className="text-xs">Upgrade to Premium for 50/day!</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+            )}
           </div>
           
           <div className="flex gap-2">
