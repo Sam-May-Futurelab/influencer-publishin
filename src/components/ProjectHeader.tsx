@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle } from '@phosphor-icons/react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { ExportDialog } from '@/components/ExportDialog';
 import { PreviewDialog } from '@/components/PreviewDialog';
@@ -16,9 +17,10 @@ interface ProjectHeaderProps {
   onProjectUpdate: (updates: Partial<EbookProject>) => void;
   onBrandCustomize: () => void;
   onUpgradeClick?: () => void;
+  onDeleteProject?: () => void;
 }
 
-export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUpgradeClick }: ProjectHeaderProps) {
+export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUpgradeClick, onDeleteProject }: ProjectHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
@@ -182,6 +184,49 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                     className="neomorph-inset border-0 resize-none"
                   />
                 </div>
+                
+                {/* Danger Zone - Delete Project */}
+                {onDeleteProject && (
+                  <div className="border-t pt-4 mt-6">
+                    <label className="text-sm font-semibold mb-2 block text-red-600 dark:text-red-400">Danger Zone</label>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      Once you delete this project, all chapters and content will be permanently removed. This action cannot be undone.
+                    </p>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button 
+                          variant="destructive"
+                          className="w-full gap-2"
+                        >
+                          <Trash size={16} />
+                          Delete Project
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="neomorph-raised border-0">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will permanently delete "<strong>{project.title}</strong>" and all {project.chapters.length} chapter{project.chapters.length !== 1 ? 's' : ''}. 
+                            This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="neomorph-button border-0">Cancel</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={() => {
+                              setIsEditing(false);
+                              onDeleteProject();
+                            }}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            Yes, Delete Project
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                )}
+                
                 <div className="flex justify-end gap-3 pt-4 pb-2">
                   <Button 
                     variant="outline" 

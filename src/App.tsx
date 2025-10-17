@@ -1,8 +1,8 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
-import { useLocalStorage } from '@/hooks/use-local-storage';
+import { useState, useEffect, lazy, Suspense, useRef } from 'react';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { useAuth } from '@/hooks/use-auth';
 import { incrementPageUsage, syncPageUsage } from '@/lib/auth';
+import { getUserProjects, saveProject, deleteProject as deleteProjectFromFirestore } from '@/lib/projects';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { Header } from '@/components/Header';
 import { UsageTracker } from '@/components/UsageTracker';
@@ -42,7 +42,8 @@ const defaultBrandConfig: BrandConfig = {
 
 function App() {
   const { user, userProfile, refreshProfile } = useAuth();
-  const [projects, setProjects] = useLocalStorage<EbookProject[]>('ebook-projects', []);
+  const [projects, setProjects] = useState<EbookProject[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(false);
   const [currentProject, setCurrentProject] = useState<EbookProject | null>(null);
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
@@ -52,8 +53,88 @@ function App() {
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  // Debounce timer for auto-save
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const currentProjectRef = useRef<EbookProject | null>(null);
+
+  // Keep ref in sync with current project
+  useEffect(() => {
+    currentProjectRef.current = currentProject;
+  }, [currentProject]);
+
   // Writing analytics
   const { recordWritingSession } = useWritingAnalytics(projects);
+
+  // Load projects from Firebase when user logs in
+  useEffect(() => {
+    const loadProjects = async () => {
+      if (user) {
+        setProjectsLoading(true);
+        try {
+          console.log('📥 Loading projects from Firebase for user:', user.uid);
+          const userProjects = await getUserProjects(user.uid);
+          console.log('✅ Loaded projects:', userProjects.map(p => ({
+            id: p.id,
+            title: p.title,
+            chaptersCount: p.chapters.length,
+            chapters: p.chapters.map(ch => ({
+              id: ch.id,
+              title: ch.title,
+              contentLength: ch.content.length
+            }))
+          })));
+          setProjects(userProjects);
+        } catch (error) {
+          console.error('❌ Error loading projects:', error);
+          toast.error('Failed to load your projects');
+        } finally {
+          setProjectsLoading(false);
+        }
+      } else {
+        // Clear projects when user logs out
+        console.log('🚪 User logged out, clearing projects');
+        setProjects([]);
+        setCurrentProject(null);
+        setCurrentChapter(null);
+        setViewMode('dashboard');
+      }
+    };
+
+    loadProjects();
+  }, [user]);
+
+  // Force save on unmount or when currentProject changes
+  useEffect(() => {
+    // Store user in a ref to check at cleanup time
+    const currentUserRef = { current: user };
+    
+    return () => {
+      // Clear timeout on unmount
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      
+      // Force save the current project if it exists AND user is still logged in
+      const projectToSave = currentProjectRef.current;
+      const userAtCleanup = currentUserRef.current;
+      
+      if (projectToSave && userAtCleanup) {
+        console.log('🔄 Force saving on unmount...', {
+          id: projectToSave.id,
+          title: projectToSave.title,
+          chaptersCount: projectToSave.chapters.length
+        });
+        saveProject(userAtCleanup.uid, projectToSave).then(() => {
+          console.log('✅ Force save completed');
+        }).catch(error => {
+          // Only log error if it's not a permissions error (which happens on logout)
+          if (!error.message?.includes('permissions')) {
+            console.error('❌ Error saving on unmount:', error);
+          }
+        });
+      }
+    };
+  }, [user]); // Only depend on user, not currentProject (we use ref instead)
 
   useEffect(() => {
     if (projects.length > 0) {
@@ -104,14 +185,46 @@ function App() {
     setCurrentSection('editor');
   };
 
-  const returnToDashboard = () => {
+  const returnToDashboard = async () => {
+    // Force save before leaving
+    if (currentProject && user) {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      console.log('💾 Saving before returning to dashboard...');
+      try {
+        await saveProject(user.uid, currentProject);
+        console.log('✅ Save completed');
+      } catch (error) {
+        console.error('❌ Error saving:', error);
+        toast.error('Failed to save. Please try again.');
+        return; // Don't navigate if save failed
+      }
+    }
+    
     setCurrentProject(null);
     setCurrentChapter(null);
     setViewMode('dashboard');
     setCurrentSection('dashboard');
   };
 
-  const goToProjectsPage = () => {
+  const goToProjectsPage = async () => {
+    // Force save before leaving
+    if (currentProject && user) {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      console.log('💾 Saving before going to projects page...');
+      try {
+        await saveProject(user.uid, currentProject);
+        console.log('✅ Save completed');
+      } catch (error) {
+        console.error('❌ Error saving:', error);
+        toast.error('Failed to save. Please try again.');
+        return;
+      }
+    }
+    
     setCurrentProject(null);
     setCurrentChapter(null);
     setViewMode('projects');
@@ -139,9 +252,10 @@ function App() {
     setCurrentSection('profile');
   };
 
-  const createProject = (title: string) => {
+  const createProject = async (title: string) => {
     // Check authentication first
     if (!requireAuth("create a new eBook project")) return;
+    if (!user) return;
     
     const newProject: EbookProject = {
       id: crypto.randomUUID(),
@@ -155,22 +269,35 @@ function App() {
       updatedAt: new Date(),
     };
 
-    setProjects(currentProjects => [...currentProjects, newProject]);
-    selectProject(newProject);
-    toast.success('New ebook project created!');
+    try {
+      await saveProject(user.uid, newProject);
+      setProjects(currentProjects => [...currentProjects, newProject]);
+      selectProject(newProject);
+      toast.success('New ebook project created!');
+    } catch (error) {
+      console.error('Error creating project:', error);
+      toast.error('Failed to create project');
+    }
   };
 
-  const createProjectFromTemplate = (project: EbookProject) => {
+  const createProjectFromTemplate = async (project: EbookProject) => {
     // Check authentication first
     if (!requireAuth("create an eBook from template")) return;
+    if (!user) return;
     
-    setProjects(currentProjects => [...currentProjects, project]);
-    selectProject(project);
-    toast.success('Ebook created from template!');
+    try {
+      await saveProject(user.uid, project);
+      setProjects(currentProjects => [...currentProjects, project]);
+      selectProject(project);
+      toast.success('Ebook created from template!');
+    } catch (error) {
+      console.error('Error creating project from template:', error);
+      toast.error('Failed to create project from template');
+    }
   };
 
-  const updateProject = (updates: Partial<EbookProject>) => {
-    if (!currentProject) return;
+  const updateProject = async (updates: Partial<EbookProject>) => {
+    if (!currentProject || !user) return;
 
     const updatedProject = {
       ...currentProject,
@@ -178,22 +305,83 @@ function App() {
       updatedAt: new Date(),
     };
 
+    // Update local state immediately for responsive UI
     setCurrentProject(updatedProject);
     setProjects(currentProjects => 
       currentProjects.map(p => p.id === currentProject.id ? updatedProject : p)
     );
+
+    // Debounce Firebase save to prevent too many writes
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    saveTimeoutRef.current = setTimeout(async () => {
+      try {
+        console.log('Saving project to Firebase:', {
+          id: updatedProject.id,
+          title: updatedProject.title,
+          chaptersCount: updatedProject.chapters.length,
+          chapters: updatedProject.chapters.map(ch => ({
+            id: ch.id,
+            title: ch.title,
+            contentLength: ch.content.length
+          }))
+        });
+        await saveProject(user.uid, updatedProject);
+        console.log('✅ Project auto-saved to Firebase successfully');
+      } catch (error) {
+        console.error('❌ Error saving project:', error);
+        toast.error('Failed to save changes. Please try again.');
+      }
+    }, 1000); // Save after 1 second of inactivity
   };
 
   const updateBrandConfig = (brandConfig: BrandConfig) => {
     updateProject({ brandConfig });
   };
 
-  const deleteProject = (projectId: string) => {
-    setProjects(currentProjects => currentProjects.filter(p => p.id !== projectId));
-    toast.success('Project deleted successfully');
+  const deleteProject = async (projectId: string) => {
+    if (!user) return;
+
+    try {
+      await deleteProjectFromFirestore(user.uid, projectId);
+      setProjects(currentProjects => currentProjects.filter(p => p.id !== projectId));
+      toast.success('Project deleted successfully');
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      toast.error('Failed to delete project');
+    }
   };
 
-  const duplicateProject = (project: EbookProject) => {
+  const handleDeleteCurrentProject = async () => {
+    if (!currentProject || !user) return;
+
+    const projectId = currentProject.id;
+
+    try {
+      // Delete from Firebase first
+      await deleteProjectFromFirestore(user.uid, projectId);
+      
+      // Then update local state
+      setProjects(currentProjects => currentProjects.filter(p => p.id !== projectId));
+      
+      // Clear current project without saving
+      setCurrentProject(null);
+      setCurrentChapter(null);
+      setViewMode('dashboard');
+      setCurrentSection('dashboard');
+      
+      toast.success('Project deleted successfully');
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      toast.error('Failed to delete project');
+    }
+  };
+
+  const duplicateProject = async (project: EbookProject) => {
+    if (!user) return;
+
     const duplicatedProject: EbookProject = {
       ...project,
       id: crypto.randomUUID(),
@@ -201,9 +389,15 @@ function App() {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    
-    setProjects(currentProjects => [...currentProjects, duplicatedProject]);
-    toast.success('Project duplicated successfully');
+
+    try {
+      await saveProject(user.uid, duplicatedProject);
+      setProjects(currentProjects => [...currentProjects, duplicatedProject]);
+      toast.success('Project duplicated successfully');
+    } catch (error) {
+      console.error('Error duplicating project:', error);
+      toast.error('Failed to duplicate project');
+    }
   };
 
   const createChapter = async () => {
@@ -328,25 +522,33 @@ function App() {
       {viewMode === 'dashboard' ? (
         <main className="p-3 lg:p-6 pb-6 lg:pb-8">
           <Suspense fallback={<PageLoading />}>
-            <Dashboard
-              projects={projects}
-              onSelectProject={selectProject}
-              onCreateProject={createProject}
-              onShowTemplateGallery={goToTemplatesPage}
-            />
+            {projectsLoading ? (
+              <PageLoading />
+            ) : (
+              <Dashboard
+                projects={projects}
+                onSelectProject={selectProject}
+                onCreateProject={createProject}
+                onShowTemplateGallery={goToTemplatesPage}
+              />
+            )}
           </Suspense>
         </main>
       ) : viewMode === 'projects' ? (
         <main className="p-3 lg:p-6 pb-6 lg:pb-8">
           <Suspense fallback={<PageLoading />}>
-            <ProjectsPage
-              projects={projects}
-              onSelectProject={selectProject}
-              onCreateProject={createProject}
-              onShowTemplateGallery={goToTemplatesPage}
-              onDeleteProject={deleteProject}
-              onDuplicateProject={duplicateProject}
-            />
+            {projectsLoading ? (
+              <PageLoading />
+            ) : (
+              <ProjectsPage
+                projects={projects}
+                onSelectProject={selectProject}
+                onCreateProject={createProject}
+                onShowTemplateGallery={goToTemplatesPage}
+                onDeleteProject={deleteProject}
+                onDuplicateProject={duplicateProject}
+              />
+            )}
           </Suspense>
         </main>
       ) : viewMode === 'templates' ? (
@@ -412,6 +614,7 @@ function App() {
             onProjectUpdate={updateProject}
             onBrandCustomize={() => setShowBrandCustomizer(true)}
             onUpgradeClick={() => setCurrentSection('profile')}
+            onDeleteProject={handleDeleteCurrentProject}
           />
           
           <main className="p-3 lg:p-6 pb-6 lg:pb-8 space-y-6">

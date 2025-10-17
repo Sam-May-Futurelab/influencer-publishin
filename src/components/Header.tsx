@@ -71,13 +71,17 @@ export function Header({
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 lg:px-6">
         <div className="flex h-16 lg:h-20 items-center justify-between">
-          {/* Logo Section */}
+          {/* Logo & Brand */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-3 lg:gap-4"
           >
-            <div className="flex items-center gap-2 lg:gap-3">
+            <button 
+              onClick={() => onNavigate?.('dashboard')}
+              className="flex items-center gap-3 lg:gap-4 hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-xl"
+              aria-label="Go to dashboard"
+            >
               {logoUrl ? (
                 <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl neomorph-flat overflow-hidden">
                   <img 
@@ -96,7 +100,7 @@ export function Header({
                 </div>
               )}
               
-              <div className="hidden sm:block">
+              <div className="hidden sm:block text-left">
                 <h1 className="text-lg lg:text-xl font-bold text-foreground">
                   {logoText}
                 </h1>
@@ -104,7 +108,7 @@ export function Header({
                   Create & Publish Professional Content
                 </p>
               </div>
-            </div>
+            </button>
           </motion.div>
 
           {/* Desktop Navigation */}
