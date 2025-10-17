@@ -14,12 +14,14 @@ import {
   ListBullets,
   Clock,
   Trophy,
-  Target
+  Target,
+  Eye
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { WritingGoalsComponent } from '@/components/WritingGoals';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
+import { PreviewDialog } from '@/components/PreviewDialog';
 
 interface DashboardProps {
   projects: EbookProject[];
@@ -37,6 +39,7 @@ export function Dashboard({
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [previewProject, setPreviewProject] = useState<EbookProject | null>(null);
 
   // Writing analytics
   const {
@@ -255,11 +258,18 @@ export function Dashboard({
                                 {project.title}
                               </h3>
                             </div>
-                            {stats.chapters > 0 && (
-                              <Badge variant="secondary" className="neomorph-flat border-0 text-xs">
-                                Active
-                              </Badge>
-                            )}
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPreviewProject(project);
+                              }}
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset"
+                            >
+                              <Eye size={14} />
+                              <span className="hidden sm:inline">Preview</span>
+                            </Button>
                           </div>
                           
                           {project.description && (
@@ -408,6 +418,15 @@ export function Dashboard({
             </CardContent>
           </Card>
         </motion.div>
+      )}
+      
+      {/* Preview Dialog */}
+      {previewProject && (
+        <PreviewDialog 
+          project={previewProject}
+          isOpen={!!previewProject}
+          onClose={() => setPreviewProject(null)}
+        />
       )}
     </div>
   );

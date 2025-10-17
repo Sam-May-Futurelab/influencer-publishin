@@ -14,10 +14,12 @@ import {
   Trash,
   Pencil,
   Copy,
-  Export
+  Export,
+  Eye
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
+import { PreviewDialog } from '@/components/PreviewDialog';
 
 interface ProjectsPageProps {
   projects: EbookProject[];
@@ -40,6 +42,7 @@ export function ProjectsPage({
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'updated' | 'created' | 'title'>('updated');
   const [filterBy, setFilterBy] = useState<'all' | 'active' | 'draft'>('all');
+  const [previewProject, setPreviewProject] = useState<EbookProject | null>(null);
 
   const filteredAndSortedProjects = projects
     .filter(project => {
@@ -283,12 +286,15 @@ export function ProjectsPage({
                               {project.title}
                             </h3>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <div className={`w-2 h-2 rounded-full ${status.color}`} />
-                            <Badge variant="secondary" className="neomorph-flat border-0 text-xs">
-                              {status.label}
-                            </Badge>
-                          </div>
+                          <Button
+                            onClick={() => setPreviewProject(project)}
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset"
+                          >
+                            <Eye size={14} />
+                            <span className="hidden sm:inline">Preview</span>
+                          </Button>
                         </div>
                         
                         {project.description && (
@@ -425,6 +431,15 @@ export function ProjectsPage({
             </div>
           )}
         </motion.div>
+      )}
+      
+      {/* Preview Dialog */}
+      {previewProject && (
+        <PreviewDialog 
+          project={previewProject}
+          isOpen={!!previewProject}
+          onClose={() => setPreviewProject(null)}
+        />
       )}
     </div>
   );

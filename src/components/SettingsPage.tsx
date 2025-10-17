@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 import { 
   Gear, 
   User, 
@@ -80,6 +81,18 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
 
   const [hasChanges, setHasChanges] = useState(false);
 
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('ebookCrafterSettings');
+    if (saved) {
+      try {
+        setSettings(JSON.parse(saved));
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+      }
+    }
+  }, []);
+
   const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
     setSettings(prev => ({ ...prev, [key]: value }));
     setHasChanges(true);
@@ -90,21 +103,21 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
     localStorage.setItem('ebookCrafterSettings', JSON.stringify(settings));
     setHasChanges(false);
     
-    // Show success message (you could add a toast here)
-    console.log('Settings saved!');
+    // Show success toast
+    toast.success('Settings saved successfully!');
   };
 
   const handleReset = () => {
     if (confirm('Reset all settings to default? This cannot be undone.')) {
       localStorage.removeItem('ebookCrafterSettings');
       // Reset to defaults
-      setSettings({
+      const defaultSettings = {
         authorName: '',
         authorBio: '',
         authorWebsite: '',
         defaultWordTarget: 10000,
         autoSaveInterval: 30,
-        defaultExportFormat: 'pdf',
+        defaultExportFormat: 'pdf' as const,
         includeFooter: true,
         saveReminders: true,
         exportNotifications: true,
@@ -113,8 +126,10 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
         compactMode: false,
         showWordCount: true,
         showReadingTime: true,
-      });
+      };
+      setSettings(defaultSettings);
       setHasChanges(false);
+      toast.success('Settings reset to defaults');
     }
   };
 
@@ -395,12 +410,6 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                   checked={settings.crashReporting}
                   onCheckedChange={(checked) => updateSetting('crashReporting', checked)}
                 />
-              </div>
-              
-              <div className="p-3 rounded-lg neomorph-inset">
-                <p className="text-xs text-muted-foreground">
-                  📘 <strong>Account Features Coming Soon:</strong> Cloud sync, collaboration, and advanced analytics will be available when user accounts are implemented.
-                </p>
               </div>
             </CardContent>
           </Card>
