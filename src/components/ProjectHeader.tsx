@@ -128,12 +128,12 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
           </div>
         </div>
 
-        <div className="flex items-center gap-2 lg:gap-3 w-full lg:w-auto">
+        <div className="flex flex-wrap items-center gap-2 lg:gap-3 w-full lg:w-auto">
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
               variant="outline" 
               size="sm" 
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
               onClick={onBrandCustomize}
             >
               <Palette size={14} className="lg:hidden" />
@@ -146,7 +146,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
           <Dialog open={isEditing} onOpenChange={setIsEditing}>
             <DialogTrigger asChild>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="sm" className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground">
+                <Button variant="outline" size="sm" className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground">
                   <Gear size={14} className="lg:hidden" />
                   <Gear size={18} className="hidden lg:block" />
                   <span className="hidden sm:inline">Project Settings</span>
@@ -278,7 +278,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
               onClick={() => setShowPreviewDialog(true)} 
               variant="outline"
               size="sm"
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
             >
               <Eye size={14} className="lg:hidden" />
               <Eye size={18} className="hidden lg:block" />
@@ -290,7 +290,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
               onClick={() => setShowExportDialog(true)} 
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-3 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground text-xs lg:text-sm flex-1 lg:flex-none"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground text-xs lg:text-sm"
             >
               <DownloadSimple size={14} className="lg:hidden" />
               <DownloadSimple size={18} className="hidden lg:block" />
