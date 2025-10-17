@@ -14,6 +14,7 @@ import { generateAIContent, enhanceContent, type ContentSuggestion, type Tone, t
 import { AILoading } from '@/components/AILoading';
 import { useAuth } from '@/hooks/use-auth';
 import { useUsageTracking } from '@/hooks/use-usage-tracking';
+import { UpgradeModal } from '@/components/UpgradeModal';
 
 interface AIContentAssistantProps {
   chapterTitle: string;
@@ -43,6 +44,7 @@ export function AIContentAssistant({
   const [isGenerating, setIsGenerating] = useState(false);
   const [suggestions, setSuggestions] = useState<ContentSuggestion[]>([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState<ContentSuggestion | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   
   // AI Enhancement Controls
   const [tone, setTone] = useState<Tone>('friendly');
@@ -66,12 +68,11 @@ export function AIContentAssistant({
 
     // Check usage limit
     if (!canGenerate) {
-      toast.error(
-        isPremium 
-          ? 'Daily limit reached. Try again tomorrow!' 
-          : 'Free limit reached. Upgrade to Premium for 50 generations/day!',
-        { duration: 4000 }
-      );
+      if (!isPremium) {
+        setShowUpgradeModal(true);
+      } else {
+        toast.error('Daily limit reached. Try again tomorrow!', { duration: 4000 });
+      }
       return;
     }
 
@@ -539,6 +540,12 @@ export function AIContentAssistant({
           </motion.div>
         )}
       </CardContent>
+
+      <UpgradeModal
+        open={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        highlightMessage="Upgrade to Premium for 50 AI generations per day!"
+      />
     </Card>
   );
 }
