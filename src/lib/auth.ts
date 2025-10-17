@@ -20,6 +20,7 @@ export interface UserProfile {
   subscriptionType?: 'monthly' | 'yearly';
   pagesUsed: number;
   maxPages: number;
+  hasCompletedOnboarding: boolean;
   createdAt: any;
   lastLoginAt: any;
   // Writing Analytics
@@ -109,6 +110,7 @@ export const createUserProfile = async (user: User) => {
     subscriptionStatus: 'free',
     pagesUsed: 0,
     maxPages: 4, // Free tier limit
+    hasCompletedOnboarding: false,
     createdAt: serverTimestamp(),
     lastLoginAt: serverTimestamp(),
     // Initialize writing analytics

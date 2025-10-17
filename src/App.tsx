@@ -1,13 +1,14 @@
 import { useState, useEffect, lazy, Suspense, useRef } from 'react';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { useAuth } from '@/hooks/use-auth';
-import { incrementPageUsage, syncPageUsage } from '@/lib/auth';
+import { incrementPageUsage, syncPageUsage, updateUserProfile } from '@/lib/auth';
 import { getUserProjects, saveProject, deleteProject as deleteProjectFromFirestore } from '@/lib/projects';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { Header } from '@/components/Header';
 import { UsageTracker } from '@/components/UsageTracker';
 import { AuthGuardDialog } from '@/components/AuthGuardDialog';
 import { AuthModal } from '@/components/AuthModal';
+import { Onboarding } from '@/components/Onboarding';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
@@ -48,6 +49,7 @@ function App() {
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
   const [currentSection, setCurrentSection] = useState('dashboard');
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'profile' | 'project'>('dashboard');
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
@@ -102,6 +104,13 @@ function App() {
 
     loadProjects();
   }, [user]);
+
+  // Check if user needs onboarding
+  useEffect(() => {
+    if (user && userProfile && !userProfile.hasCompletedOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, [user, userProfile]);
 
   // Force save on unmount or when currentProject changes
   useEffect(() => {
@@ -176,6 +185,24 @@ function App() {
       return false;
     }
     return true;
+  };
+
+  // Onboarding handlers
+  const handleOnboardingComplete = async () => {
+    if (user) {
+      await updateUserProfile(user.uid, { hasCompletedOnboarding: true });
+      await refreshProfile();
+      setShowOnboarding(false);
+      toast.success('Welcome to Inkfluence AI! 🎉');
+    }
+  };
+
+  const handleOnboardingSkip = async () => {
+    if (user) {
+      await updateUserProfile(user.uid, { hasCompletedOnboarding: true });
+      await refreshProfile();
+      setShowOnboarding(false);
+    }
   };
 
   const selectProject = (project: EbookProject) => {
@@ -668,6 +695,12 @@ function App() {
       <AuthModal
         isOpen={showAuthModal}
         onOpenChange={setShowAuthModal}
+      />
+
+      <Onboarding
+        open={showOnboarding}
+        onComplete={handleOnboardingComplete}
+        onSkip={handleOnboardingSkip}
       />
     </div>
   );
