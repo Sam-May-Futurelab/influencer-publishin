@@ -89,18 +89,16 @@ export async function generateAIContent(
       throw new Error('Failed to generate AI content');
     }
 
-    // Transform the suggestions array into ContentSuggestion format
-    const suggestions: ContentSuggestion[] = data.content.slice(0, 4).map((content: string, index: number) => ({
+    // Transform the suggestions array into ContentSuggestion format (now 3 blocks instead of 4)
+    const suggestions: ContentSuggestion[] = data.content.slice(0, 3).map((content: string, index: number) => ({
       id: `suggestion-${Date.now()}-${index}`,
-      title: index === 0 ? 'Chapter Outline' :
-             index === 1 ? 'Engaging Introduction' :
-             index === 2 ? 'Key Points & Tips' :
-             'Compelling Conclusion',
+      title: index === 0 ? 'Opening Section' :
+             index === 1 ? 'Core Content' :
+             'Practical Takeaways',
       content,
-      type: index === 0 ? 'outline' :
-            index === 1 ? 'introduction' :
-            index === 2 ? 'tips' :
-            'conclusion'
+      type: index === 0 ? 'introduction' :
+            index === 1 ? 'outline' :
+            'tips'
     }));
 
     return suggestions;
@@ -177,27 +175,21 @@ function getFallbackSuggestions(keywords: string, chapterTitle: string): Content
   return [
     {
       id: 'fallback-1',
-      title: 'Chapter Outline',
-      content: `Structure your chapter "${chapterTitle}" with these elements:\n\n1. Opening Hook: Start with a compelling question or statement about ${keywords}\n2. Main Points: Develop 3-5 key concepts related to your topic\n3. Supporting Examples: Include real-world applications or case studies\n4. Actionable Takeaways: End with practical steps readers can implement\n5. Transition: Connect to your next chapter smoothly`,
-      type: 'outline'
-    },
-    {
-      id: 'fallback-2',
-      title: 'Engaging Introduction',
-      content: `In this chapter, we'll explore ${keywords} and discover how these concepts can transform your understanding of ${chapterTitle}. Whether you're just starting out or looking to deepen your knowledge, you'll find practical insights and actionable strategies that you can apply immediately. Let's dive into the key principles that will help you master this important topic.`,
+      title: 'Opening Section',
+      content: `In this chapter, we'll explore ${keywords} and discover how these concepts can transform your understanding of ${chapterTitle}. Whether you're just starting out or looking to deepen your knowledge, you'll find practical insights and actionable strategies that you can apply immediately. Let's dive into the key principles that will help you master this important topic and see how they apply to real-world situations.`,
       type: 'introduction'
     },
     {
-      id: 'fallback-3',
-      title: 'Key Points & Tips',
-      content: `Essential insights for ${chapterTitle}:\n\n• Start with the fundamentals and build progressively\n• Focus on ${keywords} as your core foundation\n• Practice regularly to reinforce your learning\n• Learn from mistakes and iterate on your approach\n• Connect theory with real-world applications\n• Share your knowledge with others to deepen understanding\n• Stay curious and keep exploring beyond the basics`,
-      type: 'tips'
+      id: 'fallback-2',
+      title: 'Core Content',
+      content: `Understanding ${keywords} requires examining both theory and practice. Let's break down the essential elements: First, ${keywords} forms the foundation of ${chapterTitle} by providing a framework for understanding key concepts. Consider how these ideas connect to your existing knowledge and experience. Through specific examples and detailed explanations, we'll explore different aspects of ${keywords}, helping you build a comprehensive understanding. By examining various perspectives and applications, you'll develop practical skills you can implement immediately in your own context.`,
+      type: 'outline'
     },
     {
-      id: 'fallback-4',
-      title: 'Compelling Conclusion',
-      content: `As we conclude this chapter on ${chapterTitle}, remember that mastering ${keywords} is a journey, not a destination. The concepts we've covered provide a strong foundation, but the real transformation happens when you put these ideas into practice. Take what you've learned, experiment with different approaches, and don't be afraid to make it your own. Your success story starts with the first step you take today.`,
-      type: 'conclusion'
+      id: 'fallback-3',
+      title: 'Practical Takeaways',
+      content: `Let's focus on actionable insights you can implement right away. Start by identifying which aspects of ${keywords} resonate most with your situation. Practice applying these concepts in small, manageable steps rather than trying to master everything at once. Track your progress and adjust based on what works for you. Connect with others exploring ${keywords}—their experiences provide valuable perspective. Remember that mastery develops through consistent practice. Be patient as you build your skills, and celebrate small wins along the way.`,
+      type: 'tips'
     }
   ];
 }

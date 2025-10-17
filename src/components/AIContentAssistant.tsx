@@ -91,27 +91,21 @@ export function AIContentAssistant({
       const fallbackSuggestions: ContentSuggestion[] = [
         {
           id: 'fallback-intro',
-          title: 'Chapter Introduction',
+          title: 'Opening Section',
           content: `Welcome to this chapter on ${mainKeyword}. In this section, we'll explore the fundamental concepts and practical applications that will help you understand and implement ${mainKeyword} effectively. Whether you're a beginner or looking to deepen your knowledge, this chapter provides valuable insights and actionable strategies you can apply immediately. Let's begin this journey together and unlock the potential of ${mainKeyword} in your life.`,
           type: 'introduction'
         },
         {
-          id: 'fallback-outline',
-          title: 'Chapter Outline',
-          content: `Chapter Outline:\n\n1. Introduction to ${mainKeyword}\n   • Definition and core concepts\n   • Why ${mainKeyword} matters\n   • Common misconceptions\n\n2. Getting Started\n   • Essential prerequisites\n   • Basic principles\n   • First steps\n\n3. Practical Application\n   • Real-world examples\n   • Step-by-step implementation\n   • Common challenges and solutions\n\n4. Advanced Strategies\n   • Expert tips and techniques\n   • Optimization methods\n   • Best practices\n\n5. Next Steps\n   • Continuing your journey\n   • Additional resources\n   • Key takeaways`,
+          id: 'fallback-content',
+          title: 'Core Content',
+          content: `Understanding ${mainKeyword} requires both theoretical knowledge and practical application. Let's break down the key concepts that form the foundation of ${mainKeyword}. First, it's important to recognize that ${mainKeyword} is not just about theory—it's about real-world implementation. Consider how ${mainKeyword} applies to everyday situations and challenges. Through specific examples and detailed explanations, we'll explore the nuances of ${mainKeyword}, helping you build a comprehensive understanding that you can apply in your own context. By examining different perspectives and approaches, you'll develop a well-rounded grasp of ${mainKeyword} that goes beyond surface-level knowledge.`,
           type: 'outline'
         },
         {
-          id: 'fallback-tips',
-          title: 'Key Tips & Insights',
-          content: `Essential Tips for ${mainKeyword}:\n\n• Start with the fundamentals: Build a solid foundation before moving to advanced concepts\n• Practice consistently: Regular application leads to better results and deeper understanding\n• Learn from examples: Study real-world applications and case studies\n• Stay curious: Ask questions and explore different perspectives\n• Track your progress: Monitor your development and celebrate small wins\n• Connect with others: Join communities and learn from peers\n• Be patient: Mastery takes time, so embrace the learning process`,
+          id: 'fallback-takeaways',
+          title: 'Practical Takeaways',
+          content: `Now that we've covered the fundamentals of ${mainKeyword}, let's focus on actionable insights you can implement immediately. Start by identifying one or two key concepts that resonate most with your situation. Practice applying these concepts in small, manageable steps rather than attempting everything at once. Track your progress and adjust your approach based on what works best for you. Remember that mastery comes through consistent practice and reflection. Connect with others who are also exploring ${mainKeyword}—their perspectives and experiences can provide valuable insights. Finally, be patient with yourself as you develop your skills. Every expert was once a beginner, and your journey with ${mainKeyword} is uniquely yours.`,
           type: 'tips'
-        },
-        {
-          id: 'fallback-conclusion',
-          title: 'Chapter Conclusion',
-          content: `As we conclude this chapter on ${mainKeyword}, remember that knowledge without action is merely potential. The concepts and strategies we've explored are tools waiting to be used. Take what resonates with you and begin implementing it today, even in small ways. Every expert was once a beginner, and every master was once a disaster. Your journey with ${mainKeyword} is unique, and the key is to start where you are, use what you have, and do what you can. The next chapter awaits, but the real transformation happens when you close this book and begin applying what you've learned.`,
-          type: 'conclusion'
         }
       ];
       

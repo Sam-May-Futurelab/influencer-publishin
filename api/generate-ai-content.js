@@ -82,39 +82,26 @@ export default async function handler(req, res) {
 
     if (contentType === 'suggestions') {
       // Determine word count based on length setting
-      const wordCountTargets = {
-        brief: { min: 100, max: 150, description: '100-150 words' },
-        standard: { min: 200, max: 300, description: '200-300 words' },
-        detailed: { min: 300, max: 400, description: '300-400 words' },
-        comprehensive: { min: 500, max: 700, description: '500-700 words' }
-      };
-      const wordTarget = wordCountTargets[length] || wordCountTargets.standard;
+      // Simpler approach: generate 3 useful content blocks instead of 4 templated pieces
+      const targetWords = length === 'comprehensive' ? 400
+        : length === 'detailed' ? 250
+        : length === 'standard' ? 150
+        : 100;
       
-      // Build a natural, effective prompt
-      const genreContext = genre && genre !== 'general' ? ` for a ${genre} ebook` : '';
-      const audienceContext = context.targetAudience ? ` targeting ${context.targetAudience}` : '';
+      const genreContext = genre && genre !== 'general' ? ` ${genre}` : '';
+      const audienceContext = context.targetAudience ? ` for ${context.targetAudience}` : '';
       
-      // Be explicit: EACH piece should be the target length
-      const lengthInstruction = length === 'comprehensive' 
-        ? 'Each of the 4 pieces should be around 600 words.'
-        : length === 'detailed'
-        ? 'Each of the 4 pieces should be around 350 words.'
-        : length === 'standard'
-        ? 'Each of the 4 pieces should be around 250 words.'
-        : 'Each of the 4 pieces should be around 125 words.';
-      
-      prompt = `Chapter: "${chapterTitle}"
-Topics: ${keywords.join(', ')}
+      prompt = `Write 3 content blocks about "${keywords.join(', ')}" for the chapter "${chapterTitle}"${genreContext}${audienceContext}.
+
 Style: ${toneDescriptors[tone] || 'engaging, conversational'}
 
-Generate 4 separate pieces. ${lengthInstruction}
+Each block should be approximately ${targetWords} words. Write substantial, detailed content.
 
-1. Chapter Introduction (${lengthInstruction.split('should be ')[1]}) - Hook readers and set expectations
-2. Main Explanation (${lengthInstruction.split('should be ')[1]}) - Cover key concepts with examples  
-3. Practical Tips (${lengthInstruction.split('should be ')[1]}) - Give specific, actionable advice
-4. Conclusion (${lengthInstruction.split('should be ')[1]}) - Reinforce takeaways and motivate action
+1. Opening section - Introduce the topic and hook the reader
+2. Core content - Explain key concepts with specific examples and details
+3. Practical takeaways - Actionable insights the reader can use
 
-Return as JSON array of 4 strings.`;
+Return as JSON array of 3 strings. Make each one around ${targetWords} words with real substance.`;
       
       maxTokens = tokenLimits[length] || 1500;
       
