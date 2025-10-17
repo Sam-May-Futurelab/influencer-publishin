@@ -45,20 +45,20 @@ export function UsageTracker({ onUpgradeClick, className = '', forceShow = false
 
   return (
     <Card className={`neomorph-raised border-0 ${className}`}>
-      <CardContent className="p-4">
-        <div className="space-y-4">
+      <CardContent className="p-3">
+        <div className="space-y-3">
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {isPremium ? (
-                <Crown size={16} className="text-yellow-500" />
+                <Crown size={14} className="text-amber-500" weight="fill" />
               ) : (
-                <FileText size={16} className="text-muted-foreground" />
+                <FileText size={14} className="text-muted-foreground" />
               )}
-              <span className="font-medium text-sm">Page Usage</span>
+              <span className="font-medium text-xs">Page Usage</span>
             </div>
             <Badge 
-              className={`${getStatusColor()} text-white border-0 text-xs`}
+              className={`${getStatusColor()} text-white border-0 text-[10px] px-1.5 py-0.5`}
             >
               {getStatusText()}
             </Badge>
@@ -66,18 +66,18 @@ export function UsageTracker({ onUpgradeClick, className = '', forceShow = false
 
           {/* Usage Display */}
           {!isUnlimited ? (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs">
                 <span className="text-muted-foreground">
-                  {pagesUsed} of {maxPages} pages used
+                  {pagesUsed} of {maxPages} pages
                 </span>
                 <span className="font-medium">
-                  {pagesRemaining} remaining
+                  {pagesRemaining} left
                 </span>
               </div>
               <Progress 
                 value={usagePercentage} 
-                className="h-2 neomorph-inset"
+                className="h-1.5 neomorph-inset"
               />
             </div>
           ) : (
@@ -113,40 +113,22 @@ export function UsageTracker({ onUpgradeClick, className = '', forceShow = false
                   </motion.div>
                 </div>
               ) : pagesUsed >= maxPages * 0.7 ? (
-                <div className="space-y-2 p-3 rounded-lg bg-yellow-50/50 neomorph-flat">
-                  <div className="flex items-center gap-2 text-sm">
-                    <TrendUp size={14} className="text-yellow-600" />
-                    <span className="font-medium text-yellow-800">Running low on pages</span>
+                <div className="flex items-center justify-between p-2 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                  <div className="flex items-center gap-2">
+                    <TrendUp size={14} className="text-amber-600" weight="bold" />
+                    <span className="text-xs font-medium text-amber-900">Running low on pages</span>
                   </div>
-                  <p className="text-xs text-yellow-700">
-                    Consider upgrading for unlimited pages and advanced features
-                  </p>
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                    onClick={onUpgradeClick}
-                    className="w-full gap-2 neomorph-button border-0 text-yellow-700 hover:bg-yellow-100"
-                  >
-                    <Crown size={12} />
-                    Learn More
-                  </Button>
-                </div>
-              ) : (
-                <div className="text-center p-2">
-                  <p className="text-xs text-muted-foreground mb-2">
-                    Want unlimited pages and premium features?
-                  </p>
                   <Button 
                     variant="ghost"
                     size="sm"
                     onClick={onUpgradeClick}
-                    className="gap-2 neomorph-button border-0 text-xs"
+                    className="h-7 px-3 gap-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 border-0 text-xs font-medium"
                   >
-                    <Crown size={12} />
-                    Upgrade to Premium
+                    <Crown size={12} weight="fill" />
+                    Upgrade
                   </Button>
                 </div>
-              )}
+              ) : null}
             </motion.div>
           )}
         </div>

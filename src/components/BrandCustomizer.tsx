@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrandConfig } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Palette, TextT, Image, Eye } from '@phosphor-icons/react';
-import { motion } from 'framer-motion';
+import { Palette, TextT, Image, Eye, Check } from '@phosphor-icons/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface BrandCustomizerProps {
   brandConfig: BrandConfig;
@@ -36,11 +36,16 @@ const fontOptions = [
 
 export function BrandCustomizer({ brandConfig, onUpdate, isOpen, onClose }: BrandCustomizerProps) {
   const [localConfig, setLocalConfig] = useState<BrandConfig>(brandConfig);
+  const [showSaved, setShowSaved] = useState(false);
 
   const handleUpdate = (updates: Partial<BrandConfig>) => {
     const newConfig = { ...localConfig, ...updates };
     setLocalConfig(newConfig);
     onUpdate(newConfig);
+    
+    // Show saved indicator
+    setShowSaved(true);
+    setTimeout(() => setShowSaved(false), 2000);
   };
 
   const applyPreset = (preset: typeof presetColors[0]) => {
@@ -76,8 +81,21 @@ export function BrandCustomizer({ brandConfig, onUpdate, isOpen, onClose }: Bran
               </div>
               <div>
                 <CardTitle className="text-xl">Brand Customization</CardTitle>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground flex items-center gap-2">
                   Customize your ebook's visual identity
+                  <AnimatePresence>
+                    {showSaved && (
+                      <motion.span
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="inline-flex items-center gap-1 text-green-600 font-medium"
+                      >
+                        <Check size={14} weight="bold" />
+                        Saved
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </p>
               </div>
             </div>
