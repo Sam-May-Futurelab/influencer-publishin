@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
@@ -53,6 +53,16 @@ const exportOptions: ExportOption[] = [
 export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
   const { userProfile } = useAuth();
   const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
+  const [customWatermark, setCustomWatermark] = useState<string>('');
+
+  // Load custom watermark from settings
+  useEffect(() => {
+    const settings = localStorage.getItem('ebookCrafterSettings');
+    if (settings) {
+      const parsed = JSON.parse(settings);
+      setCustomWatermark(parsed.customWatermark || '');
+    }
+  }, []);
 
   const handleExport = async (format: ExportFormat) => {
     // Check if user has premium access or is within free tier limits
@@ -69,7 +79,14 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
     try {
       setExportingFormat(format);
       toast.loading(`Generating ${format.toUpperCase()}...`, { id: 'export' });
-      await exportToFormat(project, format);
+      
+      // Priority: project watermark > settings watermark > default behavior
+      const effectiveWatermark = project.customWatermark || customWatermark;
+      
+      await exportToFormat(project, format, {
+        isPremium: userProfile?.isPremium,
+        customWatermark: effectiveWatermark
+      });
       toast.success(`${format.toUpperCase()} export complete!`, { id: 'export' });
       onClose();
     } catch (error) {

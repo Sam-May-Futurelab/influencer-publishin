@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/use-auth';
 import { 
   Gear, 
   User, 
@@ -37,6 +38,7 @@ interface AppSettings {
   autoSaveInterval: number;
   defaultExportFormat: 'pdf' | 'epub' | 'docx';
   includeFooter: boolean;
+  customWatermark: string;
   
   // Notifications
   saveReminders: boolean;
@@ -53,6 +55,7 @@ interface AppSettings {
 }
 
 export function SettingsPage({ onBack }: SettingsPageProps) {
+  const { userProfile } = useAuth();
   const [settings, setSettings] = useState<AppSettings>({
     // User Profile
     authorName: '',
@@ -64,6 +67,7 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
     autoSaveInterval: 30,
     defaultExportFormat: 'pdf',
     includeFooter: true,
+    customWatermark: '',
     
     // Notifications
     saveReminders: true,
@@ -119,6 +123,7 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
         autoSaveInterval: 30,
         defaultExportFormat: 'pdf' as const,
         includeFooter: true,
+        customWatermark: '',
         saveReminders: true,
         exportNotifications: true,
         analytics: true,
@@ -283,6 +288,27 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                   onCheckedChange={(checked) => updateSetting('includeFooter', checked)}
                 />
               </div>
+              
+              {userProfile?.isPremium && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="customWatermark">Custom Watermark</Label>
+                    <Badge variant="secondary" className="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                      Premium
+                    </Badge>
+                  </div>
+                  <Input
+                    id="customWatermark"
+                    placeholder="e.g., Written by Your Name • yourwebsite.com"
+                    value={settings.customWatermark}
+                    onChange={(e) => updateSetting('customWatermark', e.target.value)}
+                    className="neomorph-inset"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Leave empty to export without any watermark. Add your custom branding text to appear in exported documents.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>

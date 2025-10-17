@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash } from '@phosphor-icons/react';
@@ -27,6 +28,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
   const [tempTitle, setTempTitle] = useState(project.title);
   const [tempDescription, setTempDescription] = useState(project.description);
   const [tempAuthor, setTempAuthor] = useState(project.author);
+  const [tempWatermark, setTempWatermark] = useState(project.customWatermark || '');
   const { userProfile } = useAuth();
 
   const isPremium = userProfile?.isPremium || false;
@@ -41,6 +43,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
       title: tempTitle.trim() || 'Untitled Ebook',
       description: tempDescription.trim(),
       author: tempAuthor.trim(),
+      customWatermark: tempWatermark.trim(),
     });
     setIsEditing(false);
   };
@@ -184,6 +187,30 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                     className="neomorph-inset border-0 resize-none"
                   />
                 </div>
+                
+                {/* Custom Watermark for Premium Users */}
+                {isPremium && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Label htmlFor="projectWatermark" className="text-sm font-semibold text-foreground">
+                        Custom Watermark
+                      </Label>
+                      <Badge variant="secondary" className="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                        Premium
+                      </Badge>
+                    </div>
+                    <Input
+                      id="projectWatermark"
+                      value={tempWatermark}
+                      onChange={(e) => setTempWatermark(e.target.value)}
+                      placeholder="e.g., Written by Your Name • yourwebsite.com"
+                      className="neomorph-inset border-0 h-12"
+                    />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Project-specific watermark. Leave empty to use your global setting or no watermark.
+                    </p>
+                  </div>
+                )}
                 
                 {/* Danger Zone - Delete Project */}
                 {onDeleteProject && (

@@ -2,15 +2,20 @@ import { EbookProject } from '@/lib/types';
 
 export type ExportFormat = 'pdf' | 'epub' | 'docx';
 
-export async function exportToFormat(project: EbookProject, format: ExportFormat): Promise<void> {
+export interface ExportOptions {
+  isPremium?: boolean;
+  customWatermark?: string;
+}
+
+export async function exportToFormat(project: EbookProject, format: ExportFormat, options?: ExportOptions): Promise<void> {
   try {
     switch (format) {
       case 'pdf':
-        return await exportToPDF(project);
+        return await exportToPDF(project, options);
       case 'epub':
-        return await exportToEPUB(project);
+        return await exportToEPUB(project, options);
       case 'docx':
-        return await exportToDocx(project);
+        return await exportToDocx(project, options);
       default:
         throw new Error(`Unsupported export format: ${format}`);
     }
@@ -20,9 +25,9 @@ export async function exportToFormat(project: EbookProject, format: ExportFormat
   }
 }
 
-export async function exportToPDF(project: EbookProject): Promise<void> {
+export async function exportToPDF(project: EbookProject, options?: ExportOptions): Promise<void> {
   try {
-    const doc = generateHTML(project);
+    const doc = generateHTML(project, options);
     
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
@@ -43,9 +48,9 @@ export async function exportToPDF(project: EbookProject): Promise<void> {
   }
 }
 
-export async function exportToEPUB(project: EbookProject): Promise<void> {
+export async function exportToEPUB(project: EbookProject, options?: ExportOptions): Promise<void> {
   try {
-    const epubContent = generateEPUBContent(project);
+    const epubContent = generateEPUBContent(project, options);
     downloadFile(epubContent, `${project.title}.epub`, 'application/epub+zip');
   } catch (error) {
     console.error('EPUB export failed:', error);
@@ -53,9 +58,9 @@ export async function exportToEPUB(project: EbookProject): Promise<void> {
   }
 }
 
-export async function exportToDocx(project: EbookProject): Promise<void> {
+export async function exportToDocx(project: EbookProject, options?: ExportOptions): Promise<void> {
   try {
-    const docxContent = generateDocxContent(project);
+    const docxContent = generateDocxContent(project, options);
     downloadFile(docxContent, `${project.title}.docx`, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
   } catch (error) {
     console.error('DOCX export failed:', error);
@@ -63,7 +68,7 @@ export async function exportToDocx(project: EbookProject): Promise<void> {
   }
 }
 
-function generateHTML(project: EbookProject): string {
+function generateHTML(project: EbookProject, options?: ExportOptions): string {
   const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
   const brand = project.brandConfig;
   
@@ -317,7 +322,10 @@ function generateHTML(project: EbookProject): string {
       </div>
       
       <div class="footer">
-        Generated with InkFluence AI • ${new Date().toLocaleDateString()}
+        ${options?.isPremium 
+          ? (options?.customWatermark || '') 
+          : `Generated with InkFluence AI • ${new Date().toLocaleDateString()}`
+        }
       </div>
     </body>
     </html>
@@ -376,7 +384,7 @@ function downloadFile(content: string, filename: string, mimeType: string): void
   window.URL.revokeObjectURL(url);
 }
 
-function generateEPUBContent(project: EbookProject): string {
+function generateEPUBContent(project: EbookProject, options?: ExportOptions): string {
   const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
   const brand = project.brandConfig;
   
@@ -479,7 +487,7 @@ function generateEPUBContent(project: EbookProject): string {
   return content;
 }
 
-function generateDocxContent(project: EbookProject): string {
+function generateDocxContent(project: EbookProject, options?: ExportOptions): string {
   const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
   const brand = project.brandConfig;
   

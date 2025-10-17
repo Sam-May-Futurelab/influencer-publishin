@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Clock, Users, Star, MagnifyingGlass, GridFour, ListBullets } from '@phosphor-icons/react';
+import { BookOpen, Clock, Users, Star, MagnifyingGlass, GridFour, ListBullets, Eye } from '@phosphor-icons/react';
 import { ebookTemplates, createProjectFromTemplate, EbookTemplate } from '@/lib/templates';
 import { EbookProject } from '@/lib/types';
+import { PreviewDialog } from '@/components/PreviewDialog';
 
 interface TemplateGalleryProps {
   onSelectTemplate: (project: EbookProject) => void;
@@ -15,6 +16,7 @@ interface TemplateGalleryProps {
 
 export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryProps) {
   const [selectedTemplate, setSelectedTemplate] = useState<EbookTemplate | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<EbookTemplate | null>(null);
   const [customTitle, setCustomTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -174,19 +176,35 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
                   <span>~{template.chapters.reduce((sum, ch) => sum + (ch.content?.split(' ').length || 0), 0).toLocaleString()} words</span>
                 </div>
                 
-                <div className="flex gap-1">
-                  <div 
-                    className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                    style={{ backgroundColor: template.brandConfig.primaryColor }}
-                  />
-                  <div 
-                    className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                    style={{ backgroundColor: template.brandConfig.secondaryColor }}
-                  />
-                  <div 
-                    className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                    style={{ backgroundColor: template.brandConfig.accentColor }}
-                  />
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-1">
+                    <div 
+                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: template.brandConfig.primaryColor }}
+                    />
+                    <div 
+                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: template.brandConfig.secondaryColor }}
+                    />
+                    <div 
+                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: template.brandConfig.accentColor }}
+                    />
+                  </div>
+                  
+                  {/* Preview Button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPreviewTemplate(template);
+                    }}
+                    className="h-8 px-3 text-xs gap-1.5 neomorph-button border-2 border-primary/20 hover:border-primary/40 hover:bg-primary/10 transition-all"
+                  >
+                    <Eye size={14} weight="duotone" />
+                    Preview
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -256,6 +274,15 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
             </div>
           </div>
         </motion.div>
+      )}
+      
+      {/* Preview Dialog */}
+      {previewTemplate && (
+        <PreviewDialog
+          project={createProjectFromTemplate(previewTemplate, previewTemplate.name)}
+          isOpen={!!previewTemplate}
+          onClose={() => setPreviewTemplate(null)}
+        />
       )}
     </div>
   );

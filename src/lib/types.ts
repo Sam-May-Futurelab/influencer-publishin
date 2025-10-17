@@ -25,6 +25,7 @@ export interface EbookProject {
   category?: string;
   chapters: Chapter[];
   brandConfig: BrandConfig;
+  customWatermark?: string; // Project-specific watermark (overrides global settings)
   createdAt: Date;
   updatedAt: Date;
 }

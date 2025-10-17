@@ -95,100 +95,156 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto p-6 max-h-[calc(80vh-120px)]">
-          <div className="max-w-3xl mx-auto space-y-8">
-            {/* Title Page */}
+          <div className="max-w-3xl mx-auto">
+            {/* Title Page - Enhanced with export-like styling */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-8 border-b border-border/20"
+              className="text-center py-12 mb-12 border-b-4 border-border/30"
+              style={{ borderColor: project.brandConfig?.accentColor || '#C4B5FD' }}
             >
+              {/* Logo if available */}
+              {project.brandConfig?.logoUrl && (
+                <div className="mb-6">
+                  <img 
+                    src={project.brandConfig.logoUrl} 
+                    alt="Logo" 
+                    className="h-16 mx-auto object-contain"
+                  />
+                </div>
+              )}
+              
               <h1 
-                className="text-3xl lg:text-4xl font-bold mb-4"
-                style={{ color: project.brandConfig?.primaryColor || '#8B5CF6' }}
+                className="text-4xl lg:text-5xl font-bold mb-6 leading-tight"
+                style={{ 
+                  color: project.brandConfig?.primaryColor || '#8B5CF6',
+                  fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                }}
               >
                 {project.title}
               </h1>
+              
               {project.author && (
-                <p className="text-lg text-muted-foreground mb-4">
+                <p 
+                  className="text-xl mb-6 italic"
+                  style={{ 
+                    color: project.brandConfig?.secondaryColor || '#A78BFA',
+                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                  }}
+                >
                   by {project.author}
                 </p>
               )}
+              
               {project.description && (
-                <p className="text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                <p 
+                  className="text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-8"
+                  style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
+                >
                   {project.description}
                 </p>
               )}
               
-              <div className="flex justify-center gap-4 mt-6">
-                <Badge 
-                  variant="secondary" 
-                  className="neomorph-flat border-0"
+              <div className="flex justify-center gap-4 mt-8 text-sm font-medium">
+                <span 
                   style={{ 
-                    backgroundColor: project.brandConfig?.accentColor || '#EDE9FE',
-                    color: project.brandConfig?.primaryColor || '#8B5CF6'
+                    color: project.brandConfig?.primaryColor || '#8B5CF6',
+                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
                   }}
                 >
-                  {sortedChapters.length} {sortedChapters.length === 1 ? 'Chapter' : 'Chapters'}
-                </Badge>
-                <Badge 
-                  variant="secondary" 
-                  className="neomorph-flat border-0"
+                  {sortedChapters.length} Chapter{sortedChapters.length !== 1 ? 's' : ''}
+                </span>
+                <span className="text-muted-foreground">•</span>
+                <span 
                   style={{ 
-                    backgroundColor: project.brandConfig?.accentColor || '#EDE9FE',
-                    color: project.brandConfig?.primaryColor || '#8B5CF6'
+                    color: project.brandConfig?.primaryColor || '#8B5CF6',
+                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
                   }}
                 >
                   {getWordCount().toLocaleString()} Words
-                </Badge>
+                </span>
+                <span className="text-muted-foreground">•</span>
+                <span 
+                  style={{ 
+                    color: project.brandConfig?.primaryColor || '#8B5CF6',
+                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                  }}
+                >
+                  ~{Math.ceil(getWordCount() / 250)} Pages
+                </span>
               </div>
             </motion.div>
 
-            {/* Chapters */}
-            {sortedChapters.map((chapter, index) => (
-              <motion.div
-                key={chapter.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="space-y-4"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <Badge 
-                    variant="outline"
-                    className="neomorph-flat border-0 px-3 py-1"
-                    style={{ 
-                      backgroundColor: project.brandConfig?.secondaryColor || '#A78BFA',
-                      color: 'white'
-                    }}
+            {/* Chapters - Enhanced with export-like styling */}
+            <div className="space-y-12 mt-8">
+              {sortedChapters.map((chapter, index) => (
+                <motion.div
+                  key={chapter.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="space-y-6 pb-8"
+                  style={{ 
+                    borderBottom: index < sortedChapters.length - 1 ? `2px solid ${project.brandConfig?.accentColor || '#E9D5FF'}` : 'none',
+                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                  }}
+                >
+                  {/* Chapter Number */}
+                  <div 
+                    className="text-sm font-semibold tracking-wider uppercase mb-2"
+                    style={{ color: project.brandConfig?.secondaryColor || '#A78BFA' }}
                   >
                     Chapter {index + 1}
-                  </Badge>
+                  </div>
+                  
+                  {/* Chapter Title with bottom border */}
                   <h2 
-                    className="text-xl lg:text-2xl font-bold"
-                    style={{ color: project.brandConfig?.primaryColor || '#8B5CF6' }}
+                    className="text-2xl lg:text-3xl font-bold pb-4"
+                    style={{ 
+                      color: project.brandConfig?.primaryColor || '#8B5CF6',
+                      borderBottom: `3px solid ${project.brandConfig?.accentColor || '#C4B5FD'}`,
+                      fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                    }}
                   >
                     {chapter.title}
                   </h2>
-                </div>
-                
-                <div className="text-sm lg:text-base leading-relaxed text-foreground/90 space-y-3">
-                  {chapter.content ? (
-                    formatContent(chapter.content)
-                  ) : (
-                    <p className="text-muted-foreground italic">
-                      This chapter has no content yet.
-                    </p>
-                  )}
-                </div>
-                
-                {index < sortedChapters.length - 1 && (
+                  
+                  {/* Chapter Content with drop cap styling */}
                   <div 
-                    className="w-16 h-px mx-auto my-8"
-                    style={{ backgroundColor: project.brandConfig?.secondaryColor || '#A78BFA' }}
-                  />
-                )}
-              </motion.div>
-            ))}
+                    className="text-base lg:text-lg leading-relaxed text-foreground/90"
+                    style={{ 
+                      textAlign: 'justify',
+                      lineHeight: '1.8',
+                      fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                    }}
+                  >
+                    {chapter.content ? (
+                      <div className="chapter-content-preview">
+                        <style>{`
+                          .chapter-content-preview p:first-of-type::first-letter {
+                            font-size: 3em;
+                            font-weight: 700;
+                            color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
+                            float: left;
+                            line-height: 1;
+                            margin-right: 8px;
+                            margin-top: 4px;
+                          }
+                          .chapter-content-preview p {
+                            margin-bottom: 1.2em;
+                          }
+                        `}</style>
+                        {formatContent(chapter.content)}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground italic">
+                        This chapter has no content yet.
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
 
             {sortedChapters.length === 0 && (
               <div className="text-center py-12">
