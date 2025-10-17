@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star, Eye, FloppyDisk, CaretLeft, CaretRight } from '@phosphor-icons/react';
+import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star, Eye, FloppyDisk, CaretLeft, CaretRight, ArrowUp, ArrowDown } from '@phosphor-icons/react';
 import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { SaveIndicator } from '@/components/SaveIndicator';
 import { RichTextEditor } from '@/components/RichTextEditor';
@@ -13,7 +13,6 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAutoSave } from '@/hooks/use-auto-save';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 interface ChapterEditorProps {
   chapters: Chapter[];
@@ -84,28 +83,6 @@ export function ChapterEditor({
     delay: 30000, // 30 seconds
     enabled: !!currentChapter
   });
-
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) return;
-
-    const sourceIndex = result.source.index;
-    const destinationIndex = result.destination.index;
-
-    if (sourceIndex === destinationIndex) return;
-
-    // Provide immediate feedback
-    const sourceChapter = chapters[sourceIndex];
-    toast.success(`"${sourceChapter.title}" moved to position ${destinationIndex + 1}`);
-    
-    onChapterReorder(sourceIndex, destinationIndex);
-  };
-
-  const handleDragStart = () => {
-    // Provide haptic feedback on mobile
-    if (navigator.vibrate) {
-      navigator.vibrate(50);
-    }
-  };
 
   const handleTitleEdit = (chapter: Chapter) => {
     setEditingTitle(true);
@@ -180,117 +157,107 @@ export function ChapterEditor({
               </motion.div>
             </div>
             
-            <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-              <Droppable droppableId="chapters">
-                {(provided, snapshot) => (
-                  <div 
-                    className={cn(
-                      "space-y-2 overflow-auto flex-1 chapter-list",
-                      snapshot.isDraggingOver && "bg-primary/5 rounded-lg p-2"
-                    )}
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
+            <div className="space-y-2 overflow-auto flex-1 chapter-list">
+              <AnimatePresence>
+                {chapters.map((chapter, index) => (
+                  <motion.div
+                    key={chapter.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="group relative"
                   >
-                    <AnimatePresence>
-                      {chapters.map((chapter, index) => (
-                        <Draggable key={chapter.id} draggableId={chapter.id} index={index}>
-                          {(provided, snapshot) => (
-                            <motion.div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -10 }}
-                              className={cn(
-                                "group relative rounded-lg transition-all",
-                                snapshot.isDragging && "z-50 rotate-2"
-                              )}
-                            >
-                              <div
-                                className={cn(
-                                  "flex items-center gap-2 p-2.5 rounded-lg cursor-pointer transition-all",
-                                  currentChapter?.id === chapter.id 
-                                    ? "neomorph-inset bg-primary/10 ring-2 ring-primary/30" 
-                                    : "neomorph-flat hover:neomorph-hover",
-                                  snapshot.isDragging && "shadow-2xl scale-105 bg-background"
-                                )}
-                                onClick={() => !snapshot.isDragging && onChapterSelect(chapter)}
-                              >
-                                {/* Drag Handle */}
-                                <div 
-                                  {...provided.dragHandleProps}
-                                  className="p-1 rounded hover:bg-muted/50 cursor-grab active:cursor-grabbing"
-                                >
-                                  <DotsSixVertical size={14} className="text-muted-foreground" />
-                                </div>
+                    <div
+                      className={cn(
+                        "flex items-center gap-2 p-2.5 rounded-lg cursor-pointer transition-all",
+                        currentChapter?.id === chapter.id 
+                          ? "neomorph-inset bg-primary/10 ring-2 ring-primary/30" 
+                          : "neomorph-flat hover:neomorph-hover"
+                      )}
+                      onClick={() => onChapterSelect(chapter)}
+                    >
+                      {/* Reorder Arrows */}
+                      <div className="flex flex-col gap-0.5">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={index === 0}
+                          className="h-4 w-4 p-0 hover:bg-muted/50 disabled:opacity-30"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (index > 0) onChapterReorder(index, index - 1);
+                          }}
+                        >
+                          <ArrowUp size={10} weight="bold" className="text-muted-foreground" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={index === chapters.length - 1}
+                          className="h-4 w-4 p-0 hover:bg-muted/50 disabled:opacity-30"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (index < chapters.length - 1) onChapterReorder(index, index + 1);
+                          }}
+                        >
+                          <ArrowDown size={10} weight="bold" className="text-muted-foreground" />
+                        </Button>
+                      </div>
 
-                                {/* Chapter Number */}
-                                <Badge 
-                                  variant="secondary" 
-                                  className={cn(
-                                    "text-xs font-bold border-0 px-1.5 py-0.5 min-w-[24px] justify-center",
-                                    currentChapter?.id === chapter.id ? "bg-primary text-primary-foreground" : "neomorph-flat"
-                                  )}
-                                >
-                                  {index + 1}
-                                </Badge>
+                      {/* Chapter Number */}
+                      <Badge 
+                        variant="secondary" 
+                        className={cn(
+                          "text-xs font-bold border-0 px-1.5 py-0.5 min-w-[24px] justify-center",
+                          currentChapter?.id === chapter.id ? "bg-primary text-primary-foreground" : "neomorph-flat"
+                        )}
+                      >
+                        {index + 1}
+                      </Badge>
 
-                                {/* Chapter Info */}
-                                <div className="flex-1 min-w-0">
-                                  <h3 className="font-medium text-sm truncate">
-                                    {chapter.title}
-                                  </h3>
-                                  <span className="text-xs text-muted-foreground">
-                                    {chapter.content?.split(' ').filter(w => w.length > 0).length || 0} words
-                                  </span>
-                                </div>
+                      {/* Chapter Info */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm truncate">
+                          {chapter.title}
+                        </h3>
+                        <span className="text-xs text-muted-foreground">
+                          {chapter.content?.split(' ').filter(w => w.length > 0).length || 0} words
+                        </span>
+                      </div>
 
-                                {/* Delete Button */}
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/10"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onChapterDelete(chapter.id);
-                                  }}
-                                >
-                                  <Trash size={12} className="text-destructive" />
-                                </Button>
-                              </div>
-                            </motion.div>
-                          )}
-                        </Draggable>
-                      ))}
-                    </AnimatePresence>
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
+                      {/* Delete Button */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onChapterDelete(chapter.id);
+                        }}
+                      >
+                        <Trash size={12} className="text-destructive" />
+                      </Button>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Collapse/Expand Toggle */}
-      <motion.div 
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 lg:relative lg:left-auto lg:top-auto lg:translate-y-0"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
+      <div className="flex items-center">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className={cn(
-            "neomorph-button border-0 h-10 w-10 p-0 rounded-full shadow-lg",
-            sidebarCollapsed && "lg:ml-2"
-          )}
+          className="neomorph-button border-0 h-10 w-10 p-0 rounded-full shadow-lg hover:scale-110 transition-transform"
           title={sidebarCollapsed ? "Show chapters" : "Hide chapters"}
         >
           {sidebarCollapsed ? <CaretRight size={18} weight="bold" /> : <CaretLeft size={18} weight="bold" />}
         </Button>
-      </motion.div>
+      </div>
 
       {/* Main Editor */}
       <motion.div 
