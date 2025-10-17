@@ -1,8 +1,10 @@
 // Stripe Webhook Handler
 // This handles Stripe events and updates Firebase accordingly
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const admin = require('firebase-admin');
+import Stripe from 'stripe';
+import admin from 'firebase-admin';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Initialize Firebase Admin if not already initialized
 if (!admin.apps.length) {
@@ -17,7 +19,7 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
