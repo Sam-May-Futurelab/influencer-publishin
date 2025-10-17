@@ -94,44 +94,28 @@ export default async function handler(req, res) {
       const genreContext = genre && genre !== 'general' ? ` for a ${genre} ebook` : '';
       const audienceContext = context.targetAudience ? ` targeting ${context.targetAudience}` : '';
       
-      prompt = `You are a professional ebook content writer${genreContext}${audienceContext}.
-
-Chapter: "${chapterTitle}"
+      // Simplified prompt - complexity was making it worse
+      const lengthInstruction = length === 'comprehensive' 
+        ? 'Write substantial, detailed content with multiple paragraphs, examples, and in-depth explanations. Aim for around 600 words each.'
+        : length === 'detailed'
+        ? 'Write thorough content with good detail and examples. Around 350 words each.'
+        : length === 'standard'
+        ? 'Write clear, focused content. Around 250 words each.'
+        : 'Write concise, to-the-point content. Around 125 words each.';
+      
+      prompt = `Chapter: "${chapterTitle}"
 Topics: ${keywords.join(', ')}
-
-CRITICAL REQUIREMENT: Each piece MUST be between ${wordTarget.min}-${wordTarget.max} words. This is MANDATORY. Count your words carefully.
-
-Generate 4 content pieces:
-
-1. Chapter Introduction (${wordTarget.description})
-   - Hook the reader immediately
-   - Set clear expectations
-   - Make them want to continue reading
-   
-2. Main Explanation (${wordTarget.description})
-   - Detailed coverage of key concepts
-   - Include 2-3 specific examples
-   - Break down complex ideas
-   
-3. Practical Tips (${wordTarget.description})
-   - 3-5 actionable tips readers can use today
-   - Specific, not generic advice
-   - Real-world application examples
-   
-4. Conclusion (${wordTarget.description})
-   - Reinforce key takeaways
-   - Motivate action
-   - Connect to next steps
-
 Style: ${toneDescriptors[tone] || 'engaging, conversational'}
 
-IMPORTANT: 
-- Each piece must be AT LEAST ${wordTarget.min} words
-- Each piece should be close to ${wordTarget.max} words
-- Be specific and detailed, not brief or generic
-- Use multiple paragraphs for longer pieces
+${lengthInstruction}
 
-Return ONLY a JSON array of 4 strings. Each string must be ${wordTarget.description}.`;
+Generate 4 pieces:
+1. Chapter Introduction - Hook readers and set expectations
+2. Main Explanation - Cover key concepts with examples  
+3. Practical Tips - Give specific, actionable advice
+4. Conclusion - Reinforce takeaways and motivate action
+
+Return as JSON array of 4 strings.`;
       
       maxTokens = tokenLimits[length] || 1500;
       
