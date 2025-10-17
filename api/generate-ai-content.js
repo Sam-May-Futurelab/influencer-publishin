@@ -91,17 +91,12 @@ export default async function handler(req, res) {
       const genreContext = genre && genre !== 'general' ? ` ${genre}` : '';
       const audienceContext = context.targetAudience ? ` for ${context.targetAudience}` : '';
       
-      // Chapter context for better continuity
+      // Simple chapter guidance - only special case for Chapter 1
       const chapterNumber = context.chapterNumber || null;
-      const totalChapters = context.totalChapters || null;
       let chapterGuidance = '';
       
       if (chapterNumber === 1) {
-        chapterGuidance = '\n\nThis is the FIRST chapter - focus on introducing the topic, hooking the reader, and setting expectations.';
-      } else if (chapterNumber === totalChapters) {
-        chapterGuidance = '\n\nThis is the FINAL chapter - focus on conclusions, takeaways, and inspiring action.';
-      } else if (chapterNumber) {
-        chapterGuidance = `\n\nThis is chapter ${chapterNumber} of ${totalChapters} - build on previous concepts and maintain continuity.`;
+        chapterGuidance = '\n\nNote: This is Chapter 1 - introduce the topic, hook the reader, and set clear expectations.';
       }
       
       prompt = `Write engaging content about "${keywords.join(', ')}" for the chapter "${chapterTitle}"${genreContext}${audienceContext}.${chapterGuidance}
