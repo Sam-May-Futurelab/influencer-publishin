@@ -26,6 +26,8 @@ When you're ready to switch from `inkfluence-ai.vercel.app` to your custom domai
 **Current value**: `https://inkfluence-ai.vercel.app`  
 **New value**: `https://yourdomain.com`
 
+**⚠️ Important**: If this is set to the wrong domain, Stripe checkout will redirect to a 404 page after payment, even though the payment succeeds. Make sure this matches your actual Vercel domain!
+
 ---
 
 ### 3. **Firebase Authentication** (Authorized Domains)
