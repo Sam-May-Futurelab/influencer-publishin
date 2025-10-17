@@ -420,3 +420,16 @@
 .prose ol > li {
   padding-left: 0.375em;
 }
+
+/* Text alignment support */
+.prose [style*="text-align: center"] {
+  text-align: center;
+}
+
+.prose [style*="text-align: right"] {
+  text-align: right;
+}
+
+.prose [style*="text-align: justify"] {
+  text-align: justify;
+}

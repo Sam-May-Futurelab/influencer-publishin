@@ -1,11 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import Underline from '@tiptap/extension-underline';
 import CharacterCount from '@tiptap/extension-character-count';
+import TextAlign from '@tiptap/extension-text-align';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { 
   TextB, 
   TextItalic, 
@@ -17,7 +25,11 @@ import {
   ArrowULeftUp,
   ArrowURightUp,
   TextAa,
-  Sparkle
+  Sparkle,
+  TextAlignLeft,
+  TextAlignCenter,
+  TextAlignRight,
+  TextAlignJustify
 } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -39,11 +51,17 @@ export function RichTextEditor({
   minHeight = '400px',
   onAIAssistantClick
 }: RichTextEditorProps) {
+  const [lineHeight, setLineHeight] = useState('1.6');
+
   const editor = useEditor({
     extensions: [
       StarterKit,
       Underline,
       CharacterCount,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+        alignments: ['left', 'center', 'right', 'justify'],
+      }),
       Placeholder.configure({
         placeholder,
       }),
@@ -52,6 +70,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg focus:outline-none max-w-none p-4',
+        style: `line-height: ${lineHeight}`,
       },
     },
     onUpdate: ({ editor }) => {
@@ -65,6 +84,13 @@ export function RichTextEditor({
       editor.commands.setContent(content);
     }
   }, [content, editor]);
+
+  // Update line height dynamically
+  useEffect(() => {
+    if (editor) {
+      editor.view.dom.style.lineHeight = lineHeight;
+    }
+  }, [lineHeight, editor]);
 
   if (!editor) {
     return null;
@@ -191,6 +217,55 @@ export function RichTextEditor({
           icon={ListNumbers}
           label="Numbered List"
         />
+
+        <Separator orientation="vertical" className="h-6 mx-1" />
+
+        {/* Text Alignment */}
+        <ToolbarButton
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          isActive={editor.isActive({ textAlign: 'left' })}
+          icon={TextAlignLeft}
+          label="Align Left"
+        />
+        <ToolbarButton
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          isActive={editor.isActive({ textAlign: 'center' })}
+          icon={TextAlignCenter}
+          label="Align Center"
+        />
+        <ToolbarButton
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          isActive={editor.isActive({ textAlign: 'right' })}
+          icon={TextAlignRight}
+          label="Align Right"
+        />
+        <ToolbarButton
+          onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+          isActive={editor.isActive({ textAlign: 'justify' })}
+          icon={TextAlignJustify}
+          label="Justify"
+        />
+
+        <Separator orientation="vertical" className="h-6 mx-1" />
+
+        {/* Line Spacing */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-muted-foreground hidden md:inline">Line:</span>
+          <Select value={lineHeight} onValueChange={setLineHeight}>
+            <SelectTrigger className="h-8 w-16 neomorph-button border-0 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1.0">1.0</SelectItem>
+              <SelectItem value="1.2">1.2</SelectItem>
+              <SelectItem value="1.4">1.4</SelectItem>
+              <SelectItem value="1.6">1.6</SelectItem>
+              <SelectItem value="1.8">1.8</SelectItem>
+              <SelectItem value="2.0">2.0</SelectItem>
+              <SelectItem value="2.5">2.5</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
