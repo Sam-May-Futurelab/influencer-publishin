@@ -180,87 +180,12 @@ export function Dashboard({
         </Card>
       </motion.div>
 
-      {/* Writing Goals Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-      >
-        <WritingGoalsComponent
-          goals={goals}
-          stats={stats}
-          progress={progress}
-          onUpdateGoals={updateGoals}
-        />
-      </motion.div>
-
-      {/* Recent Achievements */}
-      {recentAchievements.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="neomorph-flat border-0">
-            <CardContent className="p-4 lg:p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <motion.div 
-                  className="p-2 rounded-xl neomorph-flat"
-                  animate={{ 
-                    rotate: [0, 5, -5, 0]
-                  }}
-                  transition={{ 
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 3
-                  }}
-                >
-                  <Trophy size={20} className="text-yellow-500" weight="fill" />
-                </motion.div>
-                <div>
-                  <h3 className="font-semibold">Recent Achievements</h3>
-                  <p className="text-sm text-muted-foreground">Celebrate your writing milestones! 🎉</p>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {recentAchievements.map((achievement, index) => (
-                  <motion.div
-                    key={achievement.id}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                  >
-                    <div className="neomorph-flat border-0 rounded-lg px-3 py-2 flex items-center gap-2 hover:neomorph-raised transition-all duration-200 cursor-default">
-                      <motion.span 
-                        className="text-xl"
-                        animate={{ 
-                          scale: [1, 1.15, 1],
-                        }}
-                        transition={{ 
-                          duration: 1.5,
-                          repeat: Infinity,
-                          repeatDelay: 2 + index * 0.5
-                        }}
-                      >
-                        {achievement.icon}
-                      </motion.span>
-                      <span className="font-medium text-sm text-foreground">{achievement.title}</span>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
-
       {/* Projects Section */}
       {projects.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15 }}
           className="space-y-4 lg:space-y-6"
         >
           {/* Search and View Controls */}
@@ -392,7 +317,7 @@ export function Dashboard({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15 }}
           className="text-center py-12"
         >
           <BookOpen size={64} className="mx-auto mb-6 text-muted-foreground opacity-50" />
@@ -407,6 +332,81 @@ export function Dashboard({
             <BookOpen size={16} />
             Browse Templates
           </Button>
+        </motion.div>
+      )}
+
+      {/* Writing Goals Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <WritingGoalsComponent
+          goals={goals}
+          stats={stats}
+          progress={progress}
+          onUpdateGoals={updateGoals}
+        />
+      </motion.div>
+
+      {/* Recent Achievements */}
+      {recentAchievements.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <Card className="neomorph-flat border-0">
+            <CardContent className="p-4 lg:p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <motion.div 
+                  className="p-2 rounded-xl neomorph-flat"
+                  animate={{ 
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 3
+                  }}
+                >
+                  <Trophy size={20} className="text-yellow-500" weight="fill" />
+                </motion.div>
+                <div>
+                  <h3 className="font-semibold">Recent Achievements</h3>
+                  <p className="text-sm text-muted-foreground">Celebrate your writing milestones! 🎉</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {recentAchievements.map((achievement, index) => (
+                  <motion.div
+                    key={achievement.id}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                  >
+                    <div className="neomorph-flat border-0 rounded-lg px-3 py-2 flex items-center gap-2 hover:neomorph-raised transition-all duration-200 cursor-default">
+                      <motion.span 
+                        className="text-xl"
+                        animate={{ 
+                          scale: [1, 1.15, 1],
+                        }}
+                        transition={{ 
+                          duration: 1.5,
+                          repeat: Infinity,
+                          repeatDelay: 2 + index * 0.5
+                        }}
+                      >
+                        {achievement.icon}
+                      </motion.span>
+                      <span className="font-medium text-sm text-foreground">{achievement.title}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </motion.div>
       )}
     </div>
