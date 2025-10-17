@@ -22,6 +22,8 @@ export interface AIContentOptions {
   context?: {
     targetAudience?: string;
     bookDescription?: string;
+    chapterNumber?: number;
+    totalChapters?: number;
   };
 }
 
@@ -89,10 +91,11 @@ export async function generateAIContent(
       throw new Error('Failed to generate AI content');
     }
 
-    // Now returns 1 suggestion per API call - faster and cheaper
+    // Now returns 1 suggestion per API call with timestamp
+    const timestamp = new Date();
     const suggestions: ContentSuggestion[] = data.content.map((content: string, index: number) => ({
       id: `suggestion-${Date.now()}-${index}`,
-      title: 'AI Generated Content',
+      title: `Generated ${timestamp.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`,
       content,
       type: 'introduction'
     }));

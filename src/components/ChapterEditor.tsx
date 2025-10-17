@@ -393,6 +393,8 @@ export function ChapterEditor({
                       chapterTitle={currentChapter.title}
                       ebookCategory={ebookCategory}
                       targetAudience={targetAudience}
+                      chapterNumber={chapters.findIndex(ch => ch.id === currentChapter.id) + 1}
+                      totalChapters={chapters.length}
                       onContentGenerated={handleAIContentGenerated}
                     />
                     

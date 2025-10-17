@@ -17,6 +17,8 @@ interface AIContentAssistantProps {
   chapterTitle: string;
   ebookCategory?: string;
   targetAudience?: string;
+  chapterNumber?: number;
+  totalChapters?: number;
   onContentGenerated: (content: string) => void;
   className?: string;
 }
@@ -25,6 +27,8 @@ export function AIContentAssistant({
   chapterTitle, 
   ebookCategory = 'general',
   targetAudience,
+  chapterNumber,
+  totalChapters,
   onContentGenerated, 
   className = '' 
 }: AIContentAssistantProps) {
@@ -77,6 +81,8 @@ export function AIContentAssistant({
         format,
         context: {
           targetAudience,
+          chapterNumber,
+          totalChapters,
         }
       });
       

@@ -91,7 +91,20 @@ export default async function handler(req, res) {
       const genreContext = genre && genre !== 'general' ? ` ${genre}` : '';
       const audienceContext = context.targetAudience ? ` for ${context.targetAudience}` : '';
       
-      prompt = `Write engaging content about "${keywords.join(', ')}" for the chapter "${chapterTitle}"${genreContext}${audienceContext}.
+      // Chapter context for better continuity
+      const chapterNumber = context.chapterNumber || null;
+      const totalChapters = context.totalChapters || null;
+      let chapterGuidance = '';
+      
+      if (chapterNumber === 1) {
+        chapterGuidance = '\n\nThis is the FIRST chapter - focus on introducing the topic, hooking the reader, and setting expectations.';
+      } else if (chapterNumber === totalChapters) {
+        chapterGuidance = '\n\nThis is the FINAL chapter - focus on conclusions, takeaways, and inspiring action.';
+      } else if (chapterNumber) {
+        chapterGuidance = `\n\nThis is chapter ${chapterNumber} of ${totalChapters} - build on previous concepts and maintain continuity.`;
+      }
+      
+      prompt = `Write engaging content about "${keywords.join(', ')}" for the chapter "${chapterTitle}"${genreContext}${audienceContext}.${chapterGuidance}
 
 Style: ${toneDescriptors[tone] || 'engaging, conversational'}
 Target length: ${targetWords} words
