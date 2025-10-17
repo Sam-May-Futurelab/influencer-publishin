@@ -65,10 +65,13 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     priceId: process.env.VITE_STRIPE_YEARLY_PRICE_ID || 'price_yearly_placeholder',
     interval: 'year',
     features: [
-      'Everything in Monthly',
-      '2 months free',
-      'Priority feature requests',
-      'Early access to new features'
+      'Unlimited pages',
+      '50 AI generations per day',
+      'All premium templates',
+      'Priority support',
+      'Custom branding',
+      'Advanced export options',
+      'Remove watermarks'
     ]
   }
 ];

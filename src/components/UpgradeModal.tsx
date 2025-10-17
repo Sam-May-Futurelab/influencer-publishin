@@ -54,8 +54,8 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl neomorph-flat border-0 p-0 overflow-hidden">
-        <DialogHeader className="p-6 pb-4 bg-gradient-to-r from-primary/10 to-purple-500/10">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto neomorph-flat border-0 p-0">
+        <DialogHeader className="p-6 pb-4 bg-gradient-to-r from-primary/10 to-purple-500/10 sticky top-0 z-10 backdrop-blur-sm">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-lg bg-amber-500/20">
               <Crown size={24} className="text-amber-500" weight="fill" />
