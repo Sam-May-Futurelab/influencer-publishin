@@ -65,4 +65,4 @@ export interface Achievement {
   type: 'words' | 'streak' | 'projects' | 'chapters';
 }
 
-export type InputMode = 'text' | 'ai';
+export type InputMode = 'text' | 'ai' | 'preview';

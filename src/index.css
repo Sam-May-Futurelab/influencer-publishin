@@ -353,3 +353,70 @@
   font-style: italic;
   color: hsl(var(--muted-foreground));
 }
+
+/* Preview tab prose styling */
+.prose {
+  color: hsl(var(--foreground));
+  max-width: 65ch;
+}
+
+.prose p {
+  margin-bottom: 1.25em;
+  line-height: 1.75;
+}
+
+.prose h1 {
+  font-size: 2.25em;
+  font-weight: 800;
+  line-height: 1.1111;
+  margin-top: 0;
+  margin-bottom: 0.8888em;
+}
+
+.prose h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1.3333;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.prose h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  line-height: 1.6;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose u {
+  text-decoration: underline;
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.625em;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
+.prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose ul > li {
+  padding-left: 0.375em;
+}
+
+.prose ol > li {
+  padding-left: 0.375em;
+}

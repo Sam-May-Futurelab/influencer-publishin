@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star } from '@phosphor-icons/react';
+import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star, Eye } from '@phosphor-icons/react';
 import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { SaveIndicator } from '@/components/SaveIndicator';
 import { RichTextEditor } from '@/components/RichTextEditor';
@@ -369,13 +369,12 @@ export function ChapterEditor({
                         whileTap={{ scale: 0.95 }}
                       >
                         <Button
-                          variant="outline"
                           size="sm"
                           onClick={forceSave}
                           disabled={saving}
-                          className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-2 lg:px-3"
+                          className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-3 lg:px-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold shadow-lg"
                         >
-                          {saving ? 'Saving...' : 'Save Now'}
+                          {saving ? 'Saving...' : '💾 Save Now'}
                         </Button>
                       </motion.div>
                     )}
@@ -405,6 +404,15 @@ export function ChapterEditor({
                     <PencilSimple size={16} className="hidden lg:block" />
                     <span className="hidden sm:inline">Text Editor</span>
                     <span className="sm:hidden">Text</span>
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="preview" 
+                    className="gap-1 lg:gap-2 neomorph-button border-0 data-[state=active]:neomorph-inset data-[state=active]:bg-background text-xs lg:text-sm px-2 lg:px-3"
+                  >
+                    <Eye size={14} className="lg:hidden" />
+                    <Eye size={16} className="hidden lg:block" />
+                    <span className="hidden sm:inline">Preview</span>
+                    <span className="sm:hidden">Preview</span>
                   </TabsTrigger>
                 </TabsList>
 
@@ -499,6 +507,35 @@ export function ChapterEditor({
                         <span className="text-xs text-muted-foreground">Last updated: {new Date(currentChapter.updatedAt).toLocaleTimeString()}</span>
                       </div>
                     </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="preview" className="mt-4 lg:mt-6">
+                  <div className="space-y-4">
+                    <Card className="neomorph-inset border-0 bg-background/50">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-semibold">Chapter Preview</h3>
+                          <Badge variant="secondary" className="text-xs neomorph-flat border-0">
+                            Read-only
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        {pendingContent ? (
+                          <div 
+                            className="prose prose-sm sm:prose lg:prose-lg max-w-none"
+                            dangerouslySetInnerHTML={{ __html: pendingContent }}
+                          />
+                        ) : (
+                          <div className="text-center py-12 text-muted-foreground">
+                            <Eye size={48} className="mx-auto mb-4 opacity-50" />
+                            <p className="text-lg">No content to preview yet</p>
+                            <p className="text-sm mt-2">Start writing or use AI Assistant to generate content</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
                   </div>
                 </TabsContent>
               </Tabs>
