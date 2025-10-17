@@ -299,25 +299,25 @@ export function AIContentAssistant({
                     <SelectItem value="brief">
                       <div className="flex flex-col items-start py-1">
                         <span className="font-medium">📄 Brief</span>
-                        <span className="text-xs text-muted-foreground">~100 words each (3 blocks)</span>
+                        <span className="text-xs text-muted-foreground">~75 words each (225 total)</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="standard">
                       <div className="flex flex-col items-start py-1">
                         <span className="font-medium">📋 Standard</span>
-                        <span className="text-xs text-muted-foreground">~150 words each (recommended)</span>
+                        <span className="text-xs text-muted-foreground">~100 words each (300 total)</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="detailed">
                       <div className="flex flex-col items-start py-1">
                         <span className="font-medium">� Detailed</span>
-                        <span className="text-xs text-muted-foreground">~250 words each (3 blocks)</span>
+                        <span className="text-xs text-muted-foreground">~150 words each (450 total)</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="comprehensive">
                       <div className="flex flex-col items-start py-1">
                         <span className="font-medium">📚 Comprehensive</span>
-                        <span className="text-xs text-muted-foreground">~400 words each (3 blocks)</span>
+                        <span className="text-xs text-muted-foreground">~200 words each (600 total)</span>
                       </div>
                     </SelectItem>
                   </SelectContent>

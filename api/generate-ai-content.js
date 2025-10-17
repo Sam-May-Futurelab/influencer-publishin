@@ -40,12 +40,12 @@ export default async function handler(req, res) {
     let prompt = '';
     let maxTokens = 2000;
 
-    // Dynamic token allocation based on length parameter
+    // Reduced token limits to avoid Vercel timeout (10 seconds)
     const tokenLimits = {
-      brief: 800,
-      standard: 1500,
-      detailed: 2500,
-      comprehensive: 3500
+      brief: 600,    // ~225 words total
+      standard: 900,  // ~300 words total
+      detailed: 1200, // ~450 words total
+      comprehensive: 1800  // ~600 words total
     };
 
     // Build context string from metadata
@@ -82,11 +82,11 @@ export default async function handler(req, res) {
 
     if (contentType === 'suggestions') {
       // Determine word count based on length setting
-      // Simpler approach: generate 3 useful content blocks instead of 4 templated pieces
-      const targetWords = length === 'comprehensive' ? 400
-        : length === 'detailed' ? 250
-        : length === 'standard' ? 150
-        : 100;
+      // Realistic word counts that won't timeout on Vercel (10 second limit)
+      const targetWords = length === 'comprehensive' ? 200  // 600 words total
+        : length === 'detailed' ? 150  // 450 words total
+        : length === 'standard' ? 100  // 300 words total
+        : 75;  // 225 words total
       
       const genreContext = genre && genre !== 'general' ? ` ${genre}` : '';
       const audienceContext = context.targetAudience ? ` for ${context.targetAudience}` : '';
@@ -101,7 +101,10 @@ Each block should be approximately ${targetWords} words. Write substantial, deta
 2. Core content - Explain key concepts with specific examples and details
 3. Practical takeaways - Actionable insights the reader can use
 
-Return as JSON array of 3 strings. Make each one around ${targetWords} words with real substance.`;
+IMPORTANT: Return ONLY a valid JSON array of 3 strings. No markdown, no code blocks, just the raw JSON array.
+Example format: ["first block text here...", "second block text here...", "third block text here..."]
+
+Make each block around ${targetWords} words with real substance.`;
       
       maxTokens = tokenLimits[length] || 1500;
       
@@ -160,6 +163,24 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
       throw new Error('No content generated from OpenAI');
     }
 
+    // Parse JSON response with better error handling
+    let parsedContent = content;
+    if (contentType === 'suggestions') {
+      try {
+        // Remove markdown code blocks if present
+        const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        parsedContent = JSON.parse(cleanContent);
+        
+        if (!Array.isArray(parsedContent)) {
+          throw new Error('Response is not an array');
+        }
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError);
+        console.error('Raw content:', content);
+        throw new Error('Failed to parse AI response as JSON');
+      }
+    }
+
     // Log usage for monitoring (optional)
     console.log('AI Content Generated', {
       userId: userId || 'anonymous',
@@ -174,7 +195,7 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
 
     return res.status(200).json({
       success: true,
-      content: contentType === 'suggestions' ? JSON.parse(content) : content,
+      content: parsedContent,
       tokensUsed: completion.usage?.total_tokens || 0,
     });
 
