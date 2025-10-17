@@ -182,19 +182,9 @@ export function Header({
                       size="sm"
                       className="gap-2 h-10 px-3 neomorph-button border-0 text-foreground hover:text-foreground"
                     >
-                      {user.photoURL ? (
-                        <div className="w-6 h-6 rounded-full overflow-hidden neomorph-flat">
-                          <img 
-                            src={user.photoURL} 
-                            alt={user.displayName || user.email || 'User'} 
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-6 h-6 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
-                          <User size={14} className="text-primary" />
-                        </div>
-                      )}
+                      <div className="w-6 h-6 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
+                        <User size={14} className="text-primary" />
+                      </div>
                       <span className="text-sm font-medium">
                         {user.displayName || user.email?.split('@')[0] || 'User'}
                       </span>
@@ -314,19 +304,9 @@ export function Header({
                   {user ? (
                     <>
                       <div className="flex items-center gap-3 px-4 py-2">
-                        {user.photoURL ? (
-                          <div className="w-8 h-8 rounded-full overflow-hidden neomorph-flat">
-                            <img 
-                              src={user.photoURL} 
-                              alt={user.displayName || user.email || 'User'} 
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-8 h-8 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
-                            <User size={16} className="text-primary" />
-                          </div>
-                        )}
+                        <div className="w-8 h-8 rounded-full neomorph-flat flex items-center justify-center bg-primary/20">
+                          <User size={16} className="text-primary" />
+                        </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <p className="text-sm font-medium text-foreground">

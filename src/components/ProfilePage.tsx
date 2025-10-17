@@ -64,7 +64,6 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         user: {
           displayName: user?.displayName,
           email: user?.email,
-          photoURL: user?.photoURL,
           createdAt: user?.metadata?.creationTime
         },
         userProfile: userProfile,
@@ -201,26 +200,8 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Avatar Section */}
+              {/* Profile Header */}
               <div className="flex items-center gap-6">
-                <div className="relative">
-                  <div className="w-20 h-20 rounded-full overflow-hidden neomorph-raised p-1">
-                    {user?.photoURL ? (
-                      <img 
-                        src={user.photoURL} 
-                        alt="Profile" 
-                        className="w-full h-full object-cover rounded-full"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-100 to-indigo-200 rounded-full flex items-center justify-center">
-                        <span className="text-2xl font-semibold text-primary">
-                          {user?.displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-lg font-semibold text-gray-900">
