@@ -82,7 +82,13 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
 
   const getWordCount = () => {
     return project.chapters.reduce((total, chapter) => {
-      return total + (chapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0);
+      if (!chapter.content) return total;
+      
+      // Strip HTML tags for accurate word count
+      const textContent = chapter.content.replace(/<[^>]*>/g, ' ');
+      const wordCount = textContent.split(/\s+/).filter(word => word.length > 0).length;
+      
+      return total + wordCount;
     }, 0);
   };
 

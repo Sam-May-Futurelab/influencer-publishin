@@ -67,7 +67,10 @@ export function ProjectsPage({
 
   const getProjectStats = (project: EbookProject) => {
     const wordCount = project.chapters.reduce((total, chapter) => {
-      return total + (chapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0);
+      if (!chapter.content) return total;
+      // Strip HTML tags for accurate word count
+      const textContent = chapter.content.replace(/<[^>]*>/g, ' ');
+      return total + textContent.split(/\s+/).filter(word => word.length > 0).length;
     }, 0);
     
     return {
@@ -225,7 +228,10 @@ export function ProjectsPage({
             <div className="text-2xl font-bold text-primary">
               {projects.reduce((sum, p) => {
                 const words = p.chapters.reduce((total, chapter) => {
-                  return total + (chapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0);
+                  if (!chapter.content) return total;
+                  // Strip HTML tags for accurate word count
+                  const textContent = chapter.content.replace(/<[^>]*>/g, ' ');
+                  return total + textContent.split(/\s+/).filter(word => word.length > 0).length;
                 }, 0);
                 return sum + words;
               }, 0).toLocaleString()}

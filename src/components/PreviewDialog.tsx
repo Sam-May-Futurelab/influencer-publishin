@@ -14,12 +14,33 @@ interface PreviewDialogProps {
 export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) {
   const getWordCount = () => {
     return project.chapters.reduce((total, chapter) => {
-      return total + (chapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0);
+      if (!chapter.content) return total;
+      
+      // Strip HTML tags for accurate word count
+      const textContent = chapter.content.replace(/<[^>]*>/g, ' ');
+      const wordCount = textContent.split(/\s+/).filter(word => word.length > 0).length;
+      
+      return total + wordCount;
     }, 0);
   };
 
+  const isHTML = (content: string) => {
+    // Check if content contains HTML tags
+    return /<\/?[a-z][\s\S]*>/i.test(content);
+  };
+
   const formatContent = (content: string) => {
-    // Simple formatting for preview
+    // If content is HTML (from rich text editor), render it directly
+    if (isHTML(content)) {
+      return (
+        <div 
+          className="prose prose-sm lg:prose-base max-w-none"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      );
+    }
+    
+    // Otherwise, treat as plain text (from AI or old content)
     return content
       .split('\n\n')
       .map((paragraph, index) => {

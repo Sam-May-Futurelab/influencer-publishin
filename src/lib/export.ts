@@ -347,16 +347,20 @@ function escapeHtml(text: string): string {
 function formatContent(content: string): string {
   if (!content) return '<p><em>No content yet...</em></p>';
   
-  return content
-    .split('\n\n')
-    .filter(paragraph => paragraph.trim())
-    .map(paragraph => `<p>${escapeHtml(paragraph.trim())}</p>`)
-    .join('');
+  // Content is already HTML from the rich text editor, so return as-is
+  // Just ensure it's wrapped in a div for proper styling
+  return content;
 }
 
 function getTotalWordCount(project: EbookProject): number {
   return project.chapters.reduce((total, chapter) => {
-    return total + (chapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0);
+    if (!chapter.content) return total;
+    
+    // Strip HTML tags for accurate word count
+    const textContent = chapter.content.replace(/<[^>]*>/g, ' ');
+    const wordCount = textContent.split(/\s+/).filter(word => word.length > 0).length;
+    
+    return total + wordCount;
   }, 0);
 }
 
@@ -603,19 +607,13 @@ function generateDocxContent(project: EbookProject): string {
 function formatContentForEPUB(content: string): string {
   if (!content) return '<p><em>No content yet...</em></p>';
   
-  return content
-    .split('\n\n')
-    .filter(paragraph => paragraph.trim())
-    .map(paragraph => `<p>${escapeHtml(paragraph.trim())}</p>`)
-    .join('');
+  // Content is already HTML from the rich text editor, so return as-is
+  return content;
 }
 
 function formatContentForWord(content: string): string {
   if (!content) return '<p><em>No content yet...</em></p>';
   
-  return content
-    .split('\n\n')
-    .filter(paragraph => paragraph.trim())
-    .map(paragraph => `<p>${escapeHtml(paragraph.trim())}</p>`)
-    .join('');
+  // Content is already HTML from the rich text editor, so return as-is
+  return content;
 }

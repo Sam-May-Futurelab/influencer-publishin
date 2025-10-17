@@ -464,7 +464,12 @@ export function ChapterEditor({
                             color: brandConfig?.primaryColor || '#8B5CF6'
                           }}
                         >
-                          {chapters.reduce((total, ch) => total + (ch.content?.split(/\s+/).filter(w => w.length > 0).length || 0), 0).toLocaleString()} Words
+                          {chapters.reduce((total, ch) => {
+                            if (!ch.content) return total;
+                            // Strip HTML tags for accurate word count
+                            const textContent = ch.content.replace(/<[^>]*>/g, ' ');
+                            return total + textContent.split(/\s+/).filter(w => w.length > 0).length;
+                          }, 0).toLocaleString()} Words
                         </Badge>
                       </div>
                     </motion.div>
