@@ -40,12 +40,12 @@ export default async function handler(req, res) {
     let prompt = '';
     let maxTokens = 2000;
 
-    // Reduced token limits to avoid Vercel timeout (10 seconds)
+    // Faster generation with 1 block per request
     const tokenLimits = {
-      brief: 600,    // ~225 words total
-      standard: 900,  // ~300 words total
-      detailed: 1200, // ~450 words total
-      comprehensive: 1800  // ~600 words total
+      brief: 400,    // ~100 words
+      standard: 600,  // ~150 words
+      detailed: 800, // ~200 words
+      comprehensive: 1200  // ~300 words
     };
 
     // Build context string from metadata
@@ -82,29 +82,29 @@ export default async function handler(req, res) {
 
     if (contentType === 'suggestions') {
       // Determine word count based on length setting
-      // Realistic word counts that won't timeout on Vercel (10 second limit)
-      const targetWords = length === 'comprehensive' ? 200  // 600 words total
-        : length === 'detailed' ? 150  // 450 words total
-        : length === 'standard' ? 100  // 300 words total
-        : 75;  // 225 words total
+      // Generate 1 block per request - faster, cheaper, won't timeout
+      const targetWords = length === 'comprehensive' ? 300
+        : length === 'detailed' ? 200
+        : length === 'standard' ? 150
+        : 100;
       
       const genreContext = genre && genre !== 'general' ? ` ${genre}` : '';
       const audienceContext = context.targetAudience ? ` for ${context.targetAudience}` : '';
       
-      prompt = `Write 3 content blocks about "${keywords.join(', ')}" for the chapter "${chapterTitle}"${genreContext}${audienceContext}.
+      prompt = `Write engaging content about "${keywords.join(', ')}" for the chapter "${chapterTitle}"${genreContext}${audienceContext}.
 
 Style: ${toneDescriptors[tone] || 'engaging, conversational'}
+Target length: ${targetWords} words
 
-Each block should be approximately ${targetWords} words. Write substantial, detailed content.
+Write a complete, well-developed paragraph or section with:
+- Clear explanation of the topic
+- Specific examples or details
+- Practical insights readers can use
 
-1. Opening section - Introduce the topic and hook the reader
-2. Core content - Explain key concepts with specific examples and details
-3. Practical takeaways - Actionable insights the reader can use
+IMPORTANT: Return ONLY a JSON array with 1 string. No markdown, no code blocks.
+Example format: ["Your content text here..."]
 
-IMPORTANT: Return ONLY a valid JSON array of 3 strings. No markdown, no code blocks, just the raw JSON array.
-Example format: ["first block text here...", "second block text here...", "third block text here..."]
-
-Make each block around ${targetWords} words with real substance.`;
+Make it substantial and valuable - around ${targetWords} words.`;
       
       maxTokens = tokenLimits[length] || 1500;
       

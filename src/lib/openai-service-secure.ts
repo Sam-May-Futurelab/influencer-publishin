@@ -89,16 +89,12 @@ export async function generateAIContent(
       throw new Error('Failed to generate AI content');
     }
 
-    // Transform the suggestions array into ContentSuggestion format (now 3 blocks instead of 4)
-    const suggestions: ContentSuggestion[] = data.content.slice(0, 3).map((content: string, index: number) => ({
+    // Now returns 1 suggestion per API call - faster and cheaper
+    const suggestions: ContentSuggestion[] = data.content.map((content: string, index: number) => ({
       id: `suggestion-${Date.now()}-${index}`,
-      title: index === 0 ? 'Opening Section' :
-             index === 1 ? 'Core Content' :
-             'Practical Takeaways',
+      title: 'AI Generated Content',
       content,
-      type: index === 0 ? 'introduction' :
-            index === 1 ? 'outline' :
-            'tips'
+      type: 'introduction'
     }));
 
     return suggestions;
@@ -175,21 +171,9 @@ function getFallbackSuggestions(keywords: string, chapterTitle: string): Content
   return [
     {
       id: 'fallback-1',
-      title: 'Opening Section',
-      content: `In this chapter, we'll explore ${keywords} and discover how these concepts can transform your understanding of ${chapterTitle}. Whether you're just starting out or looking to deepen your knowledge, you'll find practical insights and actionable strategies that you can apply immediately. Let's dive into the key principles that will help you master this important topic and see how they apply to real-world situations.`,
+      title: 'Content Suggestion',
+      content: `In this chapter on ${chapterTitle}, we'll explore ${keywords} and discover how these concepts can transform your understanding. Whether you're just starting out or looking to deepen your knowledge, you'll find practical insights and actionable strategies. Understanding ${keywords} requires examining both theory and practice. Through specific examples and detailed explanations, we'll help you build a comprehensive understanding that you can apply in your own context.`,
       type: 'introduction'
-    },
-    {
-      id: 'fallback-2',
-      title: 'Core Content',
-      content: `Understanding ${keywords} requires examining both theory and practice. Let's break down the essential elements: First, ${keywords} forms the foundation of ${chapterTitle} by providing a framework for understanding key concepts. Consider how these ideas connect to your existing knowledge and experience. Through specific examples and detailed explanations, we'll explore different aspects of ${keywords}, helping you build a comprehensive understanding. By examining various perspectives and applications, you'll develop practical skills you can implement immediately in your own context.`,
-      type: 'outline'
-    },
-    {
-      id: 'fallback-3',
-      title: 'Practical Takeaways',
-      content: `Let's focus on actionable insights you can implement right away. Start by identifying which aspects of ${keywords} resonate most with your situation. Practice applying these concepts in small, manageable steps rather than trying to master everything at once. Track your progress and adjust based on what works for you. Connect with others exploring ${keywords}—their experiences provide valuable perspective. Remember that mastery develops through consistent practice. Be patient as you build your skills, and celebrate small wins along the way.`,
-      type: 'tips'
     }
   ];
 }

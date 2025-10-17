@@ -65,7 +65,7 @@ export function AIContentAssistant({
       });
       
       // Use enhanced AI service with new parameters
-      const suggestions = await generateAIContent({
+      const newSuggestions = await generateAIContent({
         keywords,
         chapterTitle,
         genre: ebookCategory,
@@ -77,8 +77,9 @@ export function AIContentAssistant({
         }
       });
       
-      setSuggestions(suggestions);
-      toast.success(`Generated ${suggestions.length} AI content suggestions!`);
+      // Add to existing suggestions instead of replacing (allows multiple clicks)
+      setSuggestions(prev => [...newSuggestions, ...prev]);
+      toast.success(`Generated ${newSuggestions.length} new suggestion!`);
       
     } catch (error) {
       console.error('Content generation failed:', error);
@@ -90,27 +91,15 @@ export function AIContentAssistant({
       
       const fallbackSuggestions: ContentSuggestion[] = [
         {
-          id: 'fallback-intro',
-          title: 'Opening Section',
-          content: `Welcome to this chapter on ${mainKeyword}. In this section, we'll explore the fundamental concepts and practical applications that will help you understand and implement ${mainKeyword} effectively. Whether you're a beginner or looking to deepen your knowledge, this chapter provides valuable insights and actionable strategies you can apply immediately. Let's begin this journey together and unlock the potential of ${mainKeyword} in your life.`,
+          id: 'fallback-1',
+          title: 'Content Suggestion',
+          content: `In this chapter on ${chapterTitle}, we'll explore ${mainKeyword} and discover how these concepts can transform your understanding. Whether you're just starting out or looking to deepen your knowledge, you'll find practical insights and actionable strategies. Understanding ${mainKeyword} requires examining both theory and practice. Through specific examples and detailed explanations, we'll help you build a comprehensive understanding that you can apply in your own context.`,
           type: 'introduction'
-        },
-        {
-          id: 'fallback-content',
-          title: 'Core Content',
-          content: `Understanding ${mainKeyword} requires both theoretical knowledge and practical application. Let's break down the key concepts that form the foundation of ${mainKeyword}. First, it's important to recognize that ${mainKeyword} is not just about theory—it's about real-world implementation. Consider how ${mainKeyword} applies to everyday situations and challenges. Through specific examples and detailed explanations, we'll explore the nuances of ${mainKeyword}, helping you build a comprehensive understanding that you can apply in your own context. By examining different perspectives and approaches, you'll develop a well-rounded grasp of ${mainKeyword} that goes beyond surface-level knowledge.`,
-          type: 'outline'
-        },
-        {
-          id: 'fallback-takeaways',
-          title: 'Practical Takeaways',
-          content: `Now that we've covered the fundamentals of ${mainKeyword}, let's focus on actionable insights you can implement immediately. Start by identifying one or two key concepts that resonate most with your situation. Practice applying these concepts in small, manageable steps rather than attempting everything at once. Track your progress and adjust your approach based on what works best for you. Remember that mastery comes through consistent practice and reflection. Connect with others who are also exploring ${mainKeyword}—their perspectives and experiences can provide valuable insights. Finally, be patient with yourself as you develop your skills. Every expert was once a beginner, and your journey with ${mainKeyword} is uniquely yours.`,
-          type: 'tips'
         }
       ];
       
-      setSuggestions(fallbackSuggestions);
-      toast.success('Template content suggestions ready!');
+      setSuggestions(prev => [...fallbackSuggestions, ...prev]);
+      toast.success('Template content ready!');
       
     } finally {
       setIsGenerating(false);
@@ -299,25 +288,25 @@ export function AIContentAssistant({
                     <SelectItem value="brief">
                       <div className="flex flex-col items-start py-1">
                         <span className="font-medium">📄 Brief</span>
-                        <span className="text-xs text-muted-foreground">~75 words each (225 total)</span>
+                        <span className="text-xs text-muted-foreground">~100 words</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="standard">
                       <div className="flex flex-col items-start py-1">
                         <span className="font-medium">📋 Standard</span>
-                        <span className="text-xs text-muted-foreground">~100 words each (300 total)</span>
+                        <span className="text-xs text-muted-foreground">~150 words</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="detailed">
                       <div className="flex flex-col items-start py-1">
                         <span className="font-medium">� Detailed</span>
-                        <span className="text-xs text-muted-foreground">~150 words each (450 total)</span>
+                        <span className="text-xs text-muted-foreground">~200 words</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="comprehensive">
                       <div className="flex flex-col items-start py-1">
                         <span className="font-medium">📚 Comprehensive</span>
-                        <span className="text-xs text-muted-foreground">~200 words each (600 total)</span>
+                        <span className="text-xs text-muted-foreground">~300 words</span>
                       </div>
                     </SelectItem>
                   </SelectContent>
