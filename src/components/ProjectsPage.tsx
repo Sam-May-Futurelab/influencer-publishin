@@ -412,10 +412,7 @@ export function ProjectsPage({
           {!searchQuery && (
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button
-                onClick={() => {
-                  const title = prompt('Enter project title:');
-                  if (title?.trim()) onCreateProject(title.trim());
-                }}
+                onClick={() => setShowNewProjectDialog(true)}
                 className="neomorph-button border-0 gap-2"
               >
                 <Plus size={16} />
