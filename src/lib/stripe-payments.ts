@@ -44,7 +44,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     name: 'Premium Monthly',
     description: 'Full access to all premium features',
     price: 9.99,
-    priceId: process.env.VITE_STRIPE_MONTHLY_PRICE_ID || 'price_monthly_placeholder',
+    priceId: import.meta.env.VITE_STRIPE_MONTHLY_PRICE_ID || 'price_monthly_placeholder',
     interval: 'month',
     features: [
       'Unlimited pages',
@@ -63,7 +63,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     name: 'Premium Yearly',
     description: 'Best value - Save 17%!',
     price: 99.99,
-    priceId: process.env.VITE_STRIPE_YEARLY_PRICE_ID || 'price_yearly_placeholder',
+    priceId: import.meta.env.VITE_STRIPE_YEARLY_PRICE_ID || 'price_yearly_placeholder',
     interval: 'year',
     features: [
       'Unlimited pages',
