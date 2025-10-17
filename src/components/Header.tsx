@@ -87,9 +87,12 @@ export function Header({
                   />
                 </div>
               ) : (
-                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl neomorph-flat flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
-                  <BookOpen size={20} className="lg:hidden text-primary" />
-                  <BookOpen size={24} className="hidden lg:block text-primary" />
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl neomorph-flat flex items-center justify-center overflow-hidden">
+                  <img 
+                    src="/images/InkfluenceAILogo.png" 
+                    alt="InkfluenceAI Logo" 
+                    className="w-full h-full object-contain p-1"
+                  />
                 </div>
               )}
               
