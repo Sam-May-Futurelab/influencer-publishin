@@ -93,13 +93,18 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
                     <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
                     <p className="text-sm text-muted-foreground mb-4">{plan.description}</p>
                     <div className="flex items-baseline justify-center gap-1">
-                      <span className="text-4xl font-bold">${plan.price}</span>
+                      <span className="text-4xl font-bold">£{plan.price}</span>
                       <span className="text-muted-foreground">/{plan.interval === 'month' ? 'mo' : 'year'}</span>
                     </div>
                     {plan.interval === 'year' && (
-                      <Badge variant="outline" className="mt-2 border-green-500 text-green-600">
-                        Save {savings}%
-                      </Badge>
+                      <div className="mt-2 space-y-1">
+                        <Badge variant="outline" className="border-green-500 text-green-600">
+                          Save {savings}%
+                        </Badge>
+                        <p className="text-sm text-muted-foreground">
+                          Just £{(plan.price / 12).toFixed(2)}/month
+                        </p>
+                      </div>
                     )}
                   </div>
 

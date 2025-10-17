@@ -108,11 +108,13 @@ export class StripePaymentService {
         }),
       });
 
+      const data = await response.json();
+      
       if (!response.ok) {
-        throw new Error('Failed to create checkout session');
+        console.error('Checkout session error response:', data);
+        throw new Error(data.details || data.error || 'Failed to create checkout session');
       }
 
-      const data = await response.json();
       return { url: data.url };
     } catch (error) {
       console.error('Error creating checkout session:', error);
