@@ -15,13 +15,15 @@ import {
   Clock,
   Trophy,
   Target,
-  Eye
+  Eye,
+  SignIn
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { WritingGoalsComponent } from '@/components/WritingGoals';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { PreviewDialog } from '@/components/PreviewDialog';
+import { useAuth } from '@/hooks/use-auth';
 
 interface DashboardProps {
   projects: EbookProject[];
@@ -36,6 +38,7 @@ export function Dashboard({
   onCreateProject, 
   onShowTemplateGallery 
 }: DashboardProps) {
+  const { user } = useAuth();
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -331,17 +334,38 @@ export function Dashboard({
           className="text-center py-12"
         >
           <BookOpen size={64} className="mx-auto mb-6 text-muted-foreground opacity-50" />
-          <h3 className="text-lg font-semibold mb-2">No projects yet</h3>
-          <p className="text-muted-foreground mb-6">
-            Create your first ebook project to get started with your publishing journey.
-          </p>
-          <Button
-            onClick={onShowTemplateGallery}
-            className="neomorph-button border-0 gap-2 hover:text-black"
-          >
-            <BookOpen size={16} />
-            Browse Templates
-          </Button>
+          {!user ? (
+            <>
+              <h3 className="text-lg font-semibold mb-2">Welcome to InkFluence AI! ✨</h3>
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                Sign in to create your first ebook project and start your publishing journey with AI-powered writing assistance.
+              </p>
+              <Button
+                onClick={() => {
+                  // Trigger the sign in flow
+                  onCreateProject('');
+                }}
+                className="neomorph-button border-0 gap-2 hover:text-black"
+              >
+                <SignIn size={16} />
+                Sign In to Get Started
+              </Button>
+            </>
+          ) : (
+            <>
+              <h3 className="text-lg font-semibold mb-2">No projects yet</h3>
+              <p className="text-muted-foreground mb-6">
+                Create your first ebook project to get started with your publishing journey.
+              </p>
+              <Button
+                onClick={onShowTemplateGallery}
+                className="neomorph-button border-0 gap-2 hover:text-black"
+              >
+                <BookOpen size={16} />
+                Browse Templates
+              </Button>
+            </>
+          )}
         </motion.div>
       )}
 
