@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
 import { 
   BookOpen, 
@@ -47,6 +48,11 @@ export function ProjectsPage({
   const [previewProject, setPreviewProject] = useState<EbookProject | null>(null);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
   const [newProjectTitle, setNewProjectTitle] = useState('');
+  const [showRenameDialog, setShowRenameDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [projectToRename, setProjectToRename] = useState<EbookProject | null>(null);
+  const [projectToDelete, setProjectToDelete] = useState<EbookProject | null>(null);
+  const [renameTitle, setRenameTitle] = useState('');
 
   const filteredAndSortedProjects = projects
     .filter(project => {
@@ -357,11 +363,9 @@ export function ProjectsPage({
                           )}
                           <Button
                             onClick={() => {
-                              const newTitle = prompt('Enter new title:', project.title);
-                              if (newTitle?.trim()) {
-                                // Handle rename - would need to be passed as prop
-                                console.log('Rename to:', newTitle);
-                              }
+                              setProjectToRename(project);
+                              setRenameTitle(project.title);
+                              setShowRenameDialog(true);
                             }}
                             variant="ghost"
                             size="sm"
@@ -372,9 +376,8 @@ export function ProjectsPage({
                           {onDeleteProject && (
                             <Button
                               onClick={() => {
-                                if (confirm(`Delete "${project.title}"? This cannot be undone.`)) {
-                                  onDeleteProject(project.id);
-                                }
+                                setProjectToDelete(project);
+                                setShowDeleteDialog(true);
                               }}
                               variant="ghost"
                               size="sm"
@@ -502,6 +505,113 @@ export function ProjectsPage({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Rename Project Dialog */}
+      <Dialog open={showRenameDialog} onOpenChange={setShowRenameDialog}>
+        <DialogContent className="neomorph-flat border-0 sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Pencil size={20} className="text-primary" />
+              Rename Project
+            </DialogTitle>
+            <DialogDescription>
+              Enter a new title for "{projectToRename?.title}"
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 pt-4">
+            <div className="space-y-2">
+              <Label htmlFor="rename-title">Project Title</Label>
+              <Input
+                id="rename-title"
+                placeholder="Enter new title"
+                value={renameTitle}
+                onChange={(e) => setRenameTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && renameTitle.trim() && projectToRename) {
+                    // Handle rename - would need to be passed as prop
+                    console.log('Rename to:', renameTitle);
+                    setShowRenameDialog(false);
+                    setRenameTitle('');
+                    setProjectToRename(null);
+                  }
+                }}
+                className="neomorph-inset border-0"
+                autoFocus
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setShowRenameDialog(false);
+                  setRenameTitle('');
+                  setProjectToRename(null);
+                }}
+                className="neomorph-flat border-0"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  if (renameTitle.trim() && projectToRename) {
+                    // Handle rename - would need to be passed as prop
+                    console.log('Rename to:', renameTitle);
+                    setShowRenameDialog(false);
+                    setRenameTitle('');
+                    setProjectToRename(null);
+                  }
+                }}
+                disabled={!renameTitle.trim()}
+                className="neomorph-button border-0 gap-2"
+              >
+                <Pencil size={16} />
+                Rename
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Project Alert Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="neomorph-flat border-0">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Trash size={20} className="text-destructive" />
+              Delete Project?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{projectToDelete?.title}"? This action cannot be undone and all content will be permanently lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel 
+              onClick={() => {
+                setShowDeleteDialog(false);
+                setProjectToDelete(null);
+              }}
+              className="neomorph-flat border-0"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (projectToDelete && onDeleteProject) {
+                  onDeleteProject(projectToDelete.id);
+                  setShowDeleteDialog(false);
+                  setProjectToDelete(null);
+                }
+              }}
+              className="neomorph-button border-0 bg-destructive hover:bg-destructive/90 text-white gap-2"
+            >
+              <Trash size={16} />
+              Delete Project
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
