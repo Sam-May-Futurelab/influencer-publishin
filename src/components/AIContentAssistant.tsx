@@ -160,25 +160,18 @@ export function AIContentAssistant({
   };
 
   return (
-    <Card className={`neomorph-raised border-0 ${className}`}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-3 text-lg">
-          <div className="p-2 rounded-lg neomorph-flat">
-            <Star size={20} className="text-primary" />
+    <Card className={`neomorph-flat border-0 ${className}`}>
+      <CardContent className="p-4 space-y-4">
+        {/* Compact Header with Input */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 mb-2">
+            <Star size={16} className="text-primary" weight="fill" />
+            <h3 className="text-sm font-semibold">AI Writing Assistant</h3>
           </div>
-          AI Content Assistant
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Enter keywords or topics to generate intelligent content suggestions for your chapter
-        </p>
-      </CardHeader>
-      
-      <CardContent className="space-y-6">
-        {/* Keyword Input */}
-        <div className="space-y-3">
-          <div className="flex gap-3">
+          
+          <div className="flex gap-2">
             <Input
-              placeholder="Enter keywords, topics, or main points (e.g., 'nutrition basics, meal planning, healthy habits')"
+              placeholder="Enter topics or keywords..."
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
               onKeyDown={(e) => {
@@ -186,13 +179,14 @@ export function AIContentAssistant({
                   generateContent();
                 }
               }}
-              className="flex-1 neomorph-inset border-0 h-12"
+              className="flex-1 neomorph-inset border-0 h-10 text-sm"
             />
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 onClick={generateContent}
                 disabled={isGenerating || !keywords.trim()}
-                className="gap-2 h-12 px-6 neomorph-button border-0"
+                size="sm"
+                className="gap-2 h-10 px-4 neomorph-button border-0"
               >
                 {isGenerating ? (
                   <>
@@ -214,50 +208,8 @@ export function AIContentAssistant({
               </Button>
             </motion.div>
           </div>
-          
-          {/* Help text */}
-          <div className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg neomorph-flat">
-            💡 <strong>Tip:</strong> Be specific with your keywords for better results. Try phrases like "beginner workout routines", "healthy meal prep strategies", or "time management techniques".
-          </div>
-          
-          {/* Test button for debugging */}
-          {typeof window !== 'undefined' && window.location.hostname === 'localhost' && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={async () => {
-                try {
-                  console.log('Testing OpenAI connection...');
-                  const testSuggestions = await generateAIContent('test keywords', 'Test Chapter', 'general');
-                  console.log('Test response:', testSuggestions);
-                  toast.success('OpenAI connection working!');
-                } catch (error) {
-                  console.error('OpenAI test failed:', error);
-                  toast.error('OpenAI connection failed - check your API key');
-                }
-              }}
-              className="text-xs"
-            >
-              Test OpenAI Connection
-            </Button>
-          )}
-          
-          {/* Quick keyword suggestions */}
-          <div className="flex flex-wrap gap-2">
-            <span className="text-xs text-muted-foreground">Quick suggestions:</span>
-            {['key benefits', 'step-by-step process', 'common mistakes', 'expert tips', 'real examples'].map((suggestion) => (
-              <Badge
-                key={suggestion}
-                variant="outline"
-                className="cursor-pointer hover:bg-primary/10 neomorph-flat border-0 text-xs"
-                onClick={() => setKeywords(prev => prev ? `${prev}, ${suggestion}` : suggestion)}
-              >
-                {suggestion}
-              </Badge>
-            ))}
-          </div>
         </div>
-
+          
         {/* Loading State */}
         <AnimatePresence>
           {isGenerating && (

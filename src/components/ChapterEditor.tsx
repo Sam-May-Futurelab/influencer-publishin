@@ -40,7 +40,7 @@ export function ChapterEditor({
   projectId,
   ebookCategory = 'general',
 }: ChapterEditorProps) {
-  const [inputMode, setInputMode] = useState<InputMode>('ai');
+  const [inputMode, setInputMode] = useState<InputMode>('text');
   const [editingTitle, setEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState('');
   const [showAIAssistant, setShowAIAssistant] = useState(false);
