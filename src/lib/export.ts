@@ -317,7 +317,7 @@ function generateHTML(project: EbookProject): string {
       </div>
       
       <div class="footer">
-        Generated with EbookCrafter • ${new Date().toLocaleDateString()}
+        Generated with InkFluence AI • ${new Date().toLocaleDateString()}
       </div>
     </body>
     </html>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,6 +28,14 @@ export function AIContentAssistant({
   const [isGenerating, setIsGenerating] = useState(false);
   const [suggestions, setSuggestions] = useState<ContentSuggestion[]>([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState<ContentSuggestion | null>(null);
+
+  // Clear suggestions when chapter changes
+  useEffect(() => {
+    setKeywords('');
+    setSuggestions([]);
+    setSelectedSuggestion(null);
+    setIsGenerating(false);
+  }, [chapterTitle]);
 
   const generateContent = async () => {
     if (!keywords.trim()) {
