@@ -94,7 +94,7 @@ export function Header({
                 <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl neomorph-flat flex items-center justify-center overflow-hidden">
                   <img 
                     src="/images/InkfluenceAILogo.png" 
-                    alt="InkfluenceAI Logo" 
+                    alt="Inkfluence AI Logo" 
                     className="w-full h-full object-contain p-1"
                   />
                 </div>

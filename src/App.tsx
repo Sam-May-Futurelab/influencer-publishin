@@ -73,28 +73,16 @@ function App() {
       if (user) {
         setProjectsLoading(true);
         try {
-          console.log('📥 Loading projects from Firebase for user:', user.uid);
           const userProjects = await getUserProjects(user.uid);
-          console.log('✅ Loaded projects:', userProjects.map(p => ({
-            id: p.id,
-            title: p.title,
-            chaptersCount: p.chapters.length,
-            chapters: p.chapters.map(ch => ({
-              id: ch.id,
-              title: ch.title,
-              contentLength: ch.content.length
-            }))
-          })));
           setProjects(userProjects);
         } catch (error) {
-          console.error('❌ Error loading projects:', error);
+          console.error('Error loading projects:', error);
           toast.error('Failed to load your projects');
         } finally {
           setProjectsLoading(false);
         }
       } else {
         // Clear projects when user logs out
-        console.log('🚪 User logged out, clearing projects');
         setProjects([]);
         setCurrentProject(null);
         setCurrentChapter(null);
@@ -541,7 +529,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background font-['Inter']">
       <Header
-        logoText="InkFluenceAI"
+        logoText="Inkfluence AI"
         onNavigate={handleNavigation}
         currentSection={currentSection}
         notifications={0}

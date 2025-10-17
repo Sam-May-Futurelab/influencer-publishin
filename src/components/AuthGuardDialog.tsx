@@ -50,7 +50,7 @@ export function AuthGuardDialog({
           </DialogTitle>
           
           <DialogDescription className="text-gray-600 mt-2">
-            You need to be signed in to {action}. Join InkFluenceAI to unlock the power of AI-assisted writing!
+            You need to be signed in to {action}. Join Inkfluence AI to unlock the power of AI-assisted writing!
           </DialogDescription>
         </DialogHeader>
 

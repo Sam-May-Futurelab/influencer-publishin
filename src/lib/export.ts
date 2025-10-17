@@ -324,7 +324,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
       <div class="footer">
         ${options?.isPremium 
           ? (options?.customWatermark || '') 
-          : `Generated with InkFluence AI • ${new Date().toLocaleDateString()}`
+          : `Generated with Inkfluence AI • ${new Date().toLocaleDateString()}`
         }
       </div>
     </body>

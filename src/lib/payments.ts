@@ -23,7 +23,7 @@ export class PaymentService {
   private products: SubscriptionProduct[] = [
     {
       id: 'inkfluence_premium_monthly',
-      title: 'InkFluenceAI Premium Monthly',
+      title: 'Inkfluence AI Premium Monthly',
       description: 'Unlimited pages and premium features',
       price: '£4.99',
       priceAmountMicros: 4990000,
@@ -32,7 +32,7 @@ export class PaymentService {
     },
     {
       id: 'inkfluence_premium_yearly',
-      title: 'InkFluenceAI Premium Yearly',
+      title: 'Inkfluence AI Premium Yearly',
       description: 'Unlimited pages and premium features - Best Value!',
       price: '£39.99',
       priceAmountMicros: 39990000,

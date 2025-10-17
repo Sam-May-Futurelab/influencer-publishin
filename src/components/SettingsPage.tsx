@@ -281,7 +281,7 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>Include Branding Footer</Label>
-                  <p className="text-xs text-muted-foreground">Add "Generated with InkFluence AI" to exports</p>
+                  <p className="text-xs text-muted-foreground">Add "Generated with Inkfluence AI" to exports</p>
                 </div>
                 <Switch
                   checked={settings.includeFooter}

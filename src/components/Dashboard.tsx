@@ -336,20 +336,13 @@ export function Dashboard({
           <BookOpen size={64} className="mx-auto mb-6 text-muted-foreground opacity-50" />
           {!user ? (
             <>
-              <h3 className="text-lg font-semibold mb-2">Welcome to InkFluence AI! ✨</h3>
+              <h3 className="text-lg font-semibold mb-2">Welcome to Inkfluence AI! ✨</h3>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                 Sign in to create your first ebook project and start your publishing journey with AI-powered writing assistance.
               </p>
-              <Button
-                onClick={() => {
-                  // Trigger the sign in flow
-                  onCreateProject('');
-                }}
-                className="neomorph-button border-0 gap-2 hover:text-black"
-              >
-                <SignIn size={16} />
-                Sign In to Get Started
-              </Button>
+              <p className="text-sm text-muted-foreground mb-4">
+                Click the <strong>"Sign In"</strong> button in the top right to get started.
+              </p>
             </>
           ) : (
             <>

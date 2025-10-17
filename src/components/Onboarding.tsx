@@ -51,7 +51,7 @@ const steps = [
         <img 
           src="/images/InkfluenceAILogo.png" 
           alt="Create Project" 
-          className="w-full rounded-lg neomorph-flat border-0"
+          className="w-32 h-32 mx-auto object-contain rounded-lg"
         />
         <p className="text-muted-foreground">
           Click <strong>"New Project"</strong> to create your first ebook. Add a title, 

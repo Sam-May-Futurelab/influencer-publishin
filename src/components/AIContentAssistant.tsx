@@ -78,14 +78,6 @@ export function AIContentAssistant({
     setIsGenerating(true);
     
     try {
-      console.log('Starting AI content generation with enhanced options:', {
-        keywords,
-        genre: ebookCategory,
-        tone,
-        length,
-        format
-      });
-      
       // Use enhanced AI service with new parameters
       const newSuggestions = await generateAIContent({
         keywords,
