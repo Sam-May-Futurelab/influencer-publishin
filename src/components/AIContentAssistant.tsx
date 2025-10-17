@@ -4,7 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb, X } from '@phosphor-icons/react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb, X, Info } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { generateAIContent, enhanceContent, type ContentSuggestion } from '@/lib/openai-service';
@@ -167,6 +168,30 @@ export function AIContentAssistant({
           <div className="flex items-center gap-2 mb-2">
             <Star size={16} className="text-primary" weight="fill" />
             <h3 className="text-sm font-semibold">AI Writing Assistant</h3>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="text-muted-foreground hover:text-foreground transition-colors">
+                    <Info size={14} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs neomorph-flat border-0 p-3">
+                  <div className="space-y-2 text-xs">
+                    <p className="font-semibold text-primary">How to use AI Assistant:</p>
+                    <ol className="space-y-1 list-decimal list-inside">
+                      <li>Enter keywords or topics for your chapter</li>
+                      <li>Click "Generate" to create AI suggestions</li>
+                      <li>Preview different content options</li>
+                      <li>Click "Enhance" to improve any suggestion</li>
+                      <li>Click "Insert" to add content to your chapter</li>
+                    </ol>
+                    <p className="text-muted-foreground italic mt-2">
+                      💡 Tip: Use specific keywords for better results!
+                    </p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           
           <div className="flex gap-2">
@@ -365,6 +390,29 @@ export function AIContentAssistant({
             </motion.div>
           )}
         </AnimatePresence>
+        
+        {/* Empty State - Show when no suggestions and not generating */}
+        {suggestions.length === 0 && !isGenerating && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-8 space-y-3"
+          >
+            <div className="w-16 h-16 mx-auto rounded-full neomorph-inset flex items-center justify-center">
+              <Star size={32} className="text-primary/50" weight="fill" />
+            </div>
+            <div className="space-y-2">
+              <h4 className="font-semibold text-foreground">Ready to Create Amazing Content?</h4>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                Enter keywords or topics above and click "Generate" to let AI create content suggestions for your chapter.
+              </p>
+              <div className="pt-2 space-y-1 text-xs text-muted-foreground">
+                <p>💡 <strong>Example:</strong> "email marketing, lead generation, conversion"</p>
+                <p>✨ AI will generate intros, outlines, tips, and conclusions</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </CardContent>
     </Card>
   );
