@@ -35,8 +35,8 @@ export default async (req, res) => {
     // Remove trailing slash, newlines, and any whitespace
     const baseUrl = frontendUrl.trim().replace(/[\n\r]/g, '').replace(/\/$/, '');
     
-    const successUrl = `${baseUrl}/app?success=true&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${baseUrl}/app?canceled=true`;
+    const successUrl = `${baseUrl}/?success=true&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${baseUrl}/?canceled=true`;
     
     console.log('Creating checkout with URLs:', { baseUrl, successUrl, cancelUrl });
     

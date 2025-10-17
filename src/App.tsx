@@ -167,6 +167,28 @@ function App() {
     }
   }, [user, userProfile, projects, refreshProfile]);
 
+  // Handle Stripe checkout success/cancel redirects
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+    const canceled = urlParams.get('canceled');
+    const sessionId = urlParams.get('session_id');
+
+    if (success === 'true' && sessionId) {
+      toast.success('Payment successful! Your premium features will be activated shortly.');
+      // Refresh user profile to get updated premium status
+      setTimeout(() => {
+        refreshProfile();
+      }, 2000);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (canceled === 'true') {
+      toast.info('Payment canceled. You can upgrade anytime!');
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [refreshProfile]);
+
   // Helper function to show auth guard
   const requireAuth = (action: string) => {
     if (!user) {
