@@ -79,16 +79,26 @@ export class PaymentService {
       // TODO: Implement actual StoreKit purchase
       // const purchase = await RNIap.requestSubscription(productId);
       
-      // For now, simulate purchase flow
+      // DISABLED: Mock implementation that auto-succeeds
+      // This was causing users to get premium without payment!
+      // Web users should use Stripe integration instead
+      console.warn('iOS In-App Purchase not implemented. Use Stripe for web payments.');
+      return {
+        success: false,
+        error: 'In-App Purchase not available. Please upgrade via web.'
+      };
+      
+      /* 
+      // Old mock code - DO NOT RE-ENABLE without real StoreKit
       return new Promise((resolve) => {
         setTimeout(() => {
-          // Simulate successful purchase for demo
           resolve({
             success: true,
             transactionId: `txn_${Date.now()}_${productId}`
           });
         }, 2000);
       });
+      */
     } catch (error) {
       console.error('Purchase failed:', error);
       return {
