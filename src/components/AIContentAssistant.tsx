@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb, X, Info, SlidersHorizontal } from '@phosphor-icons/react';
+import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb, X, Info, SlidersHorizontal, FileText, AlignLeft, BookOpen, Crown } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { generateAIContent, enhanceContent, type ContentSuggestion, type Tone, type Length, type Format } from '@/lib/openai-service-secure';
@@ -267,6 +267,12 @@ export function AIContentAssistant({
               <Label className="text-xs font-medium text-muted-foreground">
                 Content Length
               </Label>
+              <span className="text-xs text-muted-foreground">
+                {length === 'brief' && '~100 words - Quick snippets'}
+                {length === 'standard' && '~150 words - Balanced content'}
+                {length === 'detailed' && '~200 words - In-depth writing'}
+                {length === 'comprehensive' && '~300 words - Premium depth'}
+              </span>
             </div>
 
             <div className="flex gap-2 flex-wrap">
@@ -275,27 +281,30 @@ export function AIContentAssistant({
                 variant={length === 'brief' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setLength('brief')}
-                className="neomorph-button border-0"
+                className="neomorph-button border-0 gap-2"
               >
-                📄 Brief
+                <FileText size={14} />
+                Brief
               </Button>
               <Button
                 type="button"
                 variant={length === 'standard' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setLength('standard')}
-                className="neomorph-button border-0"
+                className="neomorph-button border-0 gap-2"
               >
-                📋 Standard
+                <AlignLeft size={14} />
+                Standard
               </Button>
               <Button
                 type="button"
                 variant={length === 'detailed' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setLength('detailed')}
-                className="neomorph-button border-0"
+                className="neomorph-button border-0 gap-2"
               >
-                📖 Detailed
+                <BookOpen size={14} />
+                Detailed
               </Button>
               {isPremium && (
                 <Button
@@ -303,9 +312,10 @@ export function AIContentAssistant({
                   variant={length === 'comprehensive' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setLength('comprehensive')}
-                  className="neomorph-button border-0"
+                  className="neomorph-button border-0 gap-2"
                 >
-                  ⭐ Premium
+                  <Crown size={14} />
+                  Comprehensive
                 </Button>
               )}
             </div>
@@ -476,17 +486,16 @@ export function AIContentAssistant({
             className="text-center py-8 space-y-3"
           >
             <div className="w-16 h-16 mx-auto rounded-full neomorph-inset flex items-center justify-center">
-              <Star size={32} className="text-primary/50" weight="fill" />
+              <MagicWand size={32} className="text-primary/50" weight="duotone" />
             </div>
             <div className="space-y-2">
-              <h4 className="font-semibold text-foreground">Ready to Create Amazing Content?</h4>
+              <h4 className="font-semibold text-foreground">AI Content Generator</h4>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Enter keywords or topics above and click "Generate" to let AI create content suggestions for your chapter.
+                Enter keywords above and click Generate to create content suggestions.
               </p>
-              <div className="pt-2 space-y-1 text-xs text-muted-foreground">
-                <p>💡 <strong>Example:</strong> "email marketing, lead generation, conversion"</p>
-                <p>✨ AI will generate intros, outlines, tips, and conclusions</p>
-              </div>
+              <p className="text-xs text-muted-foreground">
+                Example: "public speaking, confidence, presentation skills"
+              </p>
             </div>
           </motion.div>
         )}
