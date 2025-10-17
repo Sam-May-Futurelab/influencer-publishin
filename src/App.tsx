@@ -9,6 +9,7 @@ import { UsageTracker } from '@/components/UsageTracker';
 import { AuthGuardDialog } from '@/components/AuthGuardDialog';
 import { AuthModal } from '@/components/AuthModal';
 import { Onboarding } from '@/components/Onboarding';
+import { UpgradeModal } from '@/components/UpgradeModal';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
@@ -50,6 +51,7 @@ function App() {
   const [showBrandCustomizer, setShowBrandCustomizer] = useState(false);
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'profile' | 'project'>('dashboard');
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
@@ -428,7 +430,7 @@ function App() {
       const maxPages = userProfile?.maxPages || 4;
       
       if (currentUsage >= maxPages) {
-        toast.error('Page limit reached! Upgrade to Premium for unlimited pages.');
+        setShowUpgradeModal(true);
         return;
       }
     }
@@ -436,7 +438,7 @@ function App() {
     // Try to increment page usage
     const canCreatePage = await incrementPageUsage(user.uid);
     if (!canCreatePage) {
-      toast.error('Page limit reached! Upgrade to Premium for unlimited pages.');
+      setShowUpgradeModal(true);
       return;
     }
 
@@ -689,6 +691,12 @@ function App() {
         open={showOnboarding}
         onComplete={handleOnboardingComplete}
         onSkip={handleOnboardingSkip}
+      />
+
+      <UpgradeModal
+        open={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        highlightMessage="You've reached your page limit! Upgrade to Premium for unlimited pages."
       />
     </div>
   );
