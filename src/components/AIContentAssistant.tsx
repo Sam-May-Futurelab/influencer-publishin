@@ -38,6 +38,9 @@ export function AIContentAssistant({
   const [length, setLength] = useState<Length>('standard');
   const [format, setFormat] = useState<Format>('narrative');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  
+  // Premium check - always true for now (can connect to payment system later)
+  const isPremium = true;
 
   // Clear suggestions when chapter changes
   useEffect(() => {
@@ -246,133 +249,66 @@ export function AIContentAssistant({
                     >
                       <MagicWand size={16} />
                     </motion.div>
-                    <span className="hidden sm:inline">Creating magic...</span>
-                    <span className="sm:hidden">Creating...</span>
+                    <span className="hidden sm:inline">Creating...</span>
                   </>
                 ) : (
                   <>
                     <Star size={16} />
-                    Generate
+                    {suggestions.length > 0 ? 'Generate More' : 'Generate'}
                   </>
                 )}
               </Button>
             </motion.div>
           </div>
 
-          {/* AI Settings - Simplified and Always Visible */}
+          {/* AI Settings - Simple Button Toggle */}
           <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between">
               <Label className="text-xs font-medium text-muted-foreground">
-                Content Settings
+                Content Length
               </Label>
-              <button
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
-              >
-                <SlidersHorizontal size={14} />
-                <span>{showAdvanced ? 'Basic' : 'Advanced'}</span>
-              </button>
             </div>
 
-            {!showAdvanced ? (
-              // Basic Mode - Just Length
-              <div className="space-y-2">
-                <Label htmlFor="length" className="text-sm">
-                  How much content do you want?
-                </Label>
-                <Select value={length} onValueChange={(value) => setLength(value as Length)}>
-                  <SelectTrigger id="length" className="h-10 neomorph-inset border-0">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="brief">
-                      <div className="flex flex-col items-start py-1">
-                        <span className="font-medium">📄 Brief</span>
-                        <span className="text-xs text-muted-foreground">~100 words</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="standard">
-                      <div className="flex flex-col items-start py-1">
-                        <span className="font-medium">📋 Standard</span>
-                        <span className="text-xs text-muted-foreground">~150 words</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="detailed">
-                      <div className="flex flex-col items-start py-1">
-                        <span className="font-medium">� Detailed</span>
-                        <span className="text-xs text-muted-foreground">~200 words</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="comprehensive">
-                      <div className="flex flex-col items-start py-1">
-                        <span className="font-medium">📚 Comprehensive</span>
-                        <span className="text-xs text-muted-foreground">~300 words</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : (
-              // Advanced Mode - All Controls
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Tone Control */}
-                  <div className="space-y-2">
-                    <Label htmlFor="tone" className="text-sm">
-                      Writing Tone
-                    </Label>
-                    <Select value={tone} onValueChange={(value) => setTone(value as Tone)}>
-                      <SelectTrigger id="tone" className="h-10 neomorph-inset border-0">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="friendly">� Friendly & Conversational</SelectItem>
-                        <SelectItem value="professional">� Professional & Polished</SelectItem>
-                        <SelectItem value="motivational">� Motivational & Inspiring</SelectItem>
-                        <SelectItem value="direct">🎯 Direct & Actionable</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Length Control */}
-                  <div className="space-y-2">
-                    <Label htmlFor="length-advanced" className="text-sm">
-                      Content Length
-                    </Label>
-                    <Select value={length} onValueChange={(value) => setLength(value as Length)}>
-                      <SelectTrigger id="length-advanced" className="h-10 neomorph-inset border-0">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="brief">� Brief (100-150)</SelectItem>
-                        <SelectItem value="standard">� Standard (200-300)</SelectItem>
-                        <SelectItem value="detailed">📖 Detailed (300-400)</SelectItem>
-                        <SelectItem value="comprehensive">📚 Comprehensive (500-700)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                {/* Context Display */}
-                {(ebookCategory || targetAudience) && (
-                  <div className="pt-2 space-y-1">
-                    <Label className="text-xs text-muted-foreground">AI Context:</Label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {ebookCategory && (
-                        <Badge variant="secondary" className="text-xs">
-                          {ebookCategory}
-                        </Badge>
-                      )}
-                      {targetAudience && (
-                        <Badge variant="outline" className="text-xs">
-                          {targetAudience}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                type="button"
+                variant={length === 'brief' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setLength('brief')}
+                className="neomorph-button border-0"
+              >
+                📄 Brief
+              </Button>
+              <Button
+                type="button"
+                variant={length === 'standard' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setLength('standard')}
+                className="neomorph-button border-0"
+              >
+                📋 Standard
+              </Button>
+              <Button
+                type="button"
+                variant={length === 'detailed' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setLength('detailed')}
+                className="neomorph-button border-0"
+              >
+                📖 Detailed
+              </Button>
+              {isPremium && (
+                <Button
+                  type="button"
+                  variant={length === 'comprehensive' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setLength('comprehensive')}
+                  className="neomorph-button border-0"
+                >
+                  ⭐ Premium
+                </Button>
+              )}
+            </div>
           </div>
         </div>
           
