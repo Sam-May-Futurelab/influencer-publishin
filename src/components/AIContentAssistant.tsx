@@ -279,7 +279,7 @@ export function AIContentAssistant({
                 onClick={generateContent}
                 disabled={isGenerating || !keywords.trim()}
                 size="sm"
-                className="gap-2 h-10 px-4 neomorph-button border-0"
+                className={`gap-2 h-10 px-4 neomorph-button border-0 ${!canGenerate && !isPremium ? 'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50' : ''}`}
               >
                 {isGenerating ? (
                   <>
@@ -290,6 +290,11 @@ export function AIContentAssistant({
                       <MagicWand size={16} />
                     </motion.div>
                     <span className="hidden sm:inline">Creating...</span>
+                  </>
+                ) : !canGenerate && !isPremium ? (
+                  <>
+                    <Crown size={16} weight="fill" />
+                    {suggestions.length > 0 ? 'Upgrade for More' : 'Upgrade to Premium'}
                   </>
                 ) : (
                   <>
