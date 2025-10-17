@@ -224,6 +224,20 @@ Update your domain in:
 
 ---
 
+## 📝 Future: Adding a Landing Page
+
+When you're ready to add a marketing landing page at `/` and move the app to `/app`:
+
+1. **Update vercel.json rewrites** to serve landing page at root
+2. **Update Stripe redirect URLs** from `/?success=true` to `/app?success=true`
+3. **Update Firebase authorized domains** if using subdomain
+4. **Create routing logic** in your app to handle `/app` routes
+5. **Test authentication flow** with new routes
+
+Currently, the app is served from `/` with query parameters for Stripe redirects.
+
+---
+
 ## 🆘 Need Help?
 
 If something breaks after domain update:
@@ -237,4 +251,5 @@ If something breaks after domain update:
 
 **Last Updated**: October 17, 2025  
 **Current Domain**: `inkfluence-ai.vercel.app`  
+**Current Setup**: App served from `/`, Stripe redirects to `/?success=true`
 **Target Domain**: _(To be determined)_
