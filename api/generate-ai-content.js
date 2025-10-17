@@ -84,25 +84,24 @@ export default async function handler(req, res) {
       const toneDesc = toneDescriptors[tone] || 'engaging and helpful';
       const formatInstr = formatInstructions[format] || 'Make it engaging and valuable.';
       
-      prompt = `You are a professional ebook writer assistant specializing in ${genre} content.${contextString}
+      prompt = `You are a professional ebook writer assistant${genre && genre !== 'general' ? ` specializing in ${genre} content` : ''}.${contextString}
 
-Write with a ${toneDesc} tone that resonates with readers.
+Write with a ${toneDesc} tone.
 
 Chapter: "${chapterTitle}"
 Keywords: ${keywords.join(', ')}
 
-Generate 5-7 creative and engaging content suggestions for this chapter. ${formatInstr}
+Generate 4 high-quality content suggestions for this chapter. ${formatInstr}
 
 For each suggestion:
-- Make it specific and actionable
-- Keep it between 20-50 words
-- Match the ${tone} tone
-- Use the ${format} format style
-- Focus on valuable insights for the target audience
-- Vary the approaches (tips, stories, examples, explanations)
+- Write 2-4 complete sentences (50-100 words each)
+- Make it detailed, specific, and valuable
+- Include practical examples or actionable advice
+- Match the ${tone} tone and ${format} format style
+- Focus on depth over breadth
 
-Return ONLY a JSON array of strings, no other text. Example format:
-["Suggestion 1 text here", "Suggestion 2 text here", ...]`;
+Return ONLY a JSON array of 4 strings, no other text. Example:
+["First detailed suggestion with multiple sentences and specific examples...", "Second detailed suggestion...", "Third suggestion...", "Fourth suggestion..."]`;
       
       maxTokens = tokenLimits[length] || 1500;
       
