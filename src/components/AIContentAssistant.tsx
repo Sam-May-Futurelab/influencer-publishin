@@ -229,22 +229,24 @@ export function AIContentAssistant({
               <h3 className="font-semibold text-foreground flex items-center gap-2">
                 <Lightbulb size={16} className="text-accent" />
                 AI Generated Content
-                <span className="text-xs font-normal text-muted-foreground">(Click to preview, then add to your chapter)</span>
+                <span className="text-xs font-normal text-muted-foreground">(Click any card to expand and preview)</span>
               </h3>
               
-              <div className="grid gap-3">
+              <div className="space-y-3">
                 {suggestions.map((suggestion, index) => (
                   <motion.div
                     key={suggestion.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
+                    className="space-y-2"
                   >
+                    {/* Suggestion Card */}
                     <Card
                       className={`cursor-pointer transition-all duration-200 neomorph-flat border-0 hover:neomorph-raised ${
                         selectedSuggestion?.id === suggestion.id ? 'ring-2 ring-primary' : ''
                       }`}
-                      onClick={() => setSelectedSuggestion(suggestion)}
+                      onClick={() => setSelectedSuggestion(selectedSuggestion?.id === suggestion.id ? null : suggestion)}
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between gap-3">
@@ -287,71 +289,79 @@ export function AIContentAssistant({
                         </div>
                       </CardContent>
                     </Card>
+
+                    {/* Inline Preview - Appears right under clicked suggestion */}
+                    <AnimatePresence>
+                      {selectedSuggestion?.id === suggestion.id && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <Card className="neomorph-inset border-0 bg-muted/30">
+                            <CardContent className="p-4 space-y-3">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="secondary" className="text-xs border-0">
+                                    Full Preview
+                                  </Badge>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedSuggestion(null);
+                                  }}
+                                >
+                                  <X size={16} />
+                                </Button>
+                              </div>
+                              
+                              <Textarea
+                                value={suggestion.content}
+                                readOnly
+                                className="min-h-[150px] resize-none neomorph-inset border-0 text-sm bg-background"
+                              />
+                              
+                              <div className="flex gap-2 pt-2">
+                                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
+                                  <Button
+                                    className="w-full gap-2 neomorph-button border-0 bg-gradient-to-r from-primary to-accent text-white"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      insertContent(suggestion.content);
+                                    }}
+                                  >
+                                    <Plus size={18} weight="bold" />
+                                    Add This Content to My Chapter
+                                  </Button>
+                                </motion.div>
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                  <Button
+                                    variant="outline"
+                                    className="gap-2 neomorph-button border-0"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      copyToClipboard(suggestion.content);
+                                    }}
+                                  >
+                                    <Copy size={16} />
+                                    Copy
+                                  </Button>
+                                </motion.div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Selected Suggestion Detail - Expanded View */}
-        <AnimatePresence>
-          {selectedSuggestion && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-3"
-            >
-              <Card className="neomorph-inset border-0 bg-muted/30">
-                <CardContent className="p-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">{getTypeIcon(selectedSuggestion.type)}</span>
-                      <h4 className="font-semibold text-foreground">{selectedSuggestion.title}</h4>
-                      <Badge variant="secondary" className="text-xs border-0">
-                        Preview
-                      </Badge>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => setSelectedSuggestion(null)}
-                    >
-                      <X size={16} />
-                    </Button>
-                  </div>
-                  
-                  <Textarea
-                    value={selectedSuggestion.content}
-                    readOnly
-                    className="min-h-[150px] resize-none neomorph-inset border-0 text-sm bg-background"
-                  />
-                  
-                  <div className="flex gap-2 pt-2">
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
-                      <Button
-                        className="w-full gap-2 neomorph-button border-0 bg-gradient-to-r from-primary to-accent text-white"
-                        onClick={() => insertContent(selectedSuggestion.content)}
-                      >
-                        <Plus size={18} weight="bold" />
-                        Add This Content to My Chapter
-                      </Button>
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button
-                        variant="outline"
-                        className="gap-2 neomorph-button border-0"
-                        onClick={() => copyToClipboard(selectedSuggestion.content)}
-                      >
-                        <Copy size={16} />
-                        Copy
-                      </Button>
-                    </motion.div>
-                  </div>
-                </CardContent>
-              </Card>
             </motion.div>
           )}
         </AnimatePresence>
