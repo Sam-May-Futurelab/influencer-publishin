@@ -81,27 +81,39 @@ export default async function handler(req, res) {
     };
 
     if (contentType === 'suggestions') {
-      const toneDesc = toneDescriptors[tone] || 'engaging and helpful';
-      const formatInstr = formatInstructions[format] || 'Make it engaging and valuable.';
+      // Determine word count based on length setting
+      const wordCounts = {
+        brief: '100-150 words',
+        standard: '200-300 words',
+        detailed: '300-400 words',
+        comprehensive: '500-700 words'
+      };
+      const targetWords = wordCounts[length] || '200-300 words';
       
-      prompt = `You are a professional ebook writer assistant${genre && genre !== 'general' ? ` specializing in ${genre} content` : ''}.${contextString}
+      // Build a natural, effective prompt
+      const genreContext = genre && genre !== 'general' ? ` for a ${genre} ebook` : '';
+      const audienceContext = context.targetAudience ? ` targeting ${context.targetAudience}` : '';
+      
+      prompt = `You are a professional ebook content writer${genreContext}${audienceContext}.
 
-Write with a ${toneDesc} tone.
+Chapter Title: "${chapterTitle}"
+Topics to cover: ${keywords.join(', ')}
 
-Chapter: "${chapterTitle}"
-Keywords: ${keywords.join(', ')}
+Generate 4 distinct, well-written content pieces for this chapter. Each piece should be ${targetWords} long and serve a different purpose:
 
-Generate 4 high-quality content suggestions for this chapter. ${formatInstr}
+1. An engaging chapter introduction that hooks the reader
+2. A detailed explanation of the main concepts with examples
+3. Practical tips and actionable advice readers can use immediately
+4. A compelling conclusion that reinforces key takeaways
 
-For each suggestion:
-- Write 2-4 complete sentences (50-100 words each)
-- Make it detailed, specific, and valuable
-- Include practical examples or actionable advice
-- Match the ${tone} tone and ${format} format style
-- Focus on depth over breadth
+Important guidelines:
+- Write in a ${toneDescriptors[tone] || 'engaging, conversational'} style
+- Each piece should be substantive and valuable (${targetWords})
+- Include specific examples, not generic advice
+- Make content immediately useful and actionable
+- Use natural paragraph breaks for readability
 
-Return ONLY a JSON array of 4 strings, no other text. Example:
-["First detailed suggestion with multiple sentences and specific examples...", "Second detailed suggestion...", "Third suggestion...", "Fourth suggestion..."]`;
+Return ONLY a JSON array of 4 strings (each ${targetWords}). No markdown, no formatting markers.`;
       
       maxTokens = tokenLimits[length] || 1500;
       

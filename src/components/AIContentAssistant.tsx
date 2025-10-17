@@ -276,96 +276,120 @@ export function AIContentAssistant({
             </motion.div>
           </div>
 
-          {/* Advanced AI Controls */}
-          <div className="space-y-2">
-            <button
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <SlidersHorizontal size={12} />
-              <span>{showAdvanced ? 'Hide' : 'Show'} AI Controls</span>
-            </button>
+          {/* AI Settings - Simplified and Always Visible */}
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-xs font-medium text-muted-foreground">
+                Content Settings
+              </Label>
+              <button
+                onClick={() => setShowAdvanced(!showAdvanced)}
+                className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
+              >
+                <SlidersHorizontal size={14} />
+                <span>{showAdvanced ? 'Basic' : 'Advanced'}</span>
+              </button>
+            </div>
 
-            <AnimatePresence>
-              {showAdvanced && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
-                >
-                  <div className="grid grid-cols-3 gap-2 pt-2">
-                    {/* Tone Control */}
-                    <div className="space-y-1">
-                      <Label htmlFor="tone" className="text-xs text-muted-foreground">
-                        Tone
-                      </Label>
-                      <Select value={tone} onValueChange={(value) => setTone(value as Tone)}>
-                        <SelectTrigger id="tone" className="h-8 text-xs neomorph-inset border-0">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="friendly">😊 Friendly</SelectItem>
-                          <SelectItem value="professional">💼 Professional</SelectItem>
-                          <SelectItem value="motivational">🚀 Motivational</SelectItem>
-                          <SelectItem value="direct">🎯 Direct</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Length Control */}
-                    <div className="space-y-1">
-                      <Label htmlFor="length" className="text-xs text-muted-foreground">
-                        Length
-                      </Label>
-                      <Select value={length} onValueChange={(value) => setLength(value as Length)}>
-                        <SelectTrigger id="length" className="h-8 text-xs neomorph-inset border-0">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="brief">📄 Brief</SelectItem>
-                          <SelectItem value="standard">📋 Standard</SelectItem>
-                          <SelectItem value="detailed">📖 Detailed</SelectItem>
-                          <SelectItem value="comprehensive">📚 Comprehensive</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Format Control */}
-                    <div className="space-y-1">
-                      <Label htmlFor="format" className="text-xs text-muted-foreground">
-                        Format
-                      </Label>
-                      <Select value={format} onValueChange={(value) => setFormat(value as Format)}>
-                        <SelectTrigger id="format" className="h-8 text-xs neomorph-inset border-0">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="narrative">📝 Narrative</SelectItem>
-                          <SelectItem value="intro">👋 Introduction</SelectItem>
-                          <SelectItem value="bullets">• Bullet Points</SelectItem>
-                          <SelectItem value="steps">1️⃣ Step-by-Step</SelectItem>
-                          <SelectItem value="qa">❓ Q&A Format</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+            {!showAdvanced ? (
+              // Basic Mode - Just Length
+              <div className="space-y-2">
+                <Label htmlFor="length" className="text-sm">
+                  How much content do you want?
+                </Label>
+                <Select value={length} onValueChange={(value) => setLength(value as Length)}>
+                  <SelectTrigger id="length" className="h-10 neomorph-inset border-0">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="brief">
+                      <div className="flex flex-col items-start py-1">
+                        <span className="font-medium">📄 Brief</span>
+                        <span className="text-xs text-muted-foreground">100-150 words per suggestion</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="standard">
+                      <div className="flex flex-col items-start py-1">
+                        <span className="font-medium">📋 Standard</span>
+                        <span className="text-xs text-muted-foreground">200-300 words (recommended)</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="detailed">
+                      <div className="flex flex-col items-start py-1">
+                        <span className="font-medium">� Detailed</span>
+                        <span className="text-xs text-muted-foreground">300-400 words per suggestion</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="comprehensive">
+                      <div className="flex flex-col items-start py-1">
+                        <span className="font-medium">📚 Comprehensive</span>
+                        <span className="text-xs text-muted-foreground">500-700 words per suggestion</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : (
+              // Advanced Mode - All Controls
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Tone Control */}
+                  <div className="space-y-2">
+                    <Label htmlFor="tone" className="text-sm">
+                      Writing Tone
+                    </Label>
+                    <Select value={tone} onValueChange={(value) => setTone(value as Tone)}>
+                      <SelectTrigger id="tone" className="h-10 neomorph-inset border-0">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="friendly">� Friendly & Conversational</SelectItem>
+                        <SelectItem value="professional">� Professional & Polished</SelectItem>
+                        <SelectItem value="motivational">� Motivational & Inspiring</SelectItem>
+                        <SelectItem value="direct">🎯 Direct & Actionable</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
-                  {/* Current Settings Display */}
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    <Badge variant="secondary" className="text-xs">
-                      {ebookCategory || 'General'}
-                    </Badge>
-                    {targetAudience && (
-                      <Badge variant="outline" className="text-xs">
-                        {targetAudience}
-                      </Badge>
-                    )}
+                  {/* Length Control */}
+                  <div className="space-y-2">
+                    <Label htmlFor="length-advanced" className="text-sm">
+                      Content Length
+                    </Label>
+                    <Select value={length} onValueChange={(value) => setLength(value as Length)}>
+                      <SelectTrigger id="length-advanced" className="h-10 neomorph-inset border-0">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="brief">� Brief (100-150)</SelectItem>
+                        <SelectItem value="standard">� Standard (200-300)</SelectItem>
+                        <SelectItem value="detailed">📖 Detailed (300-400)</SelectItem>
+                        <SelectItem value="comprehensive">📚 Comprehensive (500-700)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </div>
+
+                {/* Context Display */}
+                {(ebookCategory || targetAudience) && (
+                  <div className="pt-2 space-y-1">
+                    <Label className="text-xs text-muted-foreground">AI Context:</Label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {ebookCategory && (
+                        <Badge variant="secondary" className="text-xs">
+                          {ebookCategory}
+                        </Badge>
+                      )}
+                      {targetAudience && (
+                        <Badge variant="outline" className="text-xs">
+                          {targetAudience}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
           
