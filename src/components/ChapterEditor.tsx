@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star, Eye } from '@phosphor-icons/react';
+import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star, Eye, FloppyDisk } from '@phosphor-icons/react';
 import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { SaveIndicator } from '@/components/SaveIndicator';
 import { RichTextEditor } from '@/components/RichTextEditor';
@@ -26,6 +26,10 @@ interface ChapterEditorProps {
   onRecordWritingSession?: (projectId: string, chapterId: string, wordsAdded: number) => void;
   projectId?: string;
   ebookCategory?: string;
+  projectTitle?: string;
+  projectAuthor?: string;
+  projectDescription?: string;
+  brandConfig?: any;
 }
 
 export function ChapterEditor({
@@ -39,11 +43,14 @@ export function ChapterEditor({
   onRecordWritingSession,
   projectId,
   ebookCategory = 'general',
+  projectTitle = 'Untitled Project',
+  projectAuthor = '',
+  projectDescription = '',
+  brandConfig,
 }: ChapterEditorProps) {
   const [inputMode, setInputMode] = useState<InputMode>('text');
   const [editingTitle, setEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState('');
-  const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [pendingContent, setPendingContent] = useState('');
 
   // Auto-save functionality
@@ -372,9 +379,10 @@ export function ChapterEditor({
                           size="sm"
                           onClick={forceSave}
                           disabled={saving}
-                          className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-3 lg:px-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold shadow-lg"
+                          className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-3 lg:px-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold shadow-lg gap-2"
                         >
-                          {saving ? 'Saving...' : '💾 Save Now'}
+                          <FloppyDisk size={16} weight="fill" />
+                          {saving ? 'Saving...' : 'Save Now'}
                         </Button>
                       </motion.div>
                     )}
@@ -417,61 +425,21 @@ export function ChapterEditor({
                 </TabsList>
 
                 <TabsContent value="text" className="mt-4 lg:mt-6">
-                  <div className="space-y-3 lg:space-y-4">
-                    {/* AI Assistant Toggle */}
-                    <div className="flex justify-end">
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setShowAIAssistant(!showAIAssistant)}
-                          className="gap-1 lg:gap-2 neomorph-button border-0 text-xs lg:text-sm px-2 lg:px-3"
-                        >
-                          <Star size={12} className="lg:hidden" />
-                          <Star size={14} className="hidden lg:block" />
-                          <span className="hidden sm:inline">
-                            {showAIAssistant ? 'Hide' : 'Show'} AI Assistant
-                          </span>
-                          <span className="sm:hidden">AI</span>
-                        </Button>
-                      </motion.div>
-                    </div>
-
-                    {/* AI Assistant Panel */}
-                    <AnimatePresence>
-                      {showAIAssistant && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="overflow-hidden"
-                        >
-                          <AIContentAssistant
-                            chapterTitle={currentChapter.title}
-                            ebookCategory={ebookCategory}
-                            onContentGenerated={handleAIContentGenerated}
-                            className="mb-4 lg:mb-6"
-                          />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
-                    <RichTextEditor
-                      content={pendingContent}
-                      onChange={handleContentChange}
-                      placeholder="Start writing your chapter content here... or use the AI Assistant above to generate content from keywords"
-                      minHeight="250px"
-                      className="lg:min-h-[400px]"
+                  <RichTextEditor
+                    content={pendingContent}
+                    onChange={handleContentChange}
+                    placeholder="Start writing your chapter content here..."
+                    minHeight="250px"
+                    className="lg:min-h-[400px]"
+                  />
+                  
+                  {/* Save indicator */}
+                  <div className="flex justify-end items-center pt-2 text-xs">
+                    <SaveIndicator 
+                      saving={saving}
+                      lastSaved={lastSaved}
+                      hasUnsavedChanges={hasUnsavedChanges}
                     />
-                    
-                    {/* Save indicator */}
-                    <div className="flex justify-end items-center pt-2 text-xs">
-                      <SaveIndicator 
-                        saving={saving}
-                        lastSaved={lastSaved}
-                        hasUnsavedChanges={hasUnsavedChanges}
-                      />
-                    </div>
                   </div>
                 </TabsContent>
 
@@ -511,31 +479,97 @@ export function ChapterEditor({
                 </TabsContent>
 
                 <TabsContent value="preview" className="mt-4 lg:mt-6">
-                  <div className="space-y-4">
-                    <Card className="neomorph-inset border-0 bg-background/50">
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-semibold">Chapter Preview</h3>
-                          <Badge variant="secondary" className="text-xs neomorph-flat border-0">
-                            Read-only
+                  <div className="max-w-4xl mx-auto">
+                    {/* Ebook Preview - Title Page */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-8 mb-8 neomorph-inset rounded-xl p-8"
+                    >
+                      <h1 
+                        className="text-3xl lg:text-4xl font-bold mb-4"
+                        style={{ color: brandConfig?.primaryColor || '#8B5CF6' }}
+                      >
+                        {projectTitle}
+                      </h1>
+                      {projectAuthor && (
+                        <p className="text-lg text-muted-foreground mb-4">
+                          by {projectAuthor}
+                        </p>
+                      )}
+                      {projectDescription && (
+                        <p className="text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                          {projectDescription}
+                        </p>
+                      )}
+                      
+                      <div className="flex justify-center gap-4 mt-6">
+                        <Badge 
+                          variant="secondary" 
+                          className="neomorph-flat border-0"
+                          style={{ 
+                            backgroundColor: brandConfig?.accentColor || '#EDE9FE',
+                            color: brandConfig?.primaryColor || '#8B5CF6'
+                          }}
+                        >
+                          {chapters.length} {chapters.length === 1 ? 'Chapter' : 'Chapters'}
+                        </Badge>
+                        <Badge 
+                          variant="secondary" 
+                          className="neomorph-flat border-0"
+                          style={{ 
+                            backgroundColor: brandConfig?.accentColor || '#EDE9FE',
+                            color: brandConfig?.primaryColor || '#8B5CF6'
+                          }}
+                        >
+                          {chapters.reduce((total, ch) => total + (ch.content?.split(/\s+/).filter(w => w.length > 0).length || 0), 0).toLocaleString()} Words
+                        </Badge>
+                      </div>
+                    </motion.div>
+
+                    {/* Current Chapter Preview */}
+                    {currentChapter && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="space-y-6 neomorph-inset rounded-xl p-6 lg:p-8"
+                      >
+                        <div className="flex items-center gap-3 mb-6">
+                          <Badge 
+                            variant="outline"
+                            className="neomorph-flat border-0 px-3 py-1"
+                            style={{ 
+                              backgroundColor: brandConfig?.secondaryColor || '#A78BFA',
+                              color: 'white'
+                            }}
+                          >
+                            Chapter {chapters.findIndex(ch => ch.id === currentChapter.id) + 1}
                           </Badge>
+                          <h2 
+                            className="text-xl lg:text-2xl font-bold"
+                            style={{ color: brandConfig?.primaryColor || '#8B5CF6' }}
+                          >
+                            {currentChapter.title}
+                          </h2>
                         </div>
-                      </CardHeader>
-                      <CardContent>
+
                         {pendingContent ? (
                           <div 
                             className="prose prose-sm sm:prose lg:prose-lg max-w-none"
+                            style={{ 
+                              fontFamily: brandConfig?.fontFamily || 'Inter, sans-serif',
+                            }}
                             dangerouslySetInnerHTML={{ __html: pendingContent }}
                           />
                         ) : (
                           <div className="text-center py-12 text-muted-foreground">
                             <Eye size={48} className="mx-auto mb-4 opacity-50" />
-                            <p className="text-lg">No content to preview yet</p>
-                            <p className="text-sm mt-2">Start writing or use AI Assistant to generate content</p>
+                            <p className="text-lg">No content yet</p>
+                            <p className="text-sm mt-2">Start writing in the Text Editor or use AI Assistant</p>
                           </div>
                         )}
-                      </CardContent>
-                    </Card>
+                      </motion.div>
+                    )}
                   </div>
                 </TabsContent>
               </Tabs>
