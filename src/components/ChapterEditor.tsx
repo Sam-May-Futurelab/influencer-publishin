@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star, ArrowULeftUp, ArrowURightUp } from '@phosphor-icons/react';
+import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star } from '@phosphor-icons/react';
 import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { SaveIndicator } from '@/components/SaveIndicator';
+import { RichTextEditor } from '@/components/RichTextEditor';
 import { Chapter, InputMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -45,11 +45,6 @@ export function ChapterEditor({
   const [tempTitle, setTempTitle] = useState('');
   const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [pendingContent, setPendingContent] = useState('');
-
-  // Undo/Redo history management
-  const [history, setHistory] = useState<string[]>([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
-  const isUndoRedoAction = useRef(false);
 
   // Auto-save functionality
   const {
@@ -121,64 +116,8 @@ export function ChapterEditor({
     if (currentChapter) {
       setPendingContent(content);
       markAsChanged();
-      
-      // Add to history if not from undo/redo
-      if (!isUndoRedoAction.current) {
-        const newHistory = history.slice(0, historyIndex + 1);
-        newHistory.push(content);
-        // Keep history manageable (last 50 states)
-        if (newHistory.length > 50) {
-          newHistory.shift();
-        } else {
-          setHistoryIndex(historyIndex + 1);
-        }
-        setHistory(newHistory);
-      }
-      isUndoRedoAction.current = false;
     }
   };
-
-  const handleUndo = () => {
-    if (historyIndex > 0) {
-      isUndoRedoAction.current = true;
-      const newIndex = historyIndex - 1;
-      setHistoryIndex(newIndex);
-      setPendingContent(history[newIndex]);
-      markAsChanged();
-      toast.success('↶ Undone', { duration: 1000 });
-    } else {
-      toast.info('Nothing to undo', { duration: 1000 });
-    }
-  };
-
-  const handleRedo = () => {
-    if (historyIndex < history.length - 1) {
-      isUndoRedoAction.current = true;
-      const newIndex = historyIndex + 1;
-      setHistoryIndex(newIndex);
-      setPendingContent(history[newIndex]);
-      markAsChanged();
-      toast.success('↷ Redone', { duration: 1000 });
-    } else {
-      toast.info('Nothing to redo', { duration: 1000 });
-    }
-  };
-
-  // Keyboard shortcuts for undo/redo
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'z') {
-        e.preventDefault();
-        handleUndo();
-      } else if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'z') {
-        e.preventDefault();
-        handleRedo();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [historyIndex, history]);
 
   const handleAIContentGenerated = (generatedContent: string) => {
     if (currentChapter && generatedContent && generatedContent.trim()) {
@@ -204,11 +143,6 @@ export function ChapterEditor({
     if (currentChapter) {
       setPendingContent(currentChapter.content);
       markAsSaved(); // Reset auto-save state for new chapter
-      
-      // Initialize history with current content
-      setHistory([currentChapter.content]);
-      setHistoryIndex(0);
-      isUndoRedoAction.current = false;
     }
   }, [currentChapter?.id, currentChapter?.content, markAsSaved]);
 
@@ -427,38 +361,6 @@ export function ChapterEditor({
                       </Button>
                     </motion.div>
                     
-                    {/* Undo/Redo buttons */}
-                    <div className="flex items-center gap-1">
-                      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="neomorph-button border-0 flex-shrink-0 h-8 w-8 p-0"
-                          onClick={handleUndo}
-                          disabled={historyIndex <= 0}
-                          title="Undo (⌘Z)"
-                        >
-                          <ArrowULeftUp size={16} className={cn(
-                            historyIndex <= 0 ? "text-muted-foreground" : "text-foreground"
-                          )} />
-                        </Button>
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="neomorph-button border-0 flex-shrink-0 h-8 w-8 p-0"
-                          onClick={handleRedo}
-                          disabled={historyIndex >= history.length - 1}
-                          title="Redo (⌘⇧Z)"
-                        >
-                          <ArrowURightUp size={16} className={cn(
-                            historyIndex >= history.length - 1 ? "text-muted-foreground" : "text-foreground"
-                          )} />
-                        </Button>
-                      </motion.div>
-                    </div>
-                    
                     {hasUnsavedChanges && (
                       <motion.div 
                         initial={{ opacity: 0, scale: 0.8 }}
@@ -546,33 +448,21 @@ export function ChapterEditor({
                       )}
                     </AnimatePresence>
 
-                    <Textarea
+                    <RichTextEditor
+                      content={pendingContent}
+                      onChange={handleContentChange}
                       placeholder="Start writing your chapter content here... or use the AI Assistant above to generate content from keywords"
-                      value={pendingContent}
-                      onChange={(e) => handleContentChange(e.target.value)}
-                      className="min-h-[250px] lg:min-h-[400px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
+                      minHeight="250px"
+                      className="lg:min-h-[400px]"
                     />
                     
-                    {/* Word count and save indicator */}
-                    <div className="flex justify-between items-center pt-2 text-xs">
-                      <div className="flex items-center gap-4">
-                        <span className="text-muted-foreground">
-                          {pendingContent.split(' ').filter(w => w.length > 0).length} words
-                        </span>
-                        {history.length > 1 && (
-                          <span className="text-muted-foreground">
-                            History: {historyIndex + 1}/{history.length}
-                          </span>
-                        )}
-                        <SaveIndicator 
-                          saving={saving}
-                          lastSaved={lastSaved}
-                          hasUnsavedChanges={hasUnsavedChanges}
-                        />
-                      </div>
-                      <span className="text-muted-foreground">
-                        {pendingContent.length > 0 ? 'Content ready for export' : 'Start typing or use AI to generate content'}
-                      </span>
+                    {/* Save indicator */}
+                    <div className="flex justify-end items-center pt-2 text-xs">
+                      <SaveIndicator 
+                        saving={saving}
+                        lastSaved={lastSaved}
+                        hasUnsavedChanges={hasUnsavedChanges}
+                      />
                     </div>
                   </div>
                 </TabsContent>
@@ -588,28 +478,18 @@ export function ChapterEditor({
                     <div className="space-y-2 lg:space-y-3">
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-semibold text-foreground">Chapter Content</h3>
-                        <Badge variant="secondary" className="text-xs neomorph-flat border-0">
-                          {pendingContent.split(' ').filter(w => w.length > 0).length} words
-                        </Badge>
                       </div>
-                      <Textarea
+                      <RichTextEditor
+                        content={pendingContent}
+                        onChange={handleContentChange}
                         placeholder="AI-generated content will appear here, or you can edit directly..."
-                        value={pendingContent}
-                        onChange={(e) => handleContentChange(e.target.value)}
-                        className="min-h-[200px] lg:min-h-[300px] resize-none neomorph-inset border-0 text-sm lg:text-base leading-relaxed"
+                        minHeight="200px"
+                        className="lg:min-h-[300px]"
                       />
                       
                       {/* Content status and save indicator */}
                       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center pt-2 text-xs gap-2 lg:gap-0">
                         <div className="flex items-center gap-4">
-                          <span className="text-muted-foreground">
-                            {pendingContent.length > 0 ? '✅ Content ready' : '⏳ Waiting for content'}
-                          </span>
-                          {history.length > 1 && (
-                            <span className="text-muted-foreground">
-                              History: {historyIndex + 1}/{history.length}
-                            </span>
-                          )}
                           <SaveIndicator 
                             saving={saving}
                             lastSaved={lastSaved}
