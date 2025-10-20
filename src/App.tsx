@@ -89,11 +89,11 @@ function App() {
           setProjectsLoading(false);
         }
       } else {
-        // Clear projects when user logs out
+        // Clear projects when user logs out and reset to landing page
         setProjects([]);
         setCurrentProject(null);
         setCurrentChapter(null);
-        setViewMode('dashboard');
+        // Don't set viewMode here - let the render logic handle showing landing page when !user
       }
     };
 
@@ -635,7 +635,7 @@ function App() {
           onNavigateToTerms={() => setViewMode('terms')}
           onNavigateToCookies={() => setViewMode('cookies')}
         />
-      ) : (
+      ) : user && (
         <>
           <Header
             logoText="Inkfluence AI"
