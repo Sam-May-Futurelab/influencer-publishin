@@ -24,6 +24,9 @@ const ProjectsPage = lazy(() => import('@/components/ProjectsPage').then(module 
 const TemplateGallery = lazy(() => import('@/components/TemplateGallery').then(module => ({ default: module.TemplateGallery })));
 const SettingsPage = lazy(() => import('@/components/SettingsPage').then(module => ({ default: module.SettingsPage })));
 const ProfilePage = lazy(() => import('@/components/ProfilePage').then(module => ({ default: module.ProfilePage })));
+const PrivacyPolicy = lazy(() => import('@/components/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })));
+const TermsOfService = lazy(() => import('@/components/TermsOfService').then(module => ({ default: module.TermsOfService })));
+const CookiePolicy = lazy(() => import('@/components/CookiePolicy').then(module => ({ default: module.CookiePolicy })));
 
 // Lazy load heavy components
 const ChapterEditor = lazy(() => import('@/components/ChapterEditor').then(module => ({ default: module.ChapterEditor })));
@@ -54,7 +57,7 @@ function App() {
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'profile' | 'project'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies'>('dashboard');
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -586,11 +589,51 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background font-['Inter']">
-      {/* Show Landing Page if user is not authenticated */}
-      {!user ? (
+      {/* Show legal pages for both authenticated and non-authenticated users */}
+      {viewMode === 'privacy' ? (
+        <main className="p-0">
+          <Suspense fallback={<PageLoading />}>
+            <PrivacyPolicy onBack={() => {
+              if (user) {
+                returnToDashboard();
+              } else {
+                setViewMode('dashboard');
+              }
+            }} />
+          </Suspense>
+        </main>
+      ) : viewMode === 'terms' ? (
+        <main className="p-0">
+          <Suspense fallback={<PageLoading />}>
+            <TermsOfService onBack={() => {
+              if (user) {
+                returnToDashboard();
+              } else {
+                setViewMode('dashboard');
+              }
+            }} />
+          </Suspense>
+        </main>
+      ) : viewMode === 'cookies' ? (
+        <main className="p-0">
+          <Suspense fallback={<PageLoading />}>
+            <CookiePolicy onBack={() => {
+              if (user) {
+                returnToDashboard();
+              } else {
+                setViewMode('dashboard');
+              }
+            }} />
+          </Suspense>
+        </main>
+      ) : !user ? (
+        /* Show Landing Page if user is not authenticated */
         <LandingPage 
           onGetStarted={() => setShowAuthModal(true)}
           onSignIn={() => setShowAuthModal(true)}
+          onNavigateToPrivacy={() => setViewMode('privacy')}
+          onNavigateToTerms={() => setViewMode('terms')}
+          onNavigateToCookies={() => setViewMode('cookies')}
         />
       ) : (
         <>
@@ -760,7 +803,11 @@ function App() {
       />
 
           {/* App Footer - Only show when authenticated */}
-          <AppFooter />
+          <AppFooter 
+            onNavigateToPrivacy={() => setViewMode('privacy')}
+            onNavigateToTerms={() => setViewMode('terms')}
+            onNavigateToCookies={() => setViewMode('cookies')}
+          />
         </>
       )}
 

@@ -1,8 +1,11 @@
 interface AppFooterProps {
   className?: string;
+  onNavigateToPrivacy?: () => void;
+  onNavigateToTerms?: () => void;
+  onNavigateToCookies?: () => void;
 }
 
-export function AppFooter({ className = '' }: AppFooterProps) {
+export function AppFooter({ className = '', onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies }: AppFooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -24,18 +27,24 @@ export function AppFooter({ className = '' }: AppFooterProps) {
             >
               Help Center
             </a>
-            <a 
-              href="#" 
+            <button 
+              onClick={onNavigateToPrivacy}
               className="hover:text-foreground transition-colors"
             >
               Privacy
-            </a>
-            <a 
-              href="#" 
+            </button>
+            <button 
+              onClick={onNavigateToTerms}
               className="hover:text-foreground transition-colors"
             >
               Terms
-            </a>
+            </button>
+            <button 
+              onClick={onNavigateToCookies}
+              className="hover:text-foreground transition-colors"
+            >
+              Cookies
+            </button>
             <a 
               href="#" 
               className="hover:text-foreground transition-colors"

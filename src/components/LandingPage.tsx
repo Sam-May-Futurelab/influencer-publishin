@@ -16,9 +16,12 @@ import { motion } from 'framer-motion';
 interface LandingPageProps {
   onGetStarted: () => void;
   onSignIn: () => void;
+  onNavigateToPrivacy?: () => void;
+  onNavigateToTerms?: () => void;
+  onNavigateToCookies?: () => void;
 }
 
-export function LandingPage({ onGetStarted, onSignIn }: LandingPageProps) {
+export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies }: LandingPageProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -715,9 +718,24 @@ export function LandingPage({ onGetStarted, onSignIn }: LandingPageProps) {
                 © 2025 Inkfluence AI. All rights reserved.
               </p>
               <div className="flex gap-6 text-sm text-gray-400">
-                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-                <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+                <button 
+                  onClick={onNavigateToPrivacy}
+                  className="hover:text-white transition-colors"
+                >
+                  Privacy Policy
+                </button>
+                <button 
+                  onClick={onNavigateToTerms}
+                  className="hover:text-white transition-colors"
+                >
+                  Terms of Service
+                </button>
+                <button 
+                  onClick={onNavigateToCookies}
+                  className="hover:text-white transition-colors"
+                >
+                  Cookie Policy
+                </button>
               </div>
             </div>
             <div className="text-center text-gray-500 text-sm pt-4 border-t border-gray-700">
