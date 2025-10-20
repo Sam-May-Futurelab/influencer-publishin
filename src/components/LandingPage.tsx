@@ -231,11 +231,11 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
-            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-8 overflow-hidden shadow-lg">
+            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-4 overflow-hidden shadow-lg">
               <img 
                 src="/images/idea-to-chapter.png" 
                 alt="AI-powered content generation from idea to chapter in seconds"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover rounded-xl"
               />
             </div>
           </motion.div>
@@ -247,11 +247,11 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
             viewport={{ once: true }}
             className="grid md:grid-cols-2 gap-12 items-center"
           >
-            <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-8 overflow-hidden order-2 md:order-1 shadow-lg">
+            <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-4 overflow-hidden order-2 md:order-1 shadow-lg">
               <img 
                 src="/images/organise-masterpiece.png" 
                 alt="Organize your book chapters and manuscripts with ease"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover rounded-xl"
               />
             </div>
             <div className="space-y-6 order-1 md:order-2">
@@ -332,11 +332,11 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
-            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-8 overflow-hidden shadow-lg">
+            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-4 overflow-hidden shadow-lg">
               <img 
                 src="/images/true-customisation.png" 
                 alt="Customize your book with custom fonts, colors, and branding"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover rounded-xl"
               />
             </div>
           </motion.div>
@@ -348,11 +348,11 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
             viewport={{ once: true }}
             className="grid md:grid-cols-2 gap-12 items-center"
           >
-            <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-8 overflow-hidden order-2 md:order-1 shadow-lg">
+            <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-4 overflow-hidden order-2 md:order-1 shadow-lg">
               <img 
                 src="/images/export.png" 
                 alt="Export your book in PDF, DOCX, and EPUB formats"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover rounded-xl"
               />
             </div>
             <div className="space-y-6 order-1 md:order-2">
