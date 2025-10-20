@@ -48,7 +48,7 @@ const defaultBrandConfig: BrandConfig = {
 };
 
 function App() {
-  const { user, userProfile, refreshProfile } = useAuth();
+  const { user, userProfile, loading: authLoading, refreshProfile } = useAuth();
   const [projects, setProjects] = useState<EbookProject[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(false);
   const [currentProject, setCurrentProject] = useState<EbookProject | null>(null);
@@ -586,6 +586,18 @@ function App() {
         break;
     }
   };
+
+  // Show loading screen while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background font-['Inter'] flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background font-['Inter']">
