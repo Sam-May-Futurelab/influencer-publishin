@@ -13,14 +13,16 @@ import {
   House, 
   BookOpen, 
   Palette, 
-  Gear, 
   User, 
   Bell,
   List,
   X,
   SignOut,
   Crown,
-  CaretDown
+  CaretDown,
+  Books,
+  SquaresFour,
+  UserCircle
 } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -46,11 +48,11 @@ export function Header({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, userProfile, signOut } = useAuth();
 
-  const navigationItems = [
+  const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: House },
-    { id: 'projects', label: 'Projects', icon: BookOpen },
-    { id: 'templates', label: 'Templates', icon: Palette },
-    { id: 'settings', label: 'Settings', icon: Gear },
+    { id: 'projects', label: 'My Books', icon: Books },
+    { id: 'templates', label: 'Templates', icon: SquaresFour },
+    { id: 'profile', label: 'Profile', icon: UserCircle },
   ];
 
   const handleNavigate = (section: string) => {
@@ -117,7 +119,7 @@ export function Header({
             animate={{ opacity: 1, y: 0 }}
             className="hidden lg:flex items-center gap-2"
           >
-            {navigationItems.map((item) => {
+            {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentSection === item.id;
               
@@ -215,11 +217,7 @@ export function Header({
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => onNavigate?.('profile')}>
                       <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onNavigate?.('settings')}>
-                      <Gear className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
+                      <span>Profile & Settings</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
@@ -275,7 +273,7 @@ export function Header({
               className="lg:hidden border-t border-border/40 mt-4 pt-4 pb-6"
             >
               <nav className="flex flex-col gap-2">
-                {navigationItems.map((item) => {
+                {navItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = currentSection === item.id;
                   

@@ -22,7 +22,6 @@ import { motion } from 'framer-motion';
 const Dashboard = lazy(() => import('@/components/Dashboard').then(module => ({ default: module.Dashboard })));
 const ProjectsPage = lazy(() => import('@/components/ProjectsPage').then(module => ({ default: module.ProjectsPage })));
 const TemplateGallery = lazy(() => import('@/components/TemplateGallery').then(module => ({ default: module.TemplateGallery })));
-const SettingsPage = lazy(() => import('@/components/SettingsPage').then(module => ({ default: module.SettingsPage })));
 const ProfilePage = lazy(() => import('@/components/ProfilePage').then(module => ({ default: module.ProfilePage })));
 const PrivacyPolicy = lazy(() => import('@/components/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })));
 const TermsOfService = lazy(() => import('@/components/TermsOfService').then(module => ({ default: module.TermsOfService })));
@@ -57,7 +56,7 @@ function App() {
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'settings' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies'>('dashboard');
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -295,10 +294,11 @@ function App() {
   };
 
   const goToSettingsPage = () => {
+    // Settings merged into Profile page
     setCurrentProject(null);
     setCurrentChapter(null);
-    setViewMode('settings');
-    setCurrentSection('settings');
+    setViewMode('profile');
+    setCurrentSection('profile');
   };
 
   const goToProfilePage = () => {
@@ -715,12 +715,6 @@ function App() {
                 }
               }}
             />
-          </Suspense>
-        </main>
-      ) : viewMode === 'settings' ? (
-        <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-          <Suspense fallback={<PageLoading />}>
-            <SettingsPage onBack={returnToDashboard} />
           </Suspense>
         </main>
       ) : viewMode === 'profile' ? (

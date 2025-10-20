@@ -180,8 +180,8 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile Settings</h1>
-          <p className="text-gray-600">Manage your account and subscription</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile</h1>
+          <p className="text-gray-600">Manage your account, subscription, and preferences</p>
         </motion.div>
 
         {/* Profile Information Card */}
