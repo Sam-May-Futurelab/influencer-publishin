@@ -138,7 +138,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     {
       id: 'monthly',
       name: 'Premium Monthly',
-      price: '£4.99',
+      price: '£9.99',
       period: 'per month',
       features: [
         'Unlimited pages',
@@ -154,9 +154,9 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     {
       id: 'yearly',
       name: 'Premium Yearly',
-      price: '£39.99',
+      price: '£99.99',
       period: 'per year',
-      originalPrice: '£59.88',
+      originalPrice: '£119.88',
       savings: 'Save £19.89',
       features: [
         'Everything in Monthly',

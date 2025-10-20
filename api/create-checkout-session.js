@@ -31,16 +31,15 @@ export default async (req, res) => {
     }
 
     // Get the frontend URL and ensure it's valid
-    let frontendUrl = process.env.FRONTEND_URL || req.headers.origin || 'https://inkfluence-ai.vercel.app';
+    let frontendUrl = process.env.FRONTEND_URL || req.headers.origin || 'https://inkfluence-ai-one.vercel.app';
     // Remove trailing slash, newlines, and any whitespace
     const baseUrl = frontendUrl.trim().replace(/[\n\r]/g, '').replace(/\/$/, '');
     
-    const successUrl = `${baseUrl}/?success=true&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${baseUrl}/?canceled=true`;
+    // Ensure URLs don't have double slashes
+    const successUrl = `${baseUrl}?success=true&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${baseUrl}?canceled=true`;
     
     console.log('Creating checkout with URLs:', { baseUrl, successUrl, cancelUrl });
-    
-    console.log('Frontend URL:', baseUrl);
 
     // Create or retrieve Stripe customer
     let customer;

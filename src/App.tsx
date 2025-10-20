@@ -174,25 +174,37 @@ function App() {
 
   // Handle Stripe checkout success/cancel redirects
   useEffect(() => {
+    // Don't process if still checking auth
+    if (authLoading) return;
+
     const urlParams = new URLSearchParams(window.location.search);
     const success = urlParams.get('success');
     const canceled = urlParams.get('canceled');
     const sessionId = urlParams.get('session_id');
 
     if (success === 'true' && sessionId) {
-      toast.success('Payment successful! Your premium features will be activated shortly.');
-      // Refresh user profile to get updated premium status
-      setTimeout(() => {
-        refreshProfile();
-      }, 2000);
+      // Ensure user is authenticated before showing success
+      if (user) {
+        toast.success('Payment successful! Your premium features will be activated shortly.');
+        // Refresh user profile to get updated premium status
+        setTimeout(() => {
+          refreshProfile();
+        }, 2000);
+        // Navigate to dashboard after showing success
+        setViewMode('dashboard');
+      }
       // Clean up URL
       window.history.replaceState({}, document.title, window.location.pathname);
     } else if (canceled === 'true') {
       toast.info('Payment canceled. You can upgrade anytime!');
+      // Navigate to dashboard if authenticated, otherwise landing page
+      if (user) {
+        setViewMode('dashboard');
+      }
       // Clean up URL
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, [refreshProfile]);
+  }, [refreshProfile, authLoading, user]);
 
   // Helper function to show auth guard
   const requireAuth = (action: string) => {

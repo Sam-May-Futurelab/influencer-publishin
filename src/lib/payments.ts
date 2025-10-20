@@ -25,8 +25,8 @@ export class PaymentService {
       id: 'inkfluence_premium_monthly',
       title: 'Inkfluence AI Premium Monthly',
       description: 'Unlimited pages and premium features',
-      price: '£4.99',
-      priceAmountMicros: 4990000,
+      price: '£9.99',
+      priceAmountMicros: 9990000,
       priceCurrencyCode: 'GBP',
       subscriptionPeriod: 'MONTH'
     },
@@ -34,8 +34,8 @@ export class PaymentService {
       id: 'inkfluence_premium_yearly',
       title: 'Inkfluence AI Premium Yearly',
       description: 'Unlimited pages and premium features - Best Value!',
-      price: '£39.99',
-      priceAmountMicros: 39990000,
+      price: '£99.99',
+      priceAmountMicros: 99990000,
       priceCurrencyCode: 'GBP',
       subscriptionPeriod: 'YEAR'
     }

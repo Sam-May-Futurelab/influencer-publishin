@@ -24,12 +24,12 @@ In App Store Connect, create these subscription products:
 ```
 Product ID: inkfluence_premium_monthly
 Type: Auto-Renewable Subscription
-Price: £4.99/month
+Price: £9.99/month
 Duration: 1 month
 
 Product ID: inkfluence_premium_yearly  
 Type: Auto-Renewable Subscription
-Price: £39.99/year
+Price: £99.99/year
 Duration: 1 year
 ```
 
