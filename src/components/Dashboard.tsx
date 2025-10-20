@@ -105,7 +105,7 @@ export function Dashboard({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-4"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-4xl mx-auto"
       >
         {/* Create New Project */}
         <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300">
@@ -158,8 +158,14 @@ export function Dashboard({
             </Button>
           </CardContent>
         </Card>
+      </motion.div>
 
-        {/* Quick Stats */}
+      {/* Progress Stats - Now separate section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.12 }}
+      >
         <Card className="neomorph-flat border-0">
           <CardContent className="p-4 lg:p-6">
             <div className="flex items-center gap-3 mb-4">
@@ -168,18 +174,18 @@ export function Dashboard({
               </div>
               <h3 className="font-semibold text-sm lg:text-base">Your Progress</h3>
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs lg:text-sm">
-                <span className="text-muted-foreground">Total Projects</span>
-                <span className="font-medium">{projects.length}</span>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <p className="text-2xl lg:text-3xl font-bold text-primary">{projects.length}</p>
+                <p className="text-xs lg:text-sm text-muted-foreground mt-1">Total Projects</p>
               </div>
-              <div className="flex justify-between text-xs lg:text-sm">
-                <span className="text-muted-foreground">Active Projects</span>
-                <span className="font-medium">{projects.filter(p => p.chapters.length > 0).length}</span>
+              <div className="text-center border-x border-border/20">
+                <p className="text-2xl lg:text-3xl font-bold text-accent">{projects.filter(p => p.chapters.length > 0).length}</p>
+                <p className="text-xs lg:text-sm text-muted-foreground mt-1">Active Projects</p>
               </div>
-              <div className="flex justify-between text-xs lg:text-sm">
-                <span className="text-muted-foreground">Total Chapters</span>
-                <span className="font-medium">{projects.reduce((sum, p) => sum + p.chapters.length, 0)}</span>
+              <div className="text-center">
+                <p className="text-2xl lg:text-3xl font-bold text-secondary-foreground">{projects.reduce((sum, p) => sum + p.chapters.length, 0)}</p>
+                <p className="text-xs lg:text-sm text-muted-foreground mt-1">Total Chapters</p>
               </div>
             </div>
           </CardContent>
