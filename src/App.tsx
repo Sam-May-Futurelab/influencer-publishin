@@ -5,11 +5,13 @@ import { incrementPageUsage, syncPageUsage, updateUserProfile } from '@/lib/auth
 import { getUserProjects, saveProject, deleteProject as deleteProjectFromFirestore } from '@/lib/projects';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { Header } from '@/components/Header';
+import { AppFooter } from '@/components/AppFooter';
 import { UsageTracker } from '@/components/UsageTracker';
 import { AuthGuardDialog } from '@/components/AuthGuardDialog';
 import { AuthModal } from '@/components/AuthModal';
 import { Onboarding } from '@/components/Onboarding';
 import { UpgradeModal } from '@/components/UpgradeModal';
+import { LandingPage } from '@/components/LandingPage';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
@@ -584,19 +586,27 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background font-['Inter']">
-      <Header
-        logoText="Inkfluence AI"
-        onNavigate={handleNavigation}
-        currentSection={currentSection}
-        notifications={0}
-      />
-      
-      {viewMode === 'dashboard' ? (
-        <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-          <Suspense fallback={<PageLoading />}>
-            {projectsLoading ? (
-              <PageLoading />
-            ) : (
+      {/* Show Landing Page if user is not authenticated */}
+      {!user ? (
+        <LandingPage 
+          onGetStarted={() => setShowAuthModal(true)}
+          onSignIn={() => setShowAuthModal(true)}
+        />
+      ) : (
+        <>
+          <Header
+            logoText="Inkfluence AI"
+            onNavigate={handleNavigation}
+            currentSection={currentSection}
+            notifications={0}
+          />
+          
+          {viewMode === 'dashboard' ? (
+            <main className="p-3 lg:p-6 pb-6 lg:pb-8">
+              <Suspense fallback={<PageLoading />}>
+                {projectsLoading ? (
+                  <PageLoading />
+                ) : (
               <Dashboard
                 projects={projects}
                 onSelectProject={selectProject}
@@ -737,11 +747,6 @@ function App() {
         action={authGuardAction}
       />
 
-      <AuthModal
-        isOpen={showAuthModal}
-        onOpenChange={setShowAuthModal}
-      />
-
       <Onboarding
         open={showOnboarding}
         onComplete={handleOnboardingComplete}
@@ -752,6 +757,17 @@ function App() {
         open={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
         highlightMessage="You've reached your page limit! Upgrade to Premium for unlimited pages."
+      />
+
+          {/* App Footer - Only show when authenticated */}
+          <AppFooter />
+        </>
+      )}
+
+      {/* Auth Modal - Show for both authenticated and non-authenticated users */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onOpenChange={setShowAuthModal}
       />
     </div>
   );
