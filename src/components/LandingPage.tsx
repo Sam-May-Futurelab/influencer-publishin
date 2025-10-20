@@ -728,7 +728,7 @@ export function LandingPage({ onGetStarted, onSignIn }: LandingPageProps) {
                 rel="noopener noreferrer"
                 className="text-[#b89ed6] hover:text-[#9b87b8] transition-colors font-medium"
               >
-                Future Lab Solutions
+                Futurelab
               </a>
             </div>
           </div>

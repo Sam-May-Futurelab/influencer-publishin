@@ -53,7 +53,7 @@ export function AppFooter({ className = '' }: AppFooterProps) {
               rel="noopener noreferrer"
               className="text-primary hover:underline font-medium"
             >
-              Future Lab Solutions
+              Futurelab
             </a>
           </div>
         </div>
