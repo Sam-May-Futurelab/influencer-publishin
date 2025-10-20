@@ -231,8 +231,12 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
-            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-8 h-96 flex items-center justify-center shadow-lg">
-              <Sparkles className="w-32 h-32 text-[#9b87b8] opacity-50" />
+            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-8 overflow-hidden shadow-lg">
+              <img 
+                src="/images/idea-to-chapter.png" 
+                alt="AI-powered content generation from idea to chapter in seconds"
+                className="w-full h-full object-contain"
+              />
             </div>
           </motion.div>
 
@@ -243,8 +247,12 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
             viewport={{ once: true }}
             className="grid md:grid-cols-2 gap-12 items-center"
           >
-            <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-8 h-96 flex items-center justify-center order-2 md:order-1 shadow-lg">
-              <BookOpen className="w-32 h-32 text-[#9b87b8] opacity-50" />
+            <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-8 overflow-hidden order-2 md:order-1 shadow-lg">
+              <img 
+                src="/images/organise-masterpiece.png" 
+                alt="Organize your book chapters and manuscripts with ease"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="space-y-6 order-1 md:order-2">
               <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium">
@@ -324,8 +332,12 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
-            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-8 h-96 flex items-center justify-center shadow-lg">
-              <Palette className="w-32 h-32 text-[#9b87b8] opacity-50" />
+            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-8 overflow-hidden shadow-lg">
+              <img 
+                src="/images/true-customisation.png" 
+                alt="Customize your book with custom fonts, colors, and branding"
+                className="w-full h-full object-contain"
+              />
             </div>
           </motion.div>
 
@@ -336,8 +348,12 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
             viewport={{ once: true }}
             className="grid md:grid-cols-2 gap-12 items-center"
           >
-            <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-8 h-96 flex items-center justify-center order-2 md:order-1 shadow-lg">
-              <Download className="w-32 h-32 text-[#9b87b8] opacity-50" />
+            <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-8 overflow-hidden order-2 md:order-1 shadow-lg">
+              <img 
+                src="/images/export.png" 
+                alt="Export your book in PDF, DOCX, and EPUB formats"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="space-y-6 order-1 md:order-2">
               <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium">
