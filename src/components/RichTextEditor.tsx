@@ -61,7 +61,6 @@ export function RichTextEditor({
   chapterTitle,
   onAIEnhanceSelected
 }: RichTextEditorProps) {
-  const [lineHeight, setLineHeight] = useState('1.6');
   const [isEnhancing, setIsEnhancing] = useState(false);
 
   // Voice input hook
@@ -95,7 +94,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg focus:outline-none max-w-none p-4',
-        style: `line-height: ${lineHeight}`,
+        style: 'line-height: 1.6',
       },
     },
     onUpdate: ({ editor }) => {
@@ -201,12 +200,7 @@ export function RichTextEditor({
     }
   }, [editor, isListening, stopListening, handleVoiceToggle]);
 
-  // Update line height dynamically
-  useEffect(() => {
-    if (editor?.view?.dom) {
-      editor.view.dom.style.lineHeight = lineHeight;
-    }
-  }, [lineHeight, editor]);
+  // Line height is set via CSS class, no need to access DOM directly
 
   if (!editor) {
     return null;
@@ -419,27 +413,6 @@ export function RichTextEditor({
           icon={TextAlignJustify}
           label="Justify"
         />
-
-        <Separator orientation="vertical" className="h-6 mx-1" />
-
-        {/* Line Spacing */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-muted-foreground hidden md:inline">Line:</span>
-          <Select value={lineHeight} onValueChange={setLineHeight}>
-            <SelectTrigger className="h-8 w-16 neomorph-button border-0 text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1.0">1.0</SelectItem>
-              <SelectItem value="1.2">1.2</SelectItem>
-              <SelectItem value="1.4">1.4</SelectItem>
-              <SelectItem value="1.6">1.6</SelectItem>
-              <SelectItem value="1.8">1.8</SelectItem>
-              <SelectItem value="2.0">2.0</SelectItem>
-              <SelectItem value="2.5">2.5</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
