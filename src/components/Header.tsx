@@ -22,7 +22,8 @@ import {
   CaretDown,
   Books,
   SquaresFour,
-  UserCircle
+  UserCircle,
+  BookmarkSimple
 } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -52,6 +53,7 @@ export function Header({
     { id: 'dashboard', label: 'Dashboard', icon: House },
     { id: 'projects', label: 'My Books', icon: Books },
     { id: 'templates', label: 'Templates', icon: SquaresFour },
+    { id: 'snippets', label: 'Snippets', icon: BookmarkSimple },
     { id: 'profile', label: 'Profile', icon: UserCircle },
   ];
 

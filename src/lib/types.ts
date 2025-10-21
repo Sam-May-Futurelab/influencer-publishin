@@ -73,4 +73,15 @@ export interface UsageLimit {
   lastResetDate: string; // YYYY-MM-DD format
 }
 
+export interface ContentSnippet {
+  id: string;
+  userId: string;
+  title: string;
+  content: string;
+  category: 'intro' | 'conclusion' | 'cta' | 'tip' | 'quote' | 'transition' | 'other';
+  tags?: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type InputMode = 'text' | 'ai' | 'preview';

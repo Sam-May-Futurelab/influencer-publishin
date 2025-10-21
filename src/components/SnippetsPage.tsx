@@ -1,0 +1,307 @@
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { 
+  MagnifyingGlass, 
+  Plus, 
+  Trash, 
+  Copy, 
+  BookmarkSimple,
+  Sparkle,
+  Quotes,
+  SignOut as ExitIcon,
+  Lightbulb,
+  ArrowsLeftRight
+} from '@phosphor-icons/react';
+import { useAuth } from '@/hooks/use-auth';
+import { getUserSnippets, deleteSnippet } from '@/lib/snippets';
+import { ContentSnippet } from '@/lib/types';
+import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+
+const categoryConfig = {
+  intro: { label: 'Intros', icon: Sparkle, color: 'bg-blue-100 text-blue-800' },
+  conclusion: { label: 'Conclusions', icon: ExitIcon, color: 'bg-purple-100 text-purple-800' },
+  cta: { label: 'CTAs', icon: ArrowsLeftRight, color: 'bg-green-100 text-green-800' },
+  tip: { label: 'Tips', icon: Lightbulb, color: 'bg-yellow-100 text-yellow-800' },
+  quote: { label: 'Quotes', icon: Quotes, color: 'bg-pink-100 text-pink-800' },
+  transition: { label: 'Transitions', icon: ArrowsLeftRight, color: 'bg-indigo-100 text-indigo-800' },
+  other: { label: 'Other', icon: BookmarkSimple, color: 'bg-gray-100 text-gray-800' },
+};
+
+export function SnippetsPage() {
+  const { user } = useAuth();
+  const [snippets, setSnippets] = useState<ContentSnippet[]>([]);
+  const [filteredSnippets, setFilteredSnippets] = useState<ContentSnippet[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [snippetToDelete, setSnippetToDelete] = useState<ContentSnippet | null>(null);
+
+  useEffect(() => {
+    loadSnippets();
+  }, [user]);
+
+  useEffect(() => {
+    filterSnippets();
+  }, [snippets, searchQuery, selectedCategory]);
+
+  const loadSnippets = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    try {
+      const userSnippets = await getUserSnippets(user.uid);
+      setSnippets(userSnippets);
+    } catch (error) {
+      toast.error('Failed to load snippets');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterSnippets = () => {
+    let filtered = snippets;
+
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(s => s.category === selectedCategory);
+    }
+
+    // Filter by search
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(s =>
+        s.title.toLowerCase().includes(query) ||
+        s.content.toLowerCase().includes(query) ||
+        s.tags?.some(tag => tag.toLowerCase().includes(query))
+      );
+    }
+
+    setFilteredSnippets(filtered);
+  };
+
+  const handleDeleteSnippet = async () => {
+    if (!snippetToDelete) return;
+
+    try {
+      await deleteSnippet(snippetToDelete.id);
+      setSnippets(snippets.filter(s => s.id !== snippetToDelete.id));
+      toast.success('Snippet deleted');
+      setSnippetToDelete(null);
+    } catch (error) {
+      toast.error('Failed to delete snippet');
+    }
+  };
+
+  const handleCopySnippet = (content: string) => {
+    navigator.clipboard.writeText(content);
+    toast.success('Copied to clipboard!');
+  };
+
+  const getCategoryStats = () => {
+    const stats: Record<string, number> = { all: snippets.length };
+    snippets.forEach(snippet => {
+      stats[snippet.category] = (stats[snippet.category] || 0) + 1;
+    });
+    return stats;
+  };
+
+  const categoryStats = getCategoryStats();
+
+  return (
+    <div className="space-y-6 lg:space-y-8">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between"
+      >
+        <div>
+          <h1 className="text-2xl lg:text-4xl font-bold">My Snippets</h1>
+          <p className="text-muted-foreground text-sm lg:text-base mt-2">
+            Save and reuse your best content blocks
+          </p>
+        </div>
+        <Button className="neomorph-button border-0 gap-2">
+          <Plus size={16} weight="bold" />
+          <span className="hidden sm:inline">Create Snippet</span>
+        </Button>
+      </motion.div>
+
+      {/* Controls */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col lg:flex-row gap-4"
+      >
+        {/* Search */}
+        <div className="relative flex-1 lg:max-w-md">
+          <MagnifyingGlass size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search snippets..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 neomorph-inset border-0 text-sm"
+          />
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex rounded-lg neomorph-inset p-1 overflow-x-auto">
+          <Button
+            variant={selectedCategory === 'all' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setSelectedCategory('all')}
+            className="h-8 px-3 text-xs whitespace-nowrap"
+          >
+            All ({categoryStats.all || 0})
+          </Button>
+          {Object.entries(categoryConfig).map(([key, config]) => {
+            const count = categoryStats[key] || 0;
+            if (count === 0 && selectedCategory !== key) return null;
+            
+            return (
+              <Button
+                key={key}
+                variant={selectedCategory === key ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setSelectedCategory(key)}
+                className="h-8 px-3 text-xs whitespace-nowrap"
+              >
+                {config.label} ({count})
+              </Button>
+            );
+          })}
+        </div>
+      </motion.div>
+
+      {/* Snippets Grid */}
+      {loading ? (
+        <div className="text-center py-12 text-muted-foreground">
+          <div className="animate-pulse">Loading snippets...</div>
+        </div>
+      ) : filteredSnippets.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center py-12"
+        >
+          <BookmarkSimple size={64} className="mx-auto mb-4 text-muted-foreground" />
+          <h3 className="text-xl font-semibold mb-2">
+            {searchQuery || selectedCategory !== 'all' ? 'No snippets found' : 'No snippets yet'}
+          </h3>
+          <p className="text-muted-foreground max-w-md mx-auto">
+            {searchQuery || selectedCategory !== 'all'
+              ? 'Try adjusting your search or filter'
+              : 'Save reusable content blocks from your chapter editor'}
+          </p>
+        </motion.div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <AnimatePresence>
+            {filteredSnippets.map((snippet, index) => {
+              const config = categoryConfig[snippet.category];
+              const Icon = config.icon;
+              
+              return (
+                <motion.div
+                  key={snippet.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all group">
+                    <CardContent className="p-4 space-y-3">
+                      {/* Header */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <Icon size={16} className="text-primary flex-shrink-0" />
+                          <h3 className="font-semibold text-sm truncate">{snippet.title}</h3>
+                        </div>
+                        <Badge className={`${config.color} text-[10px] px-1.5 py-0.5`}>
+                          {config.label}
+                        </Badge>
+                      </div>
+
+                      {/* Content Preview */}
+                      <p className="text-xs text-muted-foreground line-clamp-3">
+                        {snippet.content}
+                      </p>
+
+                      {/* Tags */}
+                      {snippet.tags && snippet.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {snippet.tags.slice(0, 3).map(tag => (
+                            <Badge key={tag} variant="outline" className="text-[10px] px-1.5 py-0">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleCopySnippet(snippet.content)}
+                          className="h-7 gap-1.5 text-xs flex-1"
+                        >
+                          <Copy size={12} />
+                          Copy
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setSnippetToDelete(snippet)}
+                          className="h-7 gap-1.5 text-xs text-destructive hover:text-destructive"
+                        >
+                          <Trash size={12} />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!snippetToDelete} onOpenChange={() => setSnippetToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Snippet</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{snippetToDelete?.title}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteSnippet}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
