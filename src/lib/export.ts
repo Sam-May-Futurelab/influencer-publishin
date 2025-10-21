@@ -119,7 +119,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
         .container {
           max-width: 8.5in;
           margin: 0 auto;
-          padding: 1in;
+          padding: 1.25in;
           min-height: 11in;
         }
         
@@ -155,6 +155,33 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
         .title-page-content {
           position: relative;
           z-index: 2;
+        }
+        
+        /* Copyright Page Styles */
+        .copyright-page {
+          page-break-after: always;
+          padding: 3in 1.5in;
+          font-size: 0.95em;
+          color: #6b7280;
+          line-height: 1.8;
+        }
+        
+        .copyright-title {
+          font-weight: 600;
+          font-size: 1.1em;
+          margin-bottom: 0.5em;
+          color: #374151;
+        }
+        
+        .copyright-content {
+          margin-bottom: 1.5em;
+        }
+        
+        .copyright-notice {
+          margin-top: 2em;
+          padding-top: 1em;
+          border-top: 1px solid #e5e7eb;
+          font-size: 0.85em;
         }
         
         .logo {
@@ -300,24 +327,31 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
         }
         
         .chapter-content {
-          font-size: 1.1em;
-          line-height: 1.8;
+          font-size: 1.15em;
+          line-height: 1.9;
           text-align: justify;
           color: #374151;
+          hyphens: auto;
+          word-spacing: 0.05em;
         }
         
         .chapter-content p {
-          margin-bottom: 1.2em;
+          margin-bottom: 1.5em;
+          text-indent: 1.5em;
+        }
+        
+        .chapter-content p:first-of-type {
+          text-indent: 0;
         }
         
         .chapter-content p:first-child::first-letter {
-          font-size: 3em;
+          font-size: 3.5em;
           font-weight: 700;
           color: ${brand?.primaryColor || '#8B5CF6'};
           float: left;
-          line-height: 1;
-          margin-right: 8px;
-          margin-top: 4px;
+          line-height: 0.9;
+          margin-right: 0.1em;
+          margin-top: 0.1em;
         }
         
         .about-author {
@@ -377,18 +411,52 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
             -webkit-print-color-adjust: exact;
           }
           
+          /* Page setup with headers and footers */
+          @page {
+            margin: 1in 0.75in;
+            
+            @top-left {
+              content: "${escapeHtml(project.title)}";
+              font-size: 9pt;
+              color: #6b7280;
+              font-style: italic;
+            }
+            
+            @top-right {
+              content: "Chapter " counter(page);
+              font-size: 9pt;
+              color: #6b7280;
+            }
+            
+            @bottom-center {
+              content: counter(page);
+              font-size: 10pt;
+              color: ${brand?.primaryColor || '#8B5CF6'};
+              font-weight: 600;
+            }
+          }
+          
+          /* No headers/footers on title page and TOC */
+          @page :first {
+            @top-left { content: none; }
+            @top-right { content: none; }
+            @bottom-center { content: none; }
+          }
+          
           .container {
             margin: 0;
-            padding: 0.75in;
+            padding: 0;
           }
           
           .title-page {
-            margin: -0.75in;
+            margin: 0;
             margin-bottom: 0;
+            padding: 2in;
           }
           
           .content-page {
             margin-top: 0;
+            padding: 0.5in 0.75in;
           }
           
           .table-of-contents {
@@ -423,6 +491,32 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
               ${getTotalWordCount(project).toLocaleString()} Words • 
               ~${Math.ceil(getTotalWordCount(project) / 250)} Pages
             </div>
+          </div>
+        </div>
+        
+        <!-- Copyright Page -->
+        <div class="copyright-page">
+          <p class="copyright-title">${escapeHtml(project.title)}</p>
+          ${project.author ? `<p class="copyright-content">by ${escapeHtml(project.author)}</p>` : ''}
+          
+          <div class="copyright-content">
+            <p>Copyright © ${new Date().getFullYear()} ${escapeHtml(project.author || 'Author')}</p>
+            <p>All rights reserved.</p>
+          </div>
+          
+          <div class="copyright-content">
+            <p>No part of this book may be reproduced in any form or by any electronic or mechanical means, including information storage and retrieval systems, without written permission from the author, except for the use of brief quotations in a book review.</p>
+          </div>
+          
+          ${options?.authorWebsite ? `
+            <div class="copyright-content">
+              <p><strong>Website:</strong> ${escapeHtml(options.authorWebsite)}</p>
+            </div>
+          ` : ''}
+          
+          <div class="copyright-notice">
+            <p><strong>First Edition:</strong> ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+            <p>Created with Inkfluence AI</p>
           </div>
         </div>
         
