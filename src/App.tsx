@@ -1,4 +1,5 @@
 import { useState, useEffect, lazy, Suspense, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { useAuth } from '@/hooks/use-auth';
 import { incrementPageUsage, syncPageUsage, updateUserProfile } from '@/lib/auth';
@@ -51,6 +52,8 @@ const defaultBrandConfig: BrandConfig = {
 
 function App() {
   const { user, userProfile, loading: authLoading, refreshProfile } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [projects, setProjects] = useState<EbookProject[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(false);
   const [currentProject, setCurrentProject] = useState<EbookProject | null>(null);
@@ -108,6 +111,55 @@ function App() {
       setShowOnboarding(true);
     }
   }, [user, userProfile]);
+
+  // Sync URL with viewMode state
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/about' && viewMode !== 'about') {
+      setViewMode('about');
+    } else if (path === '/help' && viewMode !== 'help') {
+      setViewMode('help');
+    } else if (path === '/privacy' && viewMode !== 'privacy') {
+      setViewMode('privacy');
+    } else if (path === '/terms' && viewMode !== 'terms') {
+      setViewMode('terms');
+    } else if (path === '/cookies' && viewMode !== 'cookies') {
+      setViewMode('cookies');
+    } else if (path === '/' && ['about', 'help', 'privacy', 'terms', 'cookies'].includes(viewMode)) {
+      setViewMode('dashboard');
+    }
+  }, [location.pathname, viewMode]);
+
+  // Update URL when viewMode changes
+  useEffect(() => {
+    const currentPath = location.pathname;
+    let targetPath = '/';
+    
+    switch (viewMode) {
+      case 'about':
+        targetPath = '/about';
+        break;
+      case 'help':
+        targetPath = '/help';
+        break;
+      case 'privacy':
+        targetPath = '/privacy';
+        break;
+      case 'terms':
+        targetPath = '/terms';
+        break;
+      case 'cookies':
+        targetPath = '/cookies';
+        break;
+      default:
+        targetPath = '/';
+        break;
+    }
+    
+    if (currentPath !== targetPath) {
+      navigate(targetPath, { replace: true });
+    }
+  }, [viewMode, navigate, location.pathname]);
 
   // Force save on unmount or when currentProject changes
   useEffect(() => {

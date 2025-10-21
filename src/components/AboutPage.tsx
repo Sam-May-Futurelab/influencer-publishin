@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { PublicHeader } from '@/components/PublicHeader';
+import { PublicFooter } from '@/components/PublicFooter';
 import { 
   Sparkles, 
   Zap, 
@@ -89,24 +91,10 @@ export function AboutPage({ onNavigate, isAuthenticated }: AboutPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border/40 bg-background/95 backdrop-blur sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate('landing')}>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                Inkfluence AI
-              </span>
-            </div>
-            <Button onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}>
-              {isAuthenticated ? 'Go to Dashboard' : 'Get Started'}
-            </Button>
-          </div>
-        </div>
-      </header>
+      <PublicHeader 
+        onNavigate={onNavigate}
+        isAuthenticated={isAuthenticated}
+      />
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
@@ -280,27 +268,11 @@ export function AboutPage({ onNavigate, isAuthenticated }: AboutPageProps) {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border/40 py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-sm text-muted-foreground">
-              © 2025 Inkfluence AI • v1.0.0
-            </div>
-            <div className="flex gap-6 text-sm">
-              <button onClick={() => onNavigate('help')} className="text-muted-foreground hover:text-primary transition-colors">
-                Help Center
-              </button>
-              <a href="mailto:support@inkfluenceai.com" className="text-muted-foreground hover:text-primary transition-colors">
-                Contact
-              </a>
-              <span className="text-muted-foreground">
-                Designed by Futurelab
-              </span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <PublicFooter 
+        onNavigate={onNavigate}
+        showAboutLink={false}
+        showHelpLink={true}
+      />
     </div>
   );
 }
