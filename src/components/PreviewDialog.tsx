@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, X } from '@phosphor-icons/react';
@@ -71,9 +71,9 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
               <DialogTitle className="text-lg lg:text-xl font-bold">
                 {project.title} - Preview
               </DialogTitle>
-              <p className="text-sm text-muted-foreground">
+              <DialogDescription className="text-sm text-muted-foreground">
                 {sortedChapters.length} chapters • {getWordCount().toLocaleString()} words
-              </p>
+              </DialogDescription>
             </div>
           </div>
           

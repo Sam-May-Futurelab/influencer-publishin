@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { ProgressRing, ProgressBar } from '@/components/ui/progress-ring';
 import { Target, Flame, Trophy, Gear, Calendar, TrendUp } from '@phosphor-icons/react';
 import { WritingGoals, WritingStats } from '@/lib/types';
@@ -96,6 +96,9 @@ export function WritingGoalsComponent({
           <DialogContent className="neomorph-raised border-0 max-w-md">
             <DialogHeader>
               <DialogTitle>Writing Goals Settings</DialogTitle>
+              <DialogDescription>
+                Set your daily, weekly, and monthly word count targets to stay on track
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>

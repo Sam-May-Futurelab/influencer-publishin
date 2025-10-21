@@ -170,6 +170,9 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
         <DialogContent className="neomorph-raised border-0 max-w-md max-h-[85vh] flex flex-col">
           <DialogHeader className="flex-shrink-0">
             <DialogTitle className="text-xl">Project Settings</DialogTitle>
+            <DialogDescription>
+              Configure your ebook details and metadata
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-6 overflow-y-auto flex-1 pr-2">
             <div>

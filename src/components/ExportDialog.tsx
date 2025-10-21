@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -167,9 +167,9 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
             </div>
             <span className="text-base lg:text-2xl">Export Your Ebook</span>
           </DialogTitle>
-          <p className="text-sm lg:text-base text-muted-foreground">
+          <DialogDescription className="text-sm lg:text-base text-muted-foreground">
             Choose your preferred format to export "{project.title}"
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="overflow-y-auto flex-1 space-y-5 lg:space-y-6">
