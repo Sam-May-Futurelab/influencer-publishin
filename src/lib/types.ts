@@ -52,6 +52,7 @@ export interface EbookProject {
   brandConfig: BrandConfig;
   coverDesign?: CoverDesign;
   customWatermark?: string; // Project-specific watermark (overrides global settings)
+  isFavorite?: boolean; // Star/favorite projects to keep them at the top
   createdAt: Date;
   updatedAt: Date;
 }

@@ -18,7 +18,8 @@ import {
   Pencil,
   Copy,
   Export,
-  Eye
+  Eye,
+  Star
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
@@ -32,6 +33,7 @@ interface ProjectsPageProps {
   onDeleteProject?: (projectId: string) => void;
   onRenameProject?: (projectId: string, newTitle: string) => void;
   onDuplicateProject?: (project: EbookProject) => void;
+  onToggleFavorite?: (projectId: string) => void;
 }
 
 export function ProjectsPage({ 
@@ -41,12 +43,12 @@ export function ProjectsPage({
   onShowTemplateGallery,
   onDeleteProject,
   onRenameProject,
-  onDuplicateProject
+  onDuplicateProject,
+  onToggleFavorite
 }: ProjectsPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'updated' | 'created' | 'title'>('updated');
-  const [filterBy, setFilterBy] = useState<'all' | 'active' | 'draft'>('all');
   const [previewProject, setPreviewProject] = useState<EbookProject | null>(null);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
   const [newProjectTitle, setNewProjectTitle] = useState('');
@@ -61,13 +63,14 @@ export function ProjectsPage({
       const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            project.description.toLowerCase().includes(searchQuery.toLowerCase());
       
-      const matchesFilter = filterBy === 'all' || 
-                           (filterBy === 'active' && project.chapters.length > 0) ||
-                           (filterBy === 'draft' && project.chapters.length === 0);
-      
-      return matchesSearch && matchesFilter;
+      return matchesSearch;
     })
     .sort((a, b) => {
+      // Always sort favorites to the top first
+      if (a.isFavorite && !b.isFavorite) return -1;
+      if (!a.isFavorite && b.isFavorite) return 1;
+      
+      // Then apply the selected sort
       switch (sortBy) {
         case 'updated':
           return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -162,21 +165,6 @@ export function ProjectsPage({
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          {/* Filter */}
-          <div className="flex rounded-lg neomorph-inset p-1">
-            {(['all', 'active', 'draft'] as const).map((filter) => (
-              <Button
-                key={filter}
-                variant={filterBy === filter ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setFilterBy(filter)}
-                className="h-8 px-3 text-xs capitalize"
-              >
-                {filter}
-              </Button>
-            ))}
-          </div>
-
           {/* Sort */}
           <select
             value={sortBy}
@@ -282,10 +270,10 @@ export function ProjectsPage({
                   <CardContent className={viewMode === 'grid' ? "p-4 lg:p-6" : "p-4"}>
                     <div className={viewMode === 'grid' ? "space-y-4" : "flex items-center justify-between"}>
                       <div className={viewMode === 'grid' ? "space-y-3" : "flex-1 space-y-1"}>
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-3 flex-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-3 flex-1 min-w-0">
                             <div 
-                              className="w-3 h-3 rounded-full"
+                              className="w-3 h-3 rounded-full flex-shrink-0"
                               style={{ backgroundColor: project.brandConfig?.primaryColor || '#8B5CF6' }}
                             />
                             <h3 
@@ -294,12 +282,30 @@ export function ProjectsPage({
                             >
                               {project.title}
                             </h3>
+                            {onToggleFavorite && (
+                              <Button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onToggleFavorite(project.id);
+                                }}
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-7 p-0 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                title={project.isFavorite ? "Remove from favorites" : "Add to favorites"}
+                              >
+                                <Star 
+                                  size={16} 
+                                  weight={project.isFavorite ? "fill" : "regular"}
+                                  className={project.isFavorite ? "text-amber-500" : ""}
+                                />
+                              </Button>
+                            )}
                           </div>
                           <Button
                             onClick={() => setPreviewProject(project)}
                             variant="ghost"
                             size="sm"
-                            className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset"
+                            className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset flex-shrink-0"
                           >
                             <Eye size={14} />
                             <span className="hidden sm:inline">Preview</span>

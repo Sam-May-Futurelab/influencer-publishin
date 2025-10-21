@@ -496,6 +496,29 @@ function App() {
     }
   };
 
+  const toggleFavorite = async (projectId: string) => {
+    if (!user) return;
+
+    const project = projects.find(p => p.id === projectId);
+    if (!project) return;
+
+    const updatedProject = {
+      ...project,
+      isFavorite: !project.isFavorite,
+      updatedAt: new Date(),
+    };
+
+    try {
+      await saveProject(user.uid, updatedProject);
+      setProjects(currentProjects =>
+        currentProjects.map(p => p.id === projectId ? updatedProject : p)
+      );
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      toast.error('Failed to update favorite');
+    }
+  };
+
   const createChapter = async () => {
     if (!currentProject) return;
     
@@ -709,6 +732,7 @@ function App() {
                 onDeleteProject={deleteProject}
                 onRenameProject={renameProject}
                 onDuplicateProject={duplicateProject}
+                onToggleFavorite={toggleFavorite}
               />
             )}
           </Suspense>
