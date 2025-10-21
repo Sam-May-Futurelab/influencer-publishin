@@ -29,7 +29,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 
 interface HelpCenterProps {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing') => void;
   isAuthenticated: boolean;
 }
 
@@ -473,6 +473,9 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
         onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
         showNavLinks={true}
         isAuthenticated={isAuthenticated}
+        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToPricing={() => onNavigate('pricing')}
+        onNavigateToBlog={() => onNavigate('blog')}
       />
 
       {/* Hero Section */}

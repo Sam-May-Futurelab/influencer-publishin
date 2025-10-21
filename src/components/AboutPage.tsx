@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 interface AboutPageProps {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing') => void;
   isAuthenticated: boolean;
 }
 
@@ -96,6 +96,9 @@ export function AboutPage({ onNavigate, isAuthenticated }: AboutPageProps) {
         onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
         showNavLinks={true}
         isAuthenticated={isAuthenticated}
+        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToPricing={() => onNavigate('pricing')}
+        onNavigateToBlog={() => onNavigate('blog')}
       />
 
       {/* Hero Section */}

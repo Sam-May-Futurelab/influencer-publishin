@@ -9,7 +9,7 @@ import { SEO, createSoftwareApplicationSchema, createBreadcrumbSchema } from './
 import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud } from 'lucide-react';
 
 interface FeaturesPageProps {
-  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin', action?: 'signin') => void;
+  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog', action?: 'signin') => void;
   isAuthenticated?: boolean;
 }
 
@@ -142,6 +142,7 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
         isAuthenticated={isAuthenticated}
         onNavigateToPricing={() => onNavigate('pricing')}
         onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToBlog={() => onNavigate('blog')}
       />
 
       {/* Hero Section */}
