@@ -120,12 +120,12 @@ export function LandingHeader({
         }`}>
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/30"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           
           {/* Sidebar */}
-          <div className={`absolute right-0 top-0 h-full w-80 bg-white shadow-2xl shadow-black/10 transform transition-transform duration-300 ${
+          <div className={`absolute right-0 top-0 h-full w-80 max-w-[90vw] bg-white border-l border-gray-200 shadow-xl transform transition-transform duration-300 ${
             isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}>
             <div className="p-6">
@@ -147,7 +147,7 @@ export function LandingHeader({
               </div>
 
               {/* Navigation Links */}
-              <div className="space-y-4 mb-8">
+              <div className="space-y-3 mb-8">
                 <button
                   onClick={() => {
                     if (onNavigateToFeatures) {
@@ -157,7 +157,7 @@ export function LandingHeader({
                     }
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
                 >
                   Features
                 </button>
@@ -170,7 +170,7 @@ export function LandingHeader({
                     }
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
                 >
                   Pricing
                 </button>
@@ -183,25 +183,19 @@ export function LandingHeader({
                     }
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
                 >
                   Blog
                 </button>
-                <button
-                  onClick={() => {
-                    navigate('/about');
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                                <button
+                  onClick={() => navigate('/about')}
+                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
                 >
                   About
                 </button>
-                <button
-                  onClick={() => {
-                    navigate('/help');
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                                <button
+                  onClick={() => navigate('/help')}
+                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
                 >
                   Help
                 </button>
