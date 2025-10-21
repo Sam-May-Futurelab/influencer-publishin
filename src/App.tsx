@@ -54,6 +54,7 @@ function App() {
   const { user, userProfile, loading: authLoading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const isNavigatingRef = useRef(false);
   const [projects, setProjects] = useState<EbookProject[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(false);
   const [currentProject, setCurrentProject] = useState<EbookProject | null>(null);
@@ -114,8 +115,12 @@ function App() {
 
   // Sync URL with viewMode state - only listen to URL changes
   useEffect(() => {
+    if (isNavigatingRef.current) {
+      return;
+    }
+    
     const path = location.pathname;
-    let newViewMode = viewMode;
+    let newViewMode: typeof viewMode = 'dashboard';
     
     if (path === '/about') {
       newViewMode = 'about';
@@ -131,13 +136,16 @@ function App() {
       newViewMode = 'dashboard';
     }
     
-    if (newViewMode !== viewMode) {
-      setViewMode(newViewMode);
-    }
-  }, [location.pathname]); // Only depend on pathname, not viewMode
+    setViewMode(newViewMode);
+  }, [location.pathname]); // Only depend on pathname
 
   // Update URL when viewMode changes programmatically - only listen to viewMode changes
   useEffect(() => {
+    if (isNavigatingRef.current) {
+      isNavigatingRef.current = false;
+      return;
+    }
+    
     const currentPath = location.pathname;
     let targetPath = '/';
     
@@ -163,9 +171,10 @@ function App() {
     }
     
     if (currentPath !== targetPath) {
+      isNavigatingRef.current = true;
       navigate(targetPath);
     }
-  }, [viewMode, navigate]); // Removed location.pathname dependency
+  }, [viewMode, navigate, location.pathname]);
 
   // Force save on unmount or when currentProject changes
   useEffect(() => {

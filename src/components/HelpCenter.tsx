@@ -176,10 +176,11 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
   return (
     <div className="min-h-screen bg-background">
       <LandingHeader 
+        onNavigateToHome={() => onNavigate('landing')}
         onNavigateToAbout={() => onNavigate('about')}
         onNavigateToHelp={() => onNavigate('help')}
         onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
-        showNavLinks={false}
+        showNavLinks={true}
       />
 
       {/* Hero Section */}
