@@ -326,21 +326,21 @@ export function CoverDesigner({
     }
   };
 
-  const getBackgroundStyle = () => {
+  const getBackgroundStyle = (): React.CSSProperties => {
     if (design.backgroundType === 'gradient') {
       return {
         background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`,
-      };
+      } as React.CSSProperties;
     } else if (design.backgroundType === 'image' && design.backgroundImage) {
       return {
         backgroundImage: `url(${design.backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-      };
+      } as React.CSSProperties;
     } else {
       return {
         backgroundColor: design.backgroundColor,
-      };
+      } as React.CSSProperties;
     }
   };
 
@@ -367,7 +367,7 @@ export function CoverDesigner({
             </div>
             <div
               ref={canvasRef}
-              className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-sm"
+              className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-sm bg-white"
               style={getBackgroundStyle()}
             >
                 {/* Overlay */}

@@ -28,7 +28,31 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
         ...chapter,
         createdAt: chapter.createdAt,
         updatedAt: chapter.updatedAt // Use the Date object directly, not serverTimestamp()
-      }))
+      })),
+      // Ensure coverDesign is properly flattened (no nested objects beyond what Firestore allows)
+      coverDesign: project.coverDesign ? {
+        title: project.coverDesign.title,
+        subtitle: project.coverDesign.subtitle,
+        authorName: project.coverDesign.authorName,
+        backgroundType: project.coverDesign.backgroundType,
+        backgroundColor: project.coverDesign.backgroundColor,
+        gradientStart: project.coverDesign.gradientStart,
+        gradientEnd: project.coverDesign.gradientEnd,
+        gradientDirection: project.coverDesign.gradientDirection,
+        backgroundImage: project.coverDesign.backgroundImage || null,
+        titleFont: project.coverDesign.titleFont,
+        titleSize: project.coverDesign.titleSize,
+        titleColor: project.coverDesign.titleColor,
+        subtitleFont: project.coverDesign.subtitleFont,
+        subtitleSize: project.coverDesign.subtitleSize,
+        subtitleColor: project.coverDesign.subtitleColor,
+        authorFont: project.coverDesign.authorFont,
+        authorSize: project.coverDesign.authorSize,
+        authorColor: project.coverDesign.authorColor,
+        overlay: project.coverDesign.overlay,
+        overlayOpacity: project.coverDesign.overlayOpacity,
+        coverImageData: project.coverDesign.coverImageData || null,
+      } : null
     };
     
     await setDoc(projectRef, projectData);
