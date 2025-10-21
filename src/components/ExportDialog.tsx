@@ -172,208 +172,230 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
           </p>
         </DialogHeader>
 
-        <div className="overflow-y-auto flex-1 space-y-4 lg:space-y-6">
+        <div className="overflow-y-auto flex-1 space-y-5 lg:space-y-6">
           {/* Project stats */}
           <div className="grid grid-cols-3 gap-2 lg:gap-4">
-            <div className="text-center p-2 lg:p-4 rounded-xl neomorph-inset">
+            <div className="text-center p-3 lg:p-4 rounded-xl neomorph-inset">
               <div className="text-lg lg:text-2xl font-bold text-primary">{project.chapters.length}</div>
               <div className="text-xs lg:text-sm text-muted-foreground">Chapters</div>
             </div>
-            <div className="text-center p-2 lg:p-4 rounded-xl neomorph-inset">
+            <div className="text-center p-3 lg:p-4 rounded-xl neomorph-inset">
               <div className="text-lg lg:text-2xl font-bold text-accent">{getWordCount().toLocaleString()}</div>
               <div className="text-xs lg:text-sm text-muted-foreground">Words</div>
             </div>
-            <div className="text-center p-2 lg:p-4 rounded-xl neomorph-inset">
+            <div className="text-center p-3 lg:p-4 rounded-xl neomorph-inset">
               <div className="text-lg lg:text-2xl font-bold text-secondary-foreground">~{Math.ceil(getWordCount() / 250)}</div>
               <div className="text-xs lg:text-sm text-muted-foreground">Pages</div>
             </div>
           </div>
 
           {/* Export Customization Options */}
-          <Card className="neomorph-inset border-0">
-            <CardContent className="p-3 lg:p-6 space-y-4 lg:space-y-6">
-              <h3 className="text-base lg:text-lg font-semibold">Customize Export</h3>
+          <Card className="neomorph-flat border-0">
+            <CardContent className="p-4 lg:p-6 space-y-5 lg:space-y-6">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-lg neomorph-inset">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-primary" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h3 className="text-base lg:text-lg font-semibold">Export Settings</h3>
+              </div>
               
-              {/* Content Options */}
-              <div className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <Checkbox 
-                    id="toc" 
-                    checked={includeTOC}
-                    onCheckedChange={(checked) => setIncludeTOC(checked as boolean)}
-                    className="mt-0.5"
-                  />
-                  <div className="flex-1">
-                    <Label htmlFor="toc" className="cursor-pointer font-medium text-sm lg:text-base">
-                      Include Table of Contents
-                    </Label>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Auto-generated with clickable chapter links
-                    </p>
+              {/* Content Includes Section */}
+              <div className="space-y-4">
+                <div className="text-xs lg:text-sm font-medium text-muted-foreground uppercase tracking-wide">What to Include</div>
+                
+                <div className="space-y-4">
+                  <div className="p-3 lg:p-4 rounded-xl neomorph-inset bg-background/50">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox 
+                        id="toc" 
+                        checked={includeTOC}
+                        onCheckedChange={(checked) => setIncludeTOC(checked as boolean)}
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor="toc" className="cursor-pointer font-medium text-sm lg:text-base block">
+                          Table of Contents
+                        </Label>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Auto-generated list with clickable chapter links
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 lg:p-4 rounded-xl neomorph-inset bg-background/50">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox 
+                        id="copyright" 
+                        checked={includeCopyright}
+                        onCheckedChange={(checked) => setIncludeCopyright(checked as boolean)}
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor="copyright" className="cursor-pointer font-medium text-sm lg:text-base block">
+                          Copyright Page
+                        </Label>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Legal protection notice with your name and copyright year
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Copyright Position (only show if copyright is enabled) */}
+                    {includeCopyright && (
+                      <div className="mt-4 pt-4 border-t border-border/50">
+                        <Label className="text-xs lg:text-sm font-medium block mb-3">Copyright Placement</Label>
+                        <RadioGroup 
+                          value={copyrightPosition} 
+                          onValueChange={(v) => setCopyrightPosition(v as typeof copyrightPosition)}
+                          className="space-y-2.5"
+                        >
+                          <div className="flex items-center space-x-2.5">
+                            <RadioGroupItem value="end" id="copyright-end" />
+                            <Label htmlFor="copyright-end" className="cursor-pointer text-xs lg:text-sm font-normal">
+                              End of book (recommended)
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2.5">
+                            <RadioGroupItem value="beginning" id="copyright-beginning" />
+                            <Label htmlFor="copyright-beginning" className="cursor-pointer text-xs lg:text-sm font-normal">
+                              Beginning (after cover)
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+                    )}
                   </div>
                 </div>
-
-                <div className="flex items-start space-x-3">
-                  <Checkbox 
-                    id="copyright" 
-                    checked={includeCopyright}
-                    onCheckedChange={(checked) => setIncludeCopyright(checked as boolean)}
-                    className="mt-0.5"
-                  />
-                  <div className="flex-1">
-                    <Label htmlFor="copyright" className="cursor-pointer font-medium text-sm lg:text-base">
-                      Include Copyright Page
-                    </Label>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Standard legal protection notice
-                    </p>
-                  </div>
-                </div>
-
-                {/* Copyright Position (only show if copyright is enabled) */}
-                {includeCopyright && (
-                  <div className="ml-6 lg:ml-8 space-y-2">
-                    <Label className="text-xs lg:text-sm font-medium">Position</Label>
-                    <RadioGroup 
-                      value={copyrightPosition} 
-                      onValueChange={(v) => setCopyrightPosition(v as typeof copyrightPosition)}
-                      className="space-y-2"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="beginning" id="copyright-beginning" />
-                        <Label htmlFor="copyright-beginning" className="cursor-pointer text-xs lg:text-sm font-normal">
-                          At the beginning (after cover)
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="end" id="copyright-end" />
-                        <Label htmlFor="copyright-end" className="cursor-pointer text-xs lg:text-sm font-normal">
-                          At the end (after content)
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                )}
               </div>
 
-              {/* Chapter Numbering */}
-              <div className="space-y-2">
-                <Label className="text-sm lg:text-base font-medium">Chapter Numbering</Label>
-                <Select 
-                  value={chapterNumberStyle} 
-                  onValueChange={(v) => setChapterNumberStyle(v as typeof chapterNumberStyle)}
-                >
-                  <SelectTrigger className="neomorph-flat border-0">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="numeric">
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium text-sm">Numeric</span>
-                        <span className="text-xs text-muted-foreground">Chapter 1, Chapter 2, Chapter 3...</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="roman">
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium text-sm">Roman Numerals</span>
-                        <span className="text-xs text-muted-foreground">Chapter I, Chapter II, Chapter III...</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="none">
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium text-sm">No Numbers</span>
-                        <span className="text-xs text-muted-foreground">Just chapter titles</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+              {/* Formatting Section */}
+              <div className="space-y-4 pt-2">
+                <div className="text-xs lg:text-sm font-medium text-muted-foreground uppercase tracking-wide">Formatting Style</div>
+                
+                <div className="p-3 lg:p-4 rounded-xl neomorph-inset bg-background/50">
+                  <Label className="text-sm lg:text-base font-medium block mb-3">Chapter Numbering</Label>
+                  <RadioGroup 
+                    value={chapterNumberStyle} 
+                    onValueChange={(v) => setChapterNumberStyle(v as typeof chapterNumberStyle)}
+                    className="space-y-3"
+                  >
+                    <div className="flex items-center space-x-3 p-2.5 rounded-lg hover:bg-accent/30 transition-colors">
+                      <RadioGroupItem value="numeric" id="numbering-numeric" />
+                      <Label htmlFor="numbering-numeric" className="cursor-pointer flex-1">
+                        <div className="font-medium text-sm">Numeric</div>
+                        <div className="text-xs text-muted-foreground">Chapter 1, Chapter 2, Chapter 3...</div>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 p-2.5 rounded-lg hover:bg-accent/30 transition-colors">
+                      <RadioGroupItem value="roman" id="numbering-roman" />
+                      <Label htmlFor="numbering-roman" className="cursor-pointer flex-1">
+                        <div className="font-medium text-sm">Roman Numerals</div>
+                        <div className="text-xs text-muted-foreground">Chapter I, Chapter II, Chapter III...</div>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 p-2.5 rounded-lg hover:bg-accent/30 transition-colors">
+                      <RadioGroupItem value="none" id="numbering-none" />
+                      <Label htmlFor="numbering-none" className="cursor-pointer flex-1">
+                        <div className="font-medium text-sm">No Numbers</div>
+                        <div className="text-xs text-muted-foreground">Show chapter titles only</div>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Export options */}
-          <div className="space-y-3 lg:space-y-4">
-            {exportOptions.map((option, index) => {
-              const Icon = option.icon;
-              const isExporting = exportingFormat === option.format;
-              
-              return (
-                <motion.div
-                  key={option.format}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300">
-                    <CardContent className="p-3 lg:p-6">
-                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 lg:gap-4">
-                        <div className="flex items-start gap-3 flex-1">
-                          <div className="p-2 lg:p-3 rounded-xl neomorph-inset">
-                            <Icon size={24} className="lg:hidden text-primary" />
-                            <Icon size={32} className="hidden lg:block text-primary" />
+          {/* Export Format Selection */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg neomorph-inset">
+                <Download size={16} className="text-primary" />
+              </div>
+              <h3 className="text-base lg:text-lg font-semibold">Choose Export Format</h3>
+            </div>
+            
+            <div className="space-y-3">
+              {exportOptions.map((option, index) => {
+                const Icon = option.icon;
+                const isExporting = exportingFormat === option.format;
+                
+                return (
+                  <motion.div
+                    key={option.format}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300 overflow-hidden">
+                      <CardContent className="p-4 lg:p-5">
+                        <div className="flex flex-col gap-4">
+                          {/* Header with icon, title, and button */}
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                              <div className="p-2.5 rounded-xl neomorph-inset flex-shrink-0">
+                                <Icon size={28} className="text-primary" />
+                              </div>
+                              
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                  <h3 className="text-base lg:text-lg font-semibold">{option.title}</h3>
+                                  {option.recommended && (
+                                    <Badge variant="secondary" className="gap-1 neomorph-flat border-0 text-xs">
+                                      <Star size={12} weight="fill" />
+                                      Best
+                                    </Badge>
+                                  )}
+                                </div>
+                                <p className="text-xs lg:text-sm text-muted-foreground">
+                                  {option.description}
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <Button
+                              onClick={() => handleExport(option.format)}
+                              disabled={isExporting}
+                              className="neomorph-button border-0 gap-2 flex-shrink-0"
+                              size="lg"
+                            >
+                              {isExporting ? (
+                                <>
+                                  <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                                  <span className="hidden sm:inline">Exporting...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Download size={16} />
+                                  <span className="hidden sm:inline">Export</span>
+                                  <span className="sm:hidden">{option.format.toUpperCase()}</span>
+                                </>
+                              )}
+                            </Button>
                           </div>
                           
-                          <div className="flex-1 min-w-0">
-                            <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-3 mb-2">
-                              <h3 className="text-base lg:text-xl font-semibold">{option.title}</h3>
-                              {option.recommended && (
-                                <Badge variant="secondary" className="gap-1 neomorph-flat border-0 self-start lg:self-auto">
-                                  <Star size={10} className="lg:hidden" />
-                                  <Star size={12} className="hidden lg:block" />
-                                  <span className="text-xs">Recommended</span>
-                                </Badge>
-                              )}
-                              {selectedFormat === option.format && (
-                                <Badge variant="secondary" className="gap-1 bg-primary/10 text-primary border-0 self-start lg:self-auto">
-                                  <Check size={10} className="lg:hidden" />
-                                  <Check size={12} className="hidden lg:block" />
-                                  <span className="text-xs">Default</span>
-                                </Badge>
-                              )}
-                            </div>
-                            
-                            <p className="text-xs lg:text-sm text-muted-foreground mb-3 lg:mb-4">
-                              {option.description}
-                            </p>
-                            
-                            <div className="flex flex-wrap gap-1 lg:gap-2">
-                              {option.features.map((feature) => (
-                                <Badge 
-                                  key={feature} 
-                                  variant="outline" 
-                                  className="text-xs neomorph-inset border-0"
-                                >
-                                  {feature}
-                                </Badge>
-                              ))}
-                            </div>
+                          {/* Features - Only show on larger screens to reduce clutter */}
+                          <div className="hidden lg:flex flex-wrap gap-1.5 pt-2 border-t border-border/30">
+                            {option.features.map((feature) => (
+                              <Badge 
+                                key={feature} 
+                                variant="outline" 
+                                className="text-xs neomorph-inset border-0 font-normal"
+                              >
+                                {feature}
+                              </Badge>
+                            ))}
                           </div>
                         </div>
-                        
-                        <Button
-                          onClick={() => handleExport(option.format)}
-                          disabled={isExporting}
-                          className="neomorph-button border-0 gap-2 w-full lg:w-auto min-h-[44px]"
-                          size="lg"
-                        >
-                          {isExporting ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                              <span className="text-sm lg:text-base">Exporting...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Download size={16} />
-                              <span className="text-sm lg:text-base">Export {option.format.toUpperCase()}</span>
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
 
           <div className="p-3 lg:p-4 rounded-xl neomorph-inset bg-muted/30">
