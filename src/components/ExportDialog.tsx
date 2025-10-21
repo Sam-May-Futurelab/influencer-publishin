@@ -3,6 +3,16 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { FilePdf, FileDoc, BookOpen, Download, Star, Check } from '@phosphor-icons/react';
 import { ExportFormat, exportToFormat } from '@/lib/export';
 import { EbookProject } from '@/lib/types';
@@ -58,6 +68,12 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
   const [authorName, setAuthorName] = useState<string>('');
   const [authorBio, setAuthorBio] = useState<string>('');
   const [authorWebsite, setAuthorWebsite] = useState<string>('');
+  
+  // New export options
+  const [includeTOC, setIncludeTOC] = useState<boolean>(true);
+  const [includeCopyright, setIncludeCopyright] = useState<boolean>(true);
+  const [copyrightPosition, setCopyrightPosition] = useState<'beginning' | 'end'>('end');
+  const [chapterNumberStyle, setChapterNumberStyle] = useState<'numeric' | 'roman' | 'none'>('numeric');
 
   // Load settings from localStorage
   useEffect(() => {
@@ -69,8 +85,24 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
       setAuthorBio(parsed.authorBio || '');
       setAuthorWebsite(parsed.authorWebsite || '');
       setSelectedFormat(parsed.defaultExportFormat || 'pdf');
+      setIncludeTOC(parsed.includeTOC ?? true);
+      setIncludeCopyright(parsed.includeCopyright ?? true);
+      setCopyrightPosition(parsed.copyrightPosition || 'end');
+      setChapterNumberStyle(parsed.chapterNumberStyle || 'numeric');
     }
   }, []);
+
+  // Save export preferences to localStorage when they change
+  useEffect(() => {
+    const settings = JSON.parse(localStorage.getItem('ebookCrafterSettings') || '{}');
+    localStorage.setItem('ebookCrafterSettings', JSON.stringify({
+      ...settings,
+      includeTOC,
+      includeCopyright,
+      copyrightPosition,
+      chapterNumberStyle,
+    }));
+  }, [includeTOC, includeCopyright, copyrightPosition, chapterNumberStyle]);
 
   const handleExport = async (format: ExportFormat) => {
     // Check if user has premium access or is within free tier limits
@@ -96,7 +128,11 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
         customWatermark: effectiveWatermark,
         authorName,
         authorBio,
-        authorWebsite
+        authorWebsite,
+        includeTOC,
+        includeCopyright,
+        copyrightPosition,
+        chapterNumberStyle,
       });
       toast.success(`${format.toUpperCase()} export complete!`, { id: 'export' });
       onClose();
@@ -152,6 +188,108 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
               <div className="text-xs lg:text-sm text-muted-foreground">Pages</div>
             </div>
           </div>
+
+          {/* Export Customization Options */}
+          <Card className="neomorph-inset border-0">
+            <CardContent className="p-3 lg:p-6 space-y-4 lg:space-y-6">
+              <h3 className="text-base lg:text-lg font-semibold">Customize Export</h3>
+              
+              {/* Content Options */}
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <Checkbox 
+                    id="toc" 
+                    checked={includeTOC}
+                    onCheckedChange={(checked) => setIncludeTOC(checked as boolean)}
+                    className="mt-0.5"
+                  />
+                  <div className="flex-1">
+                    <Label htmlFor="toc" className="cursor-pointer font-medium text-sm lg:text-base">
+                      Include Table of Contents
+                    </Label>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Auto-generated with clickable chapter links
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3">
+                  <Checkbox 
+                    id="copyright" 
+                    checked={includeCopyright}
+                    onCheckedChange={(checked) => setIncludeCopyright(checked as boolean)}
+                    className="mt-0.5"
+                  />
+                  <div className="flex-1">
+                    <Label htmlFor="copyright" className="cursor-pointer font-medium text-sm lg:text-base">
+                      Include Copyright Page
+                    </Label>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Standard legal protection notice
+                    </p>
+                  </div>
+                </div>
+
+                {/* Copyright Position (only show if copyright is enabled) */}
+                {includeCopyright && (
+                  <div className="ml-6 lg:ml-8 space-y-2">
+                    <Label className="text-xs lg:text-sm font-medium">Position</Label>
+                    <RadioGroup 
+                      value={copyrightPosition} 
+                      onValueChange={(v) => setCopyrightPosition(v as typeof copyrightPosition)}
+                      className="space-y-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="beginning" id="copyright-beginning" />
+                        <Label htmlFor="copyright-beginning" className="cursor-pointer text-xs lg:text-sm font-normal">
+                          At the beginning (after cover)
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="end" id="copyright-end" />
+                        <Label htmlFor="copyright-end" className="cursor-pointer text-xs lg:text-sm font-normal">
+                          At the end (after content)
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                )}
+              </div>
+
+              {/* Chapter Numbering */}
+              <div className="space-y-2">
+                <Label className="text-sm lg:text-base font-medium">Chapter Numbering</Label>
+                <Select 
+                  value={chapterNumberStyle} 
+                  onValueChange={(v) => setChapterNumberStyle(v as typeof chapterNumberStyle)}
+                >
+                  <SelectTrigger className="neomorph-flat border-0">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="numeric">
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium text-sm">Numeric</span>
+                        <span className="text-xs text-muted-foreground">Chapter 1, Chapter 2, Chapter 3...</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roman">
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium text-sm">Roman Numerals</span>
+                        <span className="text-xs text-muted-foreground">Chapter I, Chapter II, Chapter III...</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="none">
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium text-sm">No Numbers</span>
+                        <span className="text-xs text-muted-foreground">Just chapter titles</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Export options */}
           <div className="space-y-3 lg:space-y-4">
