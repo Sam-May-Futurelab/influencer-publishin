@@ -360,13 +360,13 @@ export function CoverDesigner({
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">
           {/* Preview Panel */}
           <div className="lg:w-[45%] p-6 lg:p-10 flex items-center justify-center bg-muted/20 border-r">
-            <div className="space-y-6 w-full max-w-xl">
+            <div className="space-y-6 w-full max-w-md">
               <div className="text-sm font-semibold text-muted-foreground text-center uppercase tracking-wide">
                 Live Preview
               </div>
               <div
                 ref={canvasRef}
-                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden mx-auto max-w-md"
+                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden mx-auto max-w-xs"
                 style={getBackgroundStyle()}
               >
                 {/* Overlay */}
