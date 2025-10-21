@@ -37,7 +37,14 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
       />
       
       {/* Menu Panel */}
-      <div className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl">
+      <div 
+        className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl"
+        style={{ 
+          backgroundColor: '#ffffff',
+          opacity: 1,
+          zIndex: 60
+        }}
+      >
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
