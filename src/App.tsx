@@ -163,7 +163,7 @@ function App() {
     }
     
     if (currentPath !== targetPath) {
-      navigate(targetPath, { replace: true });
+      navigate(targetPath);
     }
   }, [viewMode, navigate]); // Removed location.pathname dependency
 

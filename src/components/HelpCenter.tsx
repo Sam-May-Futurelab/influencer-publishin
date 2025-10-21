@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { PublicHeader } from '@/components/PublicHeader';
-import { PublicFooter } from '@/components/PublicFooter';
+import { LandingHeader } from '@/components/LandingHeader';
+import { LandingFooter } from '@/components/LandingFooter';
 import {
   Accordion,
   AccordionContent,
@@ -175,9 +175,11 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <PublicHeader 
-        onNavigate={onNavigate}
-        isAuthenticated={isAuthenticated}
+      <LandingHeader 
+        onNavigateToAbout={() => onNavigate('about')}
+        onNavigateToHelp={() => onNavigate('help')}
+        onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
+        showNavLinks={false}
       />
 
       {/* Hero Section */}
@@ -363,10 +365,12 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
         </div>
       </section>
 
-      <PublicFooter 
-        onNavigate={onNavigate}
-        showAboutLink={true}
-        showHelpLink={false}
+      <LandingFooter 
+        onNavigateToAbout={() => onNavigate('about')}
+        onNavigateToHelp={() => onNavigate('help')}
+        onNavigateToPrivacy={() => onNavigate('privacy')}
+        onNavigateToTerms={() => onNavigate('terms')}
+        onNavigateToCookies={() => onNavigate('cookies')}
       />
     </div>
   );

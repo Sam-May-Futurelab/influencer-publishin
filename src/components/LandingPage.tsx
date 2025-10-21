@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { LandingHeader } from '@/components/LandingHeader';
+import { LandingFooter } from '@/components/LandingFooter';
 import { 
   BookOpen, Sparkles, FileText, Download, Palette, TrendingUp, 
   Zap, Users, Award, Play, CheckCircle2, ArrowRight,
@@ -33,51 +35,13 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f0e8f8] to-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#e2d1f0] shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <BookOpen className="w-8 h-8 text-[#9b87b8]" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] bg-clip-text text-transparent">
-              Inkfluence AI
-            </span>
-          </div>
-          
-          {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-6">
-            <button 
-              onClick={() => scrollToSection('features')}
-              className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
-            >
-              Features
-            </button>
-            <button 
-              onClick={() => scrollToSection('pricing')}
-              className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
-            >
-              Pricing
-            </button>
-            <button 
-              onClick={() => scrollToSection('faq')}
-              className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
-            >
-              FAQ
-            </button>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" onClick={onSignIn} className="hidden sm:inline-flex">
-              Sign In
-            </Button>
-            <Button 
-              onClick={onGetStarted}
-              className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90 shadow-md hover:shadow-lg transition-all"
-            >
-              Get Started Free
-            </Button>
-          </div>
-        </div>
-      </nav>
+      <LandingHeader 
+        onGetStarted={onGetStarted}
+        onSignIn={onSignIn}
+        onNavigateToAbout={onNavigateToAbout}
+        onNavigateToHelp={onNavigateToHelp}
+        scrollToSection={scrollToSection}
+      />
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 md:py-24">
@@ -666,110 +630,13 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
         </motion.div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#2d1b3d] text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
-            {/* Brand Column */}
-            <div className="col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <BookOpen className="w-8 h-8" />
-                <span className="text-2xl font-bold">Inkfluence AI</span>
-              </div>
-              <p className="text-gray-300 mb-6">
-                AI-powered book writing platform helping authors bring their stories to life.
-              </p>
-              <div className="flex gap-4">
-                <a href="#" className="hover:text-[#b89ed6] transition-colors">
-                  <Twitter className="w-5 h-5" />
-                </a>
-                <a href="#" className="hover:text-[#b89ed6] transition-colors">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a href="#" className="hover:text-[#b89ed6] transition-colors">
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a href="#" className="hover:text-[#b89ed6] transition-colors">
-                  <Github className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
-
-            {/* Product Links */}
-            <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-gray-300">
-                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Templates</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Integrations</a></li>
-              </ul>
-            </div>
-
-            {/* Resources Links */}
-            <div>
-              <h4 className="font-semibold mb-4">Resources</h4>
-              <ul className="space-y-2 text-gray-300">
-                <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Help Center</button></li>
-                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Tutorials</button></li>
-              </ul>
-            </div>
-
-            {/* Company Links */}
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-300">
-                <li><button onClick={onNavigateToAbout} className="hover:text-white transition-colors">About</button></li>
-                <li><a href="mailto:support@inkfluenceai.com" className="hover:text-white transition-colors">Contact</a></li>
-                <li><button onClick={onNavigateToPrivacy} className="hover:text-white transition-colors">Privacy</button></li>
-                <li><button onClick={onNavigateToTerms} className="hover:text-white transition-colors">Terms</button></li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="border-t border-gray-700 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-              <p className="text-gray-400 text-sm">
-                © 2025 Inkfluence AI. All rights reserved.
-              </p>
-              <div className="flex gap-6 text-sm text-gray-400">
-                <button 
-                  onClick={onNavigateToPrivacy}
-                  className="hover:text-white transition-colors"
-                >
-                  Privacy Policy
-                </button>
-                <button 
-                  onClick={onNavigateToTerms}
-                  className="hover:text-white transition-colors"
-                >
-                  Terms of Service
-                </button>
-                <button 
-                  onClick={onNavigateToCookies}
-                  className="hover:text-white transition-colors"
-                >
-                  Cookie Policy
-                </button>
-              </div>
-            </div>
-            <div className="text-center text-gray-500 text-sm pt-4 border-t border-gray-700">
-              Designed by{' '}
-              <a 
-                href="https://www.futurelab.solutions/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-[#b89ed6] hover:text-[#9b87b8] transition-colors font-medium"
-              >
-                Futurelab
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <LandingFooter 
+        onNavigateToPrivacy={onNavigateToPrivacy}
+        onNavigateToTerms={onNavigateToTerms}
+        onNavigateToCookies={onNavigateToCookies}
+        onNavigateToHelp={onNavigateToHelp}
+        onNavigateToAbout={onNavigateToAbout}
+      />
     </div>
   );
 }
