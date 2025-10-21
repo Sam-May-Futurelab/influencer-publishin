@@ -344,29 +344,29 @@ export function CoverDesigner({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl max-h-[90vh] flex flex-col p-0">
-        <DialogHeader className="p-6 pb-4">
-          <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-            <div className="p-2 rounded-xl neomorph-flat">
-              <Palette size={24} className="text-primary" />
+      <DialogContent className="max-w-7xl w-[95vw] max-h-[95vh] flex flex-col p-0 gap-0">
+        <DialogHeader className="p-6 lg:p-8 pb-4 lg:pb-6 border-b">
+          <DialogTitle className="text-2xl lg:text-3xl font-bold flex items-center gap-3">
+            <div className="p-2.5 rounded-xl neomorph-flat">
+              <Palette size={28} className="text-primary" />
             </div>
             Cover Designer
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-base mt-2">
             Create a stunning cover for your ebook with templates and customization
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
+        <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">
           {/* Preview Panel */}
-          <div className="lg:w-1/2 p-6 flex items-center justify-center bg-muted/30">
-            <div className="space-y-4 w-full max-w-md">
-              <div className="text-sm font-medium text-muted-foreground text-center">
+          <div className="lg:w-1/2 p-6 lg:p-10 flex items-center justify-center bg-muted/20 border-r">
+            <div className="space-y-6 w-full max-w-lg">
+              <div className="text-sm font-semibold text-muted-foreground text-center uppercase tracking-wide">
                 Live Preview
               </div>
               <div
                 ref={canvasRef}
-                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden"
+                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden mx-auto max-w-md"
                 style={getBackgroundStyle()}
               >
                 {/* Overlay */}
@@ -378,9 +378,9 @@ export function CoverDesigner({
                 )}
 
                 {/* Text Content */}
-                <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
+                <div className="relative h-full flex flex-col items-center justify-center p-12 text-center">
                   <h1
-                    className="font-bold leading-tight mb-4"
+                    className="font-bold leading-tight mb-6"
                     style={{
                       fontFamily: design.titleFont,
                       fontSize: `${design.titleSize}px`,
@@ -390,7 +390,7 @@ export function CoverDesigner({
                     {design.title}
                   </h1>
                   <p
-                    className="mb-auto"
+                    className="mb-auto max-w-md"
                     style={{
                       fontFamily: design.subtitleFont,
                       fontSize: `${design.subtitleSize}px`,
@@ -400,7 +400,7 @@ export function CoverDesigner({
                     {design.subtitle}
                   </p>
                   <p
-                    className="mt-auto uppercase tracking-wider"
+                    className="mt-auto uppercase tracking-wider font-medium"
                     style={{
                       fontFamily: design.authorFont,
                       fontSize: `${design.authorSize}px`,
@@ -415,35 +415,42 @@ export function CoverDesigner({
           </div>
 
           {/* Controls Panel */}
-          <div className="lg:w-1/2 overflow-y-auto p-6">
+          <div className="lg:w-1/2 overflow-y-auto p-6 lg:p-10">
             <Tabs defaultValue="templates" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-4">
-                <TabsTrigger value="templates">
-                  <Sparkle size={16} className="mr-2" />
-                  Templates
+              <TabsList className="grid w-full grid-cols-3 mb-6 h-12">
+                <TabsTrigger value="templates" className="gap-2 text-base">
+                  <Sparkle size={18} />
+                  <span className="hidden sm:inline">Templates</span>
                 </TabsTrigger>
-                <TabsTrigger value="background">
-                  <ImageIcon size={16} className="mr-2" />
-                  Background
+                <TabsTrigger value="background" className="gap-2 text-base">
+                  <ImageIcon size={18} />
+                  <span className="hidden sm:inline">Background</span>
                 </TabsTrigger>
-                <TabsTrigger value="text">
-                  <TextT size={16} className="mr-2" />
-                  Text
+                <TabsTrigger value="text" className="gap-2 text-base">
+                  <TextT size={18} />
+                  <span className="hidden sm:inline">Text</span>
                 </TabsTrigger>
               </TabsList>
 
               {/* Templates Tab */}
-              <TabsContent value="templates" className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+              <TabsContent value="templates" className="space-y-6">
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold">Choose a Template</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Start with a professionally designed template and customize it to match your book
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 lg:gap-6">
                   {COVER_TEMPLATES.map((template) => (
                     <Card
                       key={template.id}
-                      className="cursor-pointer neomorph-flat border-0 hover:neomorph-raised transition-all"
+                      className="cursor-pointer neomorph-flat border-0 hover:neomorph-raised transition-all hover:scale-[1.02]"
                       onClick={() => applyTemplate(template)}
                     >
-                      <CardContent className="p-4 text-center">
-                        <div className="text-4xl mb-2">{template.preview}</div>
-                        <div className="text-sm font-medium">{template.name}</div>
+                      <CardContent className="p-5 lg:p-6 text-center space-y-3">
+                        <div className="text-5xl lg:text-6xl mb-3">{template.preview}</div>
+                        <div className="text-base lg:text-lg font-semibold">{template.name}</div>
                       </CardContent>
                     </Card>
                   ))}
@@ -451,40 +458,40 @@ export function CoverDesigner({
               </TabsContent>
 
               {/* Background Tab */}
-              <TabsContent value="background" className="space-y-4">
-                <div className="space-y-4">
-                  <div>
-                    <Label>Background Type</Label>
+              <TabsContent value="background" className="space-y-6">
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <Label className="text-base font-medium">Background Type</Label>
                     <Select
                       value={design.backgroundType}
                       onValueChange={(value: any) => updateDesign({ backgroundType: value })}
                     >
-                      <SelectTrigger className="mt-2">
+                      <SelectTrigger className="h-12 text-base">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="solid">Solid Color</SelectItem>
-                        <SelectItem value="gradient">Gradient</SelectItem>
-                        <SelectItem value="image">Image</SelectItem>
+                        <SelectItem value="solid" className="text-base py-3">Solid Color</SelectItem>
+                        <SelectItem value="gradient" className="text-base py-3">Gradient</SelectItem>
+                        <SelectItem value="image" className="text-base py-3">Image</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   {design.backgroundType === 'solid' && (
-                    <div>
-                      <Label>Background Color</Label>
-                      <div className="flex gap-2 mt-2">
+                    <div className="space-y-3">
+                      <Label className="text-base font-medium">Background Color</Label>
+                      <div className="flex gap-3">
                         <Input
                           type="color"
                           value={design.backgroundColor}
                           onChange={(e) => updateDesign({ backgroundColor: e.target.value })}
-                          className="w-20 h-10"
+                          className="w-24 h-12 cursor-pointer"
                         />
                         <Input
                           type="text"
                           value={design.backgroundColor}
                           onChange={(e) => updateDesign({ backgroundColor: e.target.value })}
-                          className="flex-1"
+                          className="flex-1 h-12 text-base"
                         />
                       </div>
                     </div>
@@ -492,56 +499,56 @@ export function CoverDesigner({
 
                   {design.backgroundType === 'gradient' && (
                     <>
-                      <div>
-                        <Label>Start Color</Label>
-                        <div className="flex gap-2 mt-2">
+                      <div className="space-y-3">
+                        <Label className="text-base font-medium">Start Color</Label>
+                        <div className="flex gap-3">
                           <Input
                             type="color"
                             value={design.gradientStart}
                             onChange={(e) => updateDesign({ gradientStart: e.target.value })}
-                            className="w-20 h-10"
+                            className="w-24 h-12 cursor-pointer"
                           />
                           <Input
                             type="text"
                             value={design.gradientStart}
                             onChange={(e) => updateDesign({ gradientStart: e.target.value })}
-                            className="flex-1"
+                            className="flex-1 h-12 text-base"
                           />
                         </div>
                       </div>
 
-                      <div>
-                        <Label>End Color</Label>
-                        <div className="flex gap-2 mt-2">
+                      <div className="space-y-3">
+                        <Label className="text-base font-medium">End Color</Label>
+                        <div className="flex gap-3">
                           <Input
                             type="color"
                             value={design.gradientEnd}
                             onChange={(e) => updateDesign({ gradientEnd: e.target.value })}
-                            className="w-20 h-10"
+                            className="w-24 h-12 cursor-pointer"
                           />
                           <Input
                             type="text"
                             value={design.gradientEnd}
                             onChange={(e) => updateDesign({ gradientEnd: e.target.value })}
-                            className="flex-1"
+                            className="flex-1 h-12 text-base"
                           />
                         </div>
                       </div>
 
-                      <div>
-                        <Label>Gradient Direction</Label>
+                      <div className="space-y-3">
+                        <Label className="text-base font-medium">Gradient Direction</Label>
                         <Select
                           value={design.gradientDirection}
                           onValueChange={(value: any) => updateDesign({ gradientDirection: value })}
                         >
-                          <SelectTrigger className="mt-2">
+                          <SelectTrigger className="h-12 text-base">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="to-br">Diagonal (↘)</SelectItem>
-                            <SelectItem value="to-tr">Diagonal (↗)</SelectItem>
-                            <SelectItem value="to-r">Horizontal (→)</SelectItem>
-                            <SelectItem value="to-b">Vertical (↓)</SelectItem>
+                            <SelectItem value="to-br" className="text-base py-3">Diagonal (↘)</SelectItem>
+                            <SelectItem value="to-tr" className="text-base py-3">Diagonal (↗)</SelectItem>
+                            <SelectItem value="to-r" className="text-base py-3">Horizontal (→)</SelectItem>
+                            <SelectItem value="to-b" className="text-base py-3">Vertical (↓)</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -550,8 +557,8 @@ export function CoverDesigner({
 
                   {design.backgroundType === 'image' && (
                     <>
-                      <div>
-                        <Label>Upload Image</Label>
+                      <div className="space-y-3">
+                        <Label className="text-base font-medium">Upload Image</Label>
                         <input
                           ref={fileInputRef}
                           type="file"
@@ -561,35 +568,35 @@ export function CoverDesigner({
                         />
                         <Button
                           variant="outline"
-                          className="w-full mt-2"
+                          className="w-full h-12 text-base"
                           onClick={() => fileInputRef.current?.click()}
                         >
-                          <UploadSimple size={16} className="mr-2" />
+                          <UploadSimple size={20} className="mr-2" />
                           Choose Image
                         </Button>
                       </div>
 
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <Label>Dark Overlay</Label>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
+                          <Label className="text-base font-medium">Dark Overlay</Label>
                           <input
                             type="checkbox"
                             checked={design.overlay}
                             onChange={(e) => updateDesign({ overlay: e.target.checked })}
-                            className="rounded"
+                            className="w-5 h-5 rounded cursor-pointer"
                           />
                         </div>
 
                         {design.overlay && (
-                          <div>
-                            <Label>Overlay Opacity: {design.overlayOpacity}%</Label>
+                          <div className="space-y-3">
+                            <Label className="text-base font-medium">Overlay Opacity: {design.overlayOpacity}%</Label>
                             <Slider
                               value={[design.overlayOpacity]}
                               onValueChange={([value]) => updateDesign({ overlayOpacity: value })}
                               min={0}
                               max={100}
                               step={5}
-                              className="mt-2"
+                              className="py-2"
                             />
                           </div>
                         )}
@@ -608,52 +615,53 @@ export function CoverDesigner({
                     value={design.title}
                     onChange={(e) => updateDesign({ title: e.target.value })}
                     placeholder="Your Book Title"
+                    className="h-12 text-base"
                   />
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-sm">Font</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Font</Label>
                       <Select
                         value={design.titleFont}
                         onValueChange={(value) => updateDesign({ titleFont: value })}
                       >
-                        <SelectTrigger className="mt-1">
+                        <SelectTrigger className="h-11 text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           {FONTS.map((font) => (
-                            <SelectItem key={font.value} value={font.value}>
+                            <SelectItem key={font.value} value={font.value} className="text-sm py-2.5">
                               {font.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
-                    <div>
-                      <Label className="text-sm">Size: {design.titleSize}px</Label>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Size: {design.titleSize}px</Label>
                       <Slider
                         value={[design.titleSize]}
                         onValueChange={([value]) => updateDesign({ titleSize: value })}
                         min={24}
                         max={80}
                         step={2}
-                        className="mt-3"
+                        className="py-2"
                       />
                     </div>
                   </div>
-                  <div>
-                    <Label className="text-sm">Color</Label>
-                    <div className="flex gap-2 mt-1">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Color</Label>
+                    <div className="flex gap-3">
                       <Input
                         type="color"
                         value={design.titleColor}
                         onChange={(e) => updateDesign({ titleColor: e.target.value })}
-                        className="w-20 h-10"
+                        className="w-24 h-11 cursor-pointer"
                       />
                       <Input
                         type="text"
                         value={design.titleColor}
                         onChange={(e) => updateDesign({ titleColor: e.target.value })}
-                        className="flex-1"
+                        className="flex-1 h-11 text-sm"
                       />
                     </div>
                   </div>
@@ -666,52 +674,53 @@ export function CoverDesigner({
                     value={design.subtitle}
                     onChange={(e) => updateDesign({ subtitle: e.target.value })}
                     placeholder="Compelling subtitle"
+                    className="h-12 text-base"
                   />
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-sm">Font</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Font</Label>
                       <Select
                         value={design.subtitleFont}
                         onValueChange={(value) => updateDesign({ subtitleFont: value })}
                       >
-                        <SelectTrigger className="mt-1">
+                        <SelectTrigger className="h-11 text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           {FONTS.map((font) => (
-                            <SelectItem key={font.value} value={font.value}>
+                            <SelectItem key={font.value} value={font.value} className="text-sm py-2.5">
                               {font.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
-                    <div>
-                      <Label className="text-sm">Size: {design.subtitleSize}px</Label>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Size: {design.subtitleSize}px</Label>
                       <Slider
                         value={[design.subtitleSize]}
                         onValueChange={([value]) => updateDesign({ subtitleSize: value })}
                         min={14}
                         max={40}
                         step={2}
-                        className="mt-3"
+                        className="py-2"
                       />
                     </div>
                   </div>
-                  <div>
-                    <Label className="text-sm">Color</Label>
-                    <div className="flex gap-2 mt-1">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Color</Label>
+                    <div className="flex gap-3">
                       <Input
                         type="color"
                         value={design.subtitleColor}
                         onChange={(e) => updateDesign({ subtitleColor: e.target.value })}
-                        className="w-20 h-10"
+                        className="w-24 h-11 cursor-pointer"
                       />
                       <Input
                         type="text"
                         value={design.subtitleColor}
                         onChange={(e) => updateDesign({ subtitleColor: e.target.value })}
-                        className="flex-1"
+                        className="flex-1 h-11 text-sm"
                       />
                     </div>
                   </div>
@@ -724,52 +733,53 @@ export function CoverDesigner({
                     value={design.authorName}
                     onChange={(e) => updateDesign({ authorName: e.target.value })}
                     placeholder="Author Name"
+                    className="h-12 text-base"
                   />
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-sm">Font</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Font</Label>
                       <Select
                         value={design.authorFont}
                         onValueChange={(value) => updateDesign({ authorFont: value })}
                       >
-                        <SelectTrigger className="mt-1">
+                        <SelectTrigger className="h-11 text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           {FONTS.map((font) => (
-                            <SelectItem key={font.value} value={font.value}>
+                            <SelectItem key={font.value} value={font.value} className="text-sm py-2.5">
                               {font.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
-                    <div>
-                      <Label className="text-sm">Size: {design.authorSize}px</Label>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Size: {design.authorSize}px</Label>
                       <Slider
                         value={[design.authorSize]}
                         onValueChange={([value]) => updateDesign({ authorSize: value })}
                         min={12}
                         max={32}
                         step={2}
-                        className="mt-3"
+                        className="py-2"
                       />
                     </div>
                   </div>
-                  <div>
-                    <Label className="text-sm">Color</Label>
-                    <div className="flex gap-2 mt-1">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Color</Label>
+                    <div className="flex gap-3">
                       <Input
                         type="color"
                         value={design.authorColor}
                         onChange={(e) => updateDesign({ authorColor: e.target.value })}
-                        className="w-20 h-10"
+                        className="w-24 h-11 cursor-pointer"
                       />
                       <Input
                         type="text"
                         value={design.authorColor}
                         onChange={(e) => updateDesign({ authorColor: e.target.value })}
-                        className="flex-1"
+                        className="flex-1 h-11 text-sm"
                       />
                     </div>
                   </div>
@@ -780,12 +790,12 @@ export function CoverDesigner({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-6 pt-4 border-t flex items-center justify-between gap-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <div className="p-6 lg:p-8 pt-5 border-t flex items-center justify-between gap-4">
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="h-12 px-6 text-base">
             Cancel
           </Button>
-          <Button onClick={exportCover} className="gap-2">
-            <Download size={16} />
+          <Button onClick={exportCover} className="gap-2 h-12 px-6 text-base">
+            <Download size={18} />
             Save Cover
           </Button>
         </div>
