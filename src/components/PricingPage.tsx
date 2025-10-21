@@ -245,6 +245,9 @@ export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
         onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
         showNavLinks={true}
         isAuthenticated={isAuthenticated}
+        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToPricing={() => onNavigate('pricing')}
+        onNavigateToBlog={() => onNavigate('blog')}
       />
 
       {/* Hero Section */}
