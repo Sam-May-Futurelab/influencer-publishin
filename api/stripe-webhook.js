@@ -19,11 +19,38 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
+// Disable automatic body parsing for Stripe webhooks
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+// Helper to get raw body
+async function getRawBody(req) {
+  return new Promise((resolve, reject) => {
+    let data = '';
+    req.on('data', chunk => {
+      data += chunk;
+    });
+    req.on('end', () => {
+      resolve(Buffer.from(data));
+    });
+    req.on('error', err => {
+      reject(err);
+    });
+  });
+}
+
 export default async (req, res) => {
   // Enable CORS for webhook endpoint
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
   
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -48,13 +75,18 @@ export default async (req, res) => {
   }
 
   let event;
+  let body;
 
   try {
+    // Get raw body for Stripe signature verification
+    body = await getRawBody(req);
+    
     // Verify webhook signature
-    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     console.log('✅ Webhook signature verified for event:', event.type);
   } catch (err) {
     console.error('❌ Webhook signature verification failed:', err.message);
+    console.error('Body type:', typeof body, 'Length:', body ? body.length : 0);
     return res.status(400).json({ error: `Webhook Error: ${err.message}` });
   }
 
