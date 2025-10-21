@@ -5,8 +5,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash, Image as ImageIcon } from '@phosphor-icons/react';
+import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash, Image as ImageIcon, DotsThree } from '@phosphor-icons/react';
 import { EbookProject, CoverDesign } from '@/lib/types';
 import { ExportDialog } from '@/components/ExportDialog';
 import { PreviewDialog } from '@/components/PreviewDialog';
@@ -66,7 +73,8 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
   const estimatedPages = Math.ceil(wordCount / 250); // ~250 words per page
 
   return (
-    <motion.header 
+    <>
+      <motion.header 
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className="bg-card neomorph-flat border-0 mx-3 lg:mx-6 mt-3 lg:mt-6 rounded-2xl px-4 lg:px-8 py-4 lg:py-6"
@@ -139,79 +147,97 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 lg:gap-3 w-full lg:w-auto">
+        <div className="flex items-center gap-2 lg:gap-3">
+          {/* Customize Dropdown Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
+              >
+                <Gear size={18} />
+                <span className="hidden lg:inline">Customize</span>
+                <DotsThree size={18} className="lg:hidden" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48 neomorph-raised border-0">
+              <DropdownMenuItem onClick={onBrandCustomize} className="cursor-pointer gap-2 p-3">
+                <Palette size={18} />
+                <span>Brand Style</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowCoverDesigner(true)} className="cursor-pointer gap-2 p-3">
+                <ImageIcon size={18} />
+                <span>Cover Design</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsEditing(true)} className="cursor-pointer gap-2 p-3">
+                <Gear size={18} />
+                <span>Project Settings</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Preview Button */}
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
-              variant="outline" 
-              size="sm" 
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
-              onClick={onBrandCustomize}
+              onClick={() => setShowPreviewDialog(true)} 
+              variant="outline"
+              size="sm"
+              className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
             >
-              <Palette size={14} className="lg:hidden" />
-              <Palette size={18} className="hidden lg:block" />
-              <span className="hidden sm:inline">Brand Style</span>
-              <span className="sm:hidden">Brand</span>
+              <Eye size={18} />
+              <span className="hidden lg:inline">Preview</span>
             </Button>
           </motion.div>
 
+          {/* Export Button - Primary Action */}
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
-              variant="outline" 
-              size="sm" 
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
-              onClick={() => setShowCoverDesigner(true)}
+              onClick={() => setShowExportDialog(true)} 
+              className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-4 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground"
             >
-              <ImageIcon size={14} className="lg:hidden" />
-              <ImageIcon size={18} className="hidden lg:block" />
-              <span className="hidden sm:inline">Cover Design</span>
-              <span className="sm:hidden">Cover</span>
+              <DownloadSimple size={18} weight="bold" />
+              <span>Export</span>
             </Button>
           </motion.div>
+        </div>
+      </div>
 
-          <Dialog open={isEditing} onOpenChange={setIsEditing}>
-            <DialogTrigger asChild>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="sm" className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground">
-                  <Gear size={14} className="lg:hidden" />
-                  <Gear size={18} className="hidden lg:block" />
-                  <span className="hidden sm:inline">Project Settings</span>
-                  <span className="sm:hidden">Settings</span>
-                </Button>
-              </motion.div>
-            </DialogTrigger>
-            <DialogContent className="neomorph-raised border-0 max-w-md max-h-[85vh] flex flex-col">
-              <DialogHeader className="flex-shrink-0">
-                <DialogTitle className="text-xl">Project Settings</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-6 overflow-y-auto flex-1 pr-2">
-                <div>
-                  <label className="text-sm font-semibold mb-3 block text-foreground">Project Title</label>
-                  <Input
-                    value={tempTitle}
-                    onChange={(e) => setTempTitle(e.target.value)}
-                    placeholder="Enter your ebook title..."
-                    className="neomorph-inset border-0 h-12"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-semibold mb-3 block text-foreground">Author Name</label>
-                  <Input
-                    value={tempAuthor}
-                    onChange={(e) => setTempAuthor(e.target.value)}
-                    placeholder="Enter author name..."
-                    className="neomorph-inset border-0 h-12"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-semibold mb-3 block text-foreground">Description</label>
-                  <Textarea
-                    value={tempDescription}
-                    onChange={(e) => setTempDescription(e.target.value)}
-                    placeholder="Brief description of your ebook..."
-                    rows={4}
-                    className="neomorph-inset border-0 resize-none"
-                  />
-                </div>
+      {/* Settings Dialog */}
+      <Dialog open={isEditing} onOpenChange={setIsEditing}>
+        <DialogContent className="neomorph-raised border-0 max-w-md max-h-[85vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
+            <DialogTitle className="text-xl">Project Settings</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6 overflow-y-auto flex-1 pr-2">
+            <div>
+              <label className="text-sm font-semibold mb-3 block text-foreground">Project Title</label>
+              <Input
+                value={tempTitle}
+                onChange={(e) => setTempTitle(e.target.value)}
+                placeholder="Enter your ebook title..."
+                className="neomorph-inset border-0 h-12"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-semibold mb-3 block text-foreground">Author Name</label>
+              <Input
+                value={tempAuthor}
+                onChange={(e) => setTempAuthor(e.target.value)}
+                placeholder="Enter author name..."
+                className="neomorph-inset border-0 h-12"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-semibold mb-3 block text-foreground">Description</label>
+              <Textarea
+                value={tempDescription}
+                onChange={(e) => setTempDescription(e.target.value)}
+                placeholder="Brief description of your ebook..."
+                rows={4}
+                className="neomorph-inset border-0 resize-none"
+              />
+            </div>
                 
                 {/* Custom Watermark for Premium Users */}
                 {isPremium && (
@@ -297,34 +323,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
               </div>
             </DialogContent>
           </Dialog>
-
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button 
-              onClick={() => setShowPreviewDialog(true)} 
-              variant="outline"
-              size="sm"
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
-            >
-              <Eye size={14} className="lg:hidden" />
-              <Eye size={18} className="hidden lg:block" />
-              <span className="hidden sm:inline">Preview</span>
-              <span className="sm:hidden">Preview</span>
-            </Button>
-          </motion.div>
-
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button 
-              onClick={() => setShowExportDialog(true)} 
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground text-xs lg:text-sm"
-            >
-              <DownloadSimple size={14} className="lg:hidden" />
-              <DownloadSimple size={18} className="hidden lg:block" />
-              <span className="hidden sm:inline">Export Ebook</span>
-              <span className="sm:hidden">Export</span>
-            </Button>
-          </motion.div>
-        </div>
-      </div>
+      </motion.header>
 
       <ExportDialog
         project={project}
@@ -345,6 +344,6 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
         onSave={handleSaveCover}
         initialDesign={project.coverDesign}
       />
-    </motion.header>
+    </>
   );
 }
