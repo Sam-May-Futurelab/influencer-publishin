@@ -1,6 +1,8 @@
 import { EbookProject } from '@/lib/types';
 
 export type ExportFormat = 'pdf' | 'epub' | 'docx';
+export type ChapterNumberStyle = 'numeric' | 'roman' | 'none';
+export type CopyrightPosition = 'beginning' | 'end';
 
 export interface ExportOptions {
   isPremium?: boolean;
@@ -8,6 +10,43 @@ export interface ExportOptions {
   authorName?: string;
   authorBio?: string;
   authorWebsite?: string;
+  
+  // New formatting options
+  includeTOC?: boolean;
+  includeCopyright?: boolean;
+  copyrightPosition?: CopyrightPosition;
+  chapterNumberStyle?: ChapterNumberStyle;
+}
+
+// Helper function to format chapter numbers
+function formatChapterNumber(index: number, style: ChapterNumberStyle = 'numeric'): string {
+  switch (style) {
+    case 'roman':
+      return toRoman(index + 1);
+    case 'none':
+      return '';
+    case 'numeric':
+    default:
+      return (index + 1).toString();
+  }
+}
+
+// Convert number to Roman numerals
+function toRoman(num: number): string {
+  const romanNumerals: [number, string][] = [
+    [1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'],
+    [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'],
+    [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']
+  ];
+  
+  let result = '';
+  for (const [value, numeral] of romanNumerals) {
+    while (num >= value) {
+      result += numeral;
+      num -= value;
+    }
+  }
+  return result;
 }
 
 export async function exportToFormat(project: EbookProject, format: ExportFormat, options?: ExportOptions): Promise<void> {
@@ -74,6 +113,44 @@ export async function exportToDocx(project: EbookProject, options?: ExportOption
 function generateHTML(project: EbookProject, options?: ExportOptions): string {
   const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
   const brand = project.brandConfig;
+  
+  // Default export options
+  const includeTOC = options?.includeTOC !== false; // default true
+  const includeCopyright = options?.includeCopyright !== false; // default true
+  const copyrightPosition = options?.copyrightPosition || 'end'; // default end
+  const chapterNumberStyle = options?.chapterNumberStyle || 'numeric'; // default numeric
+  
+  // Generate copyright page HTML
+  const getCopyrightPage = () => {
+    if (!includeCopyright) return '';
+    
+    return `
+      <div class="copyright-page">
+        <p class="copyright-title">${escapeHtml(project.title)}</p>
+        ${project.author ? `<p class="copyright-content">by ${escapeHtml(project.author)}</p>` : ''}
+        
+        <div class="copyright-content">
+          <p>Copyright © ${new Date().getFullYear()} ${escapeHtml(project.author || 'Author')}</p>
+          <p>All rights reserved.</p>
+        </div>
+        
+        <div class="copyright-content">
+          <p>No part of this book may be reproduced in any form or by any electronic or mechanical means, including information storage and retrieval systems, without written permission from the author, except for the use of brief quotations in a book review.</p>
+        </div>
+        
+        ${options?.authorWebsite ? `
+          <div class="copyright-content">
+            <p><strong>Website:</strong> ${escapeHtml(options.authorWebsite)}</p>
+          </div>
+        ` : ''}
+        
+        <div class="copyright-notice">
+          <p><strong>First Edition:</strong> ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+          <p>Created with Inkfluence AI</p>
+        </div>
+      </div>
+    `;
+  };
   
   // Generate cover background based on style
   const getCoverStyle = () => {
@@ -494,60 +571,44 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           </div>
         </div>
         
-        <!-- Copyright Page -->
-        <div class="copyright-page">
-          <p class="copyright-title">${escapeHtml(project.title)}</p>
-          ${project.author ? `<p class="copyright-content">by ${escapeHtml(project.author)}</p>` : ''}
-          
-          <div class="copyright-content">
-            <p>Copyright © ${new Date().getFullYear()} ${escapeHtml(project.author || 'Author')}</p>
-            <p>All rights reserved.</p>
-          </div>
-          
-          <div class="copyright-content">
-            <p>No part of this book may be reproduced in any form or by any electronic or mechanical means, including information storage and retrieval systems, without written permission from the author, except for the use of brief quotations in a book review.</p>
-          </div>
-          
-          ${options?.authorWebsite ? `
-            <div class="copyright-content">
-              <p><strong>Website:</strong> ${escapeHtml(options.authorWebsite)}</p>
-            </div>
-          ` : ''}
-          
-          <div class="copyright-notice">
-            <p><strong>First Edition:</strong> ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-            <p>Created with Inkfluence AI</p>
-          </div>
-        </div>
+        ${copyrightPosition === 'beginning' ? getCopyrightPage() : ''}
         
         <div class="content-page">
           <!-- Table of Contents -->
+          ${includeTOC ? `
           <div class="table-of-contents">
             <h2 class="toc-title">Table of Contents</h2>
             <ul class="toc-list">
-              ${sortedChapters.map((chapter, index) => `
+              ${sortedChapters.map((chapter, index) => {
+                const chapterNumber = formatChapterNumber(index, chapterNumberStyle);
+                return `
                 <li class="toc-item">
                   <a href="#chapter-${index + 1}" class="toc-link">
-                    <span class="toc-chapter-number">Chapter ${index + 1}</span>
+                    ${chapterNumber ? `<span class="toc-chapter-number">Chapter ${chapterNumber}</span>` : ''}
                     <span class="toc-chapter-title">${escapeHtml(chapter.title)}</span>
                     <span class="toc-dots"></span>
                   </a>
                   <span class="toc-page">${index + 2}</span>
                 </li>
-              `).join('')}
+              `;
+              }).join('')}
             </ul>
           </div>
+          ` : ''}
           
           <!-- Chapters -->
-          ${sortedChapters.map((chapter, index) => `
+          ${sortedChapters.map((chapter, index) => {
+            const chapterNumber = formatChapterNumber(index, chapterNumberStyle);
+            return `
             <div class="chapter" id="chapter-${index + 1}">
-              <div class="chapter-number">Chapter ${index + 1}</div>
+              ${chapterNumber ? `<div class="chapter-number">Chapter ${chapterNumber}</div>` : ''}
               <h2 class="chapter-title">${escapeHtml(chapter.title)}</h2>
               <div class="chapter-content">
                 ${formatContent(chapter.content)}
               </div>
             </div>
-          `).join('')}
+          `;
+          }).join('')}
           
           ${(options?.authorName || options?.authorBio || options?.authorWebsite) ? `
             <div class="about-author">
@@ -557,6 +618,8 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
               ${options.authorWebsite ? `<p class="about-author-website">🌐 ${escapeHtml(options.authorWebsite)}</p>` : ''}
             </div>
           ` : ''}
+          
+          ${copyrightPosition === 'end' ? getCopyrightPage() : ''}
         </div>
       </div>
       
