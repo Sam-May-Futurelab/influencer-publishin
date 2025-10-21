@@ -120,14 +120,14 @@ export function LandingHeader({
         }`}>
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/30"
+            className="absolute inset-0 bg-black/50"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           
           {/* Sidebar */}
-          <div className={`absolute right-0 top-0 h-full w-80 max-w-[90vw] bg-white border-l border-gray-200 shadow-xl transform transition-transform duration-300 ${
+          <div className={`absolute right-0 top-0 h-full w-80 max-w-[90vw] bg-white backdrop-blur-sm border-l border-gray-200 shadow-2xl transform transition-transform duration-300 ${
             isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}>
+          }`} style={{ backgroundColor: 'rgba(255, 255, 255, 0.98)' }}>
             <div className="p-6">
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
