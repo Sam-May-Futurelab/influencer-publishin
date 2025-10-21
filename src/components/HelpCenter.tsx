@@ -749,7 +749,12 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
                 <div className="text-center py-12">
                   <Search className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
                   <p className="text-lg text-muted-foreground">
-                    No results found for "{searchQuery}"
+                    {searchQuery 
+                      ? `No results found for "${searchQuery}"` 
+                      : selectedCategory 
+                        ? `No articles found in "${selectedCategory}"`
+                        : 'No results found'
+                    }
                   </p>
                   <p className="text-sm text-muted-foreground mt-2">
                     Try a different search term or browse by category
