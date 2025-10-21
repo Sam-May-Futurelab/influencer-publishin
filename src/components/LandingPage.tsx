@@ -38,9 +38,9 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
       <LandingHeader 
         onGetStarted={onGetStarted}
         onSignIn={onSignIn}
-        onNavigateToAbout={onNavigateToAbout}
-        onNavigateToHelp={onNavigateToHelp}
         scrollToSection={scrollToSection}
+        showNavLinks={true}
+        isAuthenticated={false}
       />
 
       {/* Hero Section */}

@@ -112,7 +112,7 @@ export function AuthModal({
         {children}
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden neomorph-raised border-0" aria-describedby="auth-description">
+      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-0 shadow-2xl shadow-black/10 bg-white" aria-describedby="auth-description">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-center text-xl font-semibold">
             Welcome to Your Publishing Platform

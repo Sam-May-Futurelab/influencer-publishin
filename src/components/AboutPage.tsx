@@ -92,11 +92,10 @@ export function AboutPage({ onNavigate, isAuthenticated }: AboutPageProps) {
   return (
     <div className="min-h-screen bg-background">
       <LandingHeader 
-        onNavigateToHome={() => onNavigate('landing')}
-        onNavigateToAbout={() => onNavigate('about')}
-        onNavigateToHelp={() => onNavigate('help')}
+        onSignIn={() => onNavigate('landing')}
         onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
         showNavLinks={true}
+        isAuthenticated={isAuthenticated}
       />
 
       {/* Hero Section */}
