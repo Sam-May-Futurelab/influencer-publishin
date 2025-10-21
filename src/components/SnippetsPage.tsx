@@ -15,7 +15,8 @@ import {
   SignOut as ExitIcon,
   Lightbulb,
   ArrowsLeftRight,
-  ArrowClockwise
+  ArrowClockwise,
+  Eye
 } from '@phosphor-icons/react';
 import { useAuth } from '@/hooks/use-auth';
 import { getUserSnippets, deleteSnippet } from '@/lib/snippets';
@@ -31,6 +32,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const categoryConfig = {
   intro: { label: 'Intros', icon: Sparkle, color: 'bg-blue-100 text-blue-800' },
@@ -51,6 +60,7 @@ export function SnippetsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [snippetToDelete, setSnippetToDelete] = useState<ContentSnippet | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [previewSnippet, setPreviewSnippet] = useState<ContentSnippet | null>(null);
 
   useEffect(() => {
     loadSnippets();
@@ -286,6 +296,15 @@ export function SnippetsPage() {
                         <Button
                           size="sm"
                           variant="ghost"
+                          onClick={() => setPreviewSnippet(snippet)}
+                          className="h-7 gap-1.5 text-xs flex-1"
+                        >
+                          <Eye size={12} />
+                          Preview
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
                           onClick={() => handleCopySnippet(snippet.content)}
                           className="h-7 gap-1.5 text-xs flex-1"
                         >
@@ -330,6 +349,69 @@ export function SnippetsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Preview Dialog */}
+      <Dialog open={!!previewSnippet} onOpenChange={() => setPreviewSnippet(null)}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              {previewSnippet && (() => {
+                const config = categoryConfig[previewSnippet.category];
+                const Icon = config.icon;
+                return (
+                  <>
+                    <Icon size={20} className="text-primary" />
+                    <DialogTitle>{previewSnippet.title}</DialogTitle>
+                    <Badge className={`${config.color} text-xs ml-auto`}>
+                      {config.label}
+                    </Badge>
+                  </>
+                );
+              })()}
+            </div>
+            <DialogDescription>
+              {previewSnippet?.tags && previewSnippet.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {previewSnippet.tags.map(tag => (
+                    <Badge key={tag} variant="outline" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <div className="p-4 rounded-lg bg-muted/50 neomorph-inset">
+              <p className="text-sm whitespace-pre-wrap leading-relaxed">
+                {previewSnippet?.content}
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (previewSnippet) {
+                  handleCopySnippet(previewSnippet.content);
+                }
+              }}
+              className="neomorph-button border-0 gap-2"
+            >
+              <Copy size={16} />
+              Copy to Clipboard
+            </Button>
+            <Button
+              onClick={() => setPreviewSnippet(null)}
+              className="neomorph-button border-0"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
