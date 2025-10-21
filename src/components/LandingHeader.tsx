@@ -115,9 +115,6 @@ export function LandingHeader({
         <MobileMenu
           isOpen={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}
-          onNavigateToFeatures={onNavigateToFeatures}
-          onNavigateToPricing={onNavigateToPricing}
-          onNavigateToBlog={onNavigateToBlog}
           onSignIn={onSignIn}
           onGetStarted={onGetStarted}
         />

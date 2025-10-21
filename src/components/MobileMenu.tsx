@@ -6,9 +6,6 @@ import { useNavigate } from 'react-router-dom';
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  onNavigateToFeatures?: () => void;
-  onNavigateToPricing?: () => void;
-  onNavigateToBlog?: () => void;
   onSignIn?: () => void;
   onGetStarted?: () => void;
 }
@@ -16,9 +13,6 @@ interface MobileMenuProps {
 export const MobileMenu: React.FC<MobileMenuProps> = ({
   isOpen,
   onClose,
-  onNavigateToFeatures,
-  onNavigateToPricing,
-  onNavigateToBlog,
   onSignIn,
   onGetStarted,
 }) => {
@@ -26,8 +20,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   
   if (!isOpen) return null;
 
-  const handleNavigation = (callback?: () => void) => {
-    if (callback) callback();
+  const handleNavigation = (path: string) => {
+    navigate(path);
     onClose();
   };
 
@@ -70,62 +64,35 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           <div className="flex-1 p-6 bg-white" style={{ backgroundColor: '#ffffff' }}>
             <nav className="space-y-4">
               <button
-                onClick={() => {
-                  if (onNavigateToFeatures) {
-                    handleNavigation(onNavigateToFeatures);
-                  } else {
-                    navigate('/features');
-                    onClose();
-                  }
-                }}
+                onClick={() => handleNavigation('/features')}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 Features
               </button>
               
               <button
-                onClick={() => {
-                  if (onNavigateToPricing) {
-                    handleNavigation(onNavigateToPricing);
-                  } else {
-                    navigate('/pricing');
-                    onClose();
-                  }
-                }}
+                onClick={() => handleNavigation('/pricing')}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 Pricing
               </button>
               
               <button
-                onClick={() => {
-                  if (onNavigateToBlog) {
-                    handleNavigation(onNavigateToBlog);
-                  } else {
-                    navigate('/blog');
-                    onClose();
-                  }
-                }}
+                onClick={() => handleNavigation('/blog')}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 Blog
               </button>
 
               <button
-                onClick={() => {
-                  navigate('/about');
-                  onClose();
-                }}
+                onClick={() => handleNavigation('/about')}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 About
               </button>
 
               <button
-                onClick={() => {
-                  navigate('/help');
-                  onClose();
-                }}
+                onClick={() => handleNavigation('/help')}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 Help
@@ -138,7 +105,10 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             {onSignIn && (
               <Button 
                 variant="outline" 
-                onClick={() => handleNavigation(onSignIn)}
+                onClick={() => {
+                  onSignIn();
+                  onClose();
+                }}
                 className="w-full"
               >
                 Sign In
@@ -146,7 +116,10 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             )}
             {onGetStarted && (
               <Button 
-                onClick={() => handleNavigation(onGetStarted)}
+                onClick={() => {
+                  onGetStarted();
+                  onClose();
+                }}
                 className="w-full bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
               >
                 Get Started Free
