@@ -5,6 +5,7 @@ import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { LandingHeader } from './LandingHeader';
 import { LandingFooter } from './LandingFooter';
+import { SEO, createSoftwareApplicationSchema, createBreadcrumbSchema } from './SEO';
 import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud } from 'lucide-react';
 
 interface FeaturesPageProps {
@@ -13,89 +14,6 @@ interface FeaturesPageProps {
 }
 
 export default function FeaturesPage({ onNavigate, isAuthenticated = false }: FeaturesPageProps) {
-  useEffect(() => {
-    // SEO meta tags
-    document.title = 'AI Ebook Creator Features - Advanced Writing Tools | InkfluenceAI';
-    
-    // Update meta description
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Discover powerful AI ebook creation features: intelligent writing assistant, custom branding, multi-format export, SEO optimization, and more. Create professional ebooks in minutes.');
-    }
-    
-    // Add Open Graph meta tags
-    const ogTags = [
-      { property: 'og:title', content: 'AI Ebook Creator Features - Advanced Writing Tools | InkfluenceAI' },
-      { property: 'og:description', content: 'Discover powerful AI ebook creation features: intelligent writing assistant, custom branding, multi-format export, SEO optimization, and more. Create professional ebooks in minutes.' },
-      { property: 'og:type', content: 'website' },
-      { property: 'og:url', content: `${window.location.origin}/features` },
-      { property: 'og:image', content: `${window.location.origin}/images/InkfluenceAILogo.png` },
-    ];
-    
-    // Add Twitter Card meta tags
-    const twitterTags = [
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: 'AI Ebook Creator Features - Advanced Writing Tools | InkfluenceAI' },
-      { name: 'twitter:description', content: 'Discover powerful AI ebook creation features: intelligent writing assistant, custom branding, multi-format export, SEO optimization, and more. Create professional ebooks in minutes.' },
-      { name: 'twitter:image', content: `${window.location.origin}/images/InkfluenceAILogo.png` },
-    ];
-    
-    // Add all meta tags
-    [...ogTags, ...twitterTags].forEach(tag => {
-      const isPropertyTag = 'property' in tag;
-      const attributeName = isPropertyTag ? 'property' : 'name';
-      const attributeValue = isPropertyTag ? tag.property : tag.name;
-      
-      const existingTag = document.querySelector(`meta[${attributeName}="${attributeValue}"]`);
-      if (existingTag) {
-        existingTag.setAttribute('content', tag.content);
-      } else {
-        const newTag = document.createElement('meta');
-        newTag.setAttribute(attributeName, attributeValue);
-        newTag.setAttribute('content', tag.content);
-        document.head.appendChild(newTag);
-      }
-    });
-    
-    // Add JSON-LD structured data
-    const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "InkfluenceAI",
-      "applicationCategory": "BusinessApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "featureList": [
-        "AI-powered writing assistant",
-        "Custom branding and styling",
-        "Multi-format export (PDF, EPUB, DOCX)",
-        "SEO optimization tools",
-        "Real-time collaboration",
-        "Template gallery",
-        "Analytics and insights",
-        "Mobile responsive design"
-      ],
-      "operatingSystem": "Web-based",
-      "url": `${window.location.origin}/features`,
-      "description": "AI-powered ebook creation platform with advanced writing tools, custom branding, and multi-format export capabilities."
-    };
-    
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.textContent = JSON.stringify(structuredData);
-    document.head.appendChild(script);
-    
-    return () => {
-      // Cleanup structured data script
-      const existingScript = document.querySelector('script[type="application/ld+json"]');
-      if (existingScript) {
-        existingScript.remove();
-      }
-    };
-  }, []);
 
   const coreFeatures = [
     {
@@ -201,6 +119,22 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f0e8f8] to-white">
+      <SEO
+        title="AI Ebook Creator Features - Advanced Writing Tools | InkfluenceAI"
+        description="Discover powerful AI ebook creation features: intelligent writing assistant, custom branding, multi-format export, SEO optimization, and more. Create professional ebooks in minutes."
+        keywords="AI ebook features, ebook creator tools, AI writing assistant, custom branding, multi-format export, ebook templates, SEO optimization"
+        canonicalUrl="https://inkfluenceai.com/features"
+        structuredData={{
+          ...createSoftwareApplicationSchema(),
+          "@graph": [
+            createSoftwareApplicationSchema(),
+            createBreadcrumbSchema([
+              { name: "Home", url: "https://inkfluenceai.com/" },
+              { name: "Features", url: "https://inkfluenceai.com/features" }
+            ])
+          ]
+        }}
+      />
       <LandingHeader 
         onGetStarted={() => onNavigate('signin')}
         onSignIn={() => onNavigate('signin')}

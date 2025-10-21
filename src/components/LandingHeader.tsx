@@ -11,6 +11,7 @@ interface LandingHeaderProps {
   isAuthenticated?: boolean;
   onNavigateToPricing?: () => void;
   onNavigateToFeatures?: () => void;
+  onNavigateToBlog?: () => void;
 }
 
 export function LandingHeader({ 
@@ -20,7 +21,8 @@ export function LandingHeader({
   showNavLinks = true,
   isAuthenticated = false,
   onNavigateToPricing,
-  onNavigateToFeatures
+  onNavigateToFeatures,
+  onNavigateToBlog
 }: LandingHeaderProps) {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -52,6 +54,12 @@ export function LandingHeader({
               className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
             >
               Pricing
+            </button>
+            <button 
+              onClick={onNavigateToBlog || (() => navigate('/blog'))}
+              className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
+            >
+              Blog
             </button>
             <button 
               onClick={() => navigate('/about')}
@@ -165,6 +173,19 @@ export function LandingHeader({
                   className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
                 >
                   Pricing
+                </button>
+                <button
+                  onClick={() => {
+                    if (onNavigateToBlog) {
+                      onNavigateToBlog();
+                    } else {
+                      navigate('/blog');
+                    }
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                >
+                  Blog
                 </button>
                 <button
                   onClick={() => {

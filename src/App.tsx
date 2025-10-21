@@ -32,6 +32,7 @@ const AboutPage = lazy(() => import('@/components/AboutPage').then(module => ({ 
 const HelpCenter = lazy(() => import('@/components/HelpCenter').then(module => ({ default: module.HelpCenter })));
 const PricingPage = lazy(() => import('@/components/PricingPage').then(module => ({ default: module.PricingPage })));
 const FeaturesPage = lazy(() => import('@/components/FeaturesPage'));
+const BlogPage = lazy(() => import('@/components/BlogPage'));
 
 // Lazy load heavy components
 const ChapterEditor = lazy(() => import('@/components/ChapterEditor').then(module => ({ default: module.ChapterEditor })));
@@ -64,7 +65,7 @@ function App() {
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'snippets' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies' | 'about' | 'help' | 'pricing' | 'features'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'snippets' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies' | 'about' | 'help' | 'pricing' | 'features' | 'blog'>('dashboard');
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -126,6 +127,8 @@ function App() {
       setViewMode('pricing');
     } else if (path === '/features') {
       setViewMode('features');
+    } else if (path === '/blog') {
+      setViewMode('blog');
     } else if (path === '/privacy') {
       setViewMode('privacy');
     } else if (path === '/terms') {
@@ -788,6 +791,38 @@ function App() {
                   navigate('/about');
                 } else if (page === 'features') {
                   navigate('/features');
+                } else if (page === 'dashboard') {
+                  if (user) {
+                    navigate('/');
+                  } else {
+                    setShowAuthModal(true);
+                  }
+                }
+              }}
+              isAuthenticated={!!user}
+            />
+          </Suspense>
+        </main>
+      ) : viewMode === 'blog' ? (
+        <main className="p-0">
+          <Suspense fallback={<PageLoading />}>
+            <BlogPage 
+              onNavigate={(page, action) => {
+                if (page === 'signin' || (page === 'home' && action === 'signin')) {
+                  navigate('/');
+                  setShowAuthModal(true);
+                } else if (page === 'home') {
+                  navigate('/');
+                } else if (page === 'pricing') {
+                  navigate('/pricing');
+                } else if (page === 'features') {
+                  navigate('/features');
+                } else if (page === 'help') {
+                  navigate('/help');
+                } else if (page === 'about') {
+                  navigate('/about');
+                } else if (page === 'blog') {
+                  navigate('/blog');
                 } else if (page === 'dashboard') {
                   if (user) {
                     navigate('/');

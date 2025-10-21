@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { LandingHeader } from '@/components/LandingHeader';
 import { LandingFooter } from '@/components/LandingFooter';
+import { SEO, createOrganizationSchema, createSoftwareApplicationSchema } from '@/components/SEO';
 import { 
   BookOpen, Sparkles, FileText, Download, Palette, TrendingUp, 
   Zap, Users, Award, Play, CheckCircle2, ArrowRight,
@@ -37,6 +38,19 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f0e8f8] to-white">
+      <SEO
+        title="InkfluenceAI - AI-Powered Ebook Creator | Create Professional Ebooks in Minutes"
+        description="Transform your ideas into professional ebooks with AI-powered writing assistance. Features intelligent content generation, custom branding, multi-format export, and SEO optimization. Start creating for free!"
+        keywords="AI ebook creator, ebook writing software, AI writing assistant, digital publishing, ebook generator, content creation, book writing AI, professional ebooks"
+        canonicalUrl="https://inkfluenceai.com/"
+        structuredData={{
+          ...createOrganizationSchema(),
+          "@graph": [
+            createOrganizationSchema(),
+            createSoftwareApplicationSchema()
+          ]
+        }}
+      />
       <LandingHeader 
         onGetStarted={onGetStarted}
         onSignIn={onSignIn}

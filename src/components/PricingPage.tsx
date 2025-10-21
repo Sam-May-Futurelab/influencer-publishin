@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LandingHeader } from '@/components/LandingHeader';
 import { LandingFooter } from '@/components/LandingFooter';
+import { SEO, createSoftwareApplicationSchema, createBreadcrumbSchema } from '@/components/SEO';
 import { useEffect, useState } from 'react';
 import { 
   CheckCircle, 
@@ -223,6 +224,22 @@ export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="InkfluenceAI Pricing - Free AI Ebook Creator | Premium Plans Available"
+        description="Start creating professional ebooks for free with InkfluenceAI. Upgrade to Premium for advanced AI features, unlimited exports, custom branding, and priority support. No credit card required."
+        keywords="AI ebook creator pricing, free ebook maker, premium ebook software, AI writing assistant cost, ebook creation plans"
+        canonicalUrl="https://inkfluenceai.com/pricing"
+        structuredData={{
+          ...createSoftwareApplicationSchema(),
+          "@graph": [
+            createSoftwareApplicationSchema(),
+            createBreadcrumbSchema([
+              { name: "Home", url: "https://inkfluenceai.com/" },
+              { name: "Pricing", url: "https://inkfluenceai.com/pricing" }
+            ])
+          ]
+        }}
+      />
       <LandingHeader 
         onSignIn={() => onNavigate('signin')}
         onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
