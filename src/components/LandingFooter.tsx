@@ -79,7 +79,11 @@ export function LandingFooter({
                 </>
               )}
               <li><a href="#features" onClick={() => scrollToSection('features')} className="hover:text-white transition-colors cursor-pointer">Features</a></li>
-              <li><a href="#pricing" onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors cursor-pointer">Pricing</a></li>
+              {onNavigateToPricing ? (
+                <li><button onClick={onNavigateToPricing} className="hover:text-white transition-colors">Pricing</button></li>
+              ) : (
+                <li><a href="#pricing" onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors cursor-pointer">Pricing</a></li>
+              )}
             </ul>
           </div>
 
