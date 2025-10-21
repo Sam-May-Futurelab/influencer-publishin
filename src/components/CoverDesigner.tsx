@@ -56,6 +56,7 @@ interface CoverDesignerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   projectTitle: string;
+  authorName?: string;
   onSave: (design: CoverDesign, imageData: string) => void;
   initialDesign?: Partial<CoverDesign>;
 }
@@ -194,13 +195,14 @@ export function CoverDesigner({
   open,
   onOpenChange,
   projectTitle,
+  authorName,
   onSave,
   initialDesign,
 }: CoverDesignerProps) {
   const [design, setDesign] = useState<CoverDesign>({
     title: projectTitle || 'Your Book Title',
     subtitle: 'A compelling subtitle that draws readers in',
-    authorName: 'Author Name',
+    authorName: authorName || 'Author Name',
     backgroundType: 'gradient',
     backgroundColor: '#8B5CF6',
     gradientStart: '#667eea',

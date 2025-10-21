@@ -303,6 +303,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
         open={showCoverDesigner}
         onOpenChange={setShowCoverDesigner}
         projectTitle={project.title}
+        authorName={project.author || userProfile?.displayName || 'Author Name'}
         onSave={handleSaveCover}
         initialDesign={project.coverDesign}
       />
