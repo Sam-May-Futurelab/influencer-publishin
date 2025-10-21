@@ -9,6 +9,8 @@ interface LandingHeaderProps {
   scrollToSection?: (sectionId: string) => void;
   showNavLinks?: boolean;
   isAuthenticated?: boolean;
+  onNavigateToPricing?: () => void;
+  onNavigateToFeatures?: () => void;
 }
 
 export function LandingHeader({ 
@@ -16,7 +18,9 @@ export function LandingHeader({
   onSignIn, 
   scrollToSection, 
   showNavLinks = true,
-  isAuthenticated = false
+  isAuthenticated = false,
+  onNavigateToPricing,
+  onNavigateToFeatures
 }: LandingHeaderProps) {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -38,7 +42,13 @@ export function LandingHeader({
         {showNavLinks && (
           <div className="hidden md:flex items-center gap-6">
             <button 
-              onClick={() => navigate('/pricing')}
+              onClick={onNavigateToFeatures || (() => navigate('/features'))}
+              className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
+            >
+              Features
+            </button>
+            <button 
+              onClick={onNavigateToPricing || (() => navigate('/pricing'))}
               className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
             >
               Pricing
@@ -132,7 +142,24 @@ export function LandingHeader({
               <div className="space-y-4 mb-8">
                 <button
                   onClick={() => {
-                    navigate('/pricing');
+                    if (onNavigateToFeatures) {
+                      onNavigateToFeatures();
+                    } else {
+                      navigate('/features');
+                    }
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                >
+                  Features
+                </button>
+                <button
+                  onClick={() => {
+                    if (onNavigateToPricing) {
+                      onNavigateToPricing();
+                    } else {
+                      navigate('/pricing');
+                    }
                     setIsMobileMenuOpen(false);
                   }}
                   className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"

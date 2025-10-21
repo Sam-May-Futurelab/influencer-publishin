@@ -7,6 +7,7 @@ interface LandingFooterProps {
   onNavigateToHelp?: () => void;
   onNavigateToAbout?: () => void;
   onNavigateToPricing?: () => void;
+  onNavigateToFeatures?: () => void;
 }
 
 export function LandingFooter({ 
@@ -15,7 +16,8 @@ export function LandingFooter({
   onNavigateToCookies, 
   onNavigateToHelp, 
   onNavigateToAbout,
-  onNavigateToPricing 
+  onNavigateToPricing,
+  onNavigateToFeatures 
 }: LandingFooterProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -57,7 +59,11 @@ export function LandingFooter({
           <div>
             <h4 className="font-semibold mb-4">Product</h4>
             <ul className="space-y-2 text-gray-300">
-              <li><a href="#features" onClick={() => scrollToSection('features')} className="hover:text-white transition-colors cursor-pointer">Features</a></li>
+              {onNavigateToFeatures ? (
+                <li><button onClick={onNavigateToFeatures} className="hover:text-white transition-colors">Features</button></li>
+              ) : (
+                <li><a href="#features" onClick={() => scrollToSection('features')} className="hover:text-white transition-colors cursor-pointer">Features</a></li>
+              )}
               {onNavigateToPricing ? (
                 <li><button onClick={onNavigateToPricing} className="hover:text-white transition-colors">Pricing</button></li>
               ) : (
@@ -78,7 +84,11 @@ export function LandingFooter({
                   <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Tutorials</button></li>
                 </>
               )}
-              <li><a href="#features" onClick={() => scrollToSection('features')} className="hover:text-white transition-colors cursor-pointer">Features</a></li>
+              {onNavigateToFeatures ? (
+                <li><button onClick={onNavigateToFeatures} className="hover:text-white transition-colors">Features</button></li>
+              ) : (
+                <li><a href="#features" onClick={() => scrollToSection('features')} className="hover:text-white transition-colors cursor-pointer">Features</a></li>
+              )}
               {onNavigateToPricing ? (
                 <li><button onClick={onNavigateToPricing} className="hover:text-white transition-colors">Pricing</button></li>
               ) : (

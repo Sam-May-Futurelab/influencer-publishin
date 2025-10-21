@@ -24,9 +24,10 @@ interface LandingPageProps {
   onNavigateToHelp?: () => void;
   onNavigateToAbout?: () => void;
   onNavigateToPricing?: () => void;
+  onNavigateToFeatures?: () => void;
 }
 
-export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout, onNavigateToPricing }: LandingPageProps) {
+export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout, onNavigateToPricing, onNavigateToFeatures }: LandingPageProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -42,6 +43,8 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
         scrollToSection={scrollToSection}
         showNavLinks={true}
         isAuthenticated={false}
+        onNavigateToPricing={onNavigateToPricing}
+        onNavigateToFeatures={onNavigateToFeatures}
       />
 
       {/* Hero Section */}
@@ -638,6 +641,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
         onNavigateToHelp={onNavigateToHelp}
         onNavigateToAbout={onNavigateToAbout}
         onNavigateToPricing={onNavigateToPricing}
+        onNavigateToFeatures={onNavigateToFeatures}
       />
     </div>
   );
