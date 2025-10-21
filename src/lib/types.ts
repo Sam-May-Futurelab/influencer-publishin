@@ -17,6 +17,30 @@ export interface BrandConfig {
   coverImageUrl?: string;
 }
 
+export interface CoverDesign {
+  title: string;
+  subtitle: string;
+  authorName: string;
+  backgroundType: 'solid' | 'gradient' | 'image';
+  backgroundColor: string;
+  gradientStart: string;
+  gradientEnd: string;
+  gradientDirection: 'to-br' | 'to-tr' | 'to-r' | 'to-b';
+  backgroundImage?: string;
+  titleFont: string;
+  titleSize: number;
+  titleColor: string;
+  subtitleFont: string;
+  subtitleSize: number;
+  subtitleColor: string;
+  authorFont: string;
+  authorSize: number;
+  authorColor: string;
+  overlay: boolean;
+  overlayOpacity: number;
+  coverImageData?: string; // Base64 image data
+}
+
 export interface EbookProject {
   id: string;
   title: string;
@@ -26,6 +50,7 @@ export interface EbookProject {
   targetAudience?: string;
   chapters: Chapter[];
   brandConfig: BrandConfig;
+  coverDesign?: CoverDesign;
   customWatermark?: string; // Project-specific watermark (overrides global settings)
   createdAt: Date;
   updatedAt: Date;

@@ -6,10 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash } from '@phosphor-icons/react';
-import { EbookProject } from '@/lib/types';
+import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash, Image as ImageIcon } from '@phosphor-icons/react';
+import { EbookProject, CoverDesign } from '@/lib/types';
 import { ExportDialog } from '@/components/ExportDialog';
 import { PreviewDialog } from '@/components/PreviewDialog';
+import { CoverDesigner } from '@/components/CoverDesigner';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
 
@@ -25,6 +26,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
   const [isEditing, setIsEditing] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+  const [showCoverDesigner, setShowCoverDesigner] = useState(false);
   const [tempTitle, setTempTitle] = useState(project.title);
   const [tempDescription, setTempDescription] = useState(project.description);
   const [tempAuthor, setTempAuthor] = useState(project.author);
@@ -49,6 +51,12 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
       customWatermark: tempWatermark.trim(),
     });
     setIsEditing(false);
+  };
+
+  const handleSaveCover = (design: CoverDesign, imageData: string) => {
+    onProjectUpdate({
+      coverDesign: { ...design, coverImageData: imageData },
+    });
   };
 
   const wordCount = project.chapters.reduce((total, chapter) => {
@@ -143,6 +151,20 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
               <Palette size={18} className="hidden lg:block" />
               <span className="hidden sm:inline">Brand Style</span>
               <span className="sm:hidden">Brand</span>
+            </Button>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-9 lg:h-12 px-2 lg:px-6 text-xs lg:text-sm text-foreground hover:text-foreground"
+              onClick={() => setShowCoverDesigner(true)}
+            >
+              <ImageIcon size={14} className="lg:hidden" />
+              <ImageIcon size={18} className="hidden lg:block" />
+              <span className="hidden sm:inline">Cover Design</span>
+              <span className="sm:hidden">Cover</span>
             </Button>
           </motion.div>
 
@@ -314,6 +336,14 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
         project={project}
         isOpen={showPreviewDialog}
         onClose={() => setShowPreviewDialog(false)}
+      />
+
+      <CoverDesigner
+        open={showCoverDesigner}
+        onOpenChange={setShowCoverDesigner}
+        projectTitle={project.title}
+        onSave={handleSaveCover}
+        initialDesign={project.coverDesign}
       />
     </motion.header>
   );
