@@ -679,6 +679,7 @@ function App() {
                 onSelectProject={selectProject}
                 onCreateProject={createProject}
                 onShowTemplateGallery={goToTemplatesPage}
+                onDeleteProject={deleteProject}
               />
             )}
           </Suspense>

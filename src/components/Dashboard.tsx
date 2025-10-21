@@ -3,6 +3,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { 
   BookOpen, 
   Plus, 
@@ -12,7 +22,8 @@ import {
   ListBullets,
   Eye,
   Sparkle,
-  Rocket
+  Rocket,
+  Trash
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
@@ -23,18 +34,21 @@ interface DashboardProps {
   onSelectProject: (project: EbookProject) => void;
   onCreateProject: (title: string) => void;
   onShowTemplateGallery: () => void;
+  onDeleteProject?: (projectId: string) => void;
 }
 
 export function Dashboard({ 
   projects, 
   onSelectProject, 
   onCreateProject, 
-  onShowTemplateGallery 
+  onShowTemplateGallery,
+  onDeleteProject
 }: DashboardProps) {
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [previewProject, setPreviewProject] = useState<EbookProject | null>(null);
+  const [projectToDelete, setProjectToDelete] = useState<EbookProject | null>(null);
 
   const filteredProjects = projects.filter(project =>
     project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -212,28 +226,43 @@ export function Dashboard({
                     <CardContent className={viewMode === 'grid' ? "p-4 lg:p-6" : "p-4"}>
                       <div className={viewMode === 'grid' ? "space-y-4" : "flex items-center justify-between"}>
                         <div className={viewMode === 'grid' ? "space-y-3" : "flex-1 space-y-1"}>
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-center gap-3">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
                               <div 
-                                className="w-3 h-3 rounded-full"
+                                className="w-3 h-3 rounded-full flex-shrink-0"
                                 style={{ backgroundColor: project.brandConfig?.primaryColor || '#8B5CF6' }}
                               />
-                              <h3 className="font-semibold text-sm lg:text-base group-hover:text-primary transition-colors">
+                              <h3 className="font-semibold text-sm lg:text-base group-hover:text-primary transition-colors truncate">
                                 {project.title}
                               </h3>
                             </div>
-                            <Button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setPreviewProject(project);
-                              }}
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset"
-                            >
-                              <Eye size={14} />
-                              <span className="hidden sm:inline">Preview</span>
-                            </Button>
+                            <div className="flex items-center gap-1 flex-shrink-0">
+                              <Button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPreviewProject(project);
+                                }}
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset"
+                              >
+                                <Eye size={14} />
+                                <span className="hidden sm:inline">Preview</span>
+                              </Button>
+                              {onDeleteProject && (
+                                <Button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setProjectToDelete(project);
+                                  }}
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset text-destructive hover:text-destructive"
+                                >
+                                  <Trash size={14} />
+                                </Button>
+                              )}
+                            </div>
                           </div>
                           
                           {project.description && (
@@ -317,6 +346,32 @@ export function Dashboard({
           onClose={() => setPreviewProject(null)}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!projectToDelete} onOpenChange={() => setProjectToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Project</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{projectToDelete?.title}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (projectToDelete && onDeleteProject) {
+                  onDeleteProject(projectToDelete.id);
+                  setProjectToDelete(null);
+                }
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
