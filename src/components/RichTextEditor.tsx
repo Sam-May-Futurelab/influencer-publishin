@@ -29,10 +29,13 @@ import {
   TextAlignLeft,
   TextAlignCenter,
   TextAlignRight,
-  TextAlignJustify
+  TextAlignJustify,
+  Microphone,
+  MicrophoneSlash
 } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useVoiceInput } from '@/hooks/use-voice-input';
 
 interface RichTextEditorProps {
   content: string;
@@ -52,6 +55,18 @@ export function RichTextEditor({
   onAIAssistantClick
 }: RichTextEditorProps) {
   const [lineHeight, setLineHeight] = useState('1.6');
+
+  // Voice input hook
+  const {
+    transcript,
+    interimTranscript,
+    isListening,
+    isSupported,
+    startListening,
+    stopListening,
+    resetTranscript,
+    error
+  } = useVoiceInput();
 
   const editor = useEditor({
     extensions: [
@@ -84,6 +99,28 @@ export function RichTextEditor({
       editor.commands.setContent(content);
     }
   }, [content, editor]);
+
+  // Insert voice transcript into editor
+  useEffect(() => {
+    if (editor && transcript) {
+      const currentContent = editor.getText();
+      const cursorPosition = editor.state.selection.from;
+      
+      // Insert transcript at cursor position
+      editor.chain().focus().insertContentAt(cursorPosition, transcript + ' ').run();
+      
+      // Reset transcript after inserting
+      resetTranscript();
+    }
+  }, [transcript, editor, resetTranscript]);
+
+  const handleVoiceToggle = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
 
   // Update line height dynamically
   useEffect(() => {
@@ -149,6 +186,37 @@ export function RichTextEditor({
             <Separator orientation="vertical" className="h-6 mx-1" />
           </>
         )}
+
+        {/* Voice Input Button */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Button
+            onClick={handleVoiceToggle}
+            className={cn(
+              "h-8 px-3 gap-1.5 border-0",
+              isListening 
+                ? "bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse" 
+                : "bg-muted hover:bg-muted/80"
+            )}
+            size="sm"
+            type="button"
+            disabled={!isSupported}
+            title={isSupported ? (isListening ? "Stop recording" : "Start voice input") : "Voice input not supported"}
+          >
+            {isListening ? (
+              <MicrophoneSlash size={16} weight="fill" />
+            ) : (
+              <Microphone size={16} weight="fill" />
+            )}
+            <span className="font-medium">
+              {isListening ? "Recording..." : "Voice"}
+            </span>
+          </Button>
+        </motion.div>
+
+        <Separator orientation="vertical" className="h-6 mx-1" />
 
         {/* Undo/Redo */}
         <ToolbarButton
