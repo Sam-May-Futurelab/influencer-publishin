@@ -354,24 +354,26 @@ export function SnippetsPage() {
       <Dialog open={!!previewSnippet} onOpenChange={() => setPreviewSnippet(null)}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <div className="flex items-center gap-2">
+            <div className="flex items-start gap-3 pr-8">
               {previewSnippet && (() => {
                 const config = categoryConfig[previewSnippet.category];
                 const Icon = config.icon;
                 return (
                   <>
-                    <Icon size={20} className="text-primary" />
-                    <DialogTitle>{previewSnippet.title}</DialogTitle>
-                    <Badge className={`${config.color} text-xs ml-auto`}>
-                      {config.label}
-                    </Badge>
+                    <Icon size={24} className="text-primary flex-shrink-0 mt-1" />
+                    <div className="flex-1 min-w-0">
+                      <DialogTitle className="text-lg mb-2">{previewSnippet.title}</DialogTitle>
+                      <Badge className={`${config.color} text-xs`}>
+                        {config.label}
+                      </Badge>
+                    </div>
                   </>
                 );
               })()}
             </div>
             <DialogDescription>
               {previewSnippet?.tags && previewSnippet.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2">
+                <div className="flex flex-wrap gap-1.5 mt-3">
                   {previewSnippet.tags.map(tag => (
                     <Badge key={tag} variant="outline" className="text-xs">
                       {tag}

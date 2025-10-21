@@ -98,61 +98,69 @@ export function Dashboard({
           className="grid grid-cols-2 lg:grid-cols-4 gap-4"
         >
           {/* Total Words */}
-          <Card className="neomorph-flat border-0">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-2">
-                <div className="p-2 rounded-lg bg-blue-500/10">
-                  <Pencil size={20} weight="bold" className="text-blue-600 dark:text-blue-400" />
+          <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
+                  <Pencil size={24} weight="bold" className="text-white" />
                 </div>
               </div>
               <div className="space-y-1">
-                <p className="text-2xl lg:text-3xl font-bold">{totalWords.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">Total Words</p>
+                <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-br from-blue-600 to-blue-500 bg-clip-text text-transparent">
+                  {totalWords.toLocaleString()}
+                </p>
+                <p className="text-sm font-medium text-muted-foreground">Total Words</p>
               </div>
             </CardContent>
           </Card>
 
           {/* Writing Streak */}
-          <Card className="neomorph-flat border-0">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-2">
-                <div className="p-2 rounded-lg bg-orange-500/10">
-                  <Fire size={20} weight="fill" className="text-orange-600 dark:text-orange-400" />
+          <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg">
+                  <Fire size={24} weight="fill" className="text-white" />
                 </div>
               </div>
               <div className="space-y-1">
-                <p className="text-2xl lg:text-3xl font-bold">{stats.currentStreak}</p>
-                <p className="text-xs text-muted-foreground">Day Streak</p>
+                <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-br from-orange-600 to-orange-500 bg-clip-text text-transparent">
+                  {stats.currentStreak}
+                </p>
+                <p className="text-sm font-medium text-muted-foreground">Day Streak</p>
               </div>
             </CardContent>
           </Card>
 
           {/* Projects Completed */}
-          <Card className="neomorph-flat border-0">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-2">
-                <div className="p-2 rounded-lg bg-green-500/10">
-                  <CheckCircle size={20} weight="fill" className="text-green-600 dark:text-green-400" />
+          <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-lg">
+                  <CheckCircle size={24} weight="fill" className="text-white" />
                 </div>
               </div>
               <div className="space-y-1">
-                <p className="text-2xl lg:text-3xl font-bold">{projects.length}</p>
-                <p className="text-xs text-muted-foreground">Projects</p>
+                <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-br from-green-600 to-green-500 bg-clip-text text-transparent">
+                  {projects.length}
+                </p>
+                <p className="text-sm font-medium text-muted-foreground">Projects</p>
               </div>
             </CardContent>
           </Card>
 
           {/* Words This Week */}
-          <Card className="neomorph-flat border-0">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-2">
-                <div className="p-2 rounded-lg bg-purple-500/10">
-                  <Clock size={20} weight="fill" className="text-purple-600 dark:text-purple-400" />
+          <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg">
+                  <Clock size={24} weight="fill" className="text-white" />
                 </div>
               </div>
               <div className="space-y-1">
-                <p className="text-2xl lg:text-3xl font-bold">{stats.totalWordsThisWeek.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">This Week</p>
+                <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-br from-purple-600 to-purple-500 bg-clip-text text-transparent">
+                  {stats.totalWordsThisWeek.toLocaleString()}
+                </p>
+                <p className="text-sm font-medium text-muted-foreground">This Week</p>
               </div>
             </CardContent>
           </Card>
