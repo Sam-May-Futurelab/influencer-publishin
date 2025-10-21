@@ -1,11 +1,19 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +34,12 @@ import {
   Download,
   Trash,
   Check,
-  X
+  X,
+  BookOpen,
+  Palette,
+  ChartBar,
+  FileText,
+  Gear
 } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
@@ -38,6 +51,34 @@ interface ProfilePageProps {
   onNavigate?: (section: string) => void;
 }
 
+// Settings interface
+interface AppSettings {
+  // User Profile
+  authorName: string;
+  authorBio: string;
+  authorWebsite: string;
+  
+  // Publishing Preferences
+  defaultWordTarget: number;
+  autoSaveInterval: number;
+  defaultExportFormat: 'pdf' | 'epub' | 'docx';
+  includeFooter: boolean;
+  customWatermark: string;
+  
+  // Notifications
+  saveReminders: boolean;
+  exportNotifications: boolean;
+  
+  // Privacy & Data
+  analytics: boolean;
+  crashReporting: boolean;
+  
+  // Interface
+  compactMode: boolean;
+  showWordCount: boolean;
+  showReadingTime: boolean;
+}
+
 export function ProfilePage({ onNavigate }: ProfilePageProps) {
   const { user, userProfile, updateUserProfile, signOut, refreshProfile } = useAuth();
   const { purchaseSubscription, purchasing, canPurchase, loading: paymentsLoading } = usePayments();
@@ -46,6 +87,89 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
+  
+  // App Settings State
+  const [settings, setSettings] = useState<AppSettings>({
+    // User Profile
+    authorName: '',
+    authorBio: '',
+    authorWebsite: '',
+    
+    // Publishing Preferences
+    defaultWordTarget: 10000,
+    autoSaveInterval: 30,
+    defaultExportFormat: 'pdf',
+    includeFooter: true,
+    customWatermark: '',
+    
+    // Notifications
+    saveReminders: true,
+    exportNotifications: true,
+    
+    // Privacy & Data
+    analytics: true,
+    crashReporting: true,
+    
+    // Interface
+    compactMode: false,
+    showWordCount: true,
+    showReadingTime: true,
+  });
+
+  const [hasSettingsChanges, setHasSettingsChanges] = useState(false);
+
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('ebookCrafterSettings');
+    if (saved) {
+      try {
+        setSettings(JSON.parse(saved));
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+      }
+    }
+  }, []);
+
+  const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+    setHasSettingsChanges(true);
+  };
+
+  const handleSaveSettings = () => {
+    // Save settings to localStorage
+    localStorage.setItem('ebookCrafterSettings', JSON.stringify(settings));
+    setHasSettingsChanges(false);
+    
+    // Show success toast
+    toast.success('Settings saved successfully!');
+  };
+
+  const handleResetSettings = () => {
+    if (confirm('Reset all settings to default? This cannot be undone.')) {
+      localStorage.removeItem('ebookCrafterSettings');
+      // Reset to defaults
+      const defaultSettings: AppSettings = {
+        authorName: '',
+        authorBio: '',
+        authorWebsite: '',
+        defaultWordTarget: 10000,
+        autoSaveInterval: 30,
+        defaultExportFormat: 'pdf',
+        includeFooter: true,
+        customWatermark: '',
+        saveReminders: true,
+        exportNotifications: true,
+        analytics: true,
+        crashReporting: true,
+        compactMode: false,
+        showWordCount: true,
+        showReadingTime: true,
+      };
+      setSettings(defaultSettings);
+      setHasSettingsChanges(false);
+      toast.success('Settings reset to defaults');
+    }
+  };
 
   const handleSaveProfile = async () => {
     try {
@@ -465,6 +589,320 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                   onCheckedChange={setPushNotifications}
                 />
               </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium">Save Reminders</Label>
+                  <p className="text-xs text-gray-600">Remind to save work periodically</p>
+                </div>
+                <Switch
+                  checked={settings.saveReminders}
+                  onCheckedChange={(checked) => updateSetting('saveReminders', checked)}
+                />
+              </div>
+              
+              <Separator />
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium">Export Notifications</Label>
+                  <p className="text-xs text-gray-600">Notify when exports complete</p>
+                </div>
+                <Switch
+                  checked={settings.exportNotifications}
+                  onCheckedChange={(checked) => updateSetting('exportNotifications', checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Author Profile Settings */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
+        >
+          <Card className="neomorph-raised border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <div className="p-2 rounded-lg neomorph-flat">
+                  <User size={20} className="text-primary" />
+                </div>
+                Author Profile
+              </CardTitle>
+              <p className="text-sm text-gray-600">
+                This information will be included in your exported eBooks
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="authorName">Author Name</Label>
+                <Input
+                  id="authorName"
+                  value={settings.authorName}
+                  onChange={(e) => updateSetting('authorName', e.target.value)}
+                  placeholder="Your name or pen name"
+                  className="neomorph-inset border-0"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="authorBio">Bio</Label>
+                <Textarea
+                  id="authorBio"
+                  value={settings.authorBio}
+                  onChange={(e) => updateSetting('authorBio', e.target.value)}
+                  placeholder="Brief description about yourself"
+                  className="neomorph-inset border-0 resize-none"
+                  rows={3}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="authorWebsite">Website</Label>
+                <Input
+                  id="authorWebsite"
+                  value={settings.authorWebsite}
+                  onChange={(e) => updateSetting('authorWebsite', e.target.value)}
+                  placeholder="https://yourwebsite.com"
+                  className="neomorph-inset border-0"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Publishing Preferences */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Card className="neomorph-raised border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <div className="p-2 rounded-lg neomorph-flat">
+                  <BookOpen size={20} className="text-primary" />
+                </div>
+                Publishing Preferences
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="wordTarget">Default Word Target</Label>
+                <Input
+                  id="wordTarget"
+                  type="number"
+                  value={settings.defaultWordTarget}
+                  onChange={(e) => updateSetting('defaultWordTarget', parseInt(e.target.value) || 0)}
+                  className="neomorph-inset border-0"
+                />
+                <p className="text-xs text-muted-foreground">Target word count for new projects</p>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="autoSave">Auto-save Interval</Label>
+                <Select 
+                  value={settings.autoSaveInterval.toString()} 
+                  onValueChange={(value) => updateSetting('autoSaveInterval', parseInt(value))}
+                >
+                  <SelectTrigger className="neomorph-inset border-0">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="15">15 seconds</SelectItem>
+                    <SelectItem value="30">30 seconds</SelectItem>
+                    <SelectItem value="60">1 minute</SelectItem>
+                    <SelectItem value="300">5 minutes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Default Export Format</Label>
+                <Select 
+                  value={settings.defaultExportFormat} 
+                  onValueChange={(value: 'pdf' | 'epub' | 'docx') => updateSetting('defaultExportFormat', value)}
+                >
+                  <SelectTrigger className="neomorph-inset border-0">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pdf">PDF</SelectItem>
+                    <SelectItem value="epub">EPUB</SelectItem>
+                    <SelectItem value="docx">Word Document</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Include Branding Footer</Label>
+                  <p className="text-xs text-muted-foreground">Add "Generated with Inkfluence AI" to exports</p>
+                </div>
+                <Switch
+                  checked={settings.includeFooter}
+                  onCheckedChange={(checked) => updateSetting('includeFooter', checked)}
+                />
+              </div>
+              
+              {userProfile?.isPremium && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="customWatermark">Custom Watermark</Label>
+                    <Badge variant="secondary" className="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                      Premium
+                    </Badge>
+                  </div>
+                  <Input
+                    id="customWatermark"
+                    placeholder="e.g., Written by Your Name • yourwebsite.com"
+                    value={settings.customWatermark}
+                    onChange={(e) => updateSetting('customWatermark', e.target.value)}
+                    className="neomorph-inset border-0"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Leave empty to export without any watermark. Add your custom branding text to appear in exported documents.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Interface Preferences */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+        >
+          <Card className="neomorph-raised border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <div className="p-2 rounded-lg neomorph-flat">
+                  <Palette size={20} className="text-primary" />
+                </div>
+                Interface
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Compact Mode</Label>
+                  <p className="text-xs text-muted-foreground">Reduce spacing for more content</p>
+                </div>
+                <Switch
+                  checked={settings.compactMode}
+                  onCheckedChange={(checked) => updateSetting('compactMode', checked)}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Show Word Count</Label>
+                  <p className="text-xs text-muted-foreground">Display live word count in editor</p>
+                </div>
+                <Switch
+                  checked={settings.showWordCount}
+                  onCheckedChange={(checked) => updateSetting('showWordCount', checked)}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Show Reading Time</Label>
+                  <p className="text-xs text-muted-foreground">Display estimated reading time</p>
+                </div>
+                <Switch
+                  checked={settings.showReadingTime}
+                  onCheckedChange={(checked) => updateSetting('showReadingTime', checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Privacy & Analytics */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <Card className="neomorph-raised border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <div className="p-2 rounded-lg neomorph-flat">
+                  <Shield size={20} className="text-primary" />
+                </div>
+                Privacy & Data
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Usage Analytics</Label>
+                  <p className="text-xs text-muted-foreground">Help improve the app with anonymous usage data</p>
+                </div>
+                <Switch
+                  checked={settings.analytics}
+                  onCheckedChange={(checked) => updateSetting('analytics', checked)}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Crash Reporting</Label>
+                  <p className="text-xs text-muted-foreground">Send error reports to help fix bugs</p>
+                </div>
+                <Switch
+                  checked={settings.crashReporting}
+                  onCheckedChange={(checked) => updateSetting('crashReporting', checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* App Info */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.65 }}
+        >
+          <Card className="neomorph-raised border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <div className="p-2 rounded-lg neomorph-flat">
+                  <ChartBar size={20} className="text-primary" />
+                </div>
+                About
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Version</span>
+                  <Badge variant="secondary" className="neomorph-flat border-0">1.0.0</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Build</span>
+                  <Badge variant="outline" className="border-0">2025.01.24</Badge>
+                </div>
+              </div>
+              
+              <div className="pt-2 border-t border-border/20">
+                <Button
+                  onClick={handleResetSettings}
+                  variant="outline"
+                  size="sm"
+                  className="w-full neomorph-button border-0 text-destructive hover:text-destructive"
+                >
+                  Reset All Settings
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
@@ -473,7 +911,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.7 }}
         >
           <Card className="neomorph-raised border-0">
             <CardHeader>
@@ -535,6 +973,24 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
           </Card>
         </motion.div>
       </div>
+
+      {/* Floating Save Button for Settings Changes */}
+      {hasSettingsChanges && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed bottom-6 right-6 z-50"
+        >
+          <Button
+            onClick={handleSaveSettings}
+            className="neomorph-button border-0 bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg"
+            size="lg"
+          >
+            <FileText size={18} className="mr-2" />
+            Save Settings
+          </Button>
+        </motion.div>
+      )}
     </div>
   );
 }

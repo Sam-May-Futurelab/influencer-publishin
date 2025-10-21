@@ -33,7 +33,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
 
   const isPremium = userProfile?.isPremium || false;
   const pagesUsed = userProfile?.pagesUsed || 0;
-  const maxPages = userProfile?.maxPages || 10;
+  const maxPages = userProfile?.maxPages || 4; // Free tier default
   const pagesRemaining = maxPages - pagesUsed;
   const usagePercentage = (pagesUsed / maxPages) * 100;
   const isUnlimited = isPremium;
