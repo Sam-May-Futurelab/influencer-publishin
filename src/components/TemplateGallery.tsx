@@ -58,7 +58,9 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
   const filteredTemplates = ebookTemplates.filter(template => {
     const matchesSearch = template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          template.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'all' || 
+                           selectedCategory === 'free' && !template.isPremium ||
+                           template.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -104,6 +106,14 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
               className="h-8 px-3 text-xs whitespace-nowrap"
             >
               All
+            </Button>
+            <Button
+              variant={selectedCategory === 'free' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setSelectedCategory('free')}
+              className="h-8 px-3 text-xs whitespace-nowrap"
+            >
+              Free
             </Button>
             {categories.map((category) => (
               <Button
