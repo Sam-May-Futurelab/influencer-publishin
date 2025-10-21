@@ -775,7 +775,7 @@ function App() {
           <Suspense fallback={<PageLoading />}>
             <FeaturesPage 
               onNavigate={(page, action) => {
-                if (page === 'home' && action === 'signin') {
+                if (page === 'signin' || (page === 'home' && action === 'signin')) {
                   navigate('/');
                   setShowAuthModal(true);
                 } else if (page === 'home') {
@@ -784,6 +784,10 @@ function App() {
                   navigate('/pricing');
                 } else if (page === 'help') {
                   navigate('/help');
+                } else if (page === 'about') {
+                  navigate('/about');
+                } else if (page === 'features') {
+                  navigate('/features');
                 } else if (page === 'dashboard') {
                   if (user) {
                     navigate('/');
@@ -792,6 +796,7 @@ function App() {
                   }
                 }
               }}
+              isAuthenticated={!!user}
             />
           </Suspense>
         </main>
