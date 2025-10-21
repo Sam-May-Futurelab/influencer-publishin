@@ -34,7 +34,7 @@ import {
   MicrophoneSlash
 } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useVoiceInput } from '@/hooks/use-voice-input';
 
 interface RichTextEditorProps {
@@ -103,14 +103,18 @@ export function RichTextEditor({
   // Insert voice transcript into editor
   useEffect(() => {
     if (editor && transcript) {
-      const currentContent = editor.getText();
-      const cursorPosition = editor.state.selection.from;
-      
-      // Insert transcript at cursor position
-      editor.chain().focus().insertContentAt(cursorPosition, transcript + ' ').run();
-      
-      // Reset transcript after inserting
-      resetTranscript();
+      // Show transcript briefly before inserting
+      const timeoutId = setTimeout(() => {
+        const cursorPosition = editor.state.selection.from;
+        
+        // Insert transcript at cursor position
+        editor.chain().focus().insertContentAt(cursorPosition, transcript + ' ').run();
+        
+        // Reset transcript after inserting
+        resetTranscript();
+      }, 1500); // Show for 1.5 seconds before inserting
+
+      return () => clearTimeout(timeoutId);
     }
   }, [transcript, editor, resetTranscript]);
 
@@ -351,9 +355,57 @@ export function RichTextEditor({
         </Button>
       </div>
 
+      {/* Voice Feedback Overlay */}
+      <AnimatePresence>
+        {(isListening || interimTranscript || transcript) && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="relative"
+          >
+            <div className="absolute inset-x-0 top-0 z-10 mx-4 mt-2">
+              <div className="neomorph-card bg-background/95 backdrop-blur-sm border border-border/50 rounded-lg p-3 shadow-lg">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0">
+                    {isListening && (
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                        className="w-3 h-3 bg-red-500 rounded-full"
+                      />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-medium text-muted-foreground mb-1">
+                      {isListening ? "Listening..." : "Voice Input"}
+                    </div>
+                    {interimTranscript && (
+                      <div className="text-sm text-muted-foreground italic">
+                        {interimTranscript}
+                      </div>
+                    )}
+                    {transcript && (
+                      <div className="text-sm font-medium text-foreground">
+                        {transcript}
+                      </div>
+                    )}
+                    {isListening && !interimTranscript && (
+                      <div className="text-sm text-muted-foreground">
+                        Start speaking...
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Editor Content */}
       <div 
-        className="overflow-auto" 
+        className="overflow-auto relative" 
         style={{ minHeight }}
       >
         <EditorContent editor={editor} />
