@@ -34,9 +34,12 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
   const isPremium = userProfile?.isPremium || false;
   const pagesUsed = userProfile?.pagesUsed || 0;
   const maxPages = userProfile?.maxPages || 4; // Free tier default
-  const isUnlimited = isPremium || maxPages === -1;
-  const pagesRemaining = isUnlimited ? 0 : Math.max(0, maxPages - pagesUsed);
-  const usagePercentage = isUnlimited ? 0 : Math.min((pagesUsed / maxPages) * 100, 100);
+  // Only show unlimited if user is actually premium (not just if maxPages is -1)
+  const isUnlimited = isPremium && (maxPages === -1 || userProfile?.subscriptionStatus === 'premium');
+  // Default to 4 pages for free users if maxPages is invalid
+  const effectiveMaxPages = !isPremium && (maxPages <= 0 || maxPages === -1) ? 4 : maxPages;
+  const pagesRemaining = isUnlimited ? 0 : Math.max(0, effectiveMaxPages - pagesUsed);
+  const usagePercentage = isUnlimited ? 0 : Math.min((pagesUsed / effectiveMaxPages) * 100, 100);
 
   const handleSave = () => {
     onProjectUpdate({

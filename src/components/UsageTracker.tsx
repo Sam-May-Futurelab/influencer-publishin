@@ -20,9 +20,12 @@ export function UsageTracker({ onUpgradeClick, className = '', forceShow = false
   if (!userProfile) return null;
 
   const { pagesUsed, maxPages, isPremium, subscriptionStatus } = userProfile;
-  const isUnlimited = maxPages === -1 || isPremium;
-  const usagePercentage = isUnlimited ? 0 : Math.min((pagesUsed / maxPages) * 100, 100);
-  const pagesRemaining = isUnlimited ? 'Unlimited' : Math.max(maxPages - pagesUsed, 0);
+  // Only show unlimited if user is actually premium (not just if maxPages is -1)
+  const isUnlimited = isPremium && (maxPages === -1 || subscriptionStatus === 'premium');
+  // Default to 4 pages for free users if maxPages is invalid
+  const effectiveMaxPages = !isPremium && (maxPages <= 0 || maxPages === -1) ? 4 : maxPages;
+  const usagePercentage = isUnlimited ? 0 : Math.min((pagesUsed / effectiveMaxPages) * 100, 100);
+  const pagesRemaining = isUnlimited ? 'Unlimited' : Math.max(effectiveMaxPages - pagesUsed, 0);
 
   // Only show if forced, or if user is not premium and usage is high (70% or more)
   const shouldShow = forceShow || (!isPremium && usagePercentage >= 70);
