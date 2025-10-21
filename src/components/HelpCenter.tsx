@@ -204,29 +204,35 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
     // Getting Started FAQs
     {
       question: 'How do I create my first ebook project?',
-      answer: 'Click "New Project" on your dashboard, give it a title and description, then start adding chapters. Use the AI assistant to generate content or write manually. You can customize fonts, colors, and branding in Project Settings.'
+      answer: 'Click "New Project" on your dashboard, give it a title and description, then start adding chapters. Use the AI assistant to generate content or write manually. You can customize fonts, colors, and branding in Project Settings.',
+      category: 'Getting Started'
     },
     {
       question: 'What ebook templates are available?',
-      answer: 'We offer 20+ professional templates including fitness guides, business growth, personal finance, productivity, marketing strategies, self-help, cooking recipes, and more. Premium templates include 6+ pre-written chapters with full content.'
+      answer: 'We offer 20+ professional templates including fitness guides, business growth, personal finance, productivity, marketing strategies, self-help, cooking recipes, and more. Premium templates include 6+ pre-written chapters with full content.',
+      category: 'Templates & Examples'
     },
     {
       question: 'How do I organize my ebook chapters?',
-      answer: 'Each project can have unlimited chapters (Premium) or up to 4 pages (Free). Add new chapters using the "+" button, reorder them by dragging, and use the chapter navigation sidebar to jump between sections quickly.'
+      answer: 'Each project can have unlimited chapters (Premium) or up to 4 pages (Free). Add new chapters using the "+" button, reorder them by dragging, and use the chapter navigation sidebar to jump between sections quickly.',
+      category: 'Getting Started'
     },
     {
       question: 'Can I set writing goals and track progress?',
-      answer: 'Yes! Go to your Dashboard to see writing analytics including total words written, chapters completed, and daily progress. Set custom word count goals to stay motivated and track your publishing journey.'
+      answer: 'Yes! Go to your Dashboard to see writing analytics including total words written, chapters completed, and daily progress. Set custom word count goals to stay motivated and track your publishing journey.',
+      category: 'Productivity Tips'
     },
     
     // AI Features FAQs
     {
       question: 'What is the daily AI generation limit?',
-      answer: 'Free users get 3 AI generations per day. Premium users get 50 AI generations daily. Each generation can create 100-300 words of content based on your prompt and selected length. The limit resets at midnight UTC.'
+      answer: 'Free users get 3 AI generations per day. Premium users get 50 AI generations daily. Each generation can create 100-300 words of content based on your prompt and selected length. The limit resets at midnight UTC.',
+      category: 'AI Writing Assistant'
     },
     {
       question: 'How do I write effective AI prompts?',
-      answer: 'Use specific keywords separated by commas like "productivity tips, time management, goal setting". Choose your preferred tone (friendly, professional, motivational) and length (brief, standard, detailed, comprehensive). The AI works best with clear, focused topics.'
+      answer: 'Use specific keywords separated by commas like "productivity tips, time management, goal setting". Choose your preferred tone (friendly, professional, motivational) and length (brief, standard, detailed, comprehensive). The AI works best with clear, focused topics.',
+      category: 'AI Writing Assistant'
     },
     {
       question: 'What AI content types can I generate?',
@@ -234,105 +240,128 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
     },
     {
       question: 'Can I enhance existing content with AI?',
-      answer: 'Yes! Select any text in your chapter and use the "Enhance with AI" feature. Choose your desired tone, format (intro, bullets, steps, Q&A, narrative), and length to improve clarity, add examples, and enhance readability.'
+      answer: 'Yes! Select any text in your chapter and use the "Enhance with AI" feature. Choose your desired tone, format (intro, bullets, steps, Q&A, narrative), and length to improve clarity, add examples, and enhance readability.',
+      category: 'AI Writing Assistant'
     },
     {
       question: 'What genres work best with AI generation?',
-      answer: 'Our AI excels at business, self-help, fitness, productivity, marketing, personal finance, cooking, and educational content. It understands context and can adapt to your specific niche and target audience.'
+      answer: 'Our AI excels at business, self-help, fitness, productivity, marketing, personal finance, cooking, and educational content. It understands context and can adapt to your specific niche and target audience.',
+      category: 'AI Writing Assistant'
     },
     
     // Design & Customization FAQs  
     {
       question: 'How do I design a custom cover?',
-      answer: 'Open any project, click the "Customize" dropdown, and select "Cover Designer". Choose from professional templates or start from scratch. Customize backgrounds (solid colors, gradients, or images), change fonts, adjust text sizes and colors, then save. Your cover appears in all exports and previews.'
+      answer: 'Open any project, click the "Customize" dropdown, and select "Cover Designer". Choose from professional templates or start from scratch. Customize backgrounds (solid colors, gradients, or images), change fonts, adjust text sizes and colors, then save. Your cover appears in all exports and previews.',
+      category: 'Design & Customization'
     },
     {
       question: 'Can I customize fonts and colors throughout my ebook?',
-      answer: 'Yes! Go to Project Settings to set your primary brand color, heading and body fonts, and custom watermark. These settings apply to your entire ebook automatically. The Cover Designer offers 8 Google Fonts and unlimited color options for covers.'
+      answer: 'Yes! Go to Project Settings to set your primary brand color, heading and body fonts, and custom watermark. These settings apply to your entire ebook automatically. The Cover Designer offers 8 Google Fonts and unlimited color options for covers.',
+      category: 'Design & Customization'
     },
     {
       question: 'How do I add my personal branding?',
-      answer: 'In Project Settings, upload your logo as a watermark, set brand colors, choose fonts that match your style, and customize the cover design. Your branding will appear consistently across all exports (PDF, EPUB, DOCX).'
+      answer: 'In Project Settings, upload your logo as a watermark, set brand colors, choose fonts that match your style, and customize the cover design. Your branding will appear consistently across all exports (PDF, EPUB, DOCX).',
+      category: 'Design & Customization'
     },
     {
       question: 'Can I preview my ebook before exporting?',
-      answer: 'Absolutely! Use the "Preview" button to see exactly how your ebook will look when exported. The preview shows your custom cover, formatting, fonts, colors, and full chapter layout in PDF format.'
+      answer: 'Absolutely! Use the "Preview" button to see exactly how your ebook will look when exported. The preview shows your custom cover, formatting, fonts, colors, and full chapter layout in PDF format.',
+      category: 'Design & Customization'
     },
     
     // Export & Publishing FAQs
     {
       question: 'What export formats are available?',
-      answer: 'You can export to PDF (best for sharing/reading), EPUB (for eReaders like Kindle), and DOCX (for further editing in Word). All formats include your custom cover, branding, and professional formatting with table of contents.'
+      answer: 'You can export to PDF (best for sharing/reading), EPUB (for eReaders like Kindle), and DOCX (for further editing in Word). All formats include your custom cover, branding, and professional formatting with table of contents.',
+      category: 'Export & Publishing'
     },
     {
       question: 'How do I publish my ebook on Amazon Kindle?',
-      answer: 'Export your ebook as EPUB format, then upload it to Amazon Kindle Direct Publishing (KDP). Your exported file includes professional formatting, cover, and metadata needed for publishing. The PDF version works great for lead magnets and direct sales.'
+      answer: 'Export your ebook as EPUB format, then upload it to Amazon Kindle Direct Publishing (KDP). Your exported file includes professional formatting, cover, and metadata needed for publishing. The PDF version works great for lead magnets and direct sales.',
+      category: 'Export & Publishing'
     },
     {
       question: 'Can I customize export settings?',
-      answer: 'Yes! When exporting, you can add author information, website, copyright details, choose chapter numbering style (numeric, roman, or none), include/exclude table of contents, and set copyright page position (beginning or end).'
+      answer: 'Yes! When exporting, you can add author information, website, copyright details, choose chapter numbering style (numeric, roman, or none), include/exclude table of contents, and set copyright page position (beginning or end).',
+      category: 'Export & Publishing'
     },
     {
       question: 'Does the export include my custom cover?',
-      answer: 'Yes! All export formats (PDF, EPUB, DOCX) automatically include your custom-designed cover as the first page. The cover maintains its high-quality design and branding across all formats.'
+      answer: 'Yes! All export formats (PDF, EPUB, DOCX) automatically include your custom-designed cover as the first page. The cover maintains its high-quality design and branding across all formats.',
+      category: 'Export & Publishing'
     },
     
     // Account & Billing FAQs
     {
       question: 'What\'s included in the Free vs Premium plan?',
-      answer: 'Free: 4 pages total, 3 AI generations daily, basic templates, PDF export. Premium ($9.99/month): Unlimited pages, 50 AI generations daily, 20+ premium templates, all export formats (PDF/EPUB/DOCX), advanced cover designer, priority support.'
+      answer: 'Free: 4 pages total, 3 AI generations daily, basic templates, PDF export. Premium ($9.99/month): Unlimited pages, 50 AI generations daily, 20+ premium templates, all export formats (PDF/EPUB/DOCX), advanced cover designer, priority support.',
+      category: 'Account & Billing'
     },
     {
       question: 'How do I upgrade to Premium?',
-      answer: 'Click "Upgrade" in the top navigation or when you hit your daily AI limit. Choose between monthly ($9.99) or yearly ($99/year - save 17%) plans. Payment is processed securely through Stripe with instant activation.'
+      answer: 'Click "Upgrade" in the top navigation or when you hit your daily AI limit. Choose between monthly ($9.99) or yearly ($99/year - save 17%) plans. Payment is processed securely through Stripe with instant activation.',
+      category: 'Account & Billing'
     },
     {
       question: 'Can I cancel my subscription anytime?',
-      answer: 'Yes! Go to Profile → Billing and click "Manage Subscription". You can cancel anytime with no penalties. You\'ll retain Premium features until the end of your billing period, then revert to the Free plan automatically.'
+      answer: 'Yes! Go to Profile → Billing and click "Manage Subscription". You can cancel anytime with no penalties. You\'ll retain Premium features until the end of your billing period, then revert to the Free plan automatically.',
+      category: 'Account & Billing'
     },
     {
       question: 'What payment methods do you accept?',
-      answer: 'We accept all major credit cards (Visa, MasterCard, American Express), debit cards, and digital wallets through our secure Stripe payment system. All transactions are encrypted and PCI compliant.'
+      answer: 'We accept all major credit cards (Visa, MasterCard, American Express), debit cards, and digital wallets through our secure Stripe payment system. All transactions are encrypted and PCI compliant.',
+      category: 'Account & Billing'
     },
     
     // Technical & Security FAQs
     {
       question: 'How does auto-save work?',
-      answer: 'Your work is automatically saved every few seconds as you type. You\'ll see a "Saved" indicator in the header when changes are synced. All data is stored securely in the cloud, so you can access your projects from any device.'
+      answer: 'Your work is automatically saved every few seconds as you type. You\'ll see a "Saved" indicator in the header when changes are synced. All data is stored securely in the cloud, so you can access your projects from any device.',
+      category: 'Productivity Tips'
     },
     {
       question: 'Is my content private and secure?',
-      answer: 'Absolutely. All data is encrypted in transit (HTTPS) and at rest using Firebase (Google Cloud) enterprise-grade security. Your content is private to you - we never share, sell, or use it for AI training. You maintain full ownership of your work.'
+      answer: 'Absolutely. All data is encrypted in transit (HTTPS) and at rest using Firebase (Google Cloud) enterprise-grade security. Your content is private to you - we never share, sell, or use it for AI training. You maintain full ownership of your work.',
+      category: 'Account & Billing'
     },
     {
       question: 'Can I access my projects from multiple devices?',
-      answer: 'Yes! Your projects are cloud-synced and accessible from any device with internet access. Simply log in to your account from any computer, tablet, or mobile device to continue working on your ebooks.'
+      answer: 'Yes! Your projects are cloud-synced and accessible from any device with internet access. Simply log in to your account from any computer, tablet, or mobile device to continue working on your ebooks.',
+      category: 'Productivity Tips'
     },
     {
       question: 'What happens if I delete a project?',
-      answer: 'Deleted projects are permanently removed and cannot be recovered. Before deleting, make sure to export any content you want to keep. We recommend exporting important projects as PDF backups for safekeeping.'
+      answer: 'Deleted projects are permanently removed and cannot be recovered. Before deleting, make sure to export any content you want to keep. We recommend exporting important projects as PDF backups for safekeeping.',
+      category: 'Troubleshooting'
     },
     {
       question: 'Do you offer data export or backup options?',
-      answer: 'Yes! You can export individual projects as PDF, EPUB, or DOCX files anytime. For complete account data export, contact support and we\'ll provide a full backup of your projects and settings within 48 hours.'
+      answer: 'Yes! You can export individual projects as PDF, EPUB, or DOCX files anytime. For complete account data export, contact support and we\'ll provide a full backup of your projects and settings within 48 hours.',
+      category: 'Account & Billing'
     },
     
     // Support & Troubleshooting FAQs
     {
       question: 'Can I import existing documents?',
-      answer: 'Currently, you can copy and paste content from Word, Google Docs, or other sources. We preserve basic formatting like bold, italics, and paragraphs. Direct file import for Word (.docx) and Google Docs is coming soon!'
+      answer: 'Currently, you can copy and paste content from Word, Google Docs, or other sources. We preserve basic formatting like bold, italics, and paragraphs. Direct file import for Word (.docx) and Google Docs is coming soon!',
+      category: 'Troubleshooting'
     },
     {
       question: 'What browsers are supported?',
-      answer: 'Inkfluence AI works best on modern browsers: Chrome, Firefox, Safari, and Edge. We recommend keeping your browser updated for the best experience. Mobile browsers are supported for editing, though the desktop experience is optimized for writing.'
+      answer: 'Inkfluence AI works best on modern browsers: Chrome, Firefox, Safari, and Edge. We recommend keeping your browser updated for the best experience. Mobile browsers are supported for editing, though the desktop experience is optimized for writing.',
+      category: 'Troubleshooting'
     },
     {
       question: 'Why is my AI generation slow or failing?',
-      answer: 'AI generation typically takes 5-15 seconds. Slow performance may be due to high server load or poor internet connection. If generations fail, check your internet connection and try again. Contact support if issues persist.'
+      answer: 'AI generation typically takes 5-15 seconds. Slow performance may be due to high server load or poor internet connection. If generations fail, check your internet connection and try again. Contact support if issues persist.',
+      category: 'Troubleshooting'
     },
     {
       question: 'How do I contact support?',
-      answer: 'Email us at support@inkfluenceai.com for technical issues, billing questions, or feature requests. We typically respond within 24 hours on business days. Premium users receive priority support with faster response times.'
+      answer: 'Email us at support@inkfluenceai.com for technical issues, billing questions, or feature requests. We typically respond within 24 hours on business days. Premium users receive priority support with faster response times.',
+      category: 'Troubleshooting'
     },
     {
       question: 'Do you offer refunds?',
@@ -432,16 +461,9 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = selectedCategory === '' || 
-      faq.question.toLowerCase().includes(selectedCategory.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(selectedCategory.toLowerCase()) ||
-      (selectedCategory === 'AI Writing Assistant' && (faq.question.includes('AI') || faq.answer.includes('AI'))) ||
-      (selectedCategory === 'Design & Customization' && (faq.question.includes('cover') || faq.question.includes('brand') || faq.question.includes('design'))) ||
-      (selectedCategory === 'Export & Publishing' && (faq.question.includes('export') || faq.question.includes('publish'))) ||
-      (selectedCategory === 'Account & Billing' && (faq.question.includes('Premium') || faq.question.includes('subscription') || faq.question.includes('billing'))) ||
-      (selectedCategory === 'Getting Started' && (faq.question.includes('create') || faq.question.includes('first') || faq.question.includes('project')));
+    const matchesCategory = selectedCategory === '' || faq.category === selectedCategory;
     
-    return matchesSearch && (selectedCategory === '' || matchesCategory);
+    return matchesSearch && matchesCategory;
   });
 
   return (
