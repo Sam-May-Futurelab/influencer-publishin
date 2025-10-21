@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LandingHeader } from '@/components/LandingHeader';
 import { LandingFooter } from '@/components/LandingFooter';
+import { useEffect } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -35,136 +36,393 @@ interface HelpCenterProps {
 export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
+  // SEO Meta Tags
+  useEffect(() => {
+    document.title = 'Help Center | Inkfluence AI - Ebook Creation Support & Tutorials';
+    
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Complete help center for Inkfluence AI ebook creation platform. Find tutorials, FAQs, and step-by-step guides for AI writing, cover design, publishing, and more.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Complete help center for Inkfluence AI ebook creation platform. Find tutorials, FAQs, and step-by-step guides for AI writing, cover design, publishing, and more.';
+      document.head.appendChild(meta);
+    }
+
+    // Keywords meta tag
+    let metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (!metaKeywords) {
+      metaKeywords = document.createElement('meta');
+      metaKeywords.setAttribute('name', 'keywords');
+      document.head.appendChild(metaKeywords);
+    }
+    metaKeywords.setAttribute('content', 'ebook creation help, AI writing assistant, book publishing guide, cover design tutorial, PDF export, EPUB creation, self-publishing help, content generation AI');
+
+    // Open Graph tags
+    let ogTitle = document.querySelector('meta[property="og:title"]');
+    if (!ogTitle) {
+      ogTitle = document.createElement('meta');
+      ogTitle.setAttribute('property', 'og:title');
+      document.head.appendChild(ogTitle);
+    }
+    ogTitle.setAttribute('content', 'Help Center | Inkfluence AI - Ebook Creation Support');
+
+    let ogDescription = document.querySelector('meta[property="og:description"]');
+    if (!ogDescription) {
+      ogDescription = document.createElement('meta');
+      ogDescription.setAttribute('property', 'og:description');
+      document.head.appendChild(ogDescription);
+    }
+    ogDescription.setAttribute('content', 'Get help with AI-powered ebook creation. Comprehensive tutorials, FAQs, and guides for writing, designing, and publishing professional ebooks.');
+
+    let ogType = document.querySelector('meta[property="og:type"]');
+    if (!ogType) {
+      ogType = document.createElement('meta');
+      ogType.setAttribute('property', 'og:type');
+      document.head.appendChild(ogType);
+    }
+    ogType.setAttribute('content', 'website');
+
+    // Twitter Card tags
+    let twitterCard = document.querySelector('meta[name="twitter:card"]');
+    if (!twitterCard) {
+      twitterCard = document.createElement('meta');
+      twitterCard.setAttribute('name', 'twitter:card');
+      document.head.appendChild(twitterCard);
+    }
+    twitterCard.setAttribute('content', 'summary_large_image');
+
+    // Canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', window.location.origin + '/help');
+
+    // Structured data for FAQs
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "name": "Inkfluence AI Help Center",
+      "description": "Frequently asked questions about Inkfluence AI ebook creation platform",
+      "mainEntity": faqs.slice(0, 10).map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    };
+
+    let structuredDataScript = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement;
+    if (!structuredDataScript) {
+      structuredDataScript = document.createElement('script');
+      structuredDataScript.type = 'application/ld+json';
+      document.head.appendChild(structuredDataScript);
+    }
+    structuredDataScript.textContent = JSON.stringify(structuredData);
+
+    // Cleanup function
+    return () => {
+      document.title = 'Inkfluence AI - AI-Powered Ebook Creation Platform';
+    };
+  }, []);
+
   const categories = [
     {
       icon: FileText,
       title: 'Getting Started',
-      description: 'Learn the basics',
+      description: 'Project creation, chapters, basics',
       color: 'from-blue-500/20 to-blue-600/20',
-      textColor: 'text-blue-600'
+      textColor: 'text-blue-600',
+      count: '8 articles'
+    },
+    {
+      icon: Sparkles,
+      title: 'AI Writing Assistant',
+      description: 'Content generation, prompts, enhancement',
+      color: 'from-purple-500/20 to-purple-600/20',
+      textColor: 'text-purple-600',
+      count: '12 articles'
     },
     {
       icon: Palette,
-      title: 'Cover Design',
-      description: 'Create beautiful covers',
-      color: 'from-purple-500/20 to-purple-600/20',
-      textColor: 'text-purple-600'
+      title: 'Design & Customization',
+      description: 'Covers, branding, fonts, colors',
+      color: 'from-pink-500/20 to-pink-600/20',
+      textColor: 'text-pink-600',
+      count: '7 articles'
     },
     {
       icon: Download,
-      title: 'Exporting',
-      description: 'Export your ebooks',
+      title: 'Export & Publishing',
+      description: 'PDF, EPUB, Kindle, distribution',
       color: 'from-green-500/20 to-green-600/20',
-      textColor: 'text-green-600'
+      textColor: 'text-green-600',
+      count: '6 articles'
+    },
+    {
+      icon: BookOpen,
+      title: 'Templates & Examples',
+      description: 'Pre-made templates, content ideas',
+      color: 'from-orange-500/20 to-orange-600/20',
+      textColor: 'text-orange-600',
+      count: '5 articles'
+    },
+    {
+      icon: Shield,
+      title: 'Account & Billing',
+      description: 'Premium features, payments, security',
+      color: 'from-red-500/20 to-red-600/20',
+      textColor: 'text-red-600',
+      count: '9 articles'
     },
     {
       icon: Zap,
-      title: 'AI Features',
-      description: 'Use AI to write faster',
+      title: 'Productivity Tips',
+      description: 'Workflows, analytics, shortcuts',
       color: 'from-yellow-500/20 to-yellow-600/20',
-      textColor: 'text-yellow-600'
+      textColor: 'text-yellow-600',
+      count: '4 articles'
+    },
+    {
+      icon: HelpCircle,
+      title: 'Troubleshooting',
+      description: 'Common issues, solutions, support',
+      color: 'from-gray-500/20 to-gray-600/20',
+      textColor: 'text-gray-600',
+      count: '6 articles'
     }
   ];
 
   const faqs = [
+    // Getting Started FAQs
     {
       question: 'How do I create my first ebook project?',
       answer: 'Click "New Project" on your dashboard, give it a title and description, then start adding chapters. Use the AI assistant to generate content or write manually. You can customize fonts, colors, and branding in Project Settings.'
     },
     {
-      question: 'What is the daily AI generation limit?',
-      answer: 'Free users get 3 AI generations per day. Premium users get 50 AI generations daily. Each generation can create 200-500 words of content based on your prompt. The limit resets at midnight UTC.'
+      question: 'What ebook templates are available?',
+      answer: 'We offer 20+ professional templates including fitness guides, business growth, personal finance, productivity, marketing strategies, self-help, cooking recipes, and more. Premium templates include 6+ pre-written chapters with full content.'
     },
+    {
+      question: 'How do I organize my ebook chapters?',
+      answer: 'Each project can have unlimited chapters (Premium) or up to 4 pages (Free). Add new chapters using the "+" button, reorder them by dragging, and use the chapter navigation sidebar to jump between sections quickly.'
+    },
+    {
+      question: 'Can I set writing goals and track progress?',
+      answer: 'Yes! Go to your Dashboard to see writing analytics including total words written, chapters completed, and daily progress. Set custom word count goals to stay motivated and track your publishing journey.'
+    },
+    
+    // AI Features FAQs
+    {
+      question: 'What is the daily AI generation limit?',
+      answer: 'Free users get 3 AI generations per day. Premium users get 50 AI generations daily. Each generation can create 100-300 words of content based on your prompt and selected length. The limit resets at midnight UTC.'
+    },
+    {
+      question: 'How do I write effective AI prompts?',
+      answer: 'Use specific keywords separated by commas like "productivity tips, time management, goal setting". Choose your preferred tone (friendly, professional, motivational) and length (brief, standard, detailed, comprehensive). The AI works best with clear, focused topics.'
+    },
+    {
+      question: 'What AI content types can I generate?',
+      answer: 'The AI creates 4 content types: detailed outlines with main points, engaging introductions that hook readers, practical tips and key insights, and compelling conclusions that motivate action. Each type is optimized for different chapter sections.'
+    },
+    {
+      question: 'Can I enhance existing content with AI?',
+      answer: 'Yes! Select any text in your chapter and use the "Enhance with AI" feature. Choose your desired tone, format (intro, bullets, steps, Q&A, narrative), and length to improve clarity, add examples, and enhance readability.'
+    },
+    {
+      question: 'What genres work best with AI generation?',
+      answer: 'Our AI excels at business, self-help, fitness, productivity, marketing, personal finance, cooking, and educational content. It understands context and can adapt to your specific niche and target audience.'
+    },
+    
+    // Design & Customization FAQs  
     {
       question: 'How do I design a custom cover?',
-      answer: 'Open any project, click the "Customize" dropdown, and select "Cover Designer". Choose a template or start from scratch. Customize backgrounds (solid colors, gradients, or images), change fonts, adjust text sizes and colors, then save. Your cover will appear in exports and previews.'
+      answer: 'Open any project, click the "Customize" dropdown, and select "Cover Designer". Choose from professional templates or start from scratch. Customize backgrounds (solid colors, gradients, or images), change fonts, adjust text sizes and colors, then save. Your cover appears in all exports and previews.'
     },
+    {
+      question: 'Can I customize fonts and colors throughout my ebook?',
+      answer: 'Yes! Go to Project Settings to set your primary brand color, heading and body fonts, and custom watermark. These settings apply to your entire ebook automatically. The Cover Designer offers 8 Google Fonts and unlimited color options for covers.'
+    },
+    {
+      question: 'How do I add my personal branding?',
+      answer: 'In Project Settings, upload your logo as a watermark, set brand colors, choose fonts that match your style, and customize the cover design. Your branding will appear consistently across all exports (PDF, EPUB, DOCX).'
+    },
+    {
+      question: 'Can I preview my ebook before exporting?',
+      answer: 'Absolutely! Use the "Preview" button to see exactly how your ebook will look when exported. The preview shows your custom cover, formatting, fonts, colors, and full chapter layout in PDF format.'
+    },
+    
+    // Export & Publishing FAQs
     {
       question: 'What export formats are available?',
-      answer: 'You can export to PDF (best for sharing/reading), EPUB (for eReaders like Kindle), and DOCX (for further editing in Word). All formats include your custom cover, branding, and formatting.'
+      answer: 'You can export to PDF (best for sharing/reading), EPUB (for eReaders like Kindle), and DOCX (for further editing in Word). All formats include your custom cover, branding, and professional formatting with table of contents.'
     },
     {
-      question: 'Can I customize fonts and colors?',
-      answer: 'Yes! Go to Project Settings to set your primary color, fonts (heading and body), and custom watermark. These settings apply to your entire ebook. For covers, the Cover Designer offers 8 Google Fonts and unlimited color options.'
+      question: 'How do I publish my ebook on Amazon Kindle?',
+      answer: 'Export your ebook as EPUB format, then upload it to Amazon Kindle Direct Publishing (KDP). Your exported file includes professional formatting, cover, and metadata needed for publishing. The PDF version works great for lead magnets and direct sales.'
     },
     {
-      question: 'How does auto-save work?',
-      answer: 'Your work is automatically saved every few seconds as you type. You\'ll see a "Saved" indicator in the header. All changes are synced to the cloud, so you can access your work from any device.'
+      question: 'Can I customize export settings?',
+      answer: 'Yes! When exporting, you can add author information, website, copyright details, choose chapter numbering style (numeric, roman, or none), include/exclude table of contents, and set copyright page position (beginning or end).'
     },
     {
-      question: 'Can I import existing documents?',
-      answer: 'Currently, you can copy and paste content from other documents. We\'re working on direct import from Word (.docx) and Google Docs - coming soon!'
+      question: 'Does the export include my custom cover?',
+      answer: 'Yes! All export formats (PDF, EPUB, DOCX) automatically include your custom-designed cover as the first page. The cover maintains its high-quality design and branding across all formats.'
+    },
+    
+    // Account & Billing FAQs
+    {
+      question: 'What\'s included in the Free vs Premium plan?',
+      answer: 'Free: 4 pages total, 3 AI generations daily, basic templates, PDF export. Premium ($9.99/month): Unlimited pages, 50 AI generations daily, 20+ premium templates, all export formats (PDF/EPUB/DOCX), advanced cover designer, priority support.'
     },
     {
       question: 'How do I upgrade to Premium?',
-      answer: 'Click "Upgrade" in the top navigation or when you hit your daily AI limit. Choose between monthly ($9.99) or yearly ($99/year - save 17%) plans. Payment is processed securely through Stripe.'
+      answer: 'Click "Upgrade" in the top navigation or when you hit your daily AI limit. Choose between monthly ($9.99) or yearly ($99/year - save 17%) plans. Payment is processed securely through Stripe with instant activation.'
     },
     {
       question: 'Can I cancel my subscription anytime?',
-      answer: 'Yes! Go to Profile → Billing and click "Manage Subscription". You can cancel anytime with no penalties. You\'ll retain Premium features until the end of your billing period.'
+      answer: 'Yes! Go to Profile → Billing and click "Manage Subscription". You can cancel anytime with no penalties. You\'ll retain Premium features until the end of your billing period, then revert to the Free plan automatically.'
+    },
+    {
+      question: 'What payment methods do you accept?',
+      answer: 'We accept all major credit cards (Visa, MasterCard, American Express), debit cards, and digital wallets through our secure Stripe payment system. All transactions are encrypted and PCI compliant.'
+    },
+    
+    // Technical & Security FAQs
+    {
+      question: 'How does auto-save work?',
+      answer: 'Your work is automatically saved every few seconds as you type. You\'ll see a "Saved" indicator in the header when changes are synced. All data is stored securely in the cloud, so you can access your projects from any device.'
     },
     {
       question: 'Is my content private and secure?',
-      answer: 'Absolutely. All data is encrypted in transit and at rest. We use Firebase (Google Cloud) for secure storage. Your content is private to you - we never share, sell, or use it for AI training.'
+      answer: 'Absolutely. All data is encrypted in transit (HTTPS) and at rest using Firebase (Google Cloud) enterprise-grade security. Your content is private to you - we never share, sell, or use it for AI training. You maintain full ownership of your work.'
     },
     {
-      question: 'Can I collaborate with others?',
-      answer: 'Team collaboration is coming soon! Currently, each account is for individual use. Follow our roadmap for updates on multi-user features.'
+      question: 'Can I access my projects from multiple devices?',
+      answer: 'Yes! Your projects are cloud-synced and accessible from any device with internet access. Simply log in to your account from any computer, tablet, or mobile device to continue working on your ebooks.'
     },
     {
-      question: 'How do I delete a project?',
-      answer: 'Go to "My Books", find the project you want to delete, click the menu (three dots), and select "Delete". This action cannot be undone, so make sure to export any content you want to keep first.'
+      question: 'What happens if I delete a project?',
+      answer: 'Deleted projects are permanently removed and cannot be recovered. Before deleting, make sure to export any content you want to keep. We recommend exporting important projects as PDF backups for safekeeping.'
     },
     {
-      question: 'What happens if I hit the page limit?',
-      answer: 'Free users get 4 pages total. Premium users get unlimited pages. A "page" is approximately 250 words. When you hit your limit, you can upgrade to Premium or export your existing work and start a new project.'
+      question: 'Do you offer data export or backup options?',
+      answer: 'Yes! You can export individual projects as PDF, EPUB, or DOCX files anytime. For complete account data export, contact support and we\'ll provide a full backup of your projects and settings within 48 hours.'
+    },
+    
+    // Support & Troubleshooting FAQs
+    {
+      question: 'Can I import existing documents?',
+      answer: 'Currently, you can copy and paste content from Word, Google Docs, or other sources. We preserve basic formatting like bold, italics, and paragraphs. Direct file import for Word (.docx) and Google Docs is coming soon!'
     },
     {
-      question: 'Can I use Inkfluence AI offline?',
-      answer: 'You need an internet connection to use Inkfluence AI since it\'s a cloud-based platform. However, you can export your ebooks and read them offline anytime.'
+      question: 'What browsers are supported?',
+      answer: 'Inkfluence AI works best on modern browsers: Chrome, Firefox, Safari, and Edge. We recommend keeping your browser updated for the best experience. Mobile browsers are supported for editing, though the desktop experience is optimized for writing.'
+    },
+    {
+      question: 'Why is my AI generation slow or failing?',
+      answer: 'AI generation typically takes 5-15 seconds. Slow performance may be due to high server load or poor internet connection. If generations fail, check your internet connection and try again. Contact support if issues persist.'
     },
     {
       question: 'How do I contact support?',
-      answer: 'Email us at support@inkfluenceai.com or use the contact form. We typically respond within 24 hours on business days.'
+      answer: 'Email us at support@inkfluenceai.com for technical issues, billing questions, or feature requests. We typically respond within 24 hours on business days. Premium users receive priority support with faster response times.'
+    },
+    {
+      question: 'Do you offer refunds?',
+      answer: 'We offer a 30-day money-back guarantee for Premium subscriptions. If you\'re not satisfied within 30 days of your first payment, contact support for a full refund. After 30 days, you can cancel anytime to avoid future charges.'
     }
   ];
 
   const tutorials = [
     {
       icon: FileText,
-      title: 'Creating Your First Ebook',
-      description: 'Learn how to start a new project, add chapters, and write content',
-      time: '5 min read'
+      title: 'Creating Your First Ebook Project',
+      description: 'Complete guide to starting a new project, adding chapters, organizing content, and setting up your ebook structure',
+      time: '5 min read',
+      category: 'Getting Started'
     },
     {
       icon: Sparkles,
-      title: 'Using AI Content Generation',
-      description: 'Master AI prompts to generate high-quality content faster',
-      time: '7 min read'
+      title: 'Mastering AI Content Generation',
+      description: 'Learn to write effective prompts, choose the right tone and length, and generate high-quality content that matches your voice',
+      time: '7 min read',
+      category: 'AI Features'
+    },
+    {
+      icon: Lightbulb,
+      title: 'AI Enhancement & Content Editing',
+      description: 'How to use AI to improve existing content, change tone, add examples, and enhance readability and engagement',
+      time: '6 min read',
+      category: 'AI Features'
+    },
+    {
+      icon: BookOpen,
+      title: 'Using Professional Templates',
+      description: 'Browse 20+ templates, customize pre-written content, and adapt professional structures to your niche',
+      time: '4 min read',
+      category: 'Templates'
     },
     {
       icon: Palette,
-      title: 'Designing Custom Covers',
-      description: 'Create professional book covers with the Cover Designer',
-      time: '10 min read'
-    },
-    {
-      icon: Download,
-      title: 'Exporting & Publishing',
-      description: 'Export to PDF, EPUB, and DOCX for distribution',
-      time: '4 min read'
+      title: 'Designing Custom Book Covers',
+      description: 'Step-by-step cover design tutorial with templates, gradients, fonts, and professional branding techniques',
+      time: '10 min read',
+      category: 'Design'
     },
     {
       icon: Shield,
-      title: 'Brand Customization',
-      description: 'Set custom fonts, colors, and watermarks for your ebooks',
-      time: '6 min read'
+      title: 'Brand Customization & Settings',
+      description: 'Set up custom fonts, brand colors, watermarks, and consistent styling across your entire ebook',
+      time: '6 min read',
+      category: 'Customization'
+    },
+    {
+      icon: Download,
+      title: 'Exporting & Publishing Your Ebook',
+      description: 'Export to PDF, EPUB, and DOCX formats, set up metadata, and prepare for Amazon Kindle and other platforms',
+      time: '8 min read',
+      category: 'Publishing'
     },
     {
       icon: Zap,
-      title: 'Productivity Tips & Shortcuts',
-      description: 'Work faster with keyboard shortcuts and pro tips',
-      time: '8 min read'
+      title: 'Writing Productivity & Analytics',
+      description: 'Set writing goals, track progress, use auto-save effectively, and optimize your writing workflow',
+      time: '5 min read',
+      category: 'Productivity'
+    },
+    {
+      icon: FileText,
+      title: 'Content Organization & Structure',
+      description: 'Best practices for chapter organization, using headings, creating flow, and structuring compelling ebooks',
+      time: '9 min read',
+      category: 'Writing Tips'
+    },
+    {
+      icon: Search,
+      title: 'Project Management & Workflow',
+      description: 'Manage multiple projects, use search and filters, preview drafts, and maintain organized workflows',
+      time: '4 min read',
+      category: 'Organization'
+    },
+    {
+      icon: HelpCircle,
+      title: 'Troubleshooting Common Issues',
+      description: 'Solutions for AI generation problems, export issues, formatting problems, and account management',
+      time: '6 min read',
+      category: 'Support'
+    },
+    {
+      icon: MessageCircle,
+      title: 'From Free to Premium: Upgrade Guide',
+      description: 'When to upgrade, comparing features, billing management, and getting the most from Premium features',
+      time: '3 min read',
+      category: 'Premium Features'
     }
   ];
 
@@ -225,7 +483,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
           <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
             Browse by Category
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {categories.map((category, index) => (
               <motion.div
                 key={category.title}
@@ -239,7 +497,8 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
                       <category.icon className={`w-6 h-6 ${category.textColor}`} />
                     </div>
                     <h3 className="text-lg font-semibold mb-1">{category.title}</h3>
-                    <p className="text-sm text-muted-foreground">{category.description}</p>
+                    <p className="text-sm text-muted-foreground mb-2">{category.description}</p>
+                    <p className="text-xs text-muted-foreground font-medium">{category.count}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -257,7 +516,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
             </h2>
             <Lightbulb className="w-8 h-8 text-primary" />
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {tutorials.map((tutorial, index) => (
               <motion.div
                 key={tutorial.title}
@@ -271,9 +530,14 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
                       <div className="p-2 rounded-lg bg-primary/10">
                         <tutorial.icon className="w-5 h-5 text-primary" />
                       </div>
-                      <Badge variant="secondary" className="text-xs">
-                        {tutorial.time}
-                      </Badge>
+                      <div className="flex flex-col items-end gap-1">
+                        <Badge variant="secondary" className="text-xs">
+                          {tutorial.time}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {tutorial.category}
+                        </Badge>
+                      </div>
                     </div>
                     <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
                       {tutorial.title}
@@ -289,6 +553,90 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
                 </Card>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Start Guide */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/5 to-accent/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              🚀 Quick Start Guide
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              New to Inkfluence AI? Follow these simple steps to create your first professional ebook in under 15 minutes.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                step: '1',
+                title: 'Create Your Project',
+                description: 'Click "New Project" on your dashboard. Choose a compelling title and brief description for your ebook.',
+                icon: '📝',
+                tip: 'Use specific, keyword-rich titles for better discoverability'
+              },
+              {
+                step: '2', 
+                title: 'Add & Organize Chapters',
+                description: 'Structure your ebook with logical chapters. Use the "+" button to add new chapters and drag to reorder.',
+                icon: '📚',
+                tip: 'Plan 5-10 chapters for optimal ebook length'
+              },
+              {
+                step: '3',
+                title: 'Generate AI Content',
+                description: 'Use specific keywords like "time management, productivity tips" to generate relevant, high-quality content.',
+                icon: '🤖',
+                tip: 'Be specific with keywords for better AI results'
+              },
+              {
+                step: '4',
+                title: 'Customize & Export',
+                description: 'Design your cover, set brand colors, preview your ebook, then export as PDF, EPUB, or DOCX.',
+                icon: '🎨',
+                tip: 'Use your brand colors for professional consistency'
+              }
+            ].map((step, index) => (
+              <motion.div
+                key={step.step}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="relative"
+              >
+                <Card className="neomorph-flat border-0 h-full hover:neomorph-raised transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+                        {step.step}
+                      </div>
+                      <span className="text-2xl">{step.icon}</span>
+                    </div>
+                    <h3 className="text-lg font-semibold mb-3">{step.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">{step.description}</p>
+                    <div className="bg-accent/10 p-3 rounded-lg">
+                      <p className="text-xs text-accent-foreground">
+                        💡 <strong>Pro tip:</strong> {step.tip}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button 
+              size="lg" 
+              onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
+              className="bg-gradient-to-r from-primary to-accent text-white"
+            >
+              {isAuthenticated ? 'Go to Dashboard' : 'Start Creating Now'} 
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
           </div>
         </div>
       </section>
@@ -333,6 +681,50 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
               )}
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      {/* Popular Topics */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-muted/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              🔥 Popular Topics
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Most searched help topics by our community
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { topic: 'How to write effective AI prompts', icon: '🎯', searches: '1.2k' },
+              { topic: 'Export ebook to Amazon Kindle', icon: '📖', searches: '980' },
+              { topic: 'Design professional book covers', icon: '🎨', searches: '850' },
+              { topic: 'Upgrade to Premium features', icon: '👑', searches: '720' },
+              { topic: 'Fix AI generation errors', icon: '🔧', searches: '650' },
+              { topic: 'Set up custom branding', icon: '🏢', searches: '580' },
+              { topic: 'Organize multiple projects', icon: '📁', searches: '490' },
+              { topic: 'Export formatting options', icon: '⚙️', searches: '420' },
+              { topic: 'Cancel subscription safely', icon: '💳', searches: '380' }
+            ].map((item, index) => (
+              <motion.div
+                key={item.topic}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-background/50 transition-colors cursor-pointer"
+                onClick={() => setSearchQuery(item.topic.split(' ').slice(0, 3).join(' '))}
+              >
+                <span className="text-xl">{item.icon}</span>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{item.topic}</p>
+                  <p className="text-xs text-muted-foreground">{item.searches} searches</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground" />
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
