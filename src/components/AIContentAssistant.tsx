@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb, X, Info, SlidersHorizontal, FileText, AlignLeft, BookOpen, Crown } from '@phosphor-icons/react';
+import { Star, ArrowRight, Copy, Plus, MagicWand, Lightbulb, X, Info, SlidersHorizontal, FileText, AlignLeft, BookOpen, Crown, BookmarkSimple } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { generateAIContent, enhanceContent, type ContentSuggestion, type Tone, type Length, type Format } from '@/lib/openai-service-secure';
@@ -15,6 +15,8 @@ import { AILoading } from '@/components/AILoading';
 import { useAuth } from '@/hooks/use-auth';
 import { useUsageTracking } from '@/hooks/use-usage-tracking';
 import { UpgradeModal } from '@/components/UpgradeModal';
+import { getUserSnippets } from '@/lib/snippets';
+import { ContentSnippet } from '@/lib/types';
 
 interface AIContentAssistantProps {
   chapterTitle: string;
@@ -52,6 +54,9 @@ export function AIContentAssistant({
   const [format, setFormat] = useState<Format>('narrative');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showPromptLibrary, setShowPromptLibrary] = useState(false);
+  const [showSnippets, setShowSnippets] = useState(false);
+  const [snippets, setSnippets] = useState<ContentSnippet[]>([]);
+  const [loadingSnippets, setLoadingSnippets] = useState(false);
 
   // Prompt Library Examples
   const promptExamples = [
@@ -94,6 +99,25 @@ export function AIContentAssistant({
     setSelectedSuggestion(null);
     setIsGenerating(false);
   }, [chapterTitle]);
+
+  // Load user snippets
+  useEffect(() => {
+    const loadSnippets = async () => {
+      if (!user?.uid) return;
+      
+      setLoadingSnippets(true);
+      try {
+        const userSnippets = await getUserSnippets(user.uid);
+        setSnippets(userSnippets);
+      } catch (error) {
+        console.error('Failed to load snippets:', error);
+      } finally {
+        setLoadingSnippets(false);
+      }
+    };
+
+    loadSnippets();
+  }, [user?.uid]);
 
   const generateContent = async () => {
     if (!keywords.trim()) {
@@ -344,6 +368,97 @@ export function AIContentAssistant({
                       </div>
                     </motion.button>
                   ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          
+          {/* My Snippets Toggle */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowSnippets(!showSnippets)}
+            className="w-full h-8 gap-2 text-xs neomorph-flat border-0 hover:neomorph-inset"
+          >
+            <BookmarkSimple size={14} weight={showSnippets ? 'fill' : 'regular'} />
+            {showSnippets ? 'Hide' : 'Show'} My Snippets
+            {snippets.length > 0 && (
+              <Badge variant="secondary" className="ml-auto h-4 px-1.5 text-[10px]">
+                {snippets.length}
+              </Badge>
+            )}
+          </Button>
+
+          {/* Snippets Library */}
+          <AnimatePresence>
+            {showSnippets && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="p-3 bg-muted/30 rounded-lg space-y-2 max-h-64 overflow-y-auto">
+                  {loadingSnippets ? (
+                    <div className="text-center py-4 text-xs text-muted-foreground">
+                      Loading snippets...
+                    </div>
+                  ) : snippets.length === 0 ? (
+                    <div className="text-center py-4 text-xs text-muted-foreground">
+                      No saved snippets yet.
+                      <br />
+                      <span className="text-[10px]">Save text from your chapters to reuse them here!</span>
+                    </div>
+                  ) : (
+                    snippets.map((snippet, index) => {
+                      const categoryColors: Record<string, string> = {
+                        intro: 'bg-blue-500/10 text-blue-700 dark:text-blue-400',
+                        conclusion: 'bg-green-500/10 text-green-700 dark:text-green-400',
+                        cta: 'bg-orange-500/10 text-orange-700 dark:text-orange-400',
+                        tip: 'bg-purple-500/10 text-purple-700 dark:text-purple-400',
+                        quote: 'bg-pink-500/10 text-pink-700 dark:text-pink-400',
+                        transition: 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400',
+                        other: 'bg-gray-500/10 text-gray-700 dark:text-gray-400'
+                      };
+
+                      return (
+                        <motion.div
+                          key={snippet.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.03 }}
+                          className="p-2 rounded-lg bg-background hover:bg-primary/10 transition-colors neomorph-flat group"
+                        >
+                          <div className="flex items-start gap-2 mb-1.5">
+                            <Badge 
+                              variant="secondary" 
+                              className={`text-[9px] px-1.5 py-0 h-4 ${categoryColors[snippet.category]}`}
+                            >
+                              {snippet.category}
+                            </Badge>
+                            <p className="font-medium text-xs flex-1 group-hover:text-primary transition-colors line-clamp-1">
+                              {snippet.title}
+                            </p>
+                          </div>
+                          <p className="text-[10px] text-muted-foreground line-clamp-2 mb-2 pl-0.5">
+                            {snippet.content}
+                          </p>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              insertContent(snippet.content);
+                              setShowSnippets(false);
+                            }}
+                            className="w-full h-6 text-[10px] gap-1.5 neomorph-button border-0"
+                          >
+                            <Plus size={12} />
+                            Insert into Chapter
+                          </Button>
+                        </motion.div>
+                      );
+                    })
+                  )}
                 </div>
               </motion.div>
             )}

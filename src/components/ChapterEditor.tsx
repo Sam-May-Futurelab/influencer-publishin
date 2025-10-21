@@ -4,16 +4,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star, Eye, FloppyDisk, CaretLeft, CaretRight, ArrowUp, ArrowDown } from '@phosphor-icons/react';
+import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star, Eye, FloppyDisk, CaretLeft, CaretRight, ArrowUp, ArrowDown, BookmarkSimple } from '@phosphor-icons/react';
 import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { SaveIndicator } from '@/components/SaveIndicator';
 import { RichTextEditor } from '@/components/RichTextEditor';
-import { Chapter, InputMode } from '@/lib/types';
+import { Chapter, InputMode, ContentSnippet } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAutoSave } from '@/hooks/use-auto-save';
 import { useAuth } from '@/hooks/use-auth';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { saveSnippet } from '@/lib/snippets';
 
 interface ChapterEditorProps {
   chapters: Chapter[];
@@ -50,7 +54,7 @@ export function ChapterEditor({
   projectDescription = '',
   brandConfig,
 }: ChapterEditorProps) {
-  const { userProfile } = useAuth();
+  const { userProfile, user } = useAuth();
   const isPremium = userProfile?.isPremium || false;
   
   const [inputMode, setInputMode] = useState<InputMode>('text');
@@ -59,6 +63,13 @@ export function ChapterEditor({
   const [pendingContent, setPendingContent] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [autoSaveInterval, setAutoSaveInterval] = useState(30000); // Default 30 seconds
+  
+  // Snippet saving state
+  const [showSnippetDialog, setShowSnippetDialog] = useState(false);
+  const [snippetTitle, setSnippetTitle] = useState('');
+  const [snippetCategory, setSnippetCategory] = useState<ContentSnippet['category']>('other');
+  const [snippetContent, setSnippetContent] = useState('');
+  const [savingSnippet, setSavingSnippet] = useState(false);
 
   // Load auto-save interval from settings
   useEffect(() => {
@@ -137,6 +148,61 @@ export function ChapterEditor({
       });
     } else {
       toast.error('No content to add');
+    }
+  };
+
+  const handleSaveAsSnippet = () => {
+    // Get selected text from the editor
+    const selection = window.getSelection();
+    const selectedText = selection?.toString().trim() || '';
+    
+    if (!selectedText) {
+      toast.error('Please select some text first');
+      return;
+    }
+    
+    if (selectedText.length < 10) {
+      toast.error('Please select at least 10 characters');
+      return;
+    }
+    
+    // Set the content and open dialog
+    setSnippetContent(selectedText);
+    setSnippetTitle(''); // Reset title
+    setSnippetCategory('other'); // Reset category
+    setShowSnippetDialog(true);
+  };
+
+  const handleSnippetSave = async () => {
+    if (!user?.uid) {
+      toast.error('You must be logged in to save snippets');
+      return;
+    }
+    
+    if (!snippetTitle.trim()) {
+      toast.error('Please enter a title for your snippet');
+      return;
+    }
+    
+    setSavingSnippet(true);
+    try {
+      await saveSnippet(user.uid, {
+        title: snippetTitle.trim(),
+        content: snippetContent,
+        category: snippetCategory,
+        tags: []
+      });
+      
+      toast.success('Snippet saved successfully!');
+      setShowSnippetDialog(false);
+      setSnippetTitle('');
+      setSnippetContent('');
+      setSnippetCategory('other');
+    } catch (error) {
+      console.error('Failed to save snippet:', error);
+      toast.error('Failed to save snippet. Please try again.');
+    } finally {
+      setSavingSnippet(false);
     }
   };
 
@@ -344,6 +410,19 @@ export function ChapterEditor({
                         </Button>
                       </motion.div>
                     )}
+                    
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button
+                        size="sm"
+                        onClick={handleSaveAsSnippet}
+                        variant="outline"
+                        className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-3 lg:px-4 gap-2"
+                        title="Save selected text as a reusable snippet"
+                      >
+                        <BookmarkSimple size={16} weight="bold" />
+                        <span className="hidden sm:inline">Save Snippet</span>
+                      </Button>
+                    </motion.div>
                   </div>
                 </div>
               )}
@@ -623,6 +702,78 @@ export function ChapterEditor({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Save Snippet Dialog */}
+      <Dialog open={showSnippetDialog} onOpenChange={setShowSnippetDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Save as Snippet</DialogTitle>
+            <DialogDescription>
+              Save this content as a reusable snippet. You can quickly insert it into any chapter from the AI Assistant.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="snippet-title">Title</Label>
+              <Input
+                id="snippet-title"
+                placeholder="e.g., Welcome Message, Chapter Conclusion"
+                value={snippetTitle}
+                onChange={(e) => setSnippetTitle(e.target.value)}
+                className="neomorph-inset border-0"
+              />
+            </div>
+
+            {/* Category */}
+            <div className="space-y-2">
+              <Label htmlFor="snippet-category">Category</Label>
+              <Select value={snippetCategory} onValueChange={(value) => setSnippetCategory(value as ContentSnippet['category'])}>
+                <SelectTrigger id="snippet-category" className="neomorph-inset border-0">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="intro">Introduction</SelectItem>
+                  <SelectItem value="conclusion">Conclusion</SelectItem>
+                  <SelectItem value="cta">Call-to-Action</SelectItem>
+                  <SelectItem value="tip">Tip/Advice</SelectItem>
+                  <SelectItem value="quote">Quote</SelectItem>
+                  <SelectItem value="transition">Transition</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Content Preview */}
+            <div className="space-y-2">
+              <Label>Content Preview</Label>
+              <div className="p-3 rounded-lg bg-muted/50 text-sm text-muted-foreground max-h-32 overflow-y-auto neomorph-inset">
+                {snippetContent}
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowSnippetDialog(false)}
+              disabled={savingSnippet}
+              className="neomorph-button border-0"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSnippetSave}
+              disabled={savingSnippet || !snippetTitle.trim()}
+              className="neomorph-button border-0 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white gap-2"
+            >
+              <BookmarkSimple size={16} weight="fill" />
+              {savingSnippet ? 'Saving...' : 'Save Snippet'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

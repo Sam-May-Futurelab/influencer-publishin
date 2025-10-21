@@ -256,7 +256,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4 lg:p-8">
+    <div className="min-h-screen bg-background p-4 lg:p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         
         {/* Header */}
@@ -265,8 +265,8 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile</h1>
-          <p className="text-gray-600">Manage your account, subscription, and preferences</p>
+          <h1 className="text-3xl font-bold mb-2">Profile</h1>
+          <p className="text-muted-foreground">Manage your account, subscription, and preferences</p>
         </motion.div>
 
         {/* Profile Information Card */}
