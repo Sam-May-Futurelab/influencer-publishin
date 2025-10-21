@@ -95,7 +95,7 @@ export default async (req, res) => {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
-        let userId = session.metadata?.firebaseUserId;
+        const userId = session.metadata?.firebaseUserId;
 
         console.log('Processing checkout.session.completed:', {
           sessionId: session.id,
@@ -103,34 +103,23 @@ export default async (req, res) => {
           customer: session.customer,
           subscription: session.subscription,
           mode: session.mode,
-          paymentStatus: session.payment_status
+          paymentStatus: session.payment_status,
+          metadata: session.metadata
         });
 
-        // If userId not in session metadata, try to get it from invoice line items
-        if (!userId && session.subscription) {
-          try {
-            console.log('UserId not in session metadata, fetching from subscription...');
-            const subscription = await stripe.subscriptions.retrieve(session.subscription, {
-              expand: ['latest_invoice.lines']
-            });
-            
-            const lineItem = subscription.latest_invoice?.lines?.data?.[0];
-            if (lineItem?.metadata?.firebaseUserId) {
-              userId = lineItem.metadata.firebaseUserId;
-              console.log('✅ Found userId in subscription line item:', userId);
-            }
-          } catch (error) {
-            console.error('❌ Error fetching subscription details:', error);
-          }
-        }
-
         if (!userId) {
-          console.error('❌ No firebaseUserId found in session or line items');
+          console.error('❌ No firebaseUserId in session metadata');
           console.log('Session metadata:', JSON.stringify(session.metadata, null, 2));
-          break;
+          return res.status(400).json({ error: 'No firebaseUserId in session metadata' });
         }
 
         try {
+          // Test Firebase connection first
+          console.log('Testing Firebase connection...');
+          const testDoc = db.collection('test').doc('connection');
+          await testDoc.get();
+          console.log('✅ Firebase connection OK');
+
           const updateData = {
             isPremium: true,
             subscriptionStatus: 'premium',
@@ -141,13 +130,23 @@ export default async (req, res) => {
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
           };
 
+          console.log(`Updating user ${userId} with data:`, updateData);
           await db.collection('users').doc(userId).set(updateData, { merge: true });
 
           console.log(`✅ User ${userId} upgraded to premium successfully`);
-          console.log('Update data:', updateData);
         } catch (error) {
           console.error(`❌ Failed to upgrade user ${userId}:`, error);
-          throw error; // Re-throw to trigger webhook retry
+          console.error('Error details:', {
+            name: error.name,
+            message: error.message,
+            code: error.code,
+            stack: error.stack
+          });
+          return res.status(500).json({ 
+            error: 'Failed to upgrade user', 
+            details: error.message,
+            userId: userId 
+          });
         }
         break;
       }
