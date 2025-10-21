@@ -344,7 +344,7 @@ export function CoverDesigner({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[1800px] w-[98vw] max-h-[95vh] flex flex-col p-0 gap-0">
+      <DialogContent className="!max-w-[1800px] sm:!max-w-[1800px] w-[98vw] max-h-[95vh] flex flex-col p-0 gap-0">
         <DialogHeader className="p-6 lg:p-8 pb-4 lg:pb-6 border-b">
           <DialogTitle className="text-2xl lg:text-3xl font-bold flex items-center gap-3">
             <div className="p-2.5 rounded-xl neomorph-flat">
@@ -417,18 +417,18 @@ export function CoverDesigner({
           {/* Controls Panel */}
           <div className="lg:w-[55%] overflow-y-auto p-6 lg:p-10">
             <Tabs defaultValue="templates" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6 h-12">
-                <TabsTrigger value="templates" className="gap-2 text-base">
-                  <Sparkle size={18} />
-                  <span className="hidden sm:inline">Templates</span>
+              <TabsList className="grid w-full grid-cols-3 mb-6 h-12 gap-2">
+                <TabsTrigger value="templates" className="gap-2 text-base px-4">
+                  <Sparkle size={16} />
+                  <span>Templates</span>
                 </TabsTrigger>
-                <TabsTrigger value="background" className="gap-2 text-base">
-                  <ImageIcon size={18} />
-                  <span className="hidden sm:inline">Background</span>
+                <TabsTrigger value="background" className="gap-2 text-base px-4">
+                  <ImageIcon size={16} />
+                  <span>Background</span>
                 </TabsTrigger>
-                <TabsTrigger value="text" className="gap-2 text-base">
-                  <TextT size={18} />
-                  <span className="hidden sm:inline">Text</span>
+                <TabsTrigger value="text" className="gap-2 text-base px-4">
+                  <TextT size={16} />
+                  <span>Text</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -449,8 +449,8 @@ export function CoverDesigner({
                       onClick={() => applyTemplate(template)}
                     >
                       <CardContent className="p-5 lg:p-6 text-center space-y-3">
-                        <div className="text-5xl lg:text-6xl mb-3">{template.preview}</div>
-                        <div className="text-base lg:text-lg font-semibold">{template.name}</div>
+                        <div className="text-3xl mb-2">{template.preview}</div>
+                        <div className="text-base font-semibold">{template.name}</div>
                       </CardContent>
                     </Card>
                   ))}
