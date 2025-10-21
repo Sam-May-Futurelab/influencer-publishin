@@ -53,30 +53,15 @@ interface ProfilePageProps {
 
 // Settings interface
 interface AppSettings {
-  // User Profile
+  // Author Profile (used in exports)
   authorName: string;
   authorBio: string;
   authorWebsite: string;
   
   // Publishing Preferences
-  defaultWordTarget: number;
   autoSaveInterval: number;
   defaultExportFormat: 'pdf' | 'epub' | 'docx';
-  includeFooter: boolean;
-  customWatermark: string;
-  
-  // Notifications
-  saveReminders: boolean;
-  exportNotifications: boolean;
-  
-  // Privacy & Data
-  analytics: boolean;
-  crashReporting: boolean;
-  
-  // Interface
-  compactMode: boolean;
-  showWordCount: boolean;
-  showReadingTime: boolean;
+  customWatermark: string; // Premium only
 }
 
 export function ProfilePage({ onNavigate }: ProfilePageProps) {
@@ -90,30 +75,15 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
   
   // App Settings State
   const [settings, setSettings] = useState<AppSettings>({
-    // User Profile
+    // Author Profile
     authorName: '',
     authorBio: '',
     authorWebsite: '',
     
     // Publishing Preferences
-    defaultWordTarget: 10000,
     autoSaveInterval: 30,
     defaultExportFormat: 'pdf',
-    includeFooter: true,
     customWatermark: '',
-    
-    // Notifications
-    saveReminders: true,
-    exportNotifications: true,
-    
-    // Privacy & Data
-    analytics: true,
-    crashReporting: true,
-    
-    // Interface
-    compactMode: false,
-    showWordCount: true,
-    showReadingTime: true,
   });
 
   const [hasSettingsChanges, setHasSettingsChanges] = useState(false);
@@ -152,18 +122,9 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         authorName: '',
         authorBio: '',
         authorWebsite: '',
-        defaultWordTarget: 10000,
         autoSaveInterval: 30,
         defaultExportFormat: 'pdf',
-        includeFooter: true,
         customWatermark: '',
-        saveReminders: true,
-        exportNotifications: true,
-        analytics: true,
-        crashReporting: true,
-        compactMode: false,
-        showWordCount: true,
-        showReadingTime: true,
       };
       setSettings(defaultSettings);
       setHasSettingsChanges(false);
@@ -589,32 +550,6 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                   onCheckedChange={setPushNotifications}
                 />
               </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-sm font-medium">Save Reminders</Label>
-                  <p className="text-xs text-gray-600">Remind to save work periodically</p>
-                </div>
-                <Switch
-                  checked={settings.saveReminders}
-                  onCheckedChange={(checked) => updateSetting('saveReminders', checked)}
-                />
-              </div>
-              
-              <Separator />
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-sm font-medium">Export Notifications</Label>
-                  <p className="text-xs text-gray-600">Notify when exports complete</p>
-                </div>
-                <Switch
-                  checked={settings.exportNotifications}
-                  onCheckedChange={(checked) => updateSetting('exportNotifications', checked)}
-                />
-              </div>
             </CardContent>
           </Card>
         </motion.div>
@@ -689,20 +624,11 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                 </div>
                 Publishing Preferences
               </CardTitle>
+              <p className="text-sm text-gray-600">
+                Customize your writing and export settings
+              </p>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="wordTarget">Default Word Target</Label>
-                <Input
-                  id="wordTarget"
-                  type="number"
-                  value={settings.defaultWordTarget}
-                  onChange={(e) => updateSetting('defaultWordTarget', parseInt(e.target.value) || 0)}
-                  className="neomorph-inset border-0"
-                />
-                <p className="text-xs text-muted-foreground">Target word count for new projects</p>
-              </div>
-              
               <div className="space-y-2">
                 <Label htmlFor="autoSave">Auto-save Interval</Label>
                 <Select 
@@ -719,6 +645,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                     <SelectItem value="300">5 minutes</SelectItem>
                   </SelectContent>
                 </Select>
+                <p className="text-xs text-muted-foreground">How often to automatically save your work</p>
               </div>
               
               <div className="space-y-2">
@@ -736,17 +663,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                     <SelectItem value="docx">Word Document</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Include Branding Footer</Label>
-                  <p className="text-xs text-muted-foreground">Add "Generated with Inkfluence AI" to exports</p>
-                </div>
-                <Switch
-                  checked={settings.includeFooter}
-                  onCheckedChange={(checked) => updateSetting('includeFooter', checked)}
-                />
+                <p className="text-xs text-muted-foreground">Your preferred format will be pre-selected when exporting</p>
               </div>
               
               {userProfile?.isPremium && (
@@ -769,99 +686,6 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                   </p>
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Interface Preferences */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-        >
-          <Card className="neomorph-raised border-0">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <div className="p-2 rounded-lg neomorph-flat">
-                  <Palette size={20} className="text-primary" />
-                </div>
-                Interface
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Compact Mode</Label>
-                  <p className="text-xs text-muted-foreground">Reduce spacing for more content</p>
-                </div>
-                <Switch
-                  checked={settings.compactMode}
-                  onCheckedChange={(checked) => updateSetting('compactMode', checked)}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Show Word Count</Label>
-                  <p className="text-xs text-muted-foreground">Display live word count in editor</p>
-                </div>
-                <Switch
-                  checked={settings.showWordCount}
-                  onCheckedChange={(checked) => updateSetting('showWordCount', checked)}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Show Reading Time</Label>
-                  <p className="text-xs text-muted-foreground">Display estimated reading time</p>
-                </div>
-                <Switch
-                  checked={settings.showReadingTime}
-                  onCheckedChange={(checked) => updateSetting('showReadingTime', checked)}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Privacy & Analytics */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <Card className="neomorph-raised border-0">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <div className="p-2 rounded-lg neomorph-flat">
-                  <Shield size={20} className="text-primary" />
-                </div>
-                Privacy & Data
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Usage Analytics</Label>
-                  <p className="text-xs text-muted-foreground">Help improve the app with anonymous usage data</p>
-                </div>
-                <Switch
-                  checked={settings.analytics}
-                  onCheckedChange={(checked) => updateSetting('analytics', checked)}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Crash Reporting</Label>
-                  <p className="text-xs text-muted-foreground">Send error reports to help fix bugs</p>
-                </div>
-                <Switch
-                  checked={settings.crashReporting}
-                  onCheckedChange={(checked) => updateSetting('crashReporting', checked)}
-                />
-              </div>
             </CardContent>
           </Card>
         </motion.div>

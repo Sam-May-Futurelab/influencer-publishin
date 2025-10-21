@@ -5,6 +5,9 @@ export type ExportFormat = 'pdf' | 'epub' | 'docx';
 export interface ExportOptions {
   isPremium?: boolean;
   customWatermark?: string;
+  authorName?: string;
+  authorBio?: string;
+  authorWebsite?: string;
 }
 
 export async function exportToFormat(project: EbookProject, format: ExportFormat, options?: ExportOptions): Promise<void> {
@@ -241,6 +244,36 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           margin-top: 4px;
         }
         
+        .about-author {
+          margin-top: 4em;
+          padding: 2em;
+          background: linear-gradient(135deg, ${brand?.primaryColor || '#8B5CF6'}15, ${brand?.secondaryColor || '#A78BFA'}15);
+          border-radius: 12px;
+          border-left: 4px solid ${brand?.primaryColor || '#8B5CF6'};
+          page-break-inside: avoid;
+        }
+        
+        .about-author-title {
+          font-size: 1.8em;
+          font-weight: 700;
+          color: ${brand?.primaryColor || '#8B5CF6'};
+          margin-bottom: 0.8em;
+        }
+        
+        .about-author-content {
+          font-size: 1.05em;
+          line-height: 1.8;
+          color: #374151;
+          margin-bottom: 1em;
+        }
+        
+        .about-author-website {
+          font-size: 1em;
+          color: ${brand?.primaryColor || '#8B5CF6'};
+          font-weight: 600;
+          word-break: break-all;
+        }
+        
         .footer {
           position: fixed;
           bottom: 0.5in;
@@ -318,6 +351,15 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
               </div>
             </div>
           `).join('')}
+          
+          ${(options?.authorName || options?.authorBio || options?.authorWebsite) ? `
+            <div class="about-author">
+              <h3 class="about-author-title">About the Author</h3>
+              ${options.authorName ? `<p class="about-author-content"><strong>${escapeHtml(options.authorName)}</strong></p>` : ''}
+              ${options.authorBio ? `<p class="about-author-content">${escapeHtml(options.authorBio)}</p>` : ''}
+              ${options.authorWebsite ? `<p class="about-author-website">🌐 ${escapeHtml(options.authorWebsite)}</p>` : ''}
+            </div>
+          ` : ''}
         </div>
       </div>
       

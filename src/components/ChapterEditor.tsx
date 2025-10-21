@@ -58,6 +58,17 @@ export function ChapterEditor({
   const [tempTitle, setTempTitle] = useState('');
   const [pendingContent, setPendingContent] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [autoSaveInterval, setAutoSaveInterval] = useState(30000); // Default 30 seconds
+
+  // Load auto-save interval from settings
+  useEffect(() => {
+    const settings = localStorage.getItem('ebookCrafterSettings');
+    if (settings) {
+      const parsed = JSON.parse(settings);
+      // Convert seconds to milliseconds
+      setAutoSaveInterval((parsed.autoSaveInterval || 30) * 1000);
+    }
+  }, []);
 
   // Auto-save functionality
   const {
@@ -86,7 +97,7 @@ export function ChapterEditor({
         }
       }
     },
-    delay: 30000, // 30 seconds
+    delay: autoSaveInterval,
     enabled: !!currentChapter
   });
 

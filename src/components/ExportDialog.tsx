@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FilePdf, FileDoc, BookOpen, Download, Star } from '@phosphor-icons/react';
+import { FilePdf, FileDoc, BookOpen, Download, Star, Check } from '@phosphor-icons/react';
 import { ExportFormat, exportToFormat } from '@/lib/export';
 import { EbookProject } from '@/lib/types';
 import { useAuth } from '@/hooks/use-auth';
@@ -53,14 +53,22 @@ const exportOptions: ExportOption[] = [
 export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
   const { userProfile } = useAuth();
   const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
+  const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('pdf');
   const [customWatermark, setCustomWatermark] = useState<string>('');
+  const [authorName, setAuthorName] = useState<string>('');
+  const [authorBio, setAuthorBio] = useState<string>('');
+  const [authorWebsite, setAuthorWebsite] = useState<string>('');
 
-  // Load custom watermark from settings
+  // Load settings from localStorage
   useEffect(() => {
     const settings = localStorage.getItem('ebookCrafterSettings');
     if (settings) {
       const parsed = JSON.parse(settings);
       setCustomWatermark(parsed.customWatermark || '');
+      setAuthorName(parsed.authorName || '');
+      setAuthorBio(parsed.authorBio || '');
+      setAuthorWebsite(parsed.authorWebsite || '');
+      setSelectedFormat(parsed.defaultExportFormat || 'pdf');
     }
   }, []);
 
@@ -85,7 +93,10 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
       
       await exportToFormat(project, format, {
         isPremium: userProfile?.isPremium,
-        customWatermark: effectiveWatermark
+        customWatermark: effectiveWatermark,
+        authorName,
+        authorBio,
+        authorWebsite
       });
       toast.success(`${format.toUpperCase()} export complete!`, { id: 'export' });
       onClose();
@@ -172,6 +183,13 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
                                   <Star size={10} className="lg:hidden" />
                                   <Star size={12} className="hidden lg:block" />
                                   <span className="text-xs">Recommended</span>
+                                </Badge>
+                              )}
+                              {selectedFormat === option.format && (
+                                <Badge variant="secondary" className="gap-1 bg-primary/10 text-primary border-0 self-start lg:self-auto">
+                                  <Check size={10} className="lg:hidden" />
+                                  <Check size={12} className="hidden lg:block" />
+                                  <span className="text-xs">Default</span>
                                 </Badge>
                               )}
                             </div>
