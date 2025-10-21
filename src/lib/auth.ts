@@ -142,7 +142,20 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
   try {
     const userDoc = await getDoc(doc(db, 'users', uid));
     if (userDoc.exists()) {
-      return userDoc.data() as UserProfile;
+      const profile = userDoc.data() as UserProfile;
+      
+      // Auto-fix corrupted data: if maxPages is -1 but user is not premium
+      if (profile.maxPages === -1 && !profile.isPremium) {
+        console.log('Detected corrupted maxPages, fixing...');
+        await setDoc(doc(db, 'users', uid), {
+          maxPages: 4,
+          pagesUsed: 0
+        }, { merge: true });
+        profile.maxPages = 4;
+        profile.pagesUsed = 0;
+      }
+      
+      return profile;
     }
     return null;
   } catch (error) {
@@ -166,6 +179,16 @@ export const incrementPageUsage = async (uid: string) => {
   try {
     const userProfile = await getUserProfile(uid);
     if (!userProfile) return false;
+    
+    // Fix corrupted data: if maxPages is -1 but user is not premium, reset to free tier limit
+    if (userProfile.maxPages === -1 && !userProfile.isPremium) {
+      await setDoc(doc(db, 'users', uid), {
+        maxPages: 4,
+        pagesUsed: 0
+      }, { merge: true });
+      console.log('Fixed corrupted maxPages for user:', uid);
+      return true; // Allow the first page after fix
+    }
     
     if (userProfile.isPremium) {
       // Premium users have unlimited pages
