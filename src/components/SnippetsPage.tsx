@@ -16,10 +16,11 @@ import {
   Lightbulb,
   ArrowsLeftRight,
   ArrowClockwise,
-  Eye
+  Eye,
+  Star
 } from '@phosphor-icons/react';
 import { useAuth } from '@/hooks/use-auth';
-import { getUserSnippets, deleteSnippet } from '@/lib/snippets';
+import { getUserSnippets, deleteSnippet, updateSnippet } from '@/lib/snippets';
 import { ContentSnippet } from '@/lib/types';
 import { toast } from 'sonner';
 import {
@@ -111,7 +112,35 @@ export function SnippetsPage() {
       );
     }
 
+    // Sort: favorites first, then by updated date
+    filtered = filtered.sort((a, b) => {
+      if (a.isFavorite && !b.isFavorite) return -1;
+      if (!a.isFavorite && b.isFavorite) return 1;
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
+
     setFilteredSnippets(filtered);
+  };
+
+  const toggleFavorite = async (snippet: ContentSnippet) => {
+    if (!user) return;
+
+    const updatedSnippet = {
+      ...snippet,
+      isFavorite: !snippet.isFavorite,
+      updatedAt: new Date(),
+    };
+
+    try {
+      await updateSnippet(snippet.id, { isFavorite: !snippet.isFavorite });
+      setSnippets(currentSnippets =>
+        currentSnippets.map(s => s.id === snippet.id ? updatedSnippet : s)
+      );
+      toast.success(updatedSnippet.isFavorite ? 'Added to favorites' : 'Removed from favorites');
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      toast.error('Failed to update favorite');
+    }
   };
 
   const handleDeleteSnippet = async () => {
@@ -262,13 +291,29 @@ export function SnippetsPage() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
+                  <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all group">
                     <CardContent className="p-4 space-y-3">
                       {/* Header */}
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2 flex-1 min-w-0">
                           <Icon size={18} className="text-primary flex-shrink-0" />
                           <h3 className="font-semibold text-base truncate">{snippet.title}</h3>
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleFavorite(snippet);
+                            }}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            title={snippet.isFavorite ? "Remove from favorites" : "Add to favorites"}
+                          >
+                            <Star 
+                              size={16} 
+                              weight={snippet.isFavorite ? "fill" : "regular"}
+                              className={snippet.isFavorite ? "text-amber-500" : ""}
+                            />
+                          </Button>
                         </div>
                         <Badge className={`${config.color} text-xs px-2 py-0.5 flex-shrink-0`}>
                           {config.label}

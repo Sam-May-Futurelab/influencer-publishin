@@ -106,6 +106,7 @@ export interface ContentSnippet {
   content: string;
   category: 'intro' | 'conclusion' | 'cta' | 'tip' | 'quote' | 'transition' | 'other';
   tags?: string[];
+  isFavorite?: boolean; // Star/favorite snippets to keep them at the top
   createdAt: Date;
   updatedAt: Date;
 }
