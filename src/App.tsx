@@ -598,6 +598,9 @@ function App() {
       case 'templates':
         goToTemplatesPage();
         break;
+      case 'snippets':
+        goToSnippetsPage();
+        break;
       case 'settings':
         goToSettingsPage();
         break;
