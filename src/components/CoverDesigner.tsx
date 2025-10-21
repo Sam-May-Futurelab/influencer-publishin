@@ -359,16 +359,15 @@ export function CoverDesigner({
 
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">
           {/* Preview Panel */}
-          <div className="lg:w-[45%] p-6 lg:p-10 flex items-center justify-center bg-muted/20 border-r">
-            <div className="space-y-6 w-full max-w-md">
-              <div className="text-sm font-semibold text-muted-foreground text-center uppercase tracking-wide">
-                Live Preview
-              </div>
-              <div
-                ref={canvasRef}
-                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden mx-auto max-w-xs"
-                style={getBackgroundStyle()}
-              >
+          <div className="lg:w-[45%] p-6 lg:p-8 flex flex-col items-center justify-center bg-muted/20 border-r overflow-y-auto">
+            <div className="text-xs font-semibold text-muted-foreground text-center uppercase tracking-wide mb-4">
+              Live Preview
+            </div>
+            <div
+              ref={canvasRef}
+              className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-sm"
+              style={getBackgroundStyle()}
+            >
                 {/* Overlay */}
                 {design.backgroundType === 'image' && design.overlay && (
                   <div
@@ -378,9 +377,9 @@ export function CoverDesigner({
                 )}
 
                 {/* Text Content */}
-                <div className="relative h-full flex flex-col items-center justify-center p-12 text-center">
+                <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
                   <h1
-                    className="font-bold leading-tight mb-6"
+                    className="font-bold leading-tight mb-4"
                     style={{
                       fontFamily: design.titleFont,
                       fontSize: `${design.titleSize}px`,
@@ -411,7 +410,6 @@ export function CoverDesigner({
                   </p>
                 </div>
               </div>
-            </div>
           </div>
 
           {/* Controls Panel */}
