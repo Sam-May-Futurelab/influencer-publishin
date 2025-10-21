@@ -6,7 +6,7 @@ import { SEO, createOrganizationSchema, createSoftwareApplicationSchema } from '
 import { 
   BookOpen, Sparkles, FileText, Download, Palette, TrendingUp, 
   Zap, Users, Award, Play, CheckCircle2, ArrowRight,
-  Twitter, Linkedin, Instagram, Github, Mail, Star
+  Twitter, Linkedin, Instagram, Github, Mail, Star, Mic
 } from 'lucide-react';
 import { 
   Accordion,
@@ -42,7 +42,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
       <SEO
         title="InkfluenceAI - AI-Powered Ebook Creator | Create Professional Ebooks in Minutes"
         description="Transform your ideas into professional ebooks with AI-powered writing assistance. Features intelligent content generation, custom branding, multi-format export, and SEO optimization. Start creating for free!"
-        keywords="AI ebook creator, ebook writing software, AI writing assistant, digital publishing, ebook generator, content creation, book writing AI, professional ebooks"
+        keywords="AI ebook creator, ebook writing software, AI writing assistant, voice to text, speech recognition, digital publishing, ebook generator, content creation, book writing AI, professional ebooks, dictation software"
         canonicalUrl="https://inkfluenceai.com/"
         structuredData={{
           ...createOrganizationSchema(),
@@ -372,6 +372,63 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
               >
                 Start Creating
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Feature 5: Voice Input */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 gap-12 items-center"
+          >
+            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-4 overflow-hidden shadow-lg">
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+                    <Mic className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">Voice Recording Active</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-sm text-gray-500 italic">Speaking: "The future of content creation..."</div>
+                  <div className="text-base font-medium text-gray-800">The future of content creation lies in the seamless integration of artificial intelligence and human creativity.</div>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-6">
+              <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium">
+                Speak your mind
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold">
+                Voice-to-text that actually works
+              </h2>
+              <p className="text-lg text-gray-600">
+                Speak naturally and watch your words appear in real-time. Perfect for brainstorming, 
+                capturing inspiration on-the-go, or when your thoughts flow faster than you can type.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Real-time speech recognition with visual feedback</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Hands-free content creation</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Keyboard shortcuts (⌘M to start, Esc to stop)</span>
+                </li>
+              </ul>
+              <Button 
+                onClick={onGetStarted}
+                size="lg"
+                className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
+              >
+                Try Voice Input
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>

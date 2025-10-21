@@ -6,7 +6,7 @@ import { Separator } from './ui/separator';
 import { LandingHeader } from './LandingHeader';
 import { LandingFooter } from './LandingFooter';
 import { SEO, createSoftwareApplicationSchema, createBreadcrumbSchema } from './SEO';
-import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud } from 'lucide-react';
+import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud, Mic } from 'lucide-react';
 
 interface FeaturesPageProps {
   onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog', action?: 'signin') => void;
@@ -22,6 +22,13 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
       description: "Advanced GPT-4 powered writing suggestions, content generation, and real-time editing assistance.",
       benefits: ["Overcome writer's block", "Generate high-quality content", "Maintain consistent tone", "Speed up writing process"],
       badge: "Most Popular"
+    },
+    {
+      icon: <Mic className="h-8 w-8 text-red-600" />,
+      title: "Voice-to-Text Dictation",
+      description: "Hands-free content creation with real-time speech recognition and visual feedback.",
+      benefits: ["Faster content creation", "Natural speaking flow", "Hands-free writing", "Real-time transcription"],
+      badge: "New"
     },
     {
       icon: <Palette className="h-8 w-8 text-purple-600" />,

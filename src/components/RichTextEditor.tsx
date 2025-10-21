@@ -126,6 +126,31 @@ export function RichTextEditor({
     }
   };
 
+  // Keyboard shortcuts for voice input
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Escape to stop recording
+      if (event.key === 'Escape' && isListening) {
+        event.preventDefault();
+        stopListening();
+        return;
+      }
+
+      // Ctrl+M (or Cmd+M on Mac) to toggle voice input
+      if ((event.ctrlKey || event.metaKey) && event.key === 'm' && !event.shiftKey) {
+        event.preventDefault();
+        handleVoiceToggle();
+        return;
+      }
+    };
+
+    // Only add event listener when editor is focused
+    if (editor) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [editor, isListening, stopListening, handleVoiceToggle]);
+
   // Update line height dynamically
   useEffect(() => {
     if (editor) {
@@ -207,7 +232,7 @@ export function RichTextEditor({
             size="sm"
             type="button"
             disabled={!isSupported}
-            title={isSupported ? (isListening ? "Stop recording" : "Start voice input") : "Voice input not supported"}
+            title={isSupported ? (isListening ? "Stop recording (Esc)" : "Start voice input (⌘M)") : "Voice input not supported"}
           >
             {isListening ? (
               <MicrophoneSlash size={16} weight="fill" />
