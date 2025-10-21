@@ -42,8 +42,8 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
         return;
       }
 
-      // Redirect to Stripe Checkout
-      window.location.href = result.url;
+      // Open Stripe Checkout in new tab to preserve user's work
+      window.open(result.url, '_blank', 'noopener,noreferrer');
     } catch (error) {
       console.error('Upgrade error:', error);
       toast.error('Failed to start upgrade process');
