@@ -140,7 +140,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       description: 'Project creation, chapters, basics',
       color: 'from-blue-500/20 to-blue-600/20',
       textColor: 'text-blue-600',
-      count: '8 articles'
+      count: '2 articles'
     },
     {
       icon: Sparkles,
@@ -148,7 +148,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       description: 'Content generation, prompts, enhancement',
       color: 'from-purple-500/20 to-purple-600/20',
       textColor: 'text-purple-600',
-      count: '12 articles'
+      count: '4 articles'
     },
     {
       icon: Palette,
@@ -156,7 +156,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       description: 'Covers, branding, fonts, colors',
       color: 'from-pink-500/20 to-pink-600/20',
       textColor: 'text-pink-600',
-      count: '7 articles'
+      count: '4 articles'
     },
     {
       icon: Download,
@@ -164,7 +164,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       description: 'PDF, EPUB, Kindle, distribution',
       color: 'from-green-500/20 to-green-600/20',
       textColor: 'text-green-600',
-      count: '6 articles'
+      count: '4 articles'
     },
     {
       icon: BookOpen,
@@ -172,7 +172,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       description: 'Pre-made templates, content ideas',
       color: 'from-orange-500/20 to-orange-600/20',
       textColor: 'text-orange-600',
-      count: '5 articles'
+      count: '1 article'
     },
     {
       icon: Shield,
@@ -180,7 +180,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       description: 'Premium features, payments, security',
       color: 'from-red-500/20 to-red-600/20',
       textColor: 'text-red-600',
-      count: '9 articles'
+      count: '6 articles'
     },
     {
       icon: Zap,
@@ -188,7 +188,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       description: 'Workflows, analytics, shortcuts',
       color: 'from-yellow-500/20 to-yellow-600/20',
       textColor: 'text-yellow-600',
-      count: '4 articles'
+      count: '3 articles'
     },
     {
       icon: HelpCircle,
@@ -196,7 +196,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       description: 'Common issues, solutions, support',
       color: 'from-gray-500/20 to-gray-600/20',
       textColor: 'text-gray-600',
-      count: '6 articles'
+      count: '5 articles'
     }
   ];
 
@@ -732,7 +732,7 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
 
           <Card className="neomorph-flat border-0">
             <CardContent className="p-6 md:p-8">
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
                 {filteredFaqs.map((faq, index) => (
                   <AccordionItem key={index} value={`item-${index}`}>
                     <AccordionTrigger className="text-left text-base md:text-lg font-semibold hover:text-primary">
