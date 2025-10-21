@@ -79,7 +79,9 @@ export function RichTextEditor({
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        strike: false, // Disable strike to avoid conflicts with underline
+      }),
       Underline,
       CharacterCount,
       TextAlign.configure({
@@ -137,7 +139,7 @@ export function RichTextEditor({
 
   // Handle AI text enhancement
   const handleAIEnhance = async () => {
-    if (!editor || !onAIEnhanceSelected) return;
+    if (!editor || !onAIEnhanceSelected || !editor.view || !editor.view.dom) return;
     
     const { from, to } = editor.state.selection;
     const selectedText = editor.state.doc.textBetween(from, to);
@@ -162,8 +164,8 @@ export function RichTextEditor({
     }
   };
 
-  // Check if text is selected
-  const hasSelection = editor ? !editor.state.selection.empty : false;
+  // Check if text is selected (with safety checks)
+  const hasSelection = editor && editor.view && editor.view.dom ? !editor.state.selection.empty : false;
 
   // Keyboard shortcuts for voice input
   useEffect(() => {

@@ -372,19 +372,20 @@ export function SnippetsPage() {
                           variant="outline"
                           onClick={() => handleCopySnippet(snippet.content)}
                           className="h-8 gap-1 text-xs neomorph-button border-0"
-                          title="Copy content to clipboard"
+                          title="Copy text to clipboard"
                         >
                           <Copy size={14} weight="bold" />
-                          Copy
+                          Copy Text
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleDuplicateSnippet(snippet)}
-                          className="h-8 px-2 text-xs neomorph-button border-0"
-                          title="Create a copy of this snippet"
+                          className="h-8 gap-1 text-xs neomorph-button border-0"
+                          title="Create a duplicate of this snippet"
                         >
                           <CopySimple size={14} weight="bold" />
+                          Duplicate
                         </Button>
                         <Button
                           size="sm"
