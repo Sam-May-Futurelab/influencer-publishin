@@ -1,187 +1,125 @@
-import { useState, useEffect, useCallback } from 'react';
-import { PaymentService, SubscriptionProduct, PurchaseResult, SUBSCRIPTION_PRODUCTS } from '@/lib/payments';
+import { useState, useCallback } from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { upgradeToPremium } from '@/lib/auth';
 import { toast } from 'sonner';
 
 export interface PaymentState {
-  products: SubscriptionProduct[];
   loading: boolean;
   purchasing: boolean;
   initialized: boolean;
 }
 
+// Stripe price IDs (these should match your Stripe dashboard)
+const STRIPE_PRICES = {
+  monthly: import.meta.env.VITE_STRIPE_MONTHLY_PRICE_ID || 'price_1S9qW1Dg7CTY7UgaLvL0Wn8j',
+  yearly: import.meta.env.VITE_STRIPE_YEARLY_PRICE_ID || 'price_1S9qW2Dg7CTY7UgaPBLRw8zK'
+};
+
 export function usePayments() {
   const { user, userProfile, refreshProfile } = useAuth();
   const [state, setState] = useState<PaymentState>({
-    products: [],
-    loading: true,
+    loading: false,
     purchasing: false,
-    initialized: false
+    initialized: true // Stripe is always available on web
   });
 
-  const paymentService = PaymentService.getInstance();
+  // Create Stripe checkout session and redirect to Stripe
+  const createCheckoutSession = async (priceId: string) => {
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
 
-  // Initialize payment service and load products
-  useEffect(() => {
-    let mounted = true;
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        priceId,
+        userId: user.uid,
+        userEmail: user.email
+      }),
+    });
 
-    const initializePayments = async () => {
-      try {
-        const initialized = await paymentService.initialize();
-        if (!mounted) return;
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to create checkout session');
+    }
 
-        if (initialized) {
-          const products = await paymentService.getProducts();
-          if (mounted) {
-            setState(prev => ({
-              ...prev,
-              products,
-              initialized: true,
-              loading: false
-            }));
-          }
-        } else {
-          if (mounted) {
-            setState(prev => ({
-              ...prev,
-              loading: false,
-              initialized: false
-            }));
-          }
-        }
-      } catch (error) {
-        console.error('Failed to initialize payments:', error);
-        if (mounted) {
-          setState(prev => ({
-            ...prev,
-            loading: false,
-            initialized: false
-          }));
-        }
-      }
-    };
+    return data.url;
+  };
 
-    initializePayments();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  // Purchase a subscription
+  // Purchase a subscription using Stripe Checkout
   const purchaseSubscription = useCallback(async (planId: 'monthly' | 'yearly'): Promise<boolean> => {
     if (!user || !state.initialized) {
-      toast.error('Payment system not ready. Please try again.');
+      toast.error('Please sign in to upgrade to premium.');
       return false;
     }
 
-    const productId = planId === 'monthly' 
-      ? SUBSCRIPTION_PRODUCTS.MONTHLY 
-      : SUBSCRIPTION_PRODUCTS.YEARLY;
-
-    const product = paymentService.getProduct(productId);
-    if (!product) {
-      toast.error('Subscription plan not found.');
-      return false;
-    }
+    const priceId = planId === 'monthly' ? STRIPE_PRICES.monthly : STRIPE_PRICES.yearly;
 
     setState(prev => ({ ...prev, purchasing: true }));
 
     try {
       // Show purchase starting
-      toast.loading(`Starting purchase of ${product.title}...`, { id: 'purchase' });
+      toast.loading('Redirecting to Stripe checkout...', { id: 'purchase' });
 
-      // Attempt purchase
-      const result: PurchaseResult = await paymentService.purchaseSubscription(productId);
+      // Create checkout session and redirect to Stripe
+      const checkoutUrl = await createCheckoutSession(priceId);
+      
+      // Redirect to Stripe Checkout
+      window.location.href = checkoutUrl;
+      
+      // Return true since we're redirecting (actual success handled by webhook)
+      return true;
 
-      if (result.success) {
-        // Update user to premium in Firebase
-        const upgradeSuccess = await upgradeToPremium(user.uid);
-        
-        if (upgradeSuccess) {
-          // Refresh user profile to show premium status
-          await refreshProfile();
-          
-          toast.success(`Welcome to Premium! ${product.title} activated.`, { id: 'purchase' });
-          return true;
-        } else {
-          toast.error('Purchase successful but failed to activate premium. Contact support.', { id: 'purchase' });
-          return false;
-        }
+    } catch (error) {
+      console.error('Stripe checkout error:', error);
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to start checkout. Please try again.',
+        { id: 'purchase' }
+      );
+      return false;
+    } finally {
+      setState(prev => ({ ...prev, purchasing: false }));
+    }
+  }, [user, state.initialized]);
+
+  // Restore purchases (not needed for Stripe web, but kept for compatibility)
+  const restorePurchases = useCallback(async (): Promise<boolean> => {
+    if (!user) {
+      toast.error('Please sign in first.');
+      return false;
+    }
+
+    try {
+      // Refresh user profile to get latest subscription status
+      await refreshProfile();
+      
+      if (userProfile?.isPremium) {
+        toast.success('Premium subscription restored!');
+        return true;
       } else {
-        toast.error(result.error || 'Purchase failed. Please try again.', { id: 'purchase' });
+        toast.info('No active premium subscription found.');
         return false;
       }
     } catch (error) {
-      console.error('Purchase error:', error);
-      toast.error('Purchase failed. Please check your payment method and try again.', { id: 'purchase' });
-      return false;
-    } finally {
-      setState(prev => ({ ...prev, purchasing: false }));
-    }
-  }, [user, state.initialized, refreshProfile]);
-
-  // Restore purchases
-  const restorePurchases = useCallback(async (): Promise<boolean> => {
-    if (!user || !state.initialized) {
-      toast.error('Cannot restore purchases at this time.');
+      console.error('Restore purchases error:', error);
+      toast.error('Failed to restore purchases. Please try again.');
       return false;
     }
+  }, [user, userProfile?.isPremium, refreshProfile]);
 
-    setState(prev => ({ ...prev, purchasing: true }));
-
-    try {
-      toast.loading('Restoring purchases...', { id: 'restore' });
-
-      const purchases = await paymentService.restorePurchases();
-      
-      if (purchases.length > 0) {
-        // Check if any purchase is still active
-        const activePurchase = purchases.find(p => p.success);
-        
-        if (activePurchase) {
-          const upgradeSuccess = await upgradeToPremium(user.uid);
-          
-          if (upgradeSuccess) {
-            await refreshProfile();
-            toast.success('Premium subscription restored!', { id: 'restore' });
-            return true;
-          }
-        }
-      }
-
-      toast.info('No active premium subscriptions found.', { id: 'restore' });
-      return false;
-    } catch (error) {
-      console.error('Restore error:', error);
-      toast.error('Failed to restore purchases.', { id: 'restore' });
-      return false;
-    } finally {
-      setState(prev => ({ ...prev, purchasing: false }));
-    }
-  }, [user, state.initialized, refreshProfile]);
-
-  // Get product by plan type
-  const getProduct = useCallback((planId: 'monthly' | 'yearly'): SubscriptionProduct | undefined => {
-    const productId = planId === 'monthly' 
-      ? SUBSCRIPTION_PRODUCTS.MONTHLY 
-      : SUBSCRIPTION_PRODUCTS.YEARLY;
-    return paymentService.getProduct(productId);
-  }, []);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      paymentService.dispose();
-    };
-  }, []);
+  // Check if purchases are available (always true for web Stripe)
+  const canPurchase = true;
 
   return {
-    ...state,
+    products: [], // Not used for Stripe web implementation
+    loading: state.loading,
+    purchasing: state.purchasing,
+    canPurchase,
+    initialized: state.initialized,
     purchaseSubscription,
     restorePurchases,
-    getProduct,
-    canPurchase: state.initialized && !state.purchasing && !userProfile?.isPremium
   };
 }
