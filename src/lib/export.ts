@@ -214,6 +214,82 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           page-break-after: avoid;
         }
         
+        /* Table of Contents Styles */
+        .table-of-contents {
+          page-break-after: always;
+          margin-bottom: 3em;
+          padding: 2em 0;
+        }
+        
+        .toc-title {
+          font-size: 2.5em;
+          font-weight: 700;
+          color: ${brand?.primaryColor || '#8B5CF6'};
+          margin-bottom: 1.5em;
+          text-align: center;
+          border-bottom: 3px solid ${brand?.accentColor || '#C4B5FD'};
+          padding-bottom: 0.5em;
+        }
+        
+        .toc-list {
+          list-style: none;
+        }
+        
+        .toc-item {
+          margin-bottom: 0.8em;
+          padding: 0.5em 0;
+          border-bottom: 1px dotted #e5e7eb;
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+        }
+        
+        .toc-item:hover {
+          background: ${brand?.primaryColor || '#8B5CF6'}05;
+          padding-left: 0.5em;
+          margin-left: -0.5em;
+          transition: all 0.2s;
+        }
+        
+        .toc-chapter-number {
+          font-size: 0.9em;
+          color: ${brand?.secondaryColor || '#A78BFA'};
+          font-weight: 600;
+          margin-right: 0.5em;
+        }
+        
+        .toc-chapter-title {
+          font-size: 1.1em;
+          font-weight: 500;
+          color: #374151;
+          flex: 1;
+        }
+        
+        .toc-link {
+          text-decoration: none;
+          color: inherit;
+          display: flex;
+          flex: 1;
+          align-items: baseline;
+        }
+        
+        .toc-link:hover .toc-chapter-title {
+          color: ${brand?.primaryColor || '#8B5CF6'};
+        }
+        
+        .toc-dots {
+          flex: 1;
+          border-bottom: 2px dotted #d1d5db;
+          margin: 0 0.5em 0.3em 0.5em;
+          min-width: 1em;
+        }
+        
+        .toc-page {
+          font-size: 0.9em;
+          color: ${brand?.primaryColor || '#8B5CF6'};
+          font-weight: 600;
+        }
+        
         .chapter-number {
           font-size: 1em;
           color: ${brand?.secondaryColor || '#A78BFA'};
@@ -315,8 +391,17 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
             margin-top: 0;
           }
           
+          .table-of-contents {
+            page-break-after: always;
+          }
+          
           .chapter {
+            page-break-before: always;
             page-break-inside: avoid;
+          }
+          
+          .chapter:first-of-type {
+            page-break-before: auto;
           }
           
           .chapter-title {
@@ -342,8 +427,26 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
         </div>
         
         <div class="content-page">
+          <!-- Table of Contents -->
+          <div class="table-of-contents">
+            <h2 class="toc-title">Table of Contents</h2>
+            <ul class="toc-list">
+              ${sortedChapters.map((chapter, index) => `
+                <li class="toc-item">
+                  <a href="#chapter-${index + 1}" class="toc-link">
+                    <span class="toc-chapter-number">Chapter ${index + 1}</span>
+                    <span class="toc-chapter-title">${escapeHtml(chapter.title)}</span>
+                    <span class="toc-dots"></span>
+                  </a>
+                  <span class="toc-page">${index + 2}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+          
+          <!-- Chapters -->
           ${sortedChapters.map((chapter, index) => `
-            <div class="chapter">
+            <div class="chapter" id="chapter-${index + 1}">
               <div class="chapter-number">Chapter ${index + 1}</div>
               <h2 class="chapter-title">${escapeHtml(chapter.title)}</h2>
               <div class="chapter-content">
