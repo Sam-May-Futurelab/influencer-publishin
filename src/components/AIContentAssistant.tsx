@@ -51,6 +51,41 @@ export function AIContentAssistant({
   const [length, setLength] = useState<Length>('standard');
   const [format, setFormat] = useState<Format>('narrative');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showPromptLibrary, setShowPromptLibrary] = useState(false);
+
+  // Prompt Library Examples
+  const promptExamples = [
+    {
+      category: 'Digital Marketing',
+      prompt: 'SEO best practices, content marketing strategies, social media engagement tactics, email marketing automation',
+      icon: '📱'
+    },
+    {
+      category: 'Health & Wellness',
+      prompt: 'nutrition guidelines, exercise routines, mental health tips, stress management techniques, healthy lifestyle habits',
+      icon: '🌱'
+    },
+    {
+      category: 'Business Growth',
+      prompt: 'startup strategies, revenue growth tactics, customer acquisition, team building, scaling operations',
+      icon: '🚀'
+    },
+    {
+      category: 'Personal Finance',
+      prompt: 'budgeting strategies, investment basics, retirement planning, debt management, savings tips',
+      icon: '💰'
+    },
+    {
+      category: 'Productivity',
+      prompt: 'time management techniques, goal setting methods, focus strategies, workflow optimization, habit building',
+      icon: '⚡'
+    },
+    {
+      category: 'Content Creation',
+      prompt: 'writing techniques, storytelling methods, audience engagement, content planning, creative process',
+      icon: '✍️'
+    }
+  ];
 
   // Clear suggestions when chapter changes
   useEffect(() => {
@@ -261,6 +296,58 @@ export function AIContentAssistant({
               </div>
             )}
           </div>
+
+          {/* Prompt Library Toggle */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowPromptLibrary(!showPromptLibrary)}
+            className="w-full h-8 gap-2 text-xs neomorph-flat border-0 hover:neomorph-inset"
+          >
+            <Lightbulb size={14} weight={showPromptLibrary ? 'fill' : 'regular'} />
+            {showPromptLibrary ? 'Hide' : 'Show'} Example Prompts
+          </Button>
+
+          {/* Prompt Library */}
+          <AnimatePresence>
+            {showPromptLibrary && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-3 bg-muted/30 rounded-lg">
+                  {promptExamples.map((example, index) => (
+                    <motion.button
+                      key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      onClick={() => {
+                        setKeywords(example.prompt);
+                        setShowPromptLibrary(false);
+                        toast.success(`Applied ${example.category} prompt!`);
+                      }}
+                      className="text-left p-2 rounded-lg bg-background hover:bg-primary/10 transition-colors neomorph-flat hover:neomorph-inset group"
+                    >
+                      <div className="flex items-start gap-2">
+                        <span className="text-lg">{example.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-xs mb-1 group-hover:text-primary transition-colors">
+                            {example.category}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground line-clamp-2">
+                            {example.prompt}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           <div className="flex gap-2">
             <Input
