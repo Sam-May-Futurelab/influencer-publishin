@@ -14,7 +14,8 @@ import {
   Quotes,
   SignOut as ExitIcon,
   Lightbulb,
-  ArrowsLeftRight
+  ArrowsLeftRight,
+  ArrowClockwise
 } from '@phosphor-icons/react';
 import { useAuth } from '@/hooks/use-auth';
 import { getUserSnippets, deleteSnippet } from '@/lib/snippets';
@@ -49,6 +50,7 @@ export function SnippetsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [snippetToDelete, setSnippetToDelete] = useState<ContentSnippet | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     loadSnippets();
@@ -64,12 +66,21 @@ export function SnippetsPage() {
     setLoading(true);
     try {
       const userSnippets = await getUserSnippets(user.uid);
+      console.log('Loaded snippets:', userSnippets.length);
       setSnippets(userSnippets);
     } catch (error) {
+      console.error('Error loading snippets:', error);
       toast.error('Failed to load snippets');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await loadSnippets();
+    setRefreshing(false);
+    toast.success('Snippets refreshed!');
   };
 
   const filterSnippets = () => {
@@ -135,10 +146,27 @@ export function SnippetsPage() {
             Save and reuse your best content blocks
           </p>
         </div>
-        <Button className="neomorph-button border-0 gap-2">
-          <Plus size={16} weight="bold" />
-          <span className="hidden sm:inline">Create Snippet</span>
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="neomorph-button border-0 gap-2"
+            title="Refresh snippets"
+          >
+            <motion.div
+              animate={refreshing ? { rotate: 360 } : {}}
+              transition={refreshing ? { duration: 1, repeat: Infinity, ease: "linear" } : {}}
+            >
+              <ArrowClockwise size={16} weight="bold" />
+            </motion.div>
+            <span className="hidden sm:inline">Refresh</span>
+          </Button>
+          <Button className="neomorph-button border-0 gap-2">
+            <Plus size={16} weight="bold" />
+            <span className="hidden sm:inline">Create Snippet</span>
+          </Button>
+        </div>
       </motion.div>
 
       {/* Controls */}

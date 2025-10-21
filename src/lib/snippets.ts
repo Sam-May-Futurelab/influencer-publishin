@@ -32,13 +32,47 @@ export const getUserSnippets = async (userId: string): Promise<ContentSnippet[]>
     );
 
     const querySnapshot = await getDocs(snippetsQuery);
-    return querySnapshot.docs.map(doc => ({
+    const snippets = querySnapshot.docs.map(doc => ({
       ...doc.data(),
       createdAt: doc.data().createdAt?.toDate(),
       updatedAt: doc.data().updatedAt?.toDate(),
     } as ContentSnippet));
+    
+    console.log(`Retrieved ${snippets.length} snippets for user ${userId}`);
+    return snippets;
   } catch (error) {
     console.error('Error getting snippets:', error);
+    
+    // If the error is about missing index, try without orderBy
+    if (error instanceof Error && error.message.includes('index')) {
+      console.warn('Firestore index missing, fetching without orderBy...');
+      try {
+        const simpleQuery = query(
+          collection(db, 'snippets'),
+          where('userId', '==', userId)
+        );
+        const querySnapshot = await getDocs(simpleQuery);
+        const snippets = querySnapshot.docs.map(doc => ({
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate(),
+          updatedAt: doc.data().updatedAt?.toDate(),
+        } as ContentSnippet));
+        
+        // Sort in memory
+        snippets.sort((a, b) => {
+          const aTime = a.updatedAt?.getTime() || 0;
+          const bTime = b.updatedAt?.getTime() || 0;
+          return bTime - aTime;
+        });
+        
+        console.log(`Retrieved ${snippets.length} snippets (fallback method)`);
+        return snippets;
+      } catch (fallbackError) {
+        console.error('Fallback query also failed:', fallbackError);
+        return [];
+      }
+    }
+    
     return [];
   }
 };

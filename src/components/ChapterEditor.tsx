@@ -161,11 +161,6 @@ export function ChapterEditor({
       return;
     }
     
-    if (selectedText.length < 10) {
-      toast.error('Please select at least 10 characters');
-      return;
-    }
-    
     // Set the content and open dialog
     setSnippetContent(selectedText);
     setSnippetTitle(''); // Reset title
