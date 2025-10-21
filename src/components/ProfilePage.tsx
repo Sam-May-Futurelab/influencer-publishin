@@ -93,7 +93,9 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     const saved = localStorage.getItem('ebookCrafterSettings');
     if (saved) {
       try {
-        setSettings(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        // Merge with defaults to ensure all fields exist
+        setSettings(prev => ({ ...prev, ...parsed }));
       } catch (error) {
         console.error('Failed to load settings:', error);
       }
@@ -632,7 +634,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
               <div className="space-y-2">
                 <Label htmlFor="autoSave">Auto-save Interval</Label>
                 <Select 
-                  value={settings.autoSaveInterval.toString()} 
+                  value={(settings.autoSaveInterval || 30).toString()} 
                   onValueChange={(value) => updateSetting('autoSaveInterval', parseInt(value))}
                 >
                   <SelectTrigger className="neomorph-inset border-0">
