@@ -224,8 +224,8 @@ export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
   return (
     <div className="min-h-screen bg-background">
       <LandingHeader 
-        onSignIn={() => onNavigate('landing')}
-        onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
+        onSignIn={() => onNavigate('signin')}
+        onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
         showNavLinks={true}
         isAuthenticated={isAuthenticated}
       />

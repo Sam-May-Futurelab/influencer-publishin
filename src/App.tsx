@@ -700,6 +700,9 @@ function App() {
               onNavigate={(page) => {
                 if (page === 'landing') {
                   navigate('/');
+                } else if (page === 'signin') {
+                  navigate('/');
+                  setShowAuthModal(true);
                 } else if (page === 'dashboard') {
                   if (user) {
                     navigate('/');
@@ -721,6 +724,9 @@ function App() {
               onNavigate={(page) => {
                 if (page === 'landing') {
                   navigate('/');
+                } else if (page === 'signin') {
+                  navigate('/');
+                  setShowAuthModal(true);
                 } else if (page === 'dashboard') {
                   if (user) {
                     navigate('/');
@@ -742,6 +748,9 @@ function App() {
               onNavigate={(page) => {
                 if (page === 'landing') {
                   navigate('/');
+                } else if (page === 'signin') {
+                  navigate('/');
+                  setShowAuthModal(true);
                 } else if (page === 'dashboard') {
                   if (user) {
                     navigate('/');
