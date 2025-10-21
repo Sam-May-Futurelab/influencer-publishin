@@ -46,9 +46,9 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           border: '4px solid red'
         }}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full bg-white" style={{ backgroundColor: '#ffffff' }}>
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white" style={{ backgroundColor: '#ffffff' }}>
             <div className="flex items-center gap-2">
               <BookOpen className="w-6 h-6 text-[#9b87b8]" />
               <span className="text-lg font-bold bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] bg-clip-text text-transparent">
@@ -65,7 +65,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           </div>
 
           {/* Navigation Links */}
-          <div className="flex-1 p-6">
+          <div className="flex-1 p-6 bg-white" style={{ backgroundColor: '#ffffff' }}>
             <nav className="space-y-4">
               {onNavigateToFeatures && (
                 <button
@@ -111,7 +111,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="p-6 border-t border-gray-200 space-y-3">
+          <div className="p-6 border-t border-gray-200 space-y-3 bg-white" style={{ backgroundColor: '#ffffff' }}>
             {onSignIn && (
               <Button 
                 variant="outline" 
