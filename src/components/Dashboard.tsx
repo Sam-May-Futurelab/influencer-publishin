@@ -23,11 +23,16 @@ import {
   Eye,
   Sparkle,
   Rocket,
-  Trash
+  Trash,
+  Pencil,
+  Fire,
+  CheckCircle,
+  Clock
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { PreviewDialog } from '@/components/PreviewDialog';
+import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 
 interface DashboardProps {
   projects: EbookProject[];
@@ -44,6 +49,7 @@ export function Dashboard({
   onShowTemplateGallery,
   onDeleteProject
 }: DashboardProps) {
+  const { stats, totalWords } = useWritingAnalytics(projects);
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -84,10 +90,80 @@ export function Dashboard({
 
   return (
     <div className="space-y-6 lg:space-y-8">
+      {/* Analytics Stats - Only show if user has data */}
+      {projects.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+        >
+          {/* Total Words */}
+          <Card className="neomorph-flat border-0">
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <div className="p-2 rounded-lg bg-blue-500/10">
+                  <Pencil size={20} weight="bold" className="text-blue-600 dark:text-blue-400" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-2xl lg:text-3xl font-bold">{totalWords.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">Total Words</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Writing Streak */}
+          <Card className="neomorph-flat border-0">
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <div className="p-2 rounded-lg bg-orange-500/10">
+                  <Fire size={20} weight="fill" className="text-orange-600 dark:text-orange-400" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-2xl lg:text-3xl font-bold">{stats.currentStreak}</p>
+                <p className="text-xs text-muted-foreground">Day Streak</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Projects Completed */}
+          <Card className="neomorph-flat border-0">
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <div className="p-2 rounded-lg bg-green-500/10">
+                  <CheckCircle size={20} weight="fill" className="text-green-600 dark:text-green-400" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-2xl lg:text-3xl font-bold">{projects.length}</p>
+                <p className="text-xs text-muted-foreground">Projects</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Words This Week */}
+          <Card className="neomorph-flat border-0">
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <div className="p-2 rounded-lg bg-purple-500/10">
+                  <Clock size={20} weight="fill" className="text-purple-600 dark:text-purple-400" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-2xl lg:text-3xl font-bold">{stats.totalWordsThisWeek.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">This Week</p>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       {/* Welcome Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: projects.length > 0 ? 0.1 : 0 }}
         className="text-center space-y-3"
       >
         <h1 className="text-2xl lg:text-4xl font-bold">

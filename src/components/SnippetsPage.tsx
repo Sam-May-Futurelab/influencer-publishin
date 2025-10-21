@@ -262,62 +262,62 @@ export function SnippetsPage() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all group">
+                  <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
                     <CardContent className="p-4 space-y-3">
                       {/* Header */}
-                      <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2 flex-1 min-w-0">
-                          <Icon size={16} className="text-primary flex-shrink-0" />
-                          <h3 className="font-semibold text-sm truncate">{snippet.title}</h3>
+                          <Icon size={18} className="text-primary flex-shrink-0" />
+                          <h3 className="font-semibold text-base truncate">{snippet.title}</h3>
                         </div>
-                        <Badge className={`${config.color} text-[10px] px-1.5 py-0.5`}>
+                        <Badge className={`${config.color} text-xs px-2 py-0.5 flex-shrink-0`}>
                           {config.label}
                         </Badge>
                       </div>
 
                       {/* Content Preview */}
-                      <p className="text-xs text-muted-foreground line-clamp-3">
+                      <p className="text-sm text-muted-foreground line-clamp-4 leading-relaxed min-h-[5rem]">
                         {snippet.content}
                       </p>
 
                       {/* Tags */}
                       {snippet.tags && snippet.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1.5 pt-1">
                           {snippet.tags.slice(0, 3).map(tag => (
-                            <Badge key={tag} variant="outline" className="text-[10px] px-1.5 py-0">
+                            <Badge key={tag} variant="outline" className="text-xs px-2 py-0.5">
                               {tag}
                             </Badge>
                           ))}
                         </div>
                       )}
 
-                      {/* Actions */}
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {/* Actions - Always Visible */}
+                      <div className="flex items-center gap-2 pt-2 border-t border-border/50">
                         <Button
                           size="sm"
-                          variant="ghost"
+                          variant="outline"
                           onClick={() => setPreviewSnippet(snippet)}
-                          className="h-7 gap-1.5 text-xs flex-1"
+                          className="h-8 gap-2 text-xs flex-1 neomorph-button border-0"
                         >
-                          <Eye size={12} />
+                          <Eye size={14} weight="bold" />
                           Preview
                         </Button>
                         <Button
                           size="sm"
-                          variant="ghost"
+                          variant="outline"
                           onClick={() => handleCopySnippet(snippet.content)}
-                          className="h-7 gap-1.5 text-xs flex-1"
+                          className="h-8 gap-2 text-xs flex-1 neomorph-button border-0"
                         >
-                          <Copy size={12} />
+                          <Copy size={14} weight="bold" />
                           Copy
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => setSnippetToDelete(snippet)}
-                          className="h-7 gap-1.5 text-xs text-destructive hover:text-destructive"
+                          className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
                         >
-                          <Trash size={12} />
+                          <Trash size={14} weight="bold" />
                         </Button>
                       </div>
                     </CardContent>
