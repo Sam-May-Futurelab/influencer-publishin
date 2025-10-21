@@ -366,7 +366,7 @@ export function AIContentAssistant({
                 onClick={generateContent}
                 disabled={isGenerating || !keywords.trim()}
                 size="sm"
-                className={`gap-2 h-10 px-4 neomorph-button border-0 ${!canGenerate && !isPremium ? 'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50' : ''}`}
+                className={`gap-2 h-10 px-4 neomorph-button border-0 ${!canGenerate && !isPremium ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white' : ''}`}
               >
                 {isGenerating ? (
                   <>

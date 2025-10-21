@@ -146,7 +146,6 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
       
       // Auto-fix corrupted data: if maxPages is -1 but user is not premium
       if (profile.maxPages === -1 && !profile.isPremium) {
-        console.log('Detected corrupted maxPages, fixing...');
         await setDoc(doc(db, 'users', uid), {
           maxPages: 4,
           pagesUsed: 0
@@ -186,7 +185,6 @@ export const incrementPageUsage = async (uid: string) => {
         maxPages: 4,
         pagesUsed: 0
       }, { merge: true });
-      console.log('Fixed corrupted maxPages for user:', uid);
       return true; // Allow the first page after fix
     }
     

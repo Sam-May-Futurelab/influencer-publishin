@@ -37,13 +37,6 @@ export function useUsageTracking(userId: string | null, isPremium: boolean) {
         if (usageDoc.exists()) {
           const data = usageDoc.data() as UsageLimit;
           
-          console.log('Loaded usage data:', {
-            stored: data,
-            today: today,
-            storedDate: data.lastResetDate,
-            needsReset: data.lastResetDate !== today || data.dailyGenerations !== dailyLimit
-          });
-          
           // Reset counter if it's a new day OR if dailyLimit changed (tier upgrade/downgrade)
           if (data.lastResetDate !== today || data.dailyGenerations !== dailyLimit) {
             const resetData: UsageLimit = {
@@ -53,10 +46,8 @@ export function useUsageTracking(userId: string | null, isPremium: boolean) {
             };
             await setDoc(usageRef, resetData);
             setUsage(resetData);
-            console.log('Usage reset for new day or tier change:', resetData);
           } else {
             setUsage(data);
-            console.log('Using existing usage data:', data);
           }
         } else {
           // First time - create usage document
@@ -67,7 +58,6 @@ export function useUsageTracking(userId: string | null, isPremium: boolean) {
           };
           await setDoc(usageRef, newData);
           setUsage(newData);
-          console.log('Created new usage document:', newData);
         }
       } catch (error) {
         console.error('Error loading usage data:', error);
