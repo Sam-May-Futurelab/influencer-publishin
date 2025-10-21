@@ -6,6 +6,7 @@ interface LandingFooterProps {
   onNavigateToCookies?: () => void;
   onNavigateToHelp?: () => void;
   onNavigateToAbout?: () => void;
+  onNavigateToPricing?: () => void;
 }
 
 export function LandingFooter({ 
@@ -13,7 +14,8 @@ export function LandingFooter({
   onNavigateToTerms, 
   onNavigateToCookies, 
   onNavigateToHelp, 
-  onNavigateToAbout 
+  onNavigateToAbout,
+  onNavigateToPricing 
 }: LandingFooterProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -56,7 +58,11 @@ export function LandingFooter({
             <h4 className="font-semibold mb-4">Product</h4>
             <ul className="space-y-2 text-gray-300">
               <li><a href="#features" onClick={() => scrollToSection('features')} className="hover:text-white transition-colors cursor-pointer">Features</a></li>
-              <li><a href="#pricing" onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors cursor-pointer">Pricing</a></li>
+              {onNavigateToPricing ? (
+                <li><button onClick={onNavigateToPricing} className="hover:text-white transition-colors">Pricing</button></li>
+              ) : (
+                <li><a href="#pricing" onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors cursor-pointer">Pricing</a></li>
+              )}
               <li><a href="#" className="hover:text-white transition-colors">Templates</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Integrations</a></li>
             </ul>

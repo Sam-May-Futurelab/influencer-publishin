@@ -23,9 +23,10 @@ interface LandingPageProps {
   onNavigateToCookies?: () => void;
   onNavigateToHelp?: () => void;
   onNavigateToAbout?: () => void;
+  onNavigateToPricing?: () => void;
 }
 
-export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout }: LandingPageProps) {
+export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout, onNavigateToPricing }: LandingPageProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -636,6 +637,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
         onNavigateToCookies={onNavigateToCookies}
         onNavigateToHelp={onNavigateToHelp}
         onNavigateToAbout={onNavigateToAbout}
+        onNavigateToPricing={onNavigateToPricing}
       />
     </div>
   );

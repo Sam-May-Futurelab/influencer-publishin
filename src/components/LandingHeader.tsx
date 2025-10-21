@@ -38,6 +38,12 @@ export function LandingHeader({
         {showNavLinks && (
           <div className="hidden md:flex items-center gap-6">
             <button 
+              onClick={() => navigate('/pricing')}
+              className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
+            >
+              Pricing
+            </button>
+            <button 
               onClick={() => navigate('/about')}
               className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
             >
@@ -124,6 +130,15 @@ export function LandingHeader({
 
               {/* Navigation Links */}
               <div className="space-y-4 mb-8">
+                <button
+                  onClick={() => {
+                    navigate('/pricing');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                >
+                  Pricing
+                </button>
                 <button
                   onClick={() => {
                     navigate('/about');

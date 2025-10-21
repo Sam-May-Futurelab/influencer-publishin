@@ -30,6 +30,7 @@ const TermsOfService = lazy(() => import('@/components/TermsOfService').then(mod
 const CookiePolicy = lazy(() => import('@/components/CookiePolicy').then(module => ({ default: module.CookiePolicy })));
 const AboutPage = lazy(() => import('@/components/AboutPage').then(module => ({ default: module.AboutPage })));
 const HelpCenter = lazy(() => import('@/components/HelpCenter').then(module => ({ default: module.HelpCenter })));
+const PricingPage = lazy(() => import('@/components/PricingPage').then(module => ({ default: module.PricingPage })));
 
 // Lazy load heavy components
 const ChapterEditor = lazy(() => import('@/components/ChapterEditor').then(module => ({ default: module.ChapterEditor })));
@@ -62,7 +63,7 @@ function App() {
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'snippets' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies' | 'about' | 'help'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'snippets' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies' | 'about' | 'help' | 'pricing'>('dashboard');
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -120,6 +121,8 @@ function App() {
       setViewMode('about');
     } else if (path === '/help') {
       setViewMode('help');
+    } else if (path === '/pricing') {
+      setViewMode('pricing');
     } else if (path === '/privacy') {
       setViewMode('privacy');
     } else if (path === '/terms') {
@@ -732,6 +735,29 @@ function App() {
             />
           </Suspense>
         </main>
+      ) : viewMode === 'pricing' ? (
+        <main className="p-0">
+          <Suspense fallback={<PageLoading />}>
+            <PricingPage 
+              onNavigate={(page) => {
+                if (page === 'landing') {
+                  navigate('/');
+                } else if (page === 'dashboard') {
+                  if (user) {
+                    navigate('/');
+                  } else {
+                    setShowAuthModal(true);
+                  }
+                } else if (page === 'help') {
+                  navigate('/help');
+                } else if (page === 'about') {
+                  navigate('/about');
+                }
+              }}
+              isAuthenticated={!!user}
+            />
+          </Suspense>
+        </main>
       ) : !user ? (
         /* Show Landing Page if user is not authenticated */
         <LandingPage 
@@ -742,6 +768,7 @@ function App() {
           onNavigateToCookies={() => navigate('/cookies')}
           onNavigateToHelp={() => navigate('/help')}
           onNavigateToAbout={() => navigate('/about')}
+          onNavigateToPricing={() => navigate('/pricing')}
         />
       ) : user && (
         <>
