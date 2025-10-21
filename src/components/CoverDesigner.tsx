@@ -344,7 +344,7 @@ export function CoverDesigner({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-7xl w-[95vw] max-h-[95vh] flex flex-col p-0 gap-0">
+      <DialogContent className="max-w-[1800px] w-[98vw] max-h-[95vh] flex flex-col p-0 gap-0">
         <DialogHeader className="p-6 lg:p-8 pb-4 lg:pb-6 border-b">
           <DialogTitle className="text-2xl lg:text-3xl font-bold flex items-center gap-3">
             <div className="p-2.5 rounded-xl neomorph-flat">
@@ -359,8 +359,8 @@ export function CoverDesigner({
 
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">
           {/* Preview Panel */}
-          <div className="lg:w-1/2 p-6 lg:p-10 flex items-center justify-center bg-muted/20 border-r">
-            <div className="space-y-6 w-full max-w-lg">
+          <div className="lg:w-[45%] p-6 lg:p-10 flex items-center justify-center bg-muted/20 border-r">
+            <div className="space-y-6 w-full max-w-xl">
               <div className="text-sm font-semibold text-muted-foreground text-center uppercase tracking-wide">
                 Live Preview
               </div>
@@ -415,7 +415,7 @@ export function CoverDesigner({
           </div>
 
           {/* Controls Panel */}
-          <div className="lg:w-1/2 overflow-y-auto p-6 lg:p-10">
+          <div className="lg:w-[55%] overflow-y-auto p-6 lg:p-10">
             <Tabs defaultValue="templates" className="w-full">
               <TabsList className="grid w-full grid-cols-3 mb-6 h-12">
                 <TabsTrigger value="templates" className="gap-2 text-base">
