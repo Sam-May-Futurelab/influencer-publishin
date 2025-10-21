@@ -148,13 +148,7 @@ export function RichTextEditor({
   const handleAIEnhance = async () => {
     if (!editor || !onAIEnhanceSelected) return;
     
-    // Safety check for editor state and view
     try {
-      if (!editor.state || !editor.view) {
-        toast.error('Editor not ready. Please try again.');
-        return;
-      }
-
       const { from, to } = editor.state.selection;
       const selectedText = editor.state.doc.textBetween(from, to);
       
@@ -165,6 +159,7 @@ export function RichTextEditor({
 
       setIsEnhancing(true);
       const enhancedText = await onAIEnhanceSelected(selectedText);
+      
       if (enhancedText && enhancedText.trim()) {
         // Replace selected text with enhanced version
         editor.chain().focus().deleteRange({ from, to }).insertContent(enhancedText).run();
@@ -178,8 +173,8 @@ export function RichTextEditor({
     }
   };
 
-  // Check if text is selected (with comprehensive safety checks)
-  const hasSelection = editor?.state?.selection && !editor.state.selection.empty;
+  // Check if text is selected (simple and safe)
+  const hasSelection = editor?.state?.selection ? !editor.state.selection.empty : false;
 
   // Keyboard shortcuts for voice input
   useEffect(() => {
@@ -310,25 +305,16 @@ export function RichTextEditor({
               onClick={handleAIEnhance}
               disabled={!hasSelection || isEnhancing}
               className={cn(
-                "h-8 px-3 gap-1.5 border-0",
+                "h-8 px-3 gap-1.5 border-0 font-medium",
                 hasSelection && !isEnhancing
                   ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700"
-                  : "bg-muted text-muted-foreground"
+                  : "bg-purple-100 text-purple-700 hover:bg-purple-200"
               )}
               size="sm"
               type="button"
-              title="Enhance selected text with AI"
+              title={hasSelection ? "Enhance selected text with AI" : "Select text first to enhance it with AI"}
             >
-              {isEnhancing ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
-                  <MagicWand size={16} weight="fill" />
-                </motion.div>
-              ) : (
-                <MagicWand size={16} weight="fill" />
-              )}
+              <MagicWand size={16} weight="fill" />
               <span className="font-medium">
                 {isEnhancing ? "Enhancing..." : "Enhance"}
               </span>
