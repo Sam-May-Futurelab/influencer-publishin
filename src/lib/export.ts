@@ -152,8 +152,14 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
     `;
   };
   
-  // Generate cover background based on style
+  // Generate cover background based on cover design or brand style
   const getCoverStyle = () => {
+    // Use custom cover design if available
+    if (project.coverDesign?.coverImageData) {
+      return `background: url('${project.coverDesign.coverImageData}') center/cover no-repeat; background-size: cover;`;
+    }
+    
+    // Fall back to brand cover style
     switch (brand?.coverStyle) {
       case 'gradient':
         return `background: linear-gradient(135deg, ${brand.primaryColor} 0%, ${brand.secondaryColor} 100%);`;
@@ -218,6 +224,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           overflow: hidden;
         }
         
+        ${!project.coverDesign?.coverImageData ? `
         .title-page::before {
           content: '';
           position: absolute;
@@ -228,6 +235,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           background: rgba(0, 0, 0, 0.3);
           z-index: 1;
         }
+        ` : ''}
         
         .title-page-content {
           position: relative;
@@ -558,6 +566,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
     <body>
       <div class="container">
         <div class="title-page">
+          ${!project.coverDesign?.coverImageData ? `
           <div class="title-page-content">
             ${brand?.logoUrl ? `<img src="${brand.logoUrl}" alt="Logo" class="logo" />` : ''}
             <h1 class="main-title">${escapeHtml(project.title)}</h1>
@@ -569,6 +578,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
               ~${Math.ceil(getTotalWordCount(project) / 250)} Pages
             </div>
           </div>
+          ` : '<!-- Custom cover design applied -->'}
         </div>
         
         ${copyrightPosition === 'beginning' ? getCopyrightPage() : ''}

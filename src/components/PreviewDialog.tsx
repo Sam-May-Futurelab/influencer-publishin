@@ -96,13 +96,27 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
 
         <div className="flex-1 overflow-y-auto p-6 max-h-[calc(80vh-120px)]">
           <div className="max-w-3xl mx-auto">
-            {/* Title Page - Enhanced with export-like styling */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-12 mb-12 border-b-4 border-border/30"
-              style={{ borderColor: project.brandConfig?.accentColor || '#C4B5FD' }}
-            >
+            {/* Title Page - Show custom cover if available, otherwise use default */}
+            {project.coverDesign?.coverImageData ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-12 rounded-2xl overflow-hidden shadow-2xl mx-auto"
+                style={{ maxWidth: '500px' }}
+              >
+                <img 
+                  src={project.coverDesign.coverImageData} 
+                  alt={`${project.title} cover`}
+                  className="w-full h-auto"
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-12 mb-12 border-b-4 border-border/30"
+                style={{ borderColor: project.brandConfig?.accentColor || '#C4B5FD' }}
+              >
               {/* Logo if available */}
               {project.brandConfig?.logoUrl && (
                 <div className="mb-6">
@@ -174,6 +188,7 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
                 </span>
               </div>
             </motion.div>
+            )}
 
             {/* Chapters - Enhanced with export-like styling */}
             <div className="space-y-12 mt-8">
