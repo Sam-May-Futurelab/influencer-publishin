@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
-import { BookOpen, Menu, X } from 'lucide-react';
+import { BookOpen, Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { MobileMenu } from './MobileMenu';
 
 interface LandingHeaderProps {
   onGetStarted?: () => void;
@@ -104,132 +105,22 @@ export function LandingHeader({
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6 text-gray-600" />
-            ) : (
-              <Menu className="w-6 h-6 text-gray-600" />
-            )}
+            <Menu className="w-6 h-6 text-gray-600" />
           </button>
         )}
       </div>
 
-      {/* Mobile Sidebar Menu */}
+      {/* Mobile Menu Component */}
       {showNavLinks && (
-        <div className={`md:hidden fixed inset-0 z-50 transition-all duration-300 ${
-          isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}>
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-          
-          {/* Sidebar */}
-          <div className={`absolute right-0 top-0 h-full w-80 max-w-[90vw] bg-white backdrop-blur-sm border-l border-gray-200 shadow-2xl transform transition-transform duration-300 ${
-            isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          }`} style={{ backgroundColor: 'rgba(255, 255, 255, 0.98)' }}>
-            <div className="p-6">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-2">
-                  <BookOpen className="w-6 h-6 text-[#9b87b8]" />
-                  <span className="text-lg font-bold bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] bg-clip-text text-transparent">
-                    Inkfluence AI
-                  </span>
-                </div>
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                  aria-label="Close menu"
-                >
-                  <X className="w-6 h-6 text-gray-600" />
-                </button>
-              </div>
-
-              {/* Navigation Links */}
-              <div className="space-y-3 mb-8">
-                <button
-                  onClick={() => {
-                    if (onNavigateToFeatures) {
-                      onNavigateToFeatures();
-                    } else {
-                      navigate('/features');
-                    }
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-                >
-                  Features
-                </button>
-                <button
-                  onClick={() => {
-                    if (onNavigateToPricing) {
-                      onNavigateToPricing();
-                    } else {
-                      navigate('/pricing');
-                    }
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-                >
-                  Pricing
-                </button>
-                <button
-                  onClick={() => {
-                    if (onNavigateToBlog) {
-                      onNavigateToBlog();
-                    } else {
-                      navigate('/blog');
-                    }
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-                >
-                  Blog
-                </button>
-                                <button
-                  onClick={() => navigate('/about')}
-                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-                >
-                  About
-                </button>
-                                <button
-                  onClick={() => navigate('/help')}
-                  className="w-full text-left px-4 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-                >
-                  Help
-                </button>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="space-y-3">
-                {onSignIn && (
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      onSignIn();
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="w-full justify-center h-12 text-gray-700 hover:text-[#9b87b8] hover:bg-gray-50"
-                  >
-                    Sign In
-                  </Button>
-                )}
-                {onGetStarted && (
-                  <Button
-                    onClick={() => {
-                      onGetStarted();
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="w-full justify-center h-12 bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90 shadow-md hover:shadow-lg transition-all text-white"
-                  >
-                    Get Started Free
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <MobileMenu
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+          onNavigateToFeatures={onNavigateToFeatures}
+          onNavigateToPricing={onNavigateToPricing}
+          onNavigateToBlog={onNavigateToBlog}
+          onSignIn={onSignIn}
+          onGetStarted={onGetStarted}
+        />
       )}
     </nav>
   );
