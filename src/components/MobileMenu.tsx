@@ -38,17 +38,16 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
       
       {/* Menu Panel */}
       <div 
-        className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl border-4 border-red-500"
+        className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl rounded-l-2xl"
         style={{ 
-          backgroundColor: '#ffffff !important',
+          backgroundColor: '#ffffff',
           opacity: 1,
-          zIndex: 9999,
-          border: '4px solid red'
+          zIndex: 60
         }}
       >
         <div className="flex flex-col h-full bg-white" style={{ backgroundColor: '#ffffff' }}>
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white" style={{ backgroundColor: '#ffffff' }}>
+          <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white rounded-tl-2xl" style={{ backgroundColor: '#ffffff' }}>
             <div className="flex items-center gap-2">
               <BookOpen className="w-6 h-6 text-[#9b87b8]" />
               <span className="text-lg font-bold bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] bg-clip-text text-transparent">
@@ -70,7 +69,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
               {onNavigateToFeatures && (
                 <button
                   onClick={() => handleNavigation(onNavigateToFeatures)}
-                  className="w-full text-left px-4 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                  className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
                 >
                   Features
                 </button>
@@ -79,7 +78,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
               {onNavigateToPricing && (
                 <button
                   onClick={() => handleNavigation(onNavigateToPricing)}
-                  className="w-full text-left px-4 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                  className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
                 >
                   Pricing
                 </button>
@@ -88,7 +87,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
               {onNavigateToBlog && (
                 <button
                   onClick={() => handleNavigation(onNavigateToBlog)}
-                  className="w-full text-left px-4 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                  className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
                 >
                   Blog
                 </button>
@@ -96,14 +95,14 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
               <button
                 onClick={() => handleNavigation(() => window.location.href = '/about')}
-                className="w-full text-left px-4 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 About
               </button>
 
               <button
                 onClick={() => handleNavigation(() => window.location.href = '/help')}
-                className="w-full text-left px-4 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 Help
               </button>
@@ -111,7 +110,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="p-6 border-t border-gray-200 space-y-3 bg-white" style={{ backgroundColor: '#ffffff' }}>
+          <div className="p-6 border-t border-gray-100 space-y-3 bg-white rounded-bl-2xl" style={{ backgroundColor: '#ffffff' }}>
             {onSignIn && (
               <Button 
                 variant="outline" 
