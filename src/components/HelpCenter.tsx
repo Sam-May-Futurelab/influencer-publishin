@@ -35,6 +35,7 @@ interface HelpCenterProps {
 
 export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   // SEO Meta Tags
   useEffect(() => {
@@ -426,10 +427,22 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
     }
   ];
 
-  const filteredFaqs = faqs.filter(faq =>
-    faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredFaqs = faqs.filter(faq => {
+    const matchesSearch = searchQuery === '' || 
+      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesCategory = selectedCategory === '' || 
+      faq.question.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+      faq.answer.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+      (selectedCategory === 'AI Writing Assistant' && (faq.question.includes('AI') || faq.answer.includes('AI'))) ||
+      (selectedCategory === 'Design & Customization' && (faq.question.includes('cover') || faq.question.includes('brand') || faq.question.includes('design'))) ||
+      (selectedCategory === 'Export & Publishing' && (faq.question.includes('export') || faq.question.includes('publish'))) ||
+      (selectedCategory === 'Account & Billing' && (faq.question.includes('Premium') || faq.question.includes('subscription') || faq.question.includes('billing'))) ||
+      (selectedCategory === 'Getting Started' && (faq.question.includes('create') || faq.question.includes('first') || faq.question.includes('project')));
+    
+    return matchesSearch && (selectedCategory === '' || matchesCategory);
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -491,14 +504,32 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300 cursor-pointer h-full">
+                <Card 
+                  className={`border-0 hover:neomorph-raised transition-all duration-300 cursor-pointer h-full ${
+                    selectedCategory === category.title 
+                      ? 'neomorph-raised ring-2 ring-primary/30' 
+                      : 'neomorph-flat'
+                  }`}
+                  onClick={() => {
+                    if (selectedCategory === category.title) {
+                      setSelectedCategory('');
+                    } else {
+                      setSelectedCategory(category.title);
+                      // Scroll to FAQ section
+                      document.getElementById('faq-section')?.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                >
                   <CardContent className="p-6">
                     <div className={`p-3 rounded-xl bg-gradient-to-br ${category.color} w-fit mb-4`}>
                       <category.icon className={`w-6 h-6 ${category.textColor}`} />
                     </div>
                     <h3 className="text-lg font-semibold mb-1">{category.title}</h3>
                     <p className="text-sm text-muted-foreground mb-2">{category.description}</p>
-                    <p className="text-xs text-muted-foreground font-medium">{category.count}</p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-muted-foreground font-medium">{category.count}</p>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -524,7 +555,14 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300 cursor-pointer h-full group">
+                <Card 
+                  className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300 cursor-pointer h-full group"
+                  onClick={() => {
+                    // For now, scroll to the tutorial in the FAQ section
+                    setSearchQuery(tutorial.title.split(' ').slice(0, 3).join(' '));
+                    document.getElementById('faq-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div className="p-2 rounded-lg bg-primary/10">
@@ -617,8 +655,8 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
                     </div>
                     <h3 className="text-lg font-semibold mb-3">{step.title}</h3>
                     <p className="text-sm text-muted-foreground mb-4">{step.description}</p>
-                    <div className="bg-accent/10 p-3 rounded-lg">
-                      <p className="text-xs text-accent-foreground">
+                    <div className="bg-primary/10 p-3 rounded-lg border border-primary/20">
+                      <p className="text-xs text-primary">
                         💡 <strong>Pro tip:</strong> {step.tip}
                       </p>
                     </div>
@@ -642,14 +680,31 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="faq-section" className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Frequently Asked Questions
+              {selectedCategory ? `${selectedCategory} - Help Articles` : 'Frequently Asked Questions'}
             </h2>
             <p className="text-lg text-muted-foreground">
-              {searchQuery ? `${filteredFaqs.length} results found` : 'Quick answers to common questions'}
+              {searchQuery || selectedCategory ? (
+                <>
+                  {filteredFaqs.length} results found
+                  {(searchQuery || selectedCategory) && (
+                    <button 
+                      onClick={() => {
+                        setSearchQuery('');
+                        setSelectedCategory('');
+                      }}
+                      className="ml-2 text-primary hover:underline text-sm"
+                    >
+                      Clear filters
+                    </button>
+                  )}
+                </>
+              ) : (
+                'Quick answers to common questions'
+              )}
             </p>
           </div>
 
