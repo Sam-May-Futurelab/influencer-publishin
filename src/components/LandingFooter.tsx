@@ -8,6 +8,7 @@ interface LandingFooterProps {
   onNavigateToAbout?: () => void;
   onNavigateToPricing?: () => void;
   onNavigateToFeatures?: () => void;
+  onNavigateToBlog?: () => void;
 }
 
 export function LandingFooter({ 
@@ -17,7 +18,8 @@ export function LandingFooter({
   onNavigateToHelp, 
   onNavigateToAbout,
   onNavigateToPricing,
-  onNavigateToFeatures 
+  onNavigateToFeatures,
+  onNavigateToBlog 
 }: LandingFooterProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -83,6 +85,11 @@ export function LandingFooter({
                   <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Help Center</button></li>
                   <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Tutorials</button></li>
                 </>
+              )}
+              {onNavigateToBlog ? (
+                <li><button onClick={onNavigateToBlog} className="hover:text-white transition-colors">Blog</button></li>
+              ) : (
+                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
               )}
               {onNavigateToFeatures ? (
                 <li><button onClick={onNavigateToFeatures} className="hover:text-white transition-colors">Features</button></li>

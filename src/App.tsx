@@ -835,6 +835,38 @@ function App() {
             />
           </Suspense>
         </main>
+      ) : viewMode === 'blog' ? (
+        <main className="p-0">
+          <Suspense fallback={<PageLoading />}>
+            <BlogPage 
+              onNavigate={(page, action) => {
+                if (page === 'signin' || (page === 'home' && action === 'signin')) {
+                  navigate('/');
+                  setShowAuthModal(true);
+                } else if (page === 'home') {
+                  navigate('/');
+                } else if (page === 'pricing') {
+                  navigate('/pricing');
+                } else if (page === 'help') {
+                  navigate('/help');
+                } else if (page === 'about') {
+                  navigate('/about');
+                } else if (page === 'features') {
+                  navigate('/features');
+                } else if (page === 'blog') {
+                  navigate('/blog');
+                } else if (page === 'dashboard') {
+                  if (user) {
+                    navigate('/');
+                  } else {
+                    setShowAuthModal(true);
+                  }
+                }
+              }}
+              isAuthenticated={!!user}
+            />
+          </Suspense>
+        </main>
       ) : !user ? (
         /* Show Landing Page if user is not authenticated */
         <LandingPage 
@@ -847,6 +879,7 @@ function App() {
           onNavigateToAbout={() => navigate('/about')}
           onNavigateToPricing={() => navigate('/pricing')}
           onNavigateToFeatures={() => navigate('/features')}
+          onNavigateToBlog={() => navigate('/blog')}
         />
       ) : user && (
         <>
