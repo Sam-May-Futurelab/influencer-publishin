@@ -27,6 +27,8 @@ const ProfilePage = lazy(() => import('@/components/ProfilePage').then(module =>
 const PrivacyPolicy = lazy(() => import('@/components/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })));
 const TermsOfService = lazy(() => import('@/components/TermsOfService').then(module => ({ default: module.TermsOfService })));
 const CookiePolicy = lazy(() => import('@/components/CookiePolicy').then(module => ({ default: module.CookiePolicy })));
+const AboutPage = lazy(() => import('@/components/AboutPage').then(module => ({ default: module.AboutPage })));
+const HelpCenter = lazy(() => import('@/components/HelpCenter').then(module => ({ default: module.HelpCenter })));
 
 // Lazy load heavy components
 const ChapterEditor = lazy(() => import('@/components/ChapterEditor').then(module => ({ default: module.ChapterEditor })));
@@ -57,7 +59,7 @@ function App() {
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'snippets' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'snippets' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies' | 'about' | 'help'>('dashboard');
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -684,6 +686,56 @@ function App() {
             }} />
           </Suspense>
         </main>
+      ) : viewMode === 'about' ? (
+        <main className="p-0">
+          <Suspense fallback={<PageLoading />}>
+            <AboutPage 
+              onNavigate={(page) => {
+                if (page === 'landing') {
+                  if (user) {
+                    returnToDashboard();
+                  } else {
+                    setViewMode('dashboard');
+                  }
+                } else if (page === 'dashboard') {
+                  if (user) {
+                    returnToDashboard();
+                  } else {
+                    setShowAuthModal(true);
+                  }
+                } else if (page === 'help') {
+                  setViewMode('help');
+                }
+              }}
+              isAuthenticated={!!user}
+            />
+          </Suspense>
+        </main>
+      ) : viewMode === 'help' ? (
+        <main className="p-0">
+          <Suspense fallback={<PageLoading />}>
+            <HelpCenter 
+              onNavigate={(page) => {
+                if (page === 'landing') {
+                  if (user) {
+                    returnToDashboard();
+                  } else {
+                    setViewMode('dashboard');
+                  }
+                } else if (page === 'dashboard') {
+                  if (user) {
+                    returnToDashboard();
+                  } else {
+                    setShowAuthModal(true);
+                  }
+                } else if (page === 'about') {
+                  setViewMode('about');
+                }
+              }}
+              isAuthenticated={!!user}
+            />
+          </Suspense>
+        </main>
       ) : !user ? (
         /* Show Landing Page if user is not authenticated */
         <LandingPage 
@@ -692,6 +744,8 @@ function App() {
           onNavigateToPrivacy={() => setViewMode('privacy')}
           onNavigateToTerms={() => setViewMode('terms')}
           onNavigateToCookies={() => setViewMode('cookies')}
+          onNavigateToHelp={() => setViewMode('help')}
+          onNavigateToAbout={() => setViewMode('about')}
         />
       ) : user && (
         <>
@@ -868,6 +922,8 @@ function App() {
             onNavigateToPrivacy={() => setViewMode('privacy')}
             onNavigateToTerms={() => setViewMode('terms')}
             onNavigateToCookies={() => setViewMode('cookies')}
+            onNavigateToHelp={() => setViewMode('help')}
+            onNavigateToAbout={() => setViewMode('about')}
           />
         </>
       )}

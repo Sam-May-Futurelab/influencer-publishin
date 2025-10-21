@@ -19,9 +19,11 @@ interface LandingPageProps {
   onNavigateToPrivacy?: () => void;
   onNavigateToTerms?: () => void;
   onNavigateToCookies?: () => void;
+  onNavigateToHelp?: () => void;
+  onNavigateToAbout?: () => void;
 }
 
-export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies }: LandingPageProps) {
+export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout }: LandingPageProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -708,10 +710,10 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
             <div>
               <h4 className="font-semibold mb-4">Resources</h4>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Community</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Tutorials</a></li>
+                <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Help Center</button></li>
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Tutorials</button></li>
               </ul>
             </div>
 
@@ -719,10 +721,10 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Press Kit</a></li>
+                <li><button onClick={onNavigateToAbout} className="hover:text-white transition-colors">About</button></li>
+                <li><a href="mailto:support@inkfluenceai.com" className="hover:text-white transition-colors">Contact</a></li>
+                <li><button onClick={onNavigateToPrivacy} className="hover:text-white transition-colors">Privacy</button></li>
+                <li><button onClick={onNavigateToTerms} className="hover:text-white transition-colors">Terms</button></li>
               </ul>
             </div>
           </div>

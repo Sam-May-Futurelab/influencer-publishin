@@ -3,9 +3,11 @@ interface AppFooterProps {
   onNavigateToPrivacy?: () => void;
   onNavigateToTerms?: () => void;
   onNavigateToCookies?: () => void;
+  onNavigateToHelp?: () => void;
+  onNavigateToAbout?: () => void;
 }
 
-export function AppFooter({ className = '', onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies }: AppFooterProps) {
+export function AppFooter({ className = '', onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout }: AppFooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -21,12 +23,18 @@ export function AppFooter({ className = '', onNavigateToPrivacy, onNavigateToTer
 
           {/* Center: Quick Links */}
           <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
-            <a 
-              href="#" 
+            <button 
+              onClick={onNavigateToHelp}
               className="hover:text-foreground transition-colors"
             >
               Help Center
-            </a>
+            </button>
+            <button 
+              onClick={onNavigateToAbout}
+              className="hover:text-foreground transition-colors"
+            >
+              About
+            </button>
             <button 
               onClick={onNavigateToPrivacy}
               className="hover:text-foreground transition-colors"
@@ -46,7 +54,7 @@ export function AppFooter({ className = '', onNavigateToPrivacy, onNavigateToTer
               Cookies
             </button>
             <a 
-              href="#" 
+              href="mailto:support@inkfluenceai.com" 
               className="hover:text-foreground transition-colors"
             >
               Contact
