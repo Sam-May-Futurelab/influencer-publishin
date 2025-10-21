@@ -17,10 +17,11 @@ import {
   ArrowsLeftRight,
   ArrowClockwise,
   Eye,
-  Star
+  Star,
+  CopySimple
 } from '@phosphor-icons/react';
 import { useAuth } from '@/hooks/use-auth';
-import { getUserSnippets, deleteSnippet, updateSnippet } from '@/lib/snippets';
+import { getUserSnippets, deleteSnippet, updateSnippet, saveSnippet } from '@/lib/snippets';
 import { ContentSnippet } from '@/lib/types';
 import { toast } from 'sonner';
 import {
@@ -159,6 +160,25 @@ export function SnippetsPage() {
   const handleCopySnippet = (content: string) => {
     navigator.clipboard.writeText(content);
     toast.success('Copied to clipboard!');
+  };
+
+  const handleDuplicateSnippet = async (snippet: ContentSnippet) => {
+    if (!user) return;
+
+    try {
+      const duplicatedSnippet = {
+        title: `${snippet.title} (Copy)`,
+        content: snippet.content,
+        category: snippet.category,
+        tags: snippet.tags || [],
+      };
+
+      await saveSnippet(user.uid, duplicatedSnippet);
+      await loadSnippets(); // Refresh the list
+      toast.success('Snippet duplicated!');
+    } catch (error) {
+      toast.error('Failed to duplicate snippet');
+    }
   };
 
   const getCategoryStats = () => {
@@ -351,16 +371,27 @@ export function SnippetsPage() {
                           size="sm"
                           variant="outline"
                           onClick={() => handleCopySnippet(snippet.content)}
-                          className="h-8 gap-2 text-xs flex-1 neomorph-button border-0"
+                          className="h-8 gap-1 text-xs neomorph-button border-0"
+                          title="Copy content to clipboard"
                         >
                           <Copy size={14} weight="bold" />
                           Copy
                         </Button>
                         <Button
                           size="sm"
+                          variant="outline"
+                          onClick={() => handleDuplicateSnippet(snippet)}
+                          className="h-8 px-2 text-xs neomorph-button border-0"
+                          title="Create a copy of this snippet"
+                        >
+                          <CopySimple size={14} weight="bold" />
+                        </Button>
+                        <Button
+                          size="sm"
                           variant="ghost"
                           onClick={() => setSnippetToDelete(snippet)}
                           className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          title="Delete snippet"
                         >
                           <Trash size={14} weight="bold" />
                         </Button>

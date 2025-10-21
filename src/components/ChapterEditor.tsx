@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { saveSnippet } from '@/lib/snippets';
+import { enhanceContent } from '@/lib/openai-service-secure';
 
 interface ChapterEditorProps {
   chapters: Chapter[];
@@ -198,6 +199,28 @@ export function ChapterEditor({
       toast.error('Failed to save snippet. Please try again.');
     } finally {
       setSavingSnippet(false);
+    }
+  };
+
+  // Handle AI text enhancement
+  const handleAIEnhancement = async (selectedText: string): Promise<string> => {
+    if (!currentChapter) {
+      throw new Error('No active chapter');
+    }
+
+    try {
+      const enhanced = await enhanceContent(selectedText, currentChapter.title, {
+        genre: ebookCategory || 'general',
+        context: {
+          targetAudience: targetAudience || 'general audience',
+          bookDescription: projectDescription
+        }
+      });
+      
+      return enhanced;
+    } catch (error) {
+      console.error('AI enhancement failed:', error);
+      throw error;
     }
   };
 
@@ -464,6 +487,8 @@ export function ChapterEditor({
                     minHeight="250px"
                     className="lg:min-h-[400px]"
                     onAIAssistantClick={() => setInputMode('ai')}
+                    chapterTitle={currentChapter?.title}
+                    onAIEnhanceSelected={handleAIEnhancement}
                   />
                   
                   {/* Save indicator */}
@@ -498,6 +523,8 @@ export function ChapterEditor({
                         placeholder="AI-generated content will appear here, or you can edit directly..."
                         minHeight="200px"
                         className="lg:min-h-[300px]"
+                        chapterTitle={currentChapter.title}
+                        onAIEnhanceSelected={handleAIEnhancement}
                       />
                       
                       {/* Content status and save indicator */}

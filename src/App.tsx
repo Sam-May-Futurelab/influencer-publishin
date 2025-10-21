@@ -269,7 +269,9 @@ function App() {
 
   const selectProject = (project: EbookProject) => {
     setCurrentProject(project);
-    setCurrentChapter(null);
+    // Auto-select first chapter if available
+    const firstChapter = project.chapters.length > 0 ? project.chapters[0] : null;
+    setCurrentChapter(firstChapter);
     setViewMode('project');
     setCurrentSection('editor');
   };

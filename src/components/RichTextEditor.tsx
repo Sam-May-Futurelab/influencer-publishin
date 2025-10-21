@@ -31,11 +31,15 @@ import {
   TextAlignRight,
   TextAlignJustify,
   Microphone,
-  MicrophoneSlash
+  MicrophoneSlash,
+  MagicWand,
+  CheckCircle,
+  Copy
 } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVoiceInput } from '@/hooks/use-voice-input';
+import { toast } from 'sonner';
 
 interface RichTextEditorProps {
   content: string;
@@ -44,6 +48,8 @@ interface RichTextEditorProps {
   className?: string;
   minHeight?: string;
   onAIAssistantClick?: () => void;
+  chapterTitle?: string;
+  onAIEnhanceSelected?: (selectedText: string) => Promise<string>;
 }
 
 export function RichTextEditor({
@@ -52,9 +58,12 @@ export function RichTextEditor({
   placeholder = 'Start writing...',
   className,
   minHeight = '400px',
-  onAIAssistantClick
+  onAIAssistantClick,
+  chapterTitle,
+  onAIEnhanceSelected
 }: RichTextEditorProps) {
   const [lineHeight, setLineHeight] = useState('1.6');
+  const [isEnhancing, setIsEnhancing] = useState(false);
 
   // Voice input hook
   const {
@@ -125,6 +134,36 @@ export function RichTextEditor({
       startListening();
     }
   };
+
+  // Handle AI text enhancement
+  const handleAIEnhance = async () => {
+    if (!editor || !onAIEnhanceSelected) return;
+    
+    const { from, to } = editor.state.selection;
+    const selectedText = editor.state.doc.textBetween(from, to);
+    
+    if (!selectedText.trim()) {
+      toast.error('Please select some text to enhance');
+      return;
+    }
+
+    setIsEnhancing(true);
+    try {
+      const enhancedText = await onAIEnhanceSelected(selectedText);
+      if (enhancedText && enhancedText.trim()) {
+        // Replace selected text with enhanced version
+        editor.chain().focus().deleteRange({ from, to }).insertContent(enhancedText).run();
+        toast.success('Text enhanced with AI!');
+      }
+    } catch (error) {
+      toast.error('Failed to enhance text. Please try again.');
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
+
+  // Check if text is selected
+  const hasSelection = editor ? !editor.state.selection.empty : false;
 
   // Keyboard shortcuts for voice input
   useEffect(() => {
@@ -227,7 +266,7 @@ export function RichTextEditor({
               "h-8 px-3 gap-1.5 border-0",
               isListening 
                 ? "bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse" 
-                : "bg-muted hover:bg-muted/80"
+                : "bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700"
             )}
             size="sm"
             type="button"
@@ -244,6 +283,42 @@ export function RichTextEditor({
             </span>
           </Button>
         </motion.div>
+
+        {/* AI Enhancement Button */}
+        {onAIEnhanceSelected && (
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button
+              onClick={handleAIEnhance}
+              disabled={!hasSelection || isEnhancing}
+              className={cn(
+                "h-8 px-3 gap-1.5 border-0",
+                hasSelection && !isEnhancing
+                  ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700"
+                  : "bg-muted text-muted-foreground"
+              )}
+              size="sm"
+              type="button"
+              title="Enhance selected text with AI"
+            >
+              {isEnhancing ? (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
+                  <MagicWand size={16} weight="fill" />
+                </motion.div>
+              ) : (
+                <MagicWand size={16} weight="fill" />
+              )}
+              <span className="font-medium">
+                {isEnhancing ? "Enhancing..." : "Enhance"}
+              </span>
+            </Button>
+          </motion.div>
+        )}
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
