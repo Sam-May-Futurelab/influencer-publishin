@@ -112,25 +112,31 @@ function App() {
     }
   }, [user, userProfile]);
 
-  // Sync URL with viewMode state
+  // Sync URL with viewMode state - only listen to URL changes
   useEffect(() => {
     const path = location.pathname;
-    if (path === '/about' && viewMode !== 'about') {
-      setViewMode('about');
-    } else if (path === '/help' && viewMode !== 'help') {
-      setViewMode('help');
-    } else if (path === '/privacy' && viewMode !== 'privacy') {
-      setViewMode('privacy');
-    } else if (path === '/terms' && viewMode !== 'terms') {
-      setViewMode('terms');
-    } else if (path === '/cookies' && viewMode !== 'cookies') {
-      setViewMode('cookies');
-    } else if (path === '/' && ['about', 'help', 'privacy', 'terms', 'cookies'].includes(viewMode)) {
-      setViewMode('dashboard');
+    let newViewMode = viewMode;
+    
+    if (path === '/about') {
+      newViewMode = 'about';
+    } else if (path === '/help') {
+      newViewMode = 'help';
+    } else if (path === '/privacy') {
+      newViewMode = 'privacy';
+    } else if (path === '/terms') {
+      newViewMode = 'terms';
+    } else if (path === '/cookies') {
+      newViewMode = 'cookies';
+    } else if (path === '/') {
+      newViewMode = 'dashboard';
     }
-  }, [location.pathname, viewMode]);
+    
+    if (newViewMode !== viewMode) {
+      setViewMode(newViewMode);
+    }
+  }, [location.pathname]); // Only depend on pathname, not viewMode
 
-  // Update URL when viewMode changes
+  // Update URL when viewMode changes programmatically - only listen to viewMode changes
   useEffect(() => {
     const currentPath = location.pathname;
     let targetPath = '/';
@@ -159,7 +165,7 @@ function App() {
     if (currentPath !== targetPath) {
       navigate(targetPath, { replace: true });
     }
-  }, [viewMode, navigate, location.pathname]);
+  }, [viewMode, navigate]); // Removed location.pathname dependency
 
   // Force save on unmount or when currentProject changes
   useEffect(() => {
