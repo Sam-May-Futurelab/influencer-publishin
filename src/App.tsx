@@ -707,6 +707,7 @@ function App() {
           <Suspense fallback={<PageLoading />}>
             <TemplateGallery
               onSelectTemplate={createProjectFromTemplate}
+              onShowUpgradeModal={() => setShowUpgradeModal(true)}
               onClose={() => {
                 // Go back to where we came from
                 if (currentSection === 'projects') {

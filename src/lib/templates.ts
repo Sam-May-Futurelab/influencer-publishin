@@ -10,6 +10,7 @@ export interface EbookTemplate {
   chapters: Omit<Chapter, 'id' | 'createdAt' | 'updatedAt'>[];
   estimatedReadTime: string;
   targetAudience: string;
+  isPremium?: boolean; // Templates with 5+ chapters require premium
 }
 
 export const ebookTemplates: EbookTemplate[] = [
@@ -19,6 +20,7 @@ export const ebookTemplates: EbookTemplate[] = [
     description: 'Complete guide for body transformation with workouts, nutrition, and mindset.',
     category: 'Fitness & Health',
     icon: '💪',
+    isPremium: true, // 6 chapters
     brandConfig: {
       primaryColor: '#EF4444',
       secondaryColor: '#F87171',
@@ -223,6 +225,7 @@ Your transformation doesn't end at day 30. Here's how to maintain and continue y
     description: 'Complete blueprint for launching your first successful business in 90 days.',
     category: 'Business & Entrepreneurship',
     icon: '🚀',
+    isPremium: true, // 6 chapters
     brandConfig: {
       primaryColor: '#3B82F6',
       secondaryColor: '#60A5FA',
@@ -643,6 +646,7 @@ Now that you've proven your concept, it's time to build systems for sustainable 
     description: 'Transform your kitchen skills from beginner to confident home chef with essential techniques.',
     category: 'Cooking & Lifestyle',
     icon: '👨‍🍳',
+    isPremium: true, // 6 chapters
     brandConfig: {
       primaryColor: '#F59E0B',
       secondaryColor: '#FCD34D',

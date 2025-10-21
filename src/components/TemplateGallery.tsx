@@ -8,13 +8,16 @@ import { BookOpen, Clock, Users, Star, MagnifyingGlass, GridFour, ListBullets, E
 import { ebookTemplates, createProjectFromTemplate, EbookTemplate } from '@/lib/templates';
 import { EbookProject } from '@/lib/types';
 import { PreviewDialog } from '@/components/PreviewDialog';
+import { useAuth } from '@/hooks/use-auth';
 
 interface TemplateGalleryProps {
   onSelectTemplate: (project: EbookProject) => void;
   onClose: () => void;
+  onShowUpgradeModal?: () => void;
 }
 
-export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryProps) {
+export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal }: TemplateGalleryProps) {
+  const { userProfile } = useAuth();
   const [selectedTemplate, setSelectedTemplate] = useState<EbookTemplate | null>(null);
   const [previewTemplate, setPreviewTemplate] = useState<EbookTemplate | null>(null);
   const [customTitle, setCustomTitle] = useState('');
@@ -35,6 +38,15 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
 
   const handleCreateFromTemplate = () => {
     if (!selectedTemplate) return;
+    
+    // Check if template requires premium and user is free
+    const isPremium = userProfile?.isPremium || userProfile?.subscriptionStatus === 'premium';
+    if (selectedTemplate.isPremium && !isPremium) {
+      if (onShowUpgradeModal) {
+        onShowUpgradeModal();
+      }
+      return;
+    }
     
     const project = createProjectFromTemplate(selectedTemplate, customTitle);
     onSelectTemplate(project);
@@ -149,6 +161,11 @@ export function TemplateGallery({ onSelectTemplate, onClose }: TemplateGalleryPr
                 <div className="flex items-center justify-between">
                   <div className="text-2xl">{template.icon}</div>
                   <div className="flex items-center gap-1">
+                    {template.isPremium && (
+                      <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs px-2 py-0">
+                        Premium
+                      </Badge>
+                    )}
                     <Star size={12} className="text-yellow-500" />
                     <span className="text-xs text-muted-foreground">4.8</span>
                   </div>
