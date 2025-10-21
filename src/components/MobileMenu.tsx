@@ -38,11 +38,12 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
       
       {/* Menu Panel */}
       <div 
-        className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl"
+        className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl border-4 border-red-500"
         style={{ 
-          backgroundColor: '#ffffff',
+          backgroundColor: '#ffffff !important',
           opacity: 1,
-          zIndex: 60
+          zIndex: 9999,
+          border: '4px solid red'
         }}
       >
         <div className="flex flex-col h-full">
