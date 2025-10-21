@@ -32,7 +32,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
     <div className="fixed inset-0 z-50 md:hidden">
       {/* Backdrop - excluding header area */}
       <div 
-        className="absolute left-0 top-16 right-0 bottom-0 bg-black bg-opacity-50" 
+        className="absolute left-0 top-24 right-0 bottom-0 bg-black bg-opacity-50" 
         onClick={onClose}
       />
       
