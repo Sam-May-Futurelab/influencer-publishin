@@ -100,51 +100,13 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
             </div>
           </motion.div>
           
-          <div className="flex flex-wrap gap-2 lg:gap-3 w-full lg:w-auto">
-            <Badge 
-              variant="secondary" 
-              className="neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium"
-            >
-              {project.chapters.length} {project.chapters.length === 1 ? 'Chapter' : 'Chapters'}
-            </Badge>
-            <Badge 
-              variant="outline" 
-              className="neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium"
-            >
-              {wordCount.toLocaleString()} words
-            </Badge>
-            <Badge 
-              variant="outline" 
-              className="neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium"
-            >
-              ~{estimatedPages} pages
-            </Badge>
-            
-            {/* Compact Usage Badge */}
-            {isUnlimited ? (
-              <Badge 
-                variant="outline"
-                className="neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1"
-              >
-                <Crown size={12} weight="fill" className="text-amber-600 dark:text-yellow-400" />
-                <span className="font-semibold">Unlimited</span>
-              </Badge>
-            ) : (
-              <Badge 
-                onClick={usagePercentage >= 70 ? onUpgradeClick : undefined}
-                className={`neomorph-flat border-0 px-2 lg:px-4 py-1 lg:py-2 text-xs lg:text-sm font-medium flex items-center gap-1 ${
-                  usagePercentage >= 100 
-                    ? 'bg-red-500/20 text-red-700 dark:text-red-400 cursor-pointer hover:bg-red-500/30' 
-                    : usagePercentage >= 70 
-                    ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 cursor-pointer hover:bg-yellow-500/30' 
-                    : 'bg-green-500/20 text-green-700 dark:text-green-400'
-                }`}
-              >
-                <FileText size={12} />
-                <span>{pagesRemaining} of {maxPages} pages left</span>
-              </Badge>
-            )}
-          </div>
+          {/* Compact inline stats - just chapters count */}
+          <Badge 
+            variant="secondary" 
+            className="neomorph-flat border-0 px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-medium"
+          >
+            {project.chapters.length} {project.chapters.length === 1 ? 'Chapter' : 'Chapters'} • {wordCount.toLocaleString()} words
+          </Badge>
         </div>
 
         <div className="flex items-center gap-2 lg:gap-3">
