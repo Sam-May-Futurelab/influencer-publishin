@@ -684,19 +684,31 @@ function App() {
       {viewMode === 'privacy' ? (
         <main className="p-0">
           <Suspense fallback={<PageLoading />}>
-            <PrivacyPolicy onBack={() => navigate('/')} />
+            <PrivacyPolicy 
+              onBack={() => navigate('/')} 
+              onNavigate={handleNavigation}
+              isAuthenticated={!!user}
+            />
           </Suspense>
         </main>
       ) : viewMode === 'terms' ? (
         <main className="p-0">
           <Suspense fallback={<PageLoading />}>
-            <TermsOfService onBack={() => navigate('/')} />
+            <TermsOfService 
+              onBack={() => navigate('/')} 
+              onNavigate={handleNavigation}
+              isAuthenticated={!!user}
+            />
           </Suspense>
         </main>
       ) : viewMode === 'cookies' ? (
         <main className="p-0">
           <Suspense fallback={<PageLoading />}>
-            <CookiePolicy onBack={() => navigate('/')} />
+            <CookiePolicy 
+              onBack={() => navigate('/')} 
+              onNavigate={handleNavigation}
+              isAuthenticated={!!user}
+            />
           </Suspense>
         </main>
       ) : viewMode === 'about' ? (

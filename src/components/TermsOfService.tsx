@@ -1,13 +1,27 @@
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { LandingHeader } from './LandingHeader';
+import { LandingFooter } from './LandingFooter';
 
 interface TermsOfServiceProps {
   onBack: () => void;
+  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog', action?: 'signin') => void;
+  isAuthenticated?: boolean;
 }
 
-export function TermsOfService({ onBack }: TermsOfServiceProps) {
+export function TermsOfService({ onBack, onNavigate, isAuthenticated = false }: TermsOfServiceProps) {
   return (
     <div className="min-h-screen bg-background">
+      <LandingHeader 
+        onSignIn={() => onNavigate('signin')}
+        onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
+        showNavLinks={true}
+        isAuthenticated={isAuthenticated}
+        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToPricing={() => onNavigate('pricing')}
+        onNavigateToBlog={() => onNavigate('blog')}
+      />
+      
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Button
           variant="ghost"
@@ -268,6 +282,17 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
           </section>
         </div>
       </div>
+      
+      <LandingFooter 
+        onNavigateToPrivacy={() => onNavigate('home')}
+        onNavigateToTerms={() => onNavigate('home')}
+        onNavigateToCookies={() => onNavigate('home')}
+        onNavigateToHelp={() => onNavigate('help')}
+        onNavigateToAbout={() => onNavigate('about')}
+        onNavigateToPricing={() => onNavigate('pricing')}
+        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToBlog={() => onNavigate('blog')}
+      />
     </div>
   );
 }
