@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, BookOpen } from 'lucide-react';
 import { Button } from './ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -21,6 +22,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   onSignIn,
   onGetStarted,
 }) => {
+  const navigate = useNavigate();
+  
   if (!isOpen) return null;
 
   const handleNavigation = (callback?: () => void) => {
@@ -66,42 +69,63 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           {/* Navigation Links */}
           <div className="flex-1 p-6 bg-white" style={{ backgroundColor: '#ffffff' }}>
             <nav className="space-y-4">
-              {onNavigateToFeatures && (
-                <button
-                  onClick={() => handleNavigation(onNavigateToFeatures)}
-                  className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-                >
-                  Features
-                </button>
-              )}
+              <button
+                onClick={() => {
+                  if (onNavigateToFeatures) {
+                    handleNavigation(onNavigateToFeatures);
+                  } else {
+                    navigate('/features');
+                    onClose();
+                  }
+                }}
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+              >
+                Features
+              </button>
               
-              {onNavigateToPricing && (
-                <button
-                  onClick={() => handleNavigation(onNavigateToPricing)}
-                  className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-                >
-                  Pricing
-                </button>
-              )}
+              <button
+                onClick={() => {
+                  if (onNavigateToPricing) {
+                    handleNavigation(onNavigateToPricing);
+                  } else {
+                    navigate('/pricing');
+                    onClose();
+                  }
+                }}
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+              >
+                Pricing
+              </button>
               
-              {onNavigateToBlog && (
-                <button
-                  onClick={() => handleNavigation(onNavigateToBlog)}
-                  className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-                >
-                  Blog
-                </button>
-              )}
+              <button
+                onClick={() => {
+                  if (onNavigateToBlog) {
+                    handleNavigation(onNavigateToBlog);
+                  } else {
+                    navigate('/blog');
+                    onClose();
+                  }
+                }}
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+              >
+                Blog
+              </button>
 
               <button
-                onClick={() => handleNavigation(() => window.location.href = '/about')}
+                onClick={() => {
+                  navigate('/about');
+                  onClose();
+                }}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 About
               </button>
 
               <button
-                onClick={() => handleNavigation(() => window.location.href = '/help')}
+                onClick={() => {
+                  navigate('/help');
+                  onClose();
+                }}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 Help
