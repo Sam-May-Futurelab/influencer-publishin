@@ -54,7 +54,6 @@ function App() {
   const { user, userProfile, loading: authLoading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const isNavigatingRef = useRef(false);
   const [projects, setProjects] = useState<EbookProject[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(false);
   const [currentProject, setCurrentProject] = useState<EbookProject | null>(null);
@@ -113,68 +112,24 @@ function App() {
     }
   }, [user, userProfile]);
 
-  // Sync URL with viewMode state - only listen to URL changes
+  // Simple URL-based routing without circular dependencies
   useEffect(() => {
-    if (isNavigatingRef.current) {
-      return;
-    }
-    
     const path = location.pathname;
-    let newViewMode: typeof viewMode = 'dashboard';
     
     if (path === '/about') {
-      newViewMode = 'about';
+      setViewMode('about');
     } else if (path === '/help') {
-      newViewMode = 'help';
+      setViewMode('help');
     } else if (path === '/privacy') {
-      newViewMode = 'privacy';
+      setViewMode('privacy');
     } else if (path === '/terms') {
-      newViewMode = 'terms';
+      setViewMode('terms');
     } else if (path === '/cookies') {
-      newViewMode = 'cookies';
+      setViewMode('cookies');
     } else if (path === '/') {
-      newViewMode = 'dashboard';
+      setViewMode('dashboard');
     }
-    
-    setViewMode(newViewMode);
-  }, [location.pathname]); // Only depend on pathname
-
-  // Update URL when viewMode changes programmatically - only listen to viewMode changes
-  useEffect(() => {
-    if (isNavigatingRef.current) {
-      isNavigatingRef.current = false;
-      return;
-    }
-    
-    const currentPath = location.pathname;
-    let targetPath = '/';
-    
-    switch (viewMode) {
-      case 'about':
-        targetPath = '/about';
-        break;
-      case 'help':
-        targetPath = '/help';
-        break;
-      case 'privacy':
-        targetPath = '/privacy';
-        break;
-      case 'terms':
-        targetPath = '/terms';
-        break;
-      case 'cookies':
-        targetPath = '/cookies';
-        break;
-      default:
-        targetPath = '/';
-        break;
-    }
-    
-    if (currentPath !== targetPath) {
-      isNavigatingRef.current = true;
-      navigate(targetPath);
-    }
-  }, [viewMode, navigate, location.pathname]);
+  }, [location.pathname]);
 
   // Force save on unmount or when currentProject changes
   useEffect(() => {
@@ -720,37 +675,19 @@ function App() {
       {viewMode === 'privacy' ? (
         <main className="p-0">
           <Suspense fallback={<PageLoading />}>
-            <PrivacyPolicy onBack={() => {
-              if (user) {
-                returnToDashboard();
-              } else {
-                setViewMode('dashboard');
-              }
-            }} />
+            <PrivacyPolicy onBack={() => navigate('/')} />
           </Suspense>
         </main>
       ) : viewMode === 'terms' ? (
         <main className="p-0">
           <Suspense fallback={<PageLoading />}>
-            <TermsOfService onBack={() => {
-              if (user) {
-                returnToDashboard();
-              } else {
-                setViewMode('dashboard');
-              }
-            }} />
+            <TermsOfService onBack={() => navigate('/')} />
           </Suspense>
         </main>
       ) : viewMode === 'cookies' ? (
         <main className="p-0">
           <Suspense fallback={<PageLoading />}>
-            <CookiePolicy onBack={() => {
-              if (user) {
-                returnToDashboard();
-              } else {
-                setViewMode('dashboard');
-              }
-            }} />
+            <CookiePolicy onBack={() => navigate('/')} />
           </Suspense>
         </main>
       ) : viewMode === 'about' ? (
@@ -759,19 +696,15 @@ function App() {
             <AboutPage 
               onNavigate={(page) => {
                 if (page === 'landing') {
-                  if (user) {
-                    returnToDashboard();
-                  } else {
-                    setViewMode('dashboard');
-                  }
+                  navigate('/');
                 } else if (page === 'dashboard') {
                   if (user) {
-                    returnToDashboard();
+                    navigate('/');
                   } else {
                     setShowAuthModal(true);
                   }
                 } else if (page === 'help') {
-                  setViewMode('help');
+                  navigate('/help');
                 }
               }}
               isAuthenticated={!!user}
@@ -784,19 +717,15 @@ function App() {
             <HelpCenter 
               onNavigate={(page) => {
                 if (page === 'landing') {
-                  if (user) {
-                    returnToDashboard();
-                  } else {
-                    setViewMode('dashboard');
-                  }
+                  navigate('/');
                 } else if (page === 'dashboard') {
                   if (user) {
-                    returnToDashboard();
+                    navigate('/');
                   } else {
                     setShowAuthModal(true);
                   }
                 } else if (page === 'about') {
-                  setViewMode('about');
+                  navigate('/about');
                 }
               }}
               isAuthenticated={!!user}
@@ -808,11 +737,11 @@ function App() {
         <LandingPage 
           onGetStarted={() => setShowAuthModal(true)}
           onSignIn={() => setShowAuthModal(true)}
-          onNavigateToPrivacy={() => setViewMode('privacy')}
-          onNavigateToTerms={() => setViewMode('terms')}
-          onNavigateToCookies={() => setViewMode('cookies')}
-          onNavigateToHelp={() => setViewMode('help')}
-          onNavigateToAbout={() => setViewMode('about')}
+          onNavigateToPrivacy={() => navigate('/privacy')}
+          onNavigateToTerms={() => navigate('/terms')}
+          onNavigateToCookies={() => navigate('/cookies')}
+          onNavigateToHelp={() => navigate('/help')}
+          onNavigateToAbout={() => navigate('/about')}
         />
       ) : user && (
         <>
@@ -986,11 +915,11 @@ function App() {
 
           {/* App Footer - Only show when authenticated */}
           <AppFooter 
-            onNavigateToPrivacy={() => setViewMode('privacy')}
-            onNavigateToTerms={() => setViewMode('terms')}
-            onNavigateToCookies={() => setViewMode('cookies')}
-            onNavigateToHelp={() => setViewMode('help')}
-            onNavigateToAbout={() => setViewMode('about')}
+            onNavigateToPrivacy={() => navigate('/privacy')}
+            onNavigateToTerms={() => navigate('/terms')}
+            onNavigateToCookies={() => navigate('/cookies')}
+            onNavigateToHelp={() => navigate('/help')}
+            onNavigateToAbout={() => navigate('/about')}
           />
         </>
       )}
