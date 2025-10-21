@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import Underline from '@tiptap/extension-underline';
 import CharacterCount from '@tiptap/extension-character-count';
 import TextAlign from '@tiptap/extension-text-align';
 import { Button } from '@/components/ui/button';
@@ -80,9 +79,9 @@ export function RichTextEditor({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        strike: false, // Disable strike to avoid conflicts with underline
+        strike: false, // Disable strike to avoid conflicts
+        // Note: StarterKit now includes underline by default in v3.7.2
       }),
-      Underline,
       CharacterCount,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
@@ -106,23 +105,31 @@ export function RichTextEditor({
 
   // Update editor content when prop changes (e.g., switching chapters)
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content);
+    if (editor && editor.state && content !== editor.getHTML()) {
+      try {
+        editor.commands.setContent(content);
+      } catch (error) {
+        console.warn('Failed to set editor content:', error);
+      }
     }
   }, [content, editor]);
 
   // Insert voice transcript into editor
   useEffect(() => {
-    if (editor && transcript) {
+    if (editor && editor.state && transcript) {
       // Show transcript briefly before inserting
       const timeoutId = setTimeout(() => {
-        const cursorPosition = editor.state.selection.from;
-        
-        // Insert transcript at cursor position
-        editor.chain().focus().insertContentAt(cursorPosition, transcript + ' ').run();
-        
-        // Reset transcript after inserting
-        resetTranscript();
+        try {
+          const cursorPosition = editor.state.selection.from;
+          
+          // Insert transcript at cursor position
+          editor.chain().focus().insertContentAt(cursorPosition, transcript + ' ').run();
+          
+          // Reset transcript after inserting
+          resetTranscript();
+        } catch (error) {
+          console.warn('Failed to insert transcript:', error);
+        }
       }, 1500); // Show for 1.5 seconds before inserting
 
       return () => clearTimeout(timeoutId);
@@ -139,18 +146,24 @@ export function RichTextEditor({
 
   // Handle AI text enhancement
   const handleAIEnhance = async () => {
-    if (!editor || !onAIEnhanceSelected || !editor.view || !editor.view.dom) return;
+    if (!editor || !onAIEnhanceSelected) return;
     
-    const { from, to } = editor.state.selection;
-    const selectedText = editor.state.doc.textBetween(from, to);
-    
-    if (!selectedText.trim()) {
-      toast.error('Please select some text to enhance');
-      return;
-    }
-
-    setIsEnhancing(true);
+    // Safety check for editor state and view
     try {
+      if (!editor.state || !editor.view) {
+        toast.error('Editor not ready. Please try again.');
+        return;
+      }
+
+      const { from, to } = editor.state.selection;
+      const selectedText = editor.state.doc.textBetween(from, to);
+      
+      if (!selectedText.trim()) {
+        toast.error('Please select some text to enhance');
+        return;
+      }
+
+      setIsEnhancing(true);
       const enhancedText = await onAIEnhanceSelected(selectedText);
       if (enhancedText && enhancedText.trim()) {
         // Replace selected text with enhanced version
@@ -158,14 +171,15 @@ export function RichTextEditor({
         toast.success('Text enhanced with AI!');
       }
     } catch (error) {
+      console.error('AI enhancement error:', error);
       toast.error('Failed to enhance text. Please try again.');
     } finally {
       setIsEnhancing(false);
     }
   };
 
-  // Check if text is selected (with safety checks)
-  const hasSelection = editor && editor.view && editor.view.dom ? !editor.state.selection.empty : false;
+  // Check if text is selected (with comprehensive safety checks)
+  const hasSelection = editor?.state?.selection && !editor.state.selection.empty;
 
   // Keyboard shortcuts for voice input
   useEffect(() => {
@@ -194,7 +208,7 @@ export function RichTextEditor({
 
   // Update line height dynamically
   useEffect(() => {
-    if (editor) {
+    if (editor?.view?.dom) {
       editor.view.dom.style.lineHeight = lineHeight;
     }
   }, [lineHeight, editor]);
