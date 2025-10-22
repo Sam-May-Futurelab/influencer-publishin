@@ -9,6 +9,7 @@ interface LandingFooterProps {
   onNavigateToPricing?: () => void;
   onNavigateToFeatures?: () => void;
   onNavigateToBlog?: () => void;
+  onNavigateToContact?: () => void;
 }
 
 export function LandingFooter({ 
@@ -19,7 +20,8 @@ export function LandingFooter({
   onNavigateToAbout,
   onNavigateToPricing,
   onNavigateToFeatures,
-  onNavigateToBlog 
+  onNavigateToBlog,
+  onNavigateToContact
 }: LandingFooterProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -111,7 +113,9 @@ export function LandingFooter({
               {onNavigateToAbout && (
                 <li><button onClick={onNavigateToAbout} className="hover:text-white transition-colors">About</button></li>
               )}
-              <li><a href="mailto:support@inkfluenceai.com" className="hover:text-white transition-colors">Contact</a></li>
+              {onNavigateToContact && (
+                <li><button onClick={onNavigateToContact} className="hover:text-white transition-colors">Contact</button></li>
+              )}
               {onNavigateToPrivacy && (
                 <li><button onClick={onNavigateToPrivacy} className="hover:text-white transition-colors">Privacy</button></li>
               )}

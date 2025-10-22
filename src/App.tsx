@@ -33,6 +33,7 @@ const HelpCenter = lazy(() => import('@/components/HelpCenter').then(module => (
 const PricingPage = lazy(() => import('@/components/PricingPage').then(module => ({ default: module.PricingPage })));
 const FeaturesPage = lazy(() => import('@/components/FeaturesPage'));
 const BlogPage = lazy(() => import('@/components/BlogPage'));
+const ContactPage = lazy(() => import('@/components/ContactPage').then(module => ({ default: module.default })));
 
 // Lazy load heavy components
 const ChapterEditor = lazy(() => import('@/components/ChapterEditor').then(module => ({ default: module.ChapterEditor })));
@@ -65,7 +66,7 @@ function App() {
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'snippets' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies' | 'about' | 'help' | 'pricing' | 'features' | 'blog'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'snippets' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies' | 'about' | 'help' | 'pricing' | 'features' | 'blog' | 'contact'>('dashboard');
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -129,6 +130,8 @@ function App() {
       setViewMode('features');
     } else if (path === '/blog') {
       setViewMode('blog');
+    } else if (path === '/contact') {
+      setViewMode('contact');
     } else if (path === '/privacy') {
       setViewMode('privacy');
     } else if (path === '/terms') {
@@ -849,6 +852,12 @@ function App() {
             />
           </Suspense>
         </main>
+      ) : viewMode === 'contact' ? (
+        <main className="p-0">
+          <Suspense fallback={<PageLoading />}>
+            <ContactPage />
+          </Suspense>
+        </main>
       ) : !user ? (
         /* Show Landing Page if user is not authenticated */
         <LandingPage 
@@ -862,6 +871,7 @@ function App() {
           onNavigateToPricing={() => navigate('/pricing')}
           onNavigateToFeatures={() => navigate('/features')}
           onNavigateToBlog={() => navigate('/blog')}
+          onNavigateToContact={() => navigate('/contact')}
         />
       ) : user && (
         <>

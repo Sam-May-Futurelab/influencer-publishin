@@ -27,9 +27,10 @@ interface LandingPageProps {
   onNavigateToPricing?: () => void;
   onNavigateToFeatures?: () => void;
   onNavigateToBlog?: () => void;
+  onNavigateToContact?: () => void;
 }
 
-export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout, onNavigateToPricing, onNavigateToFeatures, onNavigateToBlog }: LandingPageProps) {
+export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout, onNavigateToPricing, onNavigateToFeatures, onNavigateToBlog, onNavigateToContact }: LandingPageProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -716,6 +717,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
         onNavigateToPricing={onNavigateToPricing}
         onNavigateToFeatures={onNavigateToFeatures}
         onNavigateToBlog={onNavigateToBlog}
+        onNavigateToContact={onNavigateToContact}
       />
     </div>
   );
