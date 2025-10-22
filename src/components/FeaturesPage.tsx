@@ -9,7 +9,7 @@ import { SEO, createSoftwareApplicationSchema, createBreadcrumbSchema } from './
 import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud, Mic } from 'lucide-react';
 
 interface FeaturesPageProps {
-  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog', action?: 'signin') => void;
+  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'contact', action?: 'signin') => void;
   isAuthenticated?: boolean;
 }
 
@@ -340,13 +340,15 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
       </div>
 
       <LandingFooter 
-        onNavigateToPrivacy={() => onNavigate('home')}
-        onNavigateToTerms={() => onNavigate('home')}
-        onNavigateToCookies={() => onNavigate('home')}
+        onNavigateToPrivacy={() => onNavigate('privacy')}
+        onNavigateToTerms={() => onNavigate('terms')}
+        onNavigateToCookies={() => onNavigate('cookies')}
         onNavigateToHelp={() => onNavigate('help')}
         onNavigateToAbout={() => onNavigate('about')}
         onNavigateToPricing={() => onNavigate('pricing')}
         onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToBlog={() => onNavigate('blog')}
+        onNavigateToContact={() => onNavigate('contact')}
       />
     </div>
   );

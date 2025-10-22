@@ -519,6 +519,9 @@ export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
         onNavigateToTerms={() => onNavigate('terms')}
         onNavigateToCookies={() => onNavigate('cookies')}
         onNavigateToPricing={() => onNavigate('pricing')}
+        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToBlog={() => onNavigate('blog')}
+        onNavigateToContact={() => onNavigate('contact')}
       />
     </div>
   );

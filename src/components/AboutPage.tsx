@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 interface AboutPageProps {
-  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing') => void;
+  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing' | 'contact') => void;
   isAuthenticated: boolean;
 }
 
@@ -279,6 +279,10 @@ export function AboutPage({ onNavigate, isAuthenticated }: AboutPageProps) {
         onNavigateToPrivacy={() => onNavigate('privacy')}
         onNavigateToTerms={() => onNavigate('terms')}
         onNavigateToCookies={() => onNavigate('cookies')}
+        onNavigateToContact={() => onNavigate('contact')}
+        onNavigateToPricing={() => onNavigate('pricing')}
+        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToBlog={() => onNavigate('blog')}
       />
     </div>
   );

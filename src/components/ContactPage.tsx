@@ -63,7 +63,7 @@ const FAQ_ITEMS = [
 ];
 
 interface ContactPageProps {
-  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing') => void;
+  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing' | 'contact') => void;
   isAuthenticated: boolean;
 }
 
@@ -367,6 +367,7 @@ export default function ContactPage({ onNavigate, isAuthenticated }: ContactPage
         onNavigateToPricing={() => onNavigate('pricing')}
         onNavigateToFeatures={() => onNavigate('features')}
         onNavigateToBlog={() => onNavigate('blog')}
+        onNavigateToContact={() => onNavigate('contact')}
       />
     </div>
   );
