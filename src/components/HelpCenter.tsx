@@ -29,7 +29,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 
 interface HelpCenterProps {
-  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing') => void;
+  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing' | 'contact') => void;
   isAuthenticated: boolean;
 }
 
@@ -828,10 +828,14 @@ export function HelpCenter({ onNavigate, isAuthenticated }: HelpCenterProps) {
             Can't find what you're looking for? Our support team is here to help.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
+            <Button size="lg" onClick={() => onNavigate('contact')}>
+              <MessageCircle className="w-5 h-5 mr-2" />
+              Contact Form
+            </Button>
+            <Button size="lg" variant="outline" asChild>
               <a href="mailto:support@inkfluenceai.com">
                 <MessageCircle className="w-5 h-5 mr-2" />
-                Contact Support
+                Email Support
               </a>
             </Button>
             <Button size="lg" variant="outline" onClick={() => onNavigate('about')}>

@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+
 import { toast } from 'sonner';
 import { 
   Mail, 
@@ -60,7 +61,12 @@ const FAQ_ITEMS = [
   }
 ];
 
-export default function ContactPage() {
+interface ContactPageProps {
+  onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies') => void;
+  isAuthenticated?: boolean;
+}
+
+export default function ContactPage({ onNavigate, isAuthenticated }: ContactPageProps) {
   const [form, setForm] = useState<ContactForm>({
     name: '',
     email: '',

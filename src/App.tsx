@@ -758,6 +758,8 @@ function App() {
                   }
                 } else if (page === 'about') {
                   navigate('/about');
+                } else if (page === 'contact') {
+                  navigate('/contact');
                 }
               }}
               isAuthenticated={!!user}
@@ -855,7 +857,39 @@ function App() {
       ) : viewMode === 'contact' ? (
         <main className="p-0">
           <Suspense fallback={<PageLoading />}>
-            <ContactPage />
+            <ContactPage 
+              onNavigate={(page) => {
+                if (page === 'signin') {
+                  navigate('/');
+                  setShowAuthModal(true);
+                } else if (page === 'home') {
+                  navigate('/');
+                } else if (page === 'pricing') {
+                  navigate('/pricing');
+                } else if (page === 'features') {
+                  navigate('/features');
+                } else if (page === 'help') {
+                  navigate('/help');
+                } else if (page === 'about') {
+                  navigate('/about');
+                } else if (page === 'blog') {
+                  navigate('/blog');
+                } else if (page === 'privacy') {
+                  navigate('/privacy');
+                } else if (page === 'terms') {
+                  navigate('/terms');
+                } else if (page === 'cookies') {
+                  navigate('/cookies');
+                } else if (page === 'dashboard') {
+                  if (user) {
+                    navigate('/');
+                  } else {
+                    setShowAuthModal(true);
+                  }
+                }
+              }}
+              isAuthenticated={!!user}
+            />
           </Suspense>
         </main>
       ) : !user ? (
