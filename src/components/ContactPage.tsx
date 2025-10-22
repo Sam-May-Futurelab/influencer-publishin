@@ -5,7 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-
+import { LandingHeader } from '@/components/LandingHeader';
+import { LandingFooter } from '@/components/LandingFooter';
 import { toast } from 'sonner';
 import { 
   Mail, 
@@ -62,8 +63,8 @@ const FAQ_ITEMS = [
 ];
 
 interface ContactPageProps {
-  onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies') => void;
-  isAuthenticated?: boolean;
+  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing') => void;
+  isAuthenticated: boolean;
 }
 
 export default function ContactPage({ onNavigate, isAuthenticated }: ContactPageProps) {
@@ -116,16 +117,27 @@ export default function ContactPage({ onNavigate, isAuthenticated }: ContactPage
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Get in Touch</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            We're here to help! Whether you need technical support, have billing questions, 
-            or want to share feedback, we'd love to hear from you.
-          </p>
-        </div>
+    <div className="min-h-screen bg-background">
+      <LandingHeader 
+        onSignIn={() => onNavigate('signin')}
+        onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
+        showNavLinks={true}
+        isAuthenticated={isAuthenticated}
+        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToPricing={() => onNavigate('pricing')}
+        onNavigateToBlog={() => onNavigate('blog')}
+      />
+      
+      <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Get in Touch</h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              We're here to help! Whether you need technical support, have billing questions, 
+              or want to share feedback, we'd love to hear from you.
+            </p>
+          </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Contact Form */}
@@ -343,7 +355,19 @@ export default function ContactPage({ onNavigate, isAuthenticated }: ContactPage
             </CardContent>
           </Card>
         </div>
+        </div>
       </div>
+
+      <LandingFooter 
+        onNavigateToAbout={() => onNavigate('about')}
+        onNavigateToHelp={() => onNavigate('help')}
+        onNavigateToPrivacy={() => onNavigate('privacy')}
+        onNavigateToTerms={() => onNavigate('terms')}
+        onNavigateToCookies={() => onNavigate('cookies')}
+        onNavigateToPricing={() => onNavigate('pricing')}
+        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToBlog={() => onNavigate('blog')}
+      />
     </div>
   );
 }
