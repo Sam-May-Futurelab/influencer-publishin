@@ -109,14 +109,14 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
           </Badge>
         </div>
 
-        <div className="flex items-center gap-2 lg:gap-3">
+        <div className="flex items-center gap-2 w-full lg:w-auto lg:gap-3 flex-wrap lg:flex-nowrap">
           {/* Customize Dropdown Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
+                className="gap-1 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4 flex-1 lg:flex-none"
               >
                 <Gear size={18} />
                 <span className="hidden lg:inline">Customize</span>
@@ -140,23 +140,24 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
           </DropdownMenu>
 
           {/* Preview Button */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1 lg:flex-none">
             <Button 
               onClick={() => setShowPreviewDialog(true)} 
               variant="outline"
               size="sm"
-              className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4 w-full"
             >
               <Eye size={18} />
               <span className="hidden lg:inline">Preview</span>
+              <span className="lg:hidden">View</span>
             </Button>
           </motion.div>
 
           {/* Export Button - Primary Action */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1 lg:flex-none">
             <Button 
               onClick={() => setShowExportDialog(true)} 
-              className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-4 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground w-full"
             >
               <DownloadSimple size={18} weight="bold" />
               <span>Export</span>

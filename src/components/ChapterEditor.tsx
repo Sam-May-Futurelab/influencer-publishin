@@ -235,7 +235,7 @@ export function ChapterEditor({
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 min-h-0 relative">
       {/* Collapse/Expand Toggle - Always visible */}
-      <div className="absolute left-0 top-0 z-10 lg:relative lg:w-auto flex items-start pt-2">
+      <div className="flex items-start pt-2 lg:relative lg:w-auto">
         <Button
           variant="ghost"
           size="sm"
@@ -255,7 +255,7 @@ export function ChapterEditor({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="w-full lg:w-72 flex flex-col neomorph-inset rounded-xl p-4 bg-background/50 backdrop-blur-sm ml-12 lg:ml-0"
+            className="w-full lg:w-72 flex flex-col neomorph-inset rounded-xl p-4 bg-background/50 backdrop-blur-sm"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-bold text-foreground">Chapters</h2>
@@ -397,16 +397,15 @@ export function ChapterEditor({
               ) : (
                 <div className="flex-1 flex items-center gap-2 lg:gap-3">
                   <h1 className="text-2xl lg:text-3xl font-bold text-foreground truncate">{currentChapter.title}</h1>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 lg:gap-2 flex-shrink-0">
                     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="neomorph-button border-0 flex-shrink-0"
+                        className="neomorph-button border-0 flex-shrink-0 h-9 w-9 p-0"
                         onClick={() => handleTitleEdit(currentChapter)}
                       >
-                        <PencilSimple size={14} className="lg:hidden" />
-                        <PencilSimple size={16} className="hidden lg:block" />
+                        <PencilSimple size={16} />
                       </Button>
                     </motion.div>
                     
@@ -421,10 +420,11 @@ export function ChapterEditor({
                           size="sm"
                           onClick={forceSave}
                           disabled={saving}
-                          className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-3 lg:px-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold shadow-lg gap-2"
+                          className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-2 lg:px-4 h-9 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold shadow-lg gap-1 lg:gap-2"
                         >
                           <FloppyDisk size={16} weight="fill" />
-                          {saving ? 'Saving...' : 'Save Now'}
+                          <span className="hidden sm:inline">{saving ? 'Saving...' : 'Save Now'}</span>
+                          <span className="sm:hidden">{saving ? '...' : 'Save'}</span>
                         </Button>
                       </motion.div>
                     )}
@@ -434,11 +434,11 @@ export function ChapterEditor({
                         size="sm"
                         onClick={handleSaveAsSnippet}
                         variant="outline"
-                        className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-3 lg:px-4 gap-2"
+                        className="neomorph-button border-0 flex-shrink-0 text-xs lg:text-sm px-2 lg:px-4 h-9 gap-1 lg:gap-2"
                         title="Save selected text as a reusable snippet"
                       >
                         <BookmarkSimple size={16} weight="bold" />
-                        <span className="hidden sm:inline">Save Snippet</span>
+                        <span className="hidden md:inline">Snippet</span>
                       </Button>
                     </motion.div>
                   </div>
