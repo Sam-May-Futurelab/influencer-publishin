@@ -61,7 +61,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           </div>
 
           {/* Navigation Links */}
-          <div className="flex-1 p-6 bg-white" style={{ backgroundColor: '#ffffff' }}>
+          <div className="flex-1 p-6 bg-white overflow-y-auto" style={{ backgroundColor: '#ffffff' }}>
             <nav className="space-y-4">
               <button
                 onClick={() => handleNavigation('/features')}
@@ -76,26 +76,54 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
               >
                 Pricing
               </button>
-              
-              <button
-                onClick={() => handleNavigation('/blog')}
-                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-              >
-                Blog
-              </button>
+
+              {/* Resources Section */}
+              <div className="pt-2">
+                <div className="px-5 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Resources
+                </div>
+                
+                <button
+                  onClick={() => handleNavigation('/blog')}
+                  className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+                >
+                  Blog
+                </button>
+
+                <button
+                  onClick={() => handleNavigation('/help')}
+                  className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+                >
+                  Help Center
+                </button>
+
+                <button
+                  onClick={() => handleNavigation('/faq')}
+                  className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+                >
+                  FAQ
+                </button>
+
+                <button
+                  onClick={() => handleNavigation('/testimonials')}
+                  className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+                >
+                  Testimonials
+                </button>
+
+                <button
+                  onClick={() => handleNavigation('/case-studies')}
+                  className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+                >
+                  Case Studies
+                </button>
+              </div>
 
               <button
                 onClick={() => handleNavigation('/about')}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >
                 About
-              </button>
-
-              <button
-                onClick={() => handleNavigation('/help')}
-                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
-              >
-                Help
               </button>
             </nav>
           </div>
