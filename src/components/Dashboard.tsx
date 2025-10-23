@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,6 +13,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { 
   BookOpen, 
   Plus, 
@@ -29,13 +36,17 @@ import {
   CheckCircle,
   Clock,
   Target,
-  Calendar
+  Calendar,
+  UploadSimple,
+  FilePlus
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { PreviewDialog } from '@/components/PreviewDialog';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { WritingStreakCard, GoalProgressCard, ProjectCompletionCard } from '@/components/AnalyticsCards';
+import { importFile } from '@/lib/import';
+import { toast } from 'sonner';
 
 interface DashboardProps {
   projects: EbookProject[];
@@ -43,6 +54,7 @@ interface DashboardProps {
   onCreateProject: (title: string) => void;
   onShowTemplateGallery: () => void;
   onDeleteProject?: (projectId: string) => void;
+  onImportProject?: (project: Partial<EbookProject>) => void;
 }
 
 export function Dashboard({ 
@@ -50,7 +62,8 @@ export function Dashboard({
   onSelectProject, 
   onCreateProject, 
   onShowTemplateGallery,
-  onDeleteProject
+  onDeleteProject,
+  onImportProject
 }: DashboardProps) {
   const { stats, totalWords, goals, progress } = useWritingAnalytics(projects);
   const [newProjectTitle, setNewProjectTitle] = useState('');
@@ -58,6 +71,9 @@ export function Dashboard({
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [previewProject, setPreviewProject] = useState<EbookProject | null>(null);
   const [projectToDelete, setProjectToDelete] = useState<EbookProject | null>(null);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filteredProjects = projects.filter(project =>
     project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -68,6 +84,42 @@ export function Dashboard({
     if (newProjectTitle.trim()) {
       onCreateProject(newProjectTitle.trim());
       setNewProjectTitle('');
+    }
+  };
+
+  const handleFileImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    
+    try {
+      const result = await importFile(file);
+      
+      if (result.success && result.chapters && result.project) {
+        // Call the parent's import handler
+        if (onImportProject) {
+          onImportProject({
+            ...result.project,
+            chapters: result.chapters,
+          });
+          toast.success(`Successfully imported "${result.project.title}" with ${result.chapters.length} chapter${result.chapters.length === 1 ? '' : 's'}!`, {
+            duration: 4000
+          });
+          setShowImportDialog(false);
+        }
+      } else {
+        toast.error(result.error || 'Failed to import file');
+      }
+    } catch (error) {
+      console.error('Import error:', error);
+      toast.error('An error occurred while importing the file');
+    } finally {
+      setIsImporting(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -210,7 +262,7 @@ export function Dashboard({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-4xl mx-auto"
+        className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-6xl mx-auto"
       >
         {/* Create New Project */}
         <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300">
@@ -219,7 +271,7 @@ export function Dashboard({
               <div className="p-2 rounded-xl neomorph-inset">
                 <Plus size={20} className="text-primary" />
               </div>
-              <h3 className="font-semibold text-sm lg:text-base">Create New Project</h3>
+              <h3 className="font-semibold text-sm lg:text-base">Create New</h3>
             </div>
             <div className="space-y-3">
               <Input
@@ -241,6 +293,29 @@ export function Dashboard({
           </CardContent>
         </Card>
 
+        {/* Import from File */}
+        <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300">
+          <CardContent className="p-4 lg:p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-xl neomorph-inset">
+                <UploadSimple size={20} className="text-blue-600" weight="fill" />
+              </div>
+              <h3 className="font-semibold text-sm lg:text-base">Import File</h3>
+            </div>
+            <p className="text-xs lg:text-sm text-muted-foreground mb-4">
+              Import from Google Docs (.docx) or text files with automatic chapter detection.
+            </p>
+            <Button
+              onClick={() => setShowImportDialog(true)}
+              variant="outline"
+              className="w-full neomorph-button border-0 text-sm min-h-[40px]"
+            >
+              <FilePlus size={16} />
+              Import Document
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Use Template */}
         <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300">
           <CardContent className="p-4 lg:p-6">
@@ -248,7 +323,7 @@ export function Dashboard({
               <div className="p-2 rounded-xl neomorph-inset">
                 <Sparkle size={20} className="text-accent" weight="fill" />
               </div>
-              <h3 className="font-semibold text-sm lg:text-base">Use AI Template</h3>
+              <h3 className="font-semibold text-sm lg:text-base">AI Template</h3>
             </div>
             <p className="text-xs lg:text-sm text-muted-foreground mb-4">
               Jump-start your ebook with professional, AI-powered templates.
@@ -476,6 +551,74 @@ export function Dashboard({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Import Dialog */}
+      <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+        <DialogContent className="sm:max-w-md neomorph-flat border-0">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <UploadSimple size={24} className="text-primary" weight="fill" />
+              Import Document
+            </DialogTitle>
+            <DialogDescription>
+              Upload a .docx file (from Google Docs, Microsoft Word, etc.) or .txt file. 
+              We'll automatically detect chapters from Heading 1 styles.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".docx,.doc,.txt"
+              onChange={handleFileImport}
+              className="hidden"
+              disabled={isImporting}
+            />
+            
+            <Button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isImporting}
+              className="w-full neomorph-button border-0 h-24 flex-col gap-2"
+            >
+              {isImporting ? (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  >
+                    <FilePlus size={32} />
+                  </motion.div>
+                  <span>Importing...</span>
+                </>
+              ) : (
+                <>
+                  <FilePlus size={32} />
+                  <span>Choose File to Import</span>
+                </>
+              )}
+            </Button>
+
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p className="font-semibold text-foreground">Supported formats:</p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li><strong>.docx</strong> - Microsoft Word, Google Docs export</li>
+                <li><strong>.txt</strong> - Plain text with chapter markers</li>
+              </ul>
+              
+              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <p className="font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                  💡 Tip: Chapter Detection
+                </p>
+                <p className="text-xs text-blue-800 dark:text-blue-200">
+                  Use <strong>Heading 1</strong> style in your document for chapter titles. 
+                  All content under each heading becomes that chapter's content.
+                </p>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

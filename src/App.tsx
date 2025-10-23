@@ -376,6 +376,34 @@ function App() {
     }
   };
 
+  const importProject = async (importedData: Partial<EbookProject>) => {
+    // Check authentication first
+    if (!requireAuth("import a document")) return;
+    if (!user) return;
+    
+    const newProject: EbookProject = {
+      id: crypto.randomUUID(),
+      title: importedData.title || 'Imported Document',
+      description: importedData.description || 'Imported from file',
+      author: importedData.author || userProfile?.displayName || '',
+      category: importedData.category || 'general',
+      chapters: importedData.chapters || [],
+      brandConfig: importedData.brandConfig || { ...defaultBrandConfig },
+      coverDesign: importedData.coverDesign,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    try {
+      await saveProject(user.uid, newProject);
+      setProjects(currentProjects => [...currentProjects, newProject]);
+      selectProject(newProject);
+    } catch (error) {
+      console.error('Error importing project:', error);
+      toast.error('Failed to save imported project');
+    }
+  };
+
   const updateProject = async (updates: Partial<EbookProject>) => {
     if (!currentProject || !user) return;
 
@@ -782,6 +810,7 @@ function App() {
                           onCreateProject={createProject}
                           onShowTemplateGallery={goToTemplatesPage}
                           onDeleteProject={deleteProject}
+                          onImportProject={importProject}
                         />
                       )}
                     </Suspense>
