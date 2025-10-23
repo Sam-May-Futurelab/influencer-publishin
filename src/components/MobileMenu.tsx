@@ -26,21 +26,15 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 md:hidden">
-      {/* Menu Panel */}
+    <>
+      {/* Backdrop */}
       <div 
-        className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl rounded-l-2xl z-[70]"
-        style={{ 
-          backgroundColor: '#ffffff',
-          opacity: 1
-        }}
-      >
-      {/* Backdrop - excluding header area */}
-      <div 
-        className="absolute left-0 top-24 right-0 bottom-0 bg-black bg-opacity-50 -z-10" 
+        className="fixed inset-0 bg-black/50 z-40 md:hidden" 
         onClick={onClose}
       />
-        <div className="flex flex-col h-full bg-white" style={{ backgroundColor: '#ffffff' }}>
+      
+      {/* Menu Panel */}
+      <div className="fixed right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl z-50 md:hidden flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white rounded-tl-2xl" style={{ backgroundColor: '#ffffff' }}>
             <div className="flex items-center gap-2">
@@ -145,8 +139,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
               </Button>
             )}
           </div>
-        </div>
       </div>
-    </div>
+    </>
   );
 };
