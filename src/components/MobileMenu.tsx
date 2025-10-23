@@ -27,21 +27,19 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 md:hidden">
-      {/* Backdrop - excluding header area */}
-      <div 
-        className="absolute left-0 top-24 right-0 bottom-0 bg-black bg-opacity-50" 
-        onClick={onClose}
-      />
-      
       {/* Menu Panel */}
       <div 
-        className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl rounded-l-2xl"
+        className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl rounded-l-2xl z-[70]"
         style={{ 
           backgroundColor: '#ffffff',
-          opacity: 1,
-          zIndex: 60
+          opacity: 1
         }}
       >
+      {/* Backdrop - excluding header area */}
+      <div 
+        className="absolute left-0 top-24 right-0 bottom-0 bg-black bg-opacity-50 -z-10" 
+        onClick={onClose}
+      />
         <div className="flex flex-col h-full bg-white" style={{ backgroundColor: '#ffffff' }}>
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white rounded-tl-2xl" style={{ backgroundColor: '#ffffff' }}>
