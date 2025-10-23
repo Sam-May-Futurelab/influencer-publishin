@@ -164,7 +164,7 @@ export function ProjectSetupDialog({ open, initialTitle, onComplete, onSkip }: P
 
           {/* Tip */}
           <div className="space-y-1">
-            <p className="text-sm text-gray-900 dark:text-gray-100">
+            <p className="text-sm text-foreground">
               <strong>💡 Pro Tip:</strong> Adding more details helps our AI generate more relevant content suggestions tailored to your specific audience and goals.
             </p>
           </div>

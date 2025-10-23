@@ -714,11 +714,11 @@ export function Dashboard({
             {/* Info Section */}
             <div className="space-y-3 text-sm">
               <div className="space-y-1">
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100 flex items-center gap-1.5">
+                <p className="text-sm font-semibold text-foreground flex items-center gap-1.5">
                   <span>💡</span>
                   <span>Chapter Detection</span>
                 </p>
-                <p className="text-sm text-gray-900 dark:text-gray-100 leading-relaxed">
+                <p className="text-sm text-foreground leading-relaxed">
                   Use <strong>Heading 1</strong> style for chapter titles{splitOnH2 && <> or <strong>Heading 2/3</strong></>}. 
                   All content under each heading becomes that chapter's content.
                 </p>
