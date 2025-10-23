@@ -34,6 +34,9 @@ const PricingPage = lazy(() => import('@/components/PricingPage').then(module =>
 const FeaturesPage = lazy(() => import('@/components/FeaturesPage'));
 const BlogPage = lazy(() => import('@/components/BlogPage'));
 const ContactPage = lazy(() => import('@/components/ContactPage').then(module => ({ default: module.default })));
+const TestimonialsPage = lazy(() => import('@/components/TestimonialsPage'));
+const CaseStudiesPage = lazy(() => import('@/components/CaseStudiesPage'));
+const FAQPage = lazy(() => import('@/components/FAQPage'));
 
 // Lazy load heavy components
 const ChapterEditor = lazy(() => import('@/components/ChapterEditor').then(module => ({ default: module.ChapterEditor })));
@@ -729,6 +732,27 @@ function App() {
           <main className="p-0">
             <Suspense fallback={<PageLoading />}>
               <ContactPage />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/testimonials" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <TestimonialsPage />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/case-studies" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <CaseStudiesPage />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/faq" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <FAQPage />
             </Suspense>
           </main>
         } />
