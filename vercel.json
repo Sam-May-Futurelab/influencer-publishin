@@ -21,11 +21,29 @@
           "value": "Content-Type, stripe-signature"
         }
       ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
     }
   ],
   "rewrites": [
     {
-      "source": "/:path((?!api).*)*",
+      "source": "/:path((?!api|sitemap\\.xml|robots\\.txt|site\\.webmanifest).*)*",
       "destination": "/index.html"
     }
   ]
