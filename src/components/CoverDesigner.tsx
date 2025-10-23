@@ -50,6 +50,10 @@ interface CoverDesign {
   authorColor: string;
   overlay: boolean;
   overlayOpacity: number;
+  imagePosition: 'cover' | 'contain' | 'fill';
+  imageBrightness: number;
+  imageContrast: number;
+  usePreMadeCover: boolean;
 }
 
 interface CoverDesignerProps {
@@ -205,20 +209,24 @@ export function CoverDesigner({
     authorName: authorName || 'Author Name',
     backgroundType: 'gradient',
     backgroundColor: '#8B5CF6',
-    gradientStart: '#667eea',
-    gradientEnd: '#764ba2',
+    gradientStart: '#1e3a8a',
+    gradientEnd: '#1e40af',
     gradientDirection: 'to-br',
     titleFont: 'Playfair Display',
     titleSize: 52,
     titleColor: '#ffffff',
     subtitleFont: 'Inter',
     subtitleSize: 22,
-    subtitleColor: '#e0e0e0',
+    subtitleColor: '#e0e7ff',
     authorFont: 'Inter',
     authorSize: 18,
-    authorColor: '#ffffff',
+    authorColor: '#f0f9ff',
     overlay: false,
     overlayOpacity: 40,
+    imagePosition: 'cover',
+    imageBrightness: 100,
+    imageContrast: 100,
+    usePreMadeCover: false,
     ...initialDesign,
   });
 
@@ -327,15 +335,26 @@ export function CoverDesigner({
   };
 
   const getBackgroundStyle = (): React.CSSProperties => {
+    if (design.usePreMadeCover && design.backgroundImage) {
+      return {
+        backgroundImage: `url(${design.backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      } as React.CSSProperties;
+    }
+
     if (design.backgroundType === 'gradient') {
       return {
         background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`,
       } as React.CSSProperties;
     } else if (design.backgroundType === 'image' && design.backgroundImage) {
+      const filterValue = `brightness(${design.imageBrightness}%) contrast(${design.imageContrast}%)`;
       return {
         backgroundImage: `url(${design.backgroundImage})`,
-        backgroundSize: 'cover',
+        backgroundSize: design.imagePosition,
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        filter: filterValue,
       } as React.CSSProperties;
     } else {
       return {
@@ -378,46 +397,52 @@ export function CoverDesigner({
                   />
                 )}
 
-                {/* Text Content */}
-                <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
-                  <h1
-                    className="font-bold leading-tight mb-4"
-                    style={{
-                      fontFamily: design.titleFont,
-                      fontSize: `${design.titleSize}px`,
-                      color: design.titleColor,
-                    }}
-                  >
-                    {design.title}
-                  </h1>
-                  <p
-                    className="mb-auto max-w-md"
-                    style={{
-                      fontFamily: design.subtitleFont,
-                      fontSize: `${design.subtitleSize}px`,
-                      color: design.subtitleColor,
-                    }}
-                  >
-                    {design.subtitle}
-                  </p>
-                  <p
-                    className="mt-auto uppercase tracking-wider font-medium"
-                    style={{
-                      fontFamily: design.authorFont,
-                      fontSize: `${design.authorSize}px`,
-                      color: design.authorColor,
-                    }}
-                  >
-                    {design.authorName}
-                  </p>
-                </div>
+                {/* Text Content - Hide if using pre-made cover */}
+                {!design.usePreMadeCover && (
+                  <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
+                    <h1
+                      className="font-bold leading-tight mb-4"
+                      style={{
+                        fontFamily: design.titleFont,
+                        fontSize: `${design.titleSize}px`,
+                        color: design.titleColor,
+                      }}
+                    >
+                      {design.title}
+                    </h1>
+                    <p
+                      className="mb-auto max-w-md"
+                      style={{
+                        fontFamily: design.subtitleFont,
+                        fontSize: `${design.subtitleSize}px`,
+                        color: design.subtitleColor,
+                      }}
+                    >
+                      {design.subtitle}
+                    </p>
+                    <p
+                      className="mt-auto uppercase tracking-wider font-medium"
+                      style={{
+                        fontFamily: design.authorFont,
+                        fontSize: `${design.authorSize}px`,
+                        color: design.authorColor,
+                      }}
+                    >
+                      {design.authorName}
+                    </p>
+                  </div>
+                )}
               </div>
           </div>
 
           {/* Controls Panel */}
           <div className="lg:w-[55%] overflow-y-auto p-6 lg:p-10">
-            <Tabs defaultValue="templates" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6 h-12 gap-2">
+            <Tabs defaultValue="quick" className="w-full">
+              <TabsList className="grid w-full grid-cols-4 mb-6 h-12 gap-2">
+                <TabsTrigger value="quick" className="gap-2 text-base px-4">
+                  <UploadSimple size={16} />
+                  <span>Quick Upload</span>
+                </TabsTrigger>
                 <TabsTrigger value="templates" className="gap-2 text-base px-4">
                   <Sparkle size={16} />
                   <span>Templates</span>
@@ -431,6 +456,66 @@ export function CoverDesigner({
                   <span>Text</span>
                 </TabsTrigger>
               </TabsList>
+
+              {/* Quick Upload Tab */}
+              <TabsContent value="quick" className="space-y-6">
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold">Upload Your Own Cover</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Already have a cover designed? Upload it here and skip the customization
+                  </p>
+                </div>
+                
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        updateDesign({
+                          usePreMadeCover: true,
+                          backgroundImage: event.target?.result as string,
+                        });
+                        toast.success('Cover uploaded! Click Save to apply');
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="hidden"
+                />
+                <Button
+                  variant="outline"
+                  className="w-full h-32 text-base border-2 border-dashed hover:border-primary hover:bg-primary/5"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <UploadSimple size={32} />
+                    <span className="font-medium">Click to upload your cover image</span>
+                    <span className="text-xs text-muted-foreground">Recommended: 1600x2560px (PNG or JPG)</span>
+                  </div>
+                </Button>
+
+                {design.usePreMadeCover && design.backgroundImage && (
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-sm text-green-800 font-medium">✓ Cover uploaded successfully!</p>
+                    <p className="text-xs text-green-600 mt-1">You can now save this cover or customize it using the other tabs</p>
+                  </div>
+                )}
+
+                <div className="pt-4 border-t">
+                  <p className="text-sm text-muted-foreground mb-3">Or use the templates and customization tools below →</p>
+                  <Button
+                    variant="outline"
+                    onClick={() => updateDesign({ usePreMadeCover: false })}
+                    className="w-full"
+                  >
+                    Design Custom Cover Instead
+                  </Button>
+                </div>
+              </TabsContent>
 
               {/* Templates Tab */}
               <TabsContent value="templates" className="space-y-6">
@@ -558,14 +643,7 @@ export function CoverDesigner({
                   {design.backgroundType === 'image' && (
                     <>
                       <div className="space-y-3">
-                        <Label className="text-base font-medium">Upload Image</Label>
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                        />
+                        <Label className="text-base font-medium">Upload Background Image</Label>
                         <Button
                           variant="outline"
                           className="w-full h-12 text-base"
@@ -575,6 +653,51 @@ export function CoverDesigner({
                           Choose Image
                         </Button>
                       </div>
+
+                      {design.backgroundImage && (
+                        <>
+                          <div className="space-y-3">
+                            <Label className="text-base font-medium">Image Fit</Label>
+                            <Select
+                              value={design.imagePosition}
+                              onValueChange={(value: any) => updateDesign({ imagePosition: value })}
+                            >
+                              <SelectTrigger className="h-12 text-base">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="cover" className="text-base py-3">Cover (Fill entire area)</SelectItem>
+                                <SelectItem value="contain" className="text-base py-3">Contain (Fit inside)</SelectItem>
+                                <SelectItem value="fill" className="text-base py-3">Stretch (Fill completely)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label className="text-base font-medium">Brightness: {design.imageBrightness}%</Label>
+                            <Slider
+                              value={[design.imageBrightness]}
+                              onValueChange={([value]) => updateDesign({ imageBrightness: value })}
+                              min={50}
+                              max={150}
+                              step={5}
+                              className="py-2"
+                            />
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label className="text-base font-medium">Contrast: {design.imageContrast}%</Label>
+                            <Slider
+                              value={[design.imageContrast]}
+                              onValueChange={([value]) => updateDesign({ imageContrast: value })}
+                              min={50}
+                              max={150}
+                              step={5}
+                              className="py-2"
+                            />
+                          </div>
+                        </>
+                      )}
 
                       <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
