@@ -27,41 +27,35 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 md:hidden">
-      {/* Backdrop - excluding header area */}
+      {/* Backdrop */}
       <div 
-        className="absolute left-0 top-24 right-0 bottom-0 bg-black bg-opacity-50" 
+        className="absolute inset-0 bg-black/50" 
         onClick={onClose}
       />
       
       {/* Menu Panel */}
       <div 
-        className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl rounded-l-2xl"
-        style={{ 
-          backgroundColor: '#ffffff',
-          opacity: 1,
-          zIndex: 60
-        }}
+        className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl flex flex-col"
       >
-        <div className="flex flex-col h-full bg-white" style={{ backgroundColor: '#ffffff' }}>
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white rounded-tl-2xl" style={{ backgroundColor: '#ffffff' }}>
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-[#9b87b8]" />
-              <span className="text-lg font-bold bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] bg-clip-text text-transparent">
-                Inkfluence AI
-              </span>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              aria-label="Close menu"
-            >
-              <X className="w-6 h-6 text-gray-600" />
-            </button>
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-6 h-6 text-[#9b87b8]" />
+            <span className="text-lg font-bold bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] bg-clip-text text-transparent">
+              Inkfluence AI
+            </span>
           </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="w-6 h-6 text-gray-600" />
+          </button>
+        </div>
 
-          {/* Navigation Links */}
-          <div className="flex-1 p-6 bg-white overflow-y-auto" style={{ backgroundColor: '#ffffff' }}>
+        {/* Navigation Links */}
+        <div className="flex-1 overflow-y-auto p-6 bg-white">
             <nav className="space-y-3">
               <button
                 onClick={() => handleNavigation('/features')}
@@ -129,32 +123,31 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             </nav>
           </div>
 
-          {/* Action Buttons */}
-          <div className="p-6 border-t border-gray-100 space-y-3 bg-white rounded-bl-2xl" style={{ backgroundColor: '#ffffff' }}>
-            {onSignIn && (
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  onSignIn();
-                  onClose();
-                }}
-                className="w-full"
-              >
-                Sign In
-              </Button>
-            )}
-            {onGetStarted && (
-              <Button 
-                onClick={() => {
-                  onGetStarted();
-                  onClose();
-                }}
-                className="w-full bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
-              >
-                Get Started Free
-              </Button>
-            )}
-          </div>
+        {/* Action Buttons */}
+        <div className="p-6 border-t border-gray-100 bg-white flex-shrink-0 space-y-3">
+          {onSignIn && (
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                onSignIn();
+                onClose();
+              }}
+              className="w-full"
+            >
+              Sign In
+            </Button>
+          )}
+          {onGetStarted && (
+            <Button 
+              onClick={() => {
+                onGetStarted();
+                onClose();
+              }}
+              className="w-full bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
+            >
+              Get Started Free
+            </Button>
+          )}
         </div>
       </div>
     </div>
