@@ -298,31 +298,40 @@ export function RichTextEditor({
           </Button>
         </motion.div>
 
-        {/* AI Enhancement Button */}
+        {/* AI Enhancement Button - Always visible */}
         {onAIEnhanceSelected && (
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button
-              onClick={handleAIEnhance}
-              disabled={!hasSelection || isEnhancing}
-              className={cn(
-                "h-8 px-3 gap-1.5 border-0 font-medium",
-                hasSelection && !isEnhancing
-                  ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700"
-                  : "bg-purple-100 text-purple-700 hover:bg-purple-200"
-              )}
-              size="sm"
-              type="button"
-              title={hasSelection ? "Enhance selected text with AI" : "Select text first to enhance it with AI"}
-            >
-              <MagicWand size={16} weight="fill" />
-              <span className="font-medium">
-                {isEnhancing ? "Enhancing..." : "Enhance"}
-              </span>
-            </Button>
-          </motion.div>
+          <>
+            <AnimatePresence>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={hasSelection ? { scale: [1, 1.1, 1] } : {}}
+                transition={{ duration: 0.3 }}
+              >
+                <Button
+                  onClick={handleAIEnhance}
+                  disabled={!hasSelection || isEnhancing}
+                  className={cn(
+                    "h-8 px-3 gap-1.5 border-0 font-medium transition-all",
+                    hasSelection && !isEnhancing
+                      ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 shadow-lg shadow-purple-500/50"
+                      : "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50"
+                  )}
+                  size="sm"
+                  type="button"
+                  title={hasSelection ? "Enhance selected text with AI" : "Select text first to enhance it with AI"}
+                >
+                  <MagicWand size={16} weight="fill" />
+                  <span className="font-medium">
+                    {isEnhancing ? "Enhancing..." : "Enhance"}
+                  </span>
+                  {!hasSelection && (
+                    <span className="text-[10px] opacity-70 ml-1 hidden sm:inline">(select text)</span>
+                  )}
+                </Button>
+              </motion.div>
+            </AnimatePresence>
+          </>
         )}
 
         <Separator orientation="vertical" className="h-6 mx-1" />
