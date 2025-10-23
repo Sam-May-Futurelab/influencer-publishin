@@ -398,6 +398,17 @@ function App() {
       await saveProject(user.uid, newProject);
       setProjects(currentProjects => [...currentProjects, newProject]);
       selectProject(newProject);
+      
+      // Record writing session for imported words
+      // This ensures the streak updates when you import content
+      const totalWords = newProject.chapters.reduce((total, chapter) => {
+        return total + (chapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0);
+      }, 0);
+      
+      if (totalWords > 0 && newProject.chapters.length > 0) {
+        // Record session for the first chapter (representative of the import)
+        recordWritingSession(newProject.id, newProject.chapters[0].id, totalWords);
+      }
     } catch (error) {
       console.error('Error importing project:', error);
       toast.error('Failed to save imported project');
