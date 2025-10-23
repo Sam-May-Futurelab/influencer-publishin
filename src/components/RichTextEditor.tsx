@@ -62,6 +62,7 @@ export function RichTextEditor({
   onAIEnhanceSelected
 }: RichTextEditorProps) {
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [hasSelection, setHasSelection] = useState(false);
 
   // Voice input hook
   const {
@@ -99,6 +100,12 @@ export function RichTextEditor({
     },
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
+      // Update selection state on content change
+      setHasSelection(!editor.state.selection.empty);
+    },
+    onSelectionUpdate: ({ editor }) => {
+      // Update selection state when user selects text
+      setHasSelection(!editor.state.selection.empty);
     },
   });
 
@@ -170,9 +177,6 @@ export function RichTextEditor({
       setIsEnhancing(false);
     }
   };
-
-  // Check if text is selected (simple and safe)
-  const hasSelection = editor?.state?.selection ? !editor.state.selection.empty : false;
 
   // Keyboard shortcuts for voice input
   useEffect(() => {
