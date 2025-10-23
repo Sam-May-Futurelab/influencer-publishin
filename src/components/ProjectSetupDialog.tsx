@@ -75,7 +75,7 @@ export function ProjectSetupDialog({ open, initialTitle, onComplete, onSkip }: P
             Set Up Your Project
           </DialogTitle>
           <DialogDescription>
-            Help us personalize your writing experience and generate better AI suggestions.
+            Optional: Add details to get better AI suggestions (you can skip and add this later)
           </DialogDescription>
         </DialogHeader>
 
@@ -163,9 +163,9 @@ export function ProjectSetupDialog({ open, initialTitle, onComplete, onSkip }: P
           </div>
 
           {/* Tip */}
-          <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800/50">
-            <p className="text-sm text-blue-900 dark:text-blue-100">
-              <strong>💡 Pro Tip:</strong> Adding more details helps our AI generate more relevant content suggestions tailored to your specific audience and goals.
+          <div className="p-3 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800/50">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              <strong className="text-gray-900 dark:text-gray-100">💡 Pro Tip:</strong> Adding more details helps our AI generate more relevant content suggestions tailored to your specific audience and goals.
             </p>
           </div>
         </div>
@@ -173,17 +173,19 @@ export function ProjectSetupDialog({ open, initialTitle, onComplete, onSkip }: P
         <DialogFooter className="gap-2 sm:gap-0">
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             onClick={onSkip}
+            className="flex-1 sm:flex-none"
           >
-            Skip for Now
+            Skip - Start Writing Now
           </Button>
           <Button
             type="submit"
             onClick={handleSubmit}
             disabled={!isValid}
+            className="flex-1 sm:flex-none"
           >
-            Continue
+            Save & Continue
           </Button>
         </DialogFooter>
       </DialogContent>
