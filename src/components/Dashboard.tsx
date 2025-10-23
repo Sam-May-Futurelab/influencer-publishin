@@ -131,6 +131,8 @@ export function Dashboard({
   const processFile = async (file: File) => {
     setIsImporting(true);
     
+    console.log('🔄 Importing file with options:', { splitOnH2 });
+    
     try {
       const result = await importFile(file, { splitOnH2 });
       
@@ -698,10 +700,10 @@ export function Dashboard({
                 <div className="flex items-start gap-2">
                   <div className="mt-0.5">💡</div>
                   <div>
-                    <p className="font-semibold text-blue-900 dark:text-blue-100">
+                    <p className="font-semibold text-blue-950 dark:text-blue-50">
                       Chapter Detection
                     </p>
-                    <p className="text-blue-800 dark:text-blue-200 mt-1 leading-relaxed">
+                    <p className="text-blue-900 dark:text-blue-100 mt-1 leading-relaxed">
                       Use <strong>Heading 1</strong> style for chapter titles{splitOnH2 && <> or <strong>Heading 2</strong></>}. 
                       All content under each heading becomes that chapter's content.
                     </p>
