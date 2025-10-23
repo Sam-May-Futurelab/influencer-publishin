@@ -14,6 +14,12 @@
   * {
     @apply border-border
   }
+
+  /* Force Sonner toast descriptions to use foreground color */
+  [data-sonner-toast] [data-description] {
+    color: hsl(var(--foreground)) !important;
+    opacity: 0.9;
+  }
 }
 
 @layer utilities {
