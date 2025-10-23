@@ -718,6 +718,13 @@ function App() {
             </Suspense>
           </main>
         } />
+        <Route path="/blog/:postId" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <BlogPage />
+            </Suspense>
+          </main>
+        } />
         <Route path="/contact" element={
           <main className="p-0">
             <Suspense fallback={<PageLoading />}>
