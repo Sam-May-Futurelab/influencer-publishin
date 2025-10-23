@@ -110,7 +110,7 @@ export function PricingPage() {
     {
       name: 'Premium',
       tagline: 'For serious authors and creators',
-      price: { monthly: 9.99, yearly: 8.25 },
+      price: { monthly: 9.99, yearly: 99 },
       yearlyDiscount: '17% off',
       popular: true,
       features: [
@@ -199,7 +199,7 @@ export function PricingPage() {
     },
     {
       question: 'Is there a discount for yearly billing?',
-      answer: 'Yes! Annual Premium subscriptions are 17% off compared to monthly billing. You\'ll pay $99/year instead of $119.88 when billed monthly.'
+      answer: 'Yes! Annual Premium subscriptions are 17% off compared to monthly billing. You\'ll pay £99/year (£8.25/month) instead of £119.88 when billed monthly.'
     },
     {
       question: 'Do you offer educational or non-profit discounts?',
@@ -212,13 +212,22 @@ export function PricingPage() {
   ];
 
   const yearlyPrice = (plan: typeof plans[0]) => {
-    if (plan.price.yearly === 0) return 0;
-    return plan.price.yearly * 12;
+    // For yearly billing, the price is the annual total (not monthly rate * 12)
+    return plan.price.yearly;
   };
 
   const monthlySavings = (plan: typeof plans[0]) => {
     if (plan.price.monthly === 0) return 0;
     return (plan.price.monthly * 12) - yearlyPrice(plan);
+  };
+
+  const displayPrice = (plan: typeof plans[0]) => {
+    if (billingInterval === 'monthly') {
+      return plan.price.monthly;
+    } else {
+      // For annual billing, show the monthly equivalent
+      return plan.price.yearly === 0 ? 0 : (plan.price.yearly / 12).toFixed(2);
+    }
   };
 
   return (
@@ -325,20 +334,31 @@ export function PricingPage() {
                       
                       <div className="mb-6">
                         <div className="flex items-baseline justify-center gap-1">
-                          <span className="text-4xl font-bold">
-                            ${billingInterval === 'monthly' ? plan.price.monthly : plan.price.yearly}
-                          </span>
-                          <span className="text-muted-foreground">
-                            /{billingInterval === 'monthly' ? 'month' : 'month'}
-                          </span>
+                          {plan.price.monthly === 0 ? (
+                            <span className="text-4xl font-bold">Free</span>
+                          ) : (
+                            <>
+                              <span className="text-4xl font-bold">
+                                ${displayPrice(plan)}
+                              </span>
+                              <span className="text-muted-foreground">/month</span>
+                            </>
+                          )}
                         </div>
                         {billingInterval === 'yearly' && plan.price.yearly > 0 && (
                           <div className="text-sm text-muted-foreground mt-2">
-                            Billed ${yearlyPrice(plan)} annually
+                            <span className="font-semibold text-foreground">
+                              £{yearlyPrice(plan)} billed annually
+                            </span>
                             <br />
                             <span className="text-green-600 font-medium">
-                              Save ${monthlySavings(plan)} per year
+                              Save £{monthlySavings(plan).toFixed(2)} per year
                             </span>
+                          </div>
+                        )}
+                        {billingInterval === 'monthly' && plan.price.monthly > 0 && (
+                          <div className="text-sm text-muted-foreground mt-2">
+                            Billed monthly
                           </div>
                         )}
                       </div>
@@ -351,9 +371,15 @@ export function PricingPage() {
                         }`}
                         variant={plan.ctaStyle === 'primary' ? 'default' : 'outline'}
                         size="lg"
-                        onClick={() => navigate(user ? '/app/dashboard' : '/')}
+                        onClick={() => {
+                          if (user) {
+                            navigate('/app/dashboard');
+                          } else {
+                            navigate('/?signin=true');
+                          }
+                        }}
                       >
-                        {plan.ctaText}
+                        {user ? plan.ctaText : (plan.name === 'Free' ? 'Get Started Free' : 'Get Started')}
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
