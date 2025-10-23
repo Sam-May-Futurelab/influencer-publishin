@@ -321,17 +321,18 @@ function App() {
     setCurrentSection('profile');
   };
 
-  const createProject = async (title: string) => {
+  const createProject = async (projectData: { title: string; author?: string; category?: string; targetAudience?: string; description?: string }) => {
     // Check authentication first
     if (!requireAuth("create a new eBook project")) return;
     if (!user) return;
     
     const newProject: EbookProject = {
       id: crypto.randomUUID(),
-      title: title.trim() || 'Untitled Ebook',
-      description: '',
-      author: '',
-      category: 'general',
+      title: projectData.title.trim() || 'Untitled Ebook',
+      description: projectData.description?.trim() || '',
+      author: projectData.author?.trim() || userProfile?.displayName || '',
+      category: (projectData.category as any) || 'general',
+      targetAudience: projectData.targetAudience?.trim(),
       chapters: [],
       brandConfig: { ...defaultBrandConfig },
       createdAt: new Date(),
@@ -342,7 +343,15 @@ function App() {
       await saveProject(user.uid, newProject);
       setProjects(currentProjects => [...currentProjects, newProject]);
       selectProject(newProject);
-      toast.success('New ebook project created!');
+      
+      // Show different success message based on whether setup was completed
+      if (projectData.author && projectData.category) {
+        toast.success('Project created with AI-ready setup! 🎉', {
+          description: 'Your project details will help generate better content suggestions.',
+        });
+      } else {
+        toast.success('New ebook project created!');
+      }
     } catch (error) {
       console.error('Error creating project:', error);
       toast.error('Failed to create project');

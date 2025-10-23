@@ -50,11 +50,12 @@ import { WritingStreakCard, GoalProgressCard, ProjectCompletionCard } from '@/co
 import { importFile } from '@/lib/import';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { ProjectSetupDialog } from '@/components/ProjectSetupDialog';
 
 interface DashboardProps {
   projects: EbookProject[];
   onSelectProject: (project: EbookProject) => void;
-  onCreateProject: (title: string) => void;
+  onCreateProject: (projectData: { title: string; author?: string; category?: string; targetAudience?: string; description?: string }) => void;
   onShowTemplateGallery: () => void;
   onDeleteProject?: (projectId: string) => void;
   onImportProject?: (project: Partial<EbookProject>) => void;
@@ -79,6 +80,10 @@ export function Dashboard({
   const [isDragging, setIsDragging] = useState(false);
   const [splitOnH2, setSplitOnH2] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Project setup dialog state
+  const [showSetupDialog, setShowSetupDialog] = useState(false);
+  const [pendingProjectTitle, setPendingProjectTitle] = useState('');
 
   const filteredProjects = projects.filter(project =>
     project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -87,9 +92,23 @@ export function Dashboard({
 
   const handleCreateProject = () => {
     if (newProjectTitle.trim()) {
-      onCreateProject(newProjectTitle.trim());
-      setNewProjectTitle('');
+      setPendingProjectTitle(newProjectTitle.trim());
+      setShowSetupDialog(true);
     }
+  };
+
+  const handleSetupComplete = (data: { title: string; author: string; category: string; targetAudience: string; description: string }) => {
+    onCreateProject(data);
+    setShowSetupDialog(false);
+    setNewProjectTitle('');
+    setPendingProjectTitle('');
+  };
+
+  const handleSetupSkip = () => {
+    onCreateProject({ title: pendingProjectTitle });
+    setShowSetupDialog(false);
+    setNewProjectTitle('');
+    setPendingProjectTitle('');
   };
 
   const handleFileImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -720,6 +739,14 @@ export function Dashboard({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Project Setup Dialog */}
+      <ProjectSetupDialog
+        open={showSetupDialog}
+        initialTitle={pendingProjectTitle}
+        onComplete={handleSetupComplete}
+        onSkip={handleSetupSkip}
+      />
     </div>
   );
 }
