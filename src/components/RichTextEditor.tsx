@@ -159,20 +159,33 @@ export function RichTextEditor({
       const selectedText = editor.state.doc.textBetween(from, to);
       
       if (!selectedText.trim()) {
-        toast.error('Please select some text to enhance');
+        toast.error('Please select some text to enhance', {
+          description: 'Highlight the text you want to improve with AI'
+        });
         return;
       }
 
       setIsEnhancing(true);
+      toast.loading('AI is enhancing your text...', {
+        id: 'enhancing-toast'
+      });
+      
       const enhancedText = await onAIEnhanceSelected(selectedText);
+      
+      toast.dismiss('enhancing-toast');
       
       if (enhancedText && enhancedText.trim()) {
         editor.chain().focus().deleteRange({ from, to }).insertContent(enhancedText).run();
-        toast.success('Text enhanced with AI!');
+        toast.success('Text enhanced with AI!', {
+          description: 'Your content has been improved'
+        });
       }
     } catch (error) {
+      toast.dismiss('enhancing-toast');
       console.error('AI enhancement error:', error);
-      toast.error('Failed to enhance text. Please try again.');
+      toast.error('Failed to enhance text', {
+        description: 'Please try again or check your connection'
+      });
     } finally {
       setIsEnhancing(false);
     }
@@ -298,18 +311,22 @@ export function RichTextEditor({
             onClick={handleAIEnhance}
             disabled={!hasSelection || isEnhancing}
             className={cn(
-              "h-8 px-3 gap-1.5 border-0 font-medium transition-colors",
+              "h-8 px-3 gap-1.5 border-0 font-medium transition-all duration-200",
               hasSelection && !isEnhancing
-                ? "bg-purple-600 text-white hover:bg-purple-700"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600"
+                ? "bg-purple-600 text-white hover:bg-purple-700 shadow-md"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-500 cursor-not-allowed"
             )}
             size="sm"
             type="button"
-            title={hasSelection ? "Enhance selected text with AI" : "Select text to enhance with AI"}
+            title={hasSelection ? "Enhance selected text with AI" : "Select text first to enhance with AI"}
           >
-            <MagicWand size={16} weight={hasSelection ? "fill" : "regular"} />
+            <MagicWand 
+              size={16} 
+              weight={hasSelection ? "fill" : "regular"} 
+              className={cn(isEnhancing && "animate-spin")}
+            />
             <span className="font-medium">
-              {isEnhancing ? "Enhancing..." : "Enhance"}
+              {isEnhancing ? "Enhancing..." : hasSelection ? "Enhance with AI" : "Select Text First"}
             </span>
           </Button>
         )}
