@@ -788,6 +788,401 @@ export const blogPosts: BlogPost[] = [
     metaTitle: 'Ebook Design Psychology: 10 Principles That Convert | Inkfluence AI',
     metaDescription: 'Learn psychology-based ebook design principles that increase engagement by 90%. Professional design tips for ebook creators.',
     keywords: ['ebook design', 'design psychology', 'conversion optimization', 'visual design', 'user experience']
+  },
+  {
+    id: 'seo-for-ebooks',
+    slug: 'seo-for-ebooks',
+    title: 'SEO for Ebooks: How to Rank #1 and Get 10,000+ Downloads',
+    excerpt: 'The ultimate guide to ebook SEO. From keyword research to distribution, learn how to make your ebooks discoverable and profitable.',
+    content: `
+      <h2>Why SEO Matters for Ebook Success</h2>
+      <p>You've created an incredible ebook packed with valuable insights. But here's the harsh truth: if people can't find it, it doesn't matter how good it is. Search Engine Optimization (SEO) is the difference between an ebook that gets 10,000+ downloads and one that languishes in obscurity with fewer than 100.</p>
+
+      <p>The beautiful thing about ebook SEO is that it's not about gaming the system—it's about making your valuable content discoverable to people actively searching for solutions you provide. When done correctly, SEO creates a perpetual traffic machine that generates qualified leads and sales for years with zero ongoing advertising costs.</p>
+
+      <p>This comprehensive guide reveals the exact SEO strategies used by top-performing ebooks to dominate search results and generate massive organic traffic. Whether you're publishing on your own site, Amazon, or other platforms, these tactics will transform your ebook's visibility.</p>
+
+      <h2>Understanding Ebook SEO Fundamentals</h2>
+      
+      <h3>What Makes Ebook SEO Different</h3>
+      <p>Ebook SEO differs from traditional website SEO in several key ways:</p>
+      <ul>
+        <li><strong>Platform diversity:</strong> Your ebook may exist on multiple platforms (your site, Amazon, Apple Books, etc.)</li>
+        <li><strong>Metadata importance:</strong> Title, subtitle, description, and categories carry outsized weight</li>
+        <li><strong>Review signals:</strong> User reviews heavily influence rankings and click-through rates</li>
+        <li><strong>Sample content:</strong> First chapter or preview pages are crawlable and rankable</li>
+        <li><strong>Landing page optimization:</strong> Your sales/download page needs separate SEO attention</li>
+      </ul>
+
+      <h3>The Three Pillars of Ebook SEO</h3>
+      <ol>
+        <li><strong>On-page optimization:</strong> Your ebook's metadata, landing page, and content structure</li>
+        <li><strong>Off-page authority:</strong> Backlinks, social signals, and brand mentions</li>
+        <li><strong>Platform-specific tactics:</strong> Optimizing for Amazon, Google Books, and other channels</li>
+      </ol>
+
+      <h2>Keyword Research: The Foundation of Ebook SEO</h2>
+      <p>Everything starts with understanding what your target readers are searching for. Get this wrong, and all other efforts are wasted.</p>
+
+      <h3>Finding High-Value Keywords</h3>
+      <p><strong>Step 1: Brainstorm seed keywords</strong></p>
+      <p>List 10-15 topics your ebook covers. For an ebook about AI writing, this might include: "AI writing tools," "content creation," "automated writing," "GPT writing," etc.</p>
+
+      <p><strong>Step 2: Expand with keyword tools</strong></p>
+      <ul>
+        <li><strong>Google Keyword Planner:</strong> Free tool showing search volumes and competition</li>
+        <li><strong>Ahrefs/SEMrush:</strong> Premium tools with comprehensive keyword data</li>
+        <li><strong>Amazon search bar:</strong> Type your topic and see auto-complete suggestions</li>
+        <li><strong>Answer the Public:</strong> Discovers questions people ask</li>
+        <li><strong>Google Trends:</strong> Identifies growing vs. declining search interest</li>
+      </ul>
+
+      <p><strong>Step 3: Evaluate keyword opportunity</strong></p>
+      <p>Look for keywords with:</p>
+      <ul>
+        <li>Decent search volume (500-5000 monthly searches for most niches)</li>
+        <li>Moderate competition (avoid ultra-competitive one-word terms)</li>
+        <li>Clear commercial intent (people searching to learn, buy, or solve problems)</li>
+        <li>Relevance to your ebook's specific value proposition</li>
+      </ul>
+
+      <h3>Long-Tail Keywords: Your Secret Weapon</h3>
+      <p>Instead of targeting "AI writing" (massively competitive), target:</p>
+      <ul>
+        <li>"AI writing tools for ebooks" (more specific, less competition)</li>
+        <li>"how to write ebook with artificial intelligence" (clear intent)</li>
+        <li>"best AI software for ebook authors" (buying intent)</li>
+        <li>"AI ebook writing guide for beginners" (specific audience)</li>
+      </ul>
+
+      <p><strong>Pro Tip:</strong> Long-tail keywords (3-5 words) convert 2-3x better than short-tail keywords because they capture more specific intent.</p>
+
+      <h2>Optimizing Your Ebook Metadata</h2>
+      <p>Your ebook's metadata is prime SEO real estate. Every field matters.</p>
+
+      <h3>Title Optimization</h3>
+      <p>Your ebook title needs to balance three factors:</p>
+      <ul>
+        <li><strong>Keyword inclusion:</strong> Primary keyword should appear naturally</li>
+        <li><strong>Compelling copy:</strong> Must make people want to click</li>
+        <li><strong>Clear benefit:</strong> What transformation does it promise?</li>
+      </ul>
+
+      <p><strong>Formula:</strong> [Primary Keyword] + [Specific Promise/Benefit] + [Differentiator]</p>
+
+      <p><strong>Examples:</strong></p>
+      <ul>
+        <li>❌ "Writing with AI" (too generic, no benefit)</li>
+        <li>✅ "AI Ebook Writing: Complete Guide to Creating Professional Books 10x Faster"</li>
+        <li>✅ "The AI-Powered Ebook Formula: Write, Publish & Profit in 30 Days"</li>
+      </ul>
+
+      <h3>Subtitle/Description Optimization</h3>
+      <p>Use your subtitle to:</p>
+      <ul>
+        <li>Include 2-3 additional keywords naturally</li>
+        <li>Expand on the main promise</li>
+        <li>Specify your target audience</li>
+        <li>Highlight unique methodology or approach</li>
+      </ul>
+
+      <h3>Category Selection Strategy</h3>
+      <p>On Amazon and other platforms, choosing the right categories is crucial:</p>
+      <ul>
+        <li><strong>Be specific:</strong> "Computers & Technology > Software > Writing Software" beats generic "Business"</li>
+        <li><strong>Research competition:</strong> Look for categories where you can realistically rank top 20</li>
+        <li><strong>Use all available slots:</strong> Most platforms allow 2-3 categories—use them all</li>
+        <li><strong>Check bestseller lists:</strong> See which categories your competitors use successfully</li>
+      </ul>
+
+      <h2>Landing Page SEO: Your Sales Engine</h2>
+      <p>If you're selling directly (not just on Amazon), your landing page is critical for SEO and conversions.</p>
+
+      <h3>Essential Landing Page Elements</h3>
+      
+      <p><strong>1. SEO-Optimized Title Tag</strong></p>
+      <p>Format: Primary Keyword | Benefit | Brand Name</p>
+      <p>Example: "AI Ebook Writing Guide: Create Professional Ebooks 10x Faster | Inkfluence AI"</p>
+      <p>Keep under 60 characters to avoid truncation in search results.</p>
+
+      <p><strong>2. Meta Description That Converts</strong></p>
+      <p>Your meta description should:</p>
+      <ul>
+        <li>Include primary keyword naturally</li>
+        <li>Promise specific benefit or outcome</li>
+        <li>Include call-to-action</li>
+        <li>Stay under 155 characters</li>
+      </ul>
+      <p>Example: "Learn how to write professional ebooks 10x faster with AI. Step-by-step guide with templates, prompts, and proven strategies. Download your free chapter today!"</p>
+
+      <p><strong>3. Header Tag Hierarchy</strong></p>
+      <ul>
+        <li><strong>H1:</strong> Only one per page, includes main keyword</li>
+        <li><strong>H2:</strong> Section headers with related keywords</li>
+        <li><strong>H3:</strong> Subsections for detailed topics</li>
+      </ul>
+
+      <p><strong>4. Keyword-Rich Content</strong></p>
+      <p>Your landing page should include:</p>
+      <ul>
+        <li>1000-2000 words of unique, valuable content</li>
+        <li>Primary keyword 3-5 times (natural usage, not stuffing)</li>
+        <li>Related keywords and synonyms throughout</li>
+        <li>Bullet points for scanability</li>
+        <li>Clear section breaks with headers</li>
+      </ul>
+
+      <p><strong>5. Schema Markup</strong></p>
+      <p>Implement structured data for:</p>
+      <ul>
+        <li><strong>Product schema:</strong> Price, availability, ratings</li>
+        <li><strong>Review schema:</strong> Star ratings from customers</li>
+        <li><strong>Author schema:</strong> Your credentials and authority</li>
+        <li><strong>Breadcrumb schema:</strong> Site navigation structure</li>
+      </ul>
+
+      <h2>Content Marketing for Ebook SEO</h2>
+      <p>Creating supporting content is the most powerful long-term SEO strategy.</p>
+
+      <h3>The Blog Content Strategy</h3>
+      <p>Write 10-15 comprehensive blog posts that:</p>
+      <ul>
+        <li>Expand on chapters from your ebook</li>
+        <li>Target related long-tail keywords</li>
+        <li>Link back to your ebook landing page</li>
+        <li>Provide genuine value (not just promotional)</li>
+        <li>Include clear CTAs to get the full ebook</li>
+      </ul>
+
+      <p><strong>Content Repurposing Formula:</strong></p>
+      <ol>
+        <li>Take one ebook chapter</li>
+        <li>Expand it into a 2000+ word blog post</li>
+        <li>Add examples, screenshots, and case studies</li>
+        <li>Link to ebook: "For the complete system with templates and worksheets, get the full ebook"</li>
+        <li>Repeat for each major chapter</li>
+      </ol>
+
+      <h3>Video Content for SEO</h3>
+      <p>Video boosts SEO in multiple ways:</p>
+      <ul>
+        <li><strong>YouTube ranking:</strong> YouTube is the 2nd largest search engine</li>
+        <li><strong>Video rich snippets:</strong> Video results appear prominently in Google</li>
+        <li><strong>Increased dwell time:</strong> Visitors stay longer on pages with video</li>
+        <li><strong>Social sharing:</strong> Video content gets shared more frequently</li>
+      </ul>
+
+      <p><strong>Video Ideas:</strong></p>
+      <ul>
+        <li>Book trailer highlighting key benefits</li>
+        <li>Chapter summaries or key takeaways</li>
+        <li>Author interviews or behind-the-scenes</li>
+        <li>Tutorial videos demonstrating concepts</li>
+      </ul>
+
+      <h2>Building Backlinks to Your Ebook</h2>
+      <p>Backlinks remain one of Google's top ranking factors. Quality links signal authority and relevance.</p>
+
+      <h3>White-Hat Link Building Tactics</h3>
+
+      <p><strong>1. Guest Posting</strong></p>
+      <ul>
+        <li>Write valuable articles for sites in your niche</li>
+        <li>Include natural link to your ebook in author bio</li>
+        <li>Mention ebook within content when genuinely relevant</li>
+        <li>Target sites with Domain Authority 30+</li>
+      </ul>
+
+      <p><strong>2. Resource Page Outreach</strong></p>
+      <ul>
+        <li>Find "resources" or "recommended tools" pages in your niche</li>
+        <li>Reach out suggesting your ebook as a valuable addition</li>
+        <li>Explain specific value for their audience</li>
+        <li>Make it easy: provide description and link</li>
+      </ul>
+
+      <p><strong>3. Digital PR and Media Coverage</strong></p>
+      <ul>
+        <li>Pitch your ebook to relevant publications</li>
+        <li>Tie release to newsworthy angle or trend</li>
+        <li>Offer exclusive excerpts or data</li>
+        <li>Tools: HARO, JustReachOut, Terkel</li>
+      </ul>
+
+      <p><strong>4. Broken Link Building</strong></p>
+      <ul>
+        <li>Find broken links on relevant sites</li>
+        <li>Suggest your ebook as replacement</li>
+        <li>Helpful approach: "Hey, found this broken link on your site. My ebook covers this topic comprehensively if you need a replacement"</li>
+      </ul>
+
+      <p><strong>5. Strategic Partnerships</strong></p>
+      <ul>
+        <li>Partner with complementary businesses</li>
+        <li>Cross-promote ebooks</li>
+        <li>Guest on their podcast/blog, they guest on yours</li>
+        <li>Joint webinars with links to both resources</li>
+      </ul>
+
+      <h2>Amazon-Specific SEO Strategies</h2>
+      <p>Amazon's A9 algorithm differs from Google, requiring specialized tactics.</p>
+
+      <h3>Amazon Keyword Optimization</h3>
+      <p><strong>Backend keywords:</strong> Use all 7 keyword fields (250 bytes)</p>
+      <ul>
+        <li>Don't repeat words already in title/description</li>
+        <li>Include common misspellings</li>
+        <li>Add synonyms and related terms</li>
+        <li>No punctuation needed (Amazon ignores it)</li>
+        <li>Use singular OR plural, not both</li>
+      </ul>
+
+      <h3>Amazon Sales Velocity Impact</h3>
+      <p>Amazon heavily weighs sales velocity in rankings. To boost it:</p>
+      <ul>
+        <li><strong>Launch promotions:</strong> Discount heavily for 3-7 days to spike sales</li>
+        <li><strong>Amazon Ads:</strong> Run sponsored product ads to your listing</li>
+        <li><strong>External traffic:</strong> Drive email list to Amazon during launch</li>
+        <li><strong>KDP Select:</strong> Enroll for promotional tools and Kindle Unlimited exposure</li>
+      </ul>
+
+      <h3>Review Generation Strategy</h3>
+      <p>More reviews = higher rankings and better conversions:</p>
+      <ul>
+        <li><strong>Amazon Early Reviewer Program:</strong> Amazon helps get initial reviews</li>
+        <li><strong>Follow-up emails:</strong> Politely request reviews from readers</li>
+        <li><strong>Print copies to reviewers:</strong> Physical books get reviewed more often</li>
+        <li><strong>BookSirens/NetGalley:</strong> Platforms connecting authors with reviewers</li>
+      </ul>
+
+      <h2>Technical SEO for Ebook Distribution</h2>
+
+      <h3>Website Performance Optimization</h3>
+      <ul>
+        <li><strong>Page speed:</strong> Landing pages should load in under 3 seconds</li>
+        <li><strong>Mobile optimization:</strong> 60%+ traffic comes from mobile</li>
+        <li><strong>SSL certificate:</strong> HTTPS is a ranking factor</li>
+        <li><strong>Clean URL structure:</strong> Use /ebook-title not /product?id=12345</li>
+      </ul>
+
+      <h3>Internal Linking Strategy</h3>
+      <ul>
+        <li>Link blog posts to ebook landing page</li>
+        <li>Link related ebooks to each other</li>
+        <li>Use descriptive anchor text (not "click here")</li>
+        <li>Ensure ebook pages are 3 clicks from homepage</li>
+      </ul>
+
+      <h2>Measuring and Improving Ebook SEO</h2>
+
+      <h3>Key Metrics to Track</h3>
+      <ul>
+        <li><strong>Keyword rankings:</strong> Track position for target keywords</li>
+        <li><strong>Organic traffic:</strong> Visitors from search engines</li>
+        <li><strong>Conversion rate:</strong> Visitors who download/purchase</li>
+        <li><strong>Bounce rate:</strong> Lower is better (engaged visitors)</li>
+        <li><strong>Backlink growth:</strong> Number and quality of linking sites</li>
+        <li><strong>Domain Authority:</strong> Overall site authority score</li>
+      </ul>
+
+      <h3>SEO Tools You Need</h3>
+      <ul>
+        <li><strong>Google Search Console:</strong> Free, tracks performance and issues</li>
+        <li><strong>Google Analytics:</strong> Free, comprehensive traffic analysis</li>
+        <li><strong>Ahrefs or SEMrush:</strong> Premium keyword and backlink research</li>
+        <li><strong>Yoast SEO:</strong> WordPress plugin for on-page optimization</li>
+        <li><strong>Screaming Frog:</strong> Technical SEO audits</li>
+      </ul>
+
+      <h2>Common SEO Mistakes to Avoid</h2>
+
+      <h3>1. Keyword Stuffing</h3>
+      <p>Overusing keywords looks spammy and hurts rankings. Use keywords naturally—if it reads awkwardly, it's too much.</p>
+
+      <h3>2. Duplicate Content</h3>
+      <p>Don't copy-paste your ebook description across multiple platforms without variation. Google penalizes duplicate content.</p>
+
+      <h3>3. Ignoring Mobile Users</h3>
+      <p>Google uses mobile-first indexing. If your site isn't mobile-friendly, you won't rank well.</p>
+
+      <h3>4. Neglecting Title Tags</h3>
+      <p>Every page needs a unique, optimized title tag. Generic titles waste SEO opportunity.</p>
+
+      <h3>5. No Call-to-Action</h3>
+      <p>Even if you rank #1, visitors won't convert without clear CTAs telling them what to do next.</p>
+
+      <h2>Advanced SEO Tactics</h2>
+
+      <h3>Topical Authority Strategy</h3>
+      <p>Become the go-to resource on your ebook's topic:</p>
+      <ul>
+        <li>Create content cluster around main topic</li>
+        <li>Write 20-30 related articles</li>
+        <li>Internal link all articles to central pillar content</li>
+        <li>Build comprehensive resource that can't be matched</li>
+      </ul>
+
+      <h3>Voice Search Optimization</h3>
+      <p>Optimize for how people speak, not just type:</p>
+      <ul>
+        <li>Target question-based keywords</li>
+        <li>Use natural, conversational language</li>
+        <li>Include FAQ sections</li>
+        <li>Answer "who, what, where, when, why, how" questions</li>
+      </ul>
+
+      <h2>Creating a 90-Day SEO Action Plan</h2>
+
+      <h3>Month 1: Foundation</h3>
+      <ul>
+        <li>Complete keyword research</li>
+        <li>Optimize ebook metadata</li>
+        <li>Create optimized landing page</li>
+        <li>Set up Google Analytics and Search Console</li>
+        <li>Write first 5 blog posts</li>
+      </ul>
+
+      <h3>Month 2: Content and Links</h3>
+      <ul>
+        <li>Publish remaining 5-10 blog posts</li>
+        <li>Start guest posting outreach</li>
+        <li>Create video content</li>
+        <li>Reach out to resource pages</li>
+        <li>Build initial backlink foundation</li>
+      </ul>
+
+      <h3>Month 3: Scale and Optimize</h3>
+      <ul>
+        <li>Analyze which content performs best</li>
+        <li>Double down on winning topics</li>
+        <li>Update underperforming pages</li>
+        <li>Continue consistent content publication</li>
+        <li>Track and celebrate ranking improvements</li>
+      </ul>
+
+      <h2>Conclusion: SEO as a Long-Term Asset</h2>
+      <p>SEO isn't a one-time task—it's an ongoing investment in your ebook's visibility and success. The beautiful thing about SEO is that it compounds over time. The work you do today will generate traffic and sales for months and years to come.</p>
+
+      <p>Start with the fundamentals: keyword research, metadata optimization, and a solid landing page. Then consistently add content, build backlinks, and refine your strategy based on data. In 6-12 months, you'll have built a powerful SEO foundation that drives consistent organic traffic.</p>
+
+      <p>Remember: Your competitors who ignore SEO will always struggle for visibility. Those who implement these strategies systematically will dominate search results and enjoy perpetual lead generation.</p>
+
+      <p><strong><a href="/?signin=true">Create SEO-optimized ebooks that rank and convert with Inkfluence AI →</a></strong></p>
+    `,
+    author: {
+      name: 'Lisa Thompson',
+      avatar: '/images/authors/lisa.jpg'
+    },
+    category: 'SEO',
+    tags: ['SEO', 'Keywords', 'Distribution', 'Organic Traffic'],
+    readTime: 14,
+    publishDate: '2025-10-09T12:00:00Z',
+    featured: false,
+    image: '/images/blog/ebook-seo.jpg',
+    imageAlt: 'SEO analytics dashboard showing ebook ranking improvements',
+    metaTitle: 'Complete Ebook SEO Guide: Rank #1 & Get 10,000+ Downloads | Inkfluence AI',
+    metaDescription: 'Master ebook SEO with this comprehensive guide. Learn keyword research, Amazon optimization, link building, and proven strategies to dominate search results.',
+    keywords: ['ebook SEO', 'book SEO optimization', 'Amazon book ranking', 'keyword research for ebooks', 'ebook marketing SEO', 'search engine optimization books']
   }
 ];
 
