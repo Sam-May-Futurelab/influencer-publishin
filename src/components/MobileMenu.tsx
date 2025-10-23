@@ -61,8 +61,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           </div>
 
           {/* Navigation Links */}
-          <div className="flex-1 p-6 bg-white overflow-y-auto" style={{ backgroundColor: '#ffffff' }}>
-            <nav className="space-y-2">
+          <div className="flex-1 p-6 bg-white" style={{ backgroundColor: '#ffffff' }}>
+            <nav className="space-y-4">
               <button
                 onClick={() => handleNavigation('/features')}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
