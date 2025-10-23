@@ -697,42 +697,42 @@ export function CoverDesigner({
                       <Label className="text-base font-medium">Quick Color Presets</Label>
                       <div className="grid grid-cols-4 gap-3">
                         <button
-                          onClick={() => updateDesign({ backgroundColor: '#000000' })}
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#000000' })}
                           className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-black"
                           title="Black"
                         />
                         <button
-                          onClick={() => updateDesign({ backgroundColor: '#ffffff' })}
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#ffffff' })}
                           className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-white"
                           title="White"
                         />
                         <button
-                          onClick={() => updateDesign({ backgroundColor: '#1e293b' })}
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#1e293b' })}
                           className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-slate-800"
                           title="Slate Gray"
                         />
                         <button
-                          onClick={() => updateDesign({ backgroundColor: '#7c3aed' })}
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#7c3aed' })}
                           className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-violet-600"
                           title="Purple"
                         />
                         <button
-                          onClick={() => updateDesign({ backgroundColor: '#dc2626' })}
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#dc2626' })}
                           className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-red-600"
                           title="Red"
                         />
                         <button
-                          onClick={() => updateDesign({ backgroundColor: '#2563eb' })}
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#2563eb' })}
                           className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-blue-600"
                           title="Blue"
                         />
                         <button
-                          onClick={() => updateDesign({ backgroundColor: '#059669' })}
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#059669' })}
                           className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-emerald-600"
                           title="Green"
                         />
                         <button
-                          onClick={() => updateDesign({ backgroundColor: '#d97706' })}
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#d97706' })}
                           className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-amber-600"
                           title="Amber"
                         />
@@ -803,55 +803,55 @@ export function CoverDesigner({
                         <Label className="text-base font-medium">Quick Gradient Presets</Label>
                         <div className="grid grid-cols-3 gap-3">
                           <button
-                            onClick={() => updateDesign({ gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' })}
+                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' })}
                             className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
                             style={{ background: 'linear-gradient(to bottom right, #667eea, #764ba2)' }}
                             title="Purple Dream"
                           />
                           <button
-                            onClick={() => updateDesign({ gradientStart: '#f857a6', gradientEnd: '#ff5858', gradientDirection: 'to-br' })}
+                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#f857a6', gradientEnd: '#ff5858', gradientDirection: 'to-br' })}
                             className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
                             style={{ background: 'linear-gradient(to bottom right, #f857a6, #ff5858)' }}
                             title="Sunset"
                           />
                           <button
-                            onClick={() => updateDesign({ gradientStart: '#00c6ff', gradientEnd: '#0072ff', gradientDirection: 'to-br' })}
+                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#00c6ff', gradientEnd: '#0072ff', gradientDirection: 'to-br' })}
                             className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
                             style={{ background: 'linear-gradient(to bottom right, #00c6ff, #0072ff)' }}
                             title="Ocean Blue"
                           />
                           <button
-                            onClick={() => updateDesign({ gradientStart: '#f093fb', gradientEnd: '#f5576c', gradientDirection: 'to-r' })}
+                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#f093fb', gradientEnd: '#f5576c', gradientDirection: 'to-r' })}
                             className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
                             style={{ background: 'linear-gradient(to right, #f093fb, #f5576c)' }}
                             title="Pink Lemonade"
                           />
                           <button
-                            onClick={() => updateDesign({ gradientStart: '#4facfe', gradientEnd: '#00f2fe', gradientDirection: 'to-r' })}
+                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#4facfe', gradientEnd: '#00f2fe', gradientDirection: 'to-r' })}
                             className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
                             style={{ background: 'linear-gradient(to right, #4facfe, #00f2fe)' }}
                             title="Fresh Air"
                           />
                           <button
-                            onClick={() => updateDesign({ gradientStart: '#43e97b', gradientEnd: '#38f9d7', gradientDirection: 'to-r' })}
+                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#43e97b', gradientEnd: '#38f9d7', gradientDirection: 'to-r' })}
                             className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
                             style={{ background: 'linear-gradient(to right, #43e97b, #38f9d7)' }}
                             title="Mint Fresh"
                           />
                           <button
-                            onClick={() => updateDesign({ gradientStart: '#fa709a', gradientEnd: '#fee140', gradientDirection: 'to-b' })}
+                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#fa709a', gradientEnd: '#fee140', gradientDirection: 'to-b' })}
                             className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
                             style={{ background: 'linear-gradient(to bottom, #fa709a, #fee140)' }}
                             title="Summer Warmth"
                           />
                           <button
-                            onClick={() => updateDesign({ gradientStart: '#30cfd0', gradientEnd: '#330867', gradientDirection: 'to-b' })}
+                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#30cfd0', gradientEnd: '#330867', gradientDirection: 'to-b' })}
                             className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
                             style={{ background: 'linear-gradient(to bottom, #30cfd0, #330867)' }}
                             title="Deep Ocean"
                           />
                           <button
-                            onClick={() => updateDesign({ gradientStart: '#a8edea', gradientEnd: '#fed6e3', gradientDirection: 'to-b' })}
+                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#a8edea', gradientEnd: '#fed6e3', gradientDirection: 'to-b' })}
                             className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
                             style={{ background: 'linear-gradient(to bottom, #a8edea, #fed6e3)' }}
                             title="Pastel Dream"
@@ -1227,7 +1227,7 @@ export function CoverDesigner({
         <div className="p-6 lg:p-8 pt-5 border-t">
           <div className="flex items-center justify-between gap-4 mb-3">
             <p className="text-xs text-muted-foreground">
-              💡 Your cover will be saved as a high-quality PNG image (1600x2560px)
+              💡 Cover will be saved to your project and can be exported later
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -1268,7 +1268,7 @@ export function CoverDesigner({
               className="gap-2 h-12 px-8 text-base font-semibold ml-auto"
             >
               <Download size={20} />
-              Download Cover (PNG)
+              Save to Project
             </Button>
           </div>
         </div>
