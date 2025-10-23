@@ -158,7 +158,11 @@ export function RichTextEditor({
     const selectedText = editor.state.doc.textBetween(from, to);
     
     if (!selectedText.trim()) {
-      toast.error('Select text first to enhance it');
+      toast.error('Select text first to enhance it', {
+        description: 'Highlight any text in your document, then click Enhance to improve it with AI',
+        className: 'text-foreground',
+        descriptionClassName: 'text-foreground'
+      });
       return;
     }
 
@@ -174,12 +178,20 @@ export function RichTextEditor({
       
       if (enhancedText && enhancedText.trim()) {
         editor.chain().focus().deleteRange({ from, to }).insertContent(enhancedText).run();
-        toast.success('Text enhanced with AI!');
+        toast.success('Text enhanced with AI!', {
+          description: 'Your content has been improved',
+          className: 'text-foreground',
+          descriptionClassName: 'text-foreground'
+        });
       }
     } catch (error) {
       toast.dismiss('enhancing-toast');
       console.error('AI enhancement error:', error);
-      toast.error('Failed to enhance text');
+      toast.error('Failed to enhance text', {
+        description: 'Please try again or check your connection',
+        className: 'text-foreground',
+        descriptionClassName: 'text-foreground'
+      });
     } finally {
       setIsEnhancing(false);
     }
