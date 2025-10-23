@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -8,6 +8,7 @@ import { Input } from './ui/input';
 import { LandingHeader } from './LandingHeader';
 import { LandingFooter } from './LandingFooter';
 import { SEO, createArticleSchema, createBreadcrumbSchema, createOrganizationSchema } from './SEO';
+import { getAllPosts, getFeaturedPosts, getPostBySlug, getRelatedPosts, BlogPost } from '@/lib/blog';
 import { 
   BookOpen, 
   Search, 
@@ -22,24 +23,14 @@ import {
   PenTool,
   Settings,
   Brain,
-  Sparkles
+  Sparkles,
+  Share2,
+  Twitter,
+  Facebook,
+  Linkedin
 } from 'lucide-react';
 
-interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  author: string;
-  category: string;
-  tags: string[];
-  readTime: number;
-  publishDate: string;
-  image: string;
-  featured: boolean;
-}
-
-const blogPosts: BlogPost[] = [
+const oldBlogPosts: any[] = [
   {
     id: 'ai-ebook-writing-guide-2025',
     title: 'The Complete Guide to AI-Powered Ebook Writing in 2025',
@@ -122,13 +113,237 @@ const blogPosts: BlogPost[] = [
 
 const categories = ['All', 'AI Writing', 'Marketing', 'Design', 'Productivity', 'SEO'];
 
+// Individual Blog Post View Component
+function BlogPostView({ post, relatedPosts }: { post: BlogPost; relatedPosts: BlogPost[] }) {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const shareUrl = `https://inkfluenceai.com/blog/${post.slug}`;
+  const shareTitle = post.title;
+
+  const handleShare = (platform: string) => {
+    const encodedUrl = encodeURIComponent(shareUrl);
+    const encodedTitle = encodeURIComponent(shareTitle);
+    
+    const urls = {
+      twitter: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`
+    };
+    
+    window.open(urls[platform as keyof typeof urls], '_blank', 'width=600,height=400');
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#f0e8f8] to-white">
+      <SEO
+        title={post.metaTitle || `${post.title} | Inkfluence AI Blog`}
+        description={post.metaDescription || post.excerpt}
+        keywords={(post.keywords || post.tags).join(', ')}
+        canonicalUrl={`https://inkfluenceai.com/blog/${post.slug}`}
+        ogImage={post.image}
+        structuredData={createArticleSchema({
+          title: post.title,
+          description: post.excerpt,
+          author: post.author.name,
+          datePublished: post.publishDate,
+          dateModified: post.updatedDate || post.publishDate,
+          image: post.image
+        })}
+      />
+
+      <LandingHeader 
+        onGetStarted={() => navigate('/?signin=true')}
+        onSignIn={() => navigate('/?signin=true')}
+        showNavLinks={true}
+        isAuthenticated={!!user}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
+      />
+
+      <article className="container mx-auto px-4 py-12 max-w-4xl">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+          <button onClick={() => navigate('/')} className="hover:text-primary">Home</button>
+          <span>/</span>
+          <button onClick={() => navigate('/blog')} className="hover:text-primary">Blog</button>
+          <span>/</span>
+          <span className="text-gray-900">{post.title}</span>
+        </div>
+
+        {/* Post Header */}
+        <header className="mb-8">
+          <Badge className="mb-4">{post.category}</Badge>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+            {post.title}
+          </h1>
+          <p className="text-xl text-gray-600 mb-6">{post.excerpt}</p>
+          
+          {/* Meta Info */}
+          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4" />
+              <span>{post.author.name}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              <span>{new Date(post.publishDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              <span>{post.readTime} min read</span>
+            </div>
+          </div>
+
+          {/* Share Buttons */}
+          <div className="flex items-center gap-3 mt-6">
+            <span className="text-sm text-gray-600">Share:</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleShare('twitter')}
+              className="gap-2"
+            >
+              <Twitter className="w-4 h-4" />
+              Twitter
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleShare('facebook')}
+              className="gap-2"
+            >
+              <Facebook className="w-4 h-4" />
+              Facebook
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleShare('linkedin')}
+              className="gap-2"
+            >
+              <Linkedin className="w-4 h-4" />
+              LinkedIn
+            </Button>
+          </div>
+        </header>
+
+        {/* Featured Image */}
+        {post.image && (
+          <img
+            src={post.image}
+            alt={post.imageAlt || post.title}
+            className="w-full h-[400px] object-cover rounded-xl mb-8"
+          />
+        )}
+
+        {/* Post Content */}
+        <div 
+          className="prose prose-lg max-w-none mb-12"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {post.tags.map(tag => (
+            <Badge key={tag} variant="secondary">{tag}</Badge>
+          ))}
+        </div>
+
+        {/* CTA Section */}
+        <Card className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] text-white p-8 mb-12">
+          <CardContent className="p-0">
+            <h3 className="text-2xl font-bold mb-4">Ready to Create Your Own Ebook?</h3>
+            <p className="mb-6">Start writing with AI-powered tools, professional templates, and multi-format export.</p>
+            <Button
+              onClick={() => navigate('/?signin=true')}
+              size="lg"
+              className="bg-white text-[#9b87b8] hover:bg-gray-100"
+            >
+              <Sparkles className="w-5 h-5 mr-2" />
+              Get Started Free
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Related Posts */}
+        {relatedPosts.length > 0 && (
+          <div>
+            <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              {relatedPosts.map(relatedPost => (
+                <Card
+                  key={relatedPost.id}
+                  className="cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => navigate(`/blog/${relatedPost.slug}`)}
+                >
+                  <img
+                    src={relatedPost.image}
+                    alt={relatedPost.title}
+                    className="w-full h-48 object-cover"
+                  />
+                  <CardHeader>
+                    <Badge className="mb-2 w-fit">{relatedPost.category}</Badge>
+                    <CardTitle className="text-lg">{relatedPost.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600 line-clamp-2">{relatedPost.excerpt}</p>
+                    <div className="flex items-center gap-4 mt-4 text-xs text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {relatedPost.readTime} min
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+      </article>
+
+      <LandingFooter 
+        onNavigateToPrivacy={() => navigate('/privacy')}
+        onNavigateToTerms={() => navigate('/terms')}
+        onNavigateToCookies={() => navigate('/cookies')}
+        onNavigateToHelp={() => navigate('/help')}
+        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
+        onNavigateToContact={() => navigate('/contact')}
+      />
+    </div>
+  );
+}
+
 export default function BlogPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { postId } = useParams<{ postId: string }>();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const filteredPosts = blogPosts.filter(post => {
+  // If we have a postId, show individual post
+  if (postId) {
+    const post = getPostBySlug(postId);
+    
+    if (!post) {
+      // Post not found, redirect to blog listing
+      useEffect(() => {
+        navigate('/blog');
+      }, [navigate]);
+      return null;
+    }
+
+    const relatedPosts = getRelatedPosts(post, 3);
+    
+    return <BlogPostView post={post} relatedPosts={relatedPosts} />;
+  }
+
+  // Otherwise show blog listing
+  const allPosts = getAllPosts();
+  const filteredPosts = allPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -138,8 +353,8 @@ export default function BlogPage() {
     return matchesSearch && matchesCategory;
   });
 
-  const featuredPosts = blogPosts.filter(post => post.featured);
-  const recentPosts = blogPosts.slice(0, 4);
+  const featuredPosts = getFeaturedPosts();
+  const recentPosts = allPosts.slice(0, 4);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -267,7 +482,7 @@ export default function BlogPage() {
                     <div className="flex items-center gap-4 text-sm text-gray-500 mb-2">
                       <span className="flex items-center gap-1">
                         <User className="h-4 w-4" />
-                        {post.author}
+                        {typeof post.author === 'string' ? post.author : post.author.name}
                       </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
