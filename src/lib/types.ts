@@ -38,6 +38,10 @@ export interface CoverDesign {
   authorColor: string;
   overlay: boolean;
   overlayOpacity: number;
+  imagePosition?: 'cover' | 'contain' | 'fill';
+  imageBrightness?: number;
+  imageContrast?: number;
+  usePreMadeCover?: boolean;
   coverImageData?: string; // Base64 image data
 }
 

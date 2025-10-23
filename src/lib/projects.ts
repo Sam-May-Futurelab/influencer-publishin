@@ -13,6 +13,22 @@ import {
 import { db } from './firebase';
 import { EbookProject } from './types';
 
+// Helper to remove undefined values from objects (Firestore doesn't allow undefined)
+const sanitizeForFirestore = (obj: any): any => {
+  if (obj === null || obj === undefined) return null;
+  if (typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(sanitizeForFirestore);
+  
+  const sanitized: any = {};
+  Object.keys(obj).forEach(key => {
+    const value = obj[key];
+    if (value !== undefined) {
+      sanitized[key] = sanitizeForFirestore(value);
+    }
+  });
+  return sanitized;
+};
+
 // Save a project to Firestore
 export const saveProject = async (userId: string, project: EbookProject): Promise<void> => {
   try {
@@ -51,11 +67,18 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
         authorColor: project.coverDesign.authorColor,
         overlay: project.coverDesign.overlay,
         overlayOpacity: project.coverDesign.overlayOpacity,
+        imagePosition: project.coverDesign.imagePosition || 'cover',
+        imageBrightness: project.coverDesign.imageBrightness || 100,
+        imageContrast: project.coverDesign.imageContrast || 100,
+        usePreMadeCover: project.coverDesign.usePreMadeCover || false,
         coverImageData: project.coverDesign.coverImageData || null,
       } : null
     };
     
-    await setDoc(projectRef, projectData);
+    // Remove any undefined values before saving to Firestore
+    const sanitizedData = sanitizeForFirestore(projectData);
+    
+    await setDoc(projectRef, sanitizedData);
   } catch (error) {
     console.error('Error saving project:', error);
     throw new Error('Failed to save project');
