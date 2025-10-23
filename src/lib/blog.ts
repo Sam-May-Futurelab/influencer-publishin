@@ -1582,6 +1582,311 @@ export const blogPosts: BlogPost[] = [
     metaTitle: 'Content Creation Workflow: Scale to 100+ Ebooks | Inkfluence AI',
     metaDescription: 'Build a repeatable 5-phase workflow for creating ebooks at scale. Includes templates, automation tools, and batch production systems.',
     keywords: ['content creation workflow', 'ebook production system', 'content automation', 'productivity workflow', 'batch content creation', 'ebook templates']
+  },
+  {
+    id: 'ai-writing-prompts',
+    slug: 'ai-writing-prompts',
+    title: '50+ High-Converting AI Writing Prompts for Ebook Creators',
+    excerpt: 'Copy-paste prompts that generate compelling ebook content. Includes prompts for introductions, chapters, conclusions, and CTAs.',
+    content: `
+      <h2>Why Most AI-Generated Content Falls Flat</h2>
+      <p>You've tried using AI to write your ebook. You typed "Write a chapter about marketing strategies" and got... generic, surface-level content that sounds like every other AI-generated article on the internet. The problem isn't the AI—it's the prompt.</p>
+
+      <p>The difference between mediocre AI content and exceptional AI content isn't the tool—it's the quality of your prompts. Great prompts are specific, contextual, and strategic. They give AI the guardrails and guidance needed to produce content that sounds authentically yours.</p>
+
+      <p>This comprehensive guide provides 50+ battle-tested prompts specifically designed for ebook creation. These aren't generic writing prompts—they're engineered to produce content that engages readers, establishes authority, and drives action. Simply copy, customize with your specifics, and generate professional ebook content in minutes.</p>
+
+      <h2>The Anatomy of a High-Quality Prompt</h2>
+
+      <h3>The 5 Essential Components</h3>
+      <ol>
+        <li><strong>Role/Persona:</strong> Tell AI who it should "be" (expert, coach, consultant)</li>
+        <li><strong>Context:</strong> Provide background about your topic and audience</li>
+        <li><strong>Task:</strong> Clearly state what you want created</li>
+        <li><strong>Format:</strong> Specify structure (headings, lists, paragraphs)</li>
+        <li><strong>Constraints:</strong> Set tone, length, and style parameters</li>
+      </ol>
+
+      <h3>Example: Bad vs. Good Prompt</h3>
+      <p><strong>❌ Bad Prompt:</strong> "Write about ebook marketing"</p>
+      
+      <p><strong>✅ Good Prompt:</strong> "You are an ebook marketing consultant with 10 years of experience helping authors sell 6-figure+ ebook businesses. Write a 500-word section explaining the 3 biggest mistakes new ebook authors make when trying to market their first book. Use a conversational but authoritative tone. Include specific examples and actionable advice. Target audience: first-time ebook authors who are tech-savvy but marketing novices."</p>
+
+      <h2>Chapter-Specific Prompts</h2>
+
+      <h3>Hook/Introduction Prompts</h3>
+
+      <p><strong>Prompt 1: Problem-Agitation Opening</strong></p>
+      <p>"You are a compelling copywriter. Write a 300-word ebook introduction that opens with a relatable problem that [TARGET AUDIENCE] faces regarding [TOPIC]. Agitate the problem by explaining the cost of not solving it (time, money, frustration). Then introduce our solution: [YOUR EBOOK'S MAIN PROMISE]. Use storytelling and emotional language. End with a clear statement of what readers will learn."</p>
+
+      <p><strong>Prompt 2: Statistical Hook</strong></p>
+      <p>"Create an attention-grabbing ebook introduction (250 words) that opens with a surprising statistic about [TOPIC]. Explain why this statistic matters to [TARGET AUDIENCE]. Connect the stat to the transformation your ebook provides. Use a professional but engaging tone. Include a brief overview of the 5-7 main topics covered."</p>
+
+      <p><strong>Prompt 3: Story-Based Opening</strong></p>
+      <p>"Write a 400-word ebook introduction that begins with a brief story about someone who struggled with [PROBLEM] but found success using [YOUR APPROACH/SOLUTION]. Make it specific and relatable to [TARGET AUDIENCE]. Transition from the story to explaining what this ebook will teach. Establish credibility by mentioning your experience/expertise."</p>
+
+      <p><strong>Prompt 4: Bold Statement Opening</strong></p>
+      <p>"Create a provocative ebook introduction (300 words) that opens with a controversial or counterintuitive statement about [TOPIC]. Examples: 'Everything you know about X is wrong' or 'The #1 strategy experts recommend actually hurts your results.' Back up the bold claim with reasoning. Explain how this ebook reveals the truth. Target: [AUDIENCE]."</p>
+
+      <h3>Foundational Chapter Prompts</h3>
+
+      <p><strong>Prompt 5: Concept Explanation</strong></p>
+      <p>"You are an expert educator. Explain [CONCEPT] in 600 words to someone who is [KNOWLEDGE LEVEL] in [TOPIC]. Break it down into 3-4 key components. Use analogies to make complex ideas simple. Include a brief example showing the concept in action. Avoid jargon. Tone: clear, patient, encouraging."</p>
+
+      <p><strong>Prompt 6: Why This Matters</strong></p>
+      <p>"Write a 500-word section explaining why [CONCEPT/STRATEGY] is important for [TARGET AUDIENCE] trying to achieve [GOAL]. Include 3-4 specific benefits. Address common skepticism (e.g., 'Is this really necessary?'). Back up claims with logic, research, or case study snippets. Conversational but authoritative tone."</p>
+
+      <p><strong>Prompt 7: Common Misconceptions</strong></p>
+      <p>"Create a 600-word chapter section titled 'Common Myths About [TOPIC].' List and debunk 4-5 misconceptions that [TARGET AUDIENCE] typically believes. For each myth, explain: 1) Why people believe it, 2) Why it's wrong, 3) What's actually true. Use a friendly 'setting the record straight' tone."</p>
+
+      <h3>How-To Chapter Prompts</h3>
+
+      <p><strong>Prompt 8: Step-by-Step Process</strong></p>
+      <p>"You are a practical instructor. Write a detailed step-by-step guide (800 words) for [SPECIFIC TASK/PROCESS]. Format as numbered steps with clear action items. For each step, include: 1) What to do, 2) Why it matters, 3) Common mistakes to avoid. Target audience: [KNOWLEDGE LEVEL]. Include time estimates where relevant."</p>
+
+      <p><strong>Prompt 9: Framework Explanation</strong></p>
+      <p>"Explain my [FRAMEWORK NAME] framework for [ACHIEVING OUTCOME] in 700 words. The framework has [NUMBER] components: [LIST COMPONENTS]. For each component, provide a brief explanation and example. Show how all components work together. Make it actionable—readers should understand how to apply this immediately. Professional but accessible tone."</p>
+
+      <p><strong>Prompt 10: Tool/Resource Guide</strong></p>
+      <p>"Write a comprehensive guide (900 words) to the essential tools for [SPECIFIC TASK]. Organize into 3-4 categories. For each tool, include: name, what it does, who it's best for, approximate cost, and key features. Provide specific recommendations for beginners vs. advanced users. Neutral, helpful tone—not salesy."</p>
+
+      <p><strong>Prompt 11: Decision Framework</strong></p>
+      <p>"Create a 600-word guide helping [TARGET AUDIENCE] decide between [OPTION A] and [OPTION B] for [SPECIFIC PURPOSE]. Present objective criteria for evaluation. Include a simple decision tree or checklist. Explain scenarios where each option makes sense. Avoid pushing one option—be balanced and analytical."</p>
+
+      <h3>Case Study & Example Prompts</h3>
+
+      <p><strong>Prompt 12: Success Story Format</strong></p>
+      <p>"Write a compelling case study (700 words) following this structure: 1) Background - who they were and their challenge, 2) The approach - what strategy/system they used, 3) The results - specific outcomes with numbers, 4) Key takeaways - what readers can learn. Make it specific and detailed. Inspirational but realistic tone."</p>
+
+      <p><strong>Prompt 13: Before/After Comparison</strong></p>
+      <p>"Create a detailed before/after comparison (500 words) showing the transformation [TYPICAL CUSTOMER] experiences using [YOUR SYSTEM/APPROACH]. Be specific about metrics, timeframes, and actual changes. Use storytelling to make it engaging. Include both quantitative results (numbers) and qualitative benefits (how they felt)."</p>
+
+      <p><strong>Prompt 14: Failure Analysis</strong></p>
+      <p>"Write an educational case study (600 words) analyzing why [SOMEONE] failed at [TASK/GOAL]. Structure: 1) The situation, 2) What they did wrong (3-4 specific mistakes), 3) What they should have done instead, 4) Lessons readers can apply. Empathetic tone—not judgmental. Focus on learning, not blame."</p>
+
+      <h3>Advanced Strategy Prompts</h3>
+
+      <p><strong>Prompt 15: Scaling Strategy</strong></p>
+      <p>"You are a scaling expert. Write 800 words explaining how to take [BASIC STRATEGY] and scale it to [BIGGER LEVEL]. Assume readers have mastered the basics. Cover: advanced tactics, automation opportunities, when to delegate, common scaling challenges, and how to maintain quality. Sophisticated but clear tone."</p>
+
+      <p><strong>Prompt 16: Optimization Guide</strong></p>
+      <p>"Create a 700-word optimization guide for [SPECIFIC PROCESS/SYSTEM]. Assume readers are already implementing the basics. Provide 5-7 advanced techniques to improve results by 20-50%. Each technique should include: what to do, why it works, expected impact, and difficulty level. Data-driven, tactical tone."</p>
+
+      <p><strong>Prompt 17: Troubleshooting Guide</strong></p>
+      <p>"Write a troubleshooting chapter (900 words) addressing the top 6-8 problems [TARGET AUDIENCE] encounters when [DOING SPECIFIC TASK]. For each problem: 1) Describe the symptom, 2) Explain the root cause, 3) Provide the solution, 4) Offer prevention tips. Organized, problem-solving tone."</p>
+
+      <h2>Specialized Content Prompts</h2>
+
+      <h3>List-Based Content</h3>
+
+      <p><strong>Prompt 18: Comprehensive Checklist</strong></p>
+      <p>"Create a detailed checklist (600 words) for [SPECIFIC PROCESS]. Organize into 3-4 phases or categories. Each item should have: checkbox format, clear action item, brief explanation of why it matters. Add a short introduction explaining how to use the checklist effectively."</p>
+
+      <p><strong>Prompt 19: Mistakes to Avoid</strong></p>
+      <p>"Write an article (800 words) covering the 7-10 biggest mistakes [TARGET AUDIENCE] makes when [DOING SPECIFIC TASK]. For each mistake: 1) Describe what people do wrong, 2) Explain why it's problematic, 3) Provide the correct approach. Helpful, educational tone—not preachy."</p>
+
+      <p><strong>Prompt 20: Resource Roundup</strong></p>
+      <p>"Compile a curated list (700 words) of the best resources for [SPECIFIC GOAL]. Include: books (3-4), courses (2-3), tools (4-5), communities (2-3). For each, provide: name, brief description, why it's valuable, who it's for. Add introduction explaining how to use this resource guide."</p>
+
+      <h3>Q&A and FAQ Content</h3>
+
+      <p><strong>Prompt 21: Comprehensive FAQ</strong></p>
+      <p>"Generate a FAQ section (800 words) answering the 10 most common questions [TARGET AUDIENCE] has about [TOPIC]. Format as Q&A. Provide thorough, helpful answers (50-80 words each). Cover both beginner and advanced questions. Anticipate follow-up questions and address them."</p>
+
+      <p><strong>Prompt 22: Expert Interview Format</strong></p>
+      <p>"Write a Q&A chapter (900 words) in interview format covering [TOPIC]. Create 8-10 insightful questions and provide detailed expert answers. Questions should progress from foundational to advanced. Answers should include specific examples, actionable advice, and occasional personal anecdotes. Conversational but authoritative."</p>
+
+      <h3>Comparison Content</h3>
+
+      <p><strong>Prompt 23: Strategy Comparison</strong></p>
+      <p>"Write an objective comparison (700 words) of [STRATEGY A] vs. [STRATEGY B] for [ACHIEVING GOAL]. Structure: brief intro, side-by-side comparison covering 5-6 criteria (cost, time, difficulty, results, etc.), pros/cons of each, recommendations for different situations. Balanced, analytical tone."</p>
+
+      <p><strong>Prompt 24: Evolution/Timeline Content</strong></p>
+      <p>"Create a 600-word overview of how [TOPIC/INDUSTRY] has evolved over time. Cover 4-5 major phases or turning points. For each era, explain: what was common then, why things changed, key innovations. Connect to why current approaches work better. Historical yet practical tone."</p>
+
+      <h2>Closing & CTA Prompts</h2>
+
+      <h3>Chapter Conclusions</h3>
+
+      <p><strong>Prompt 25: Action-Oriented Summary</strong></p>
+      <p>"Write a powerful chapter conclusion (200 words) summarizing the key takeaways from this chapter about [TOPIC]. Format as 3-5 specific action items readers should implement immediately. Add a transition sentence connecting to the next chapter. Motivational, clear, action-focused tone."</p>
+
+      <p><strong>Prompt 26: Reflection Questions</strong></p>
+      <p>"Create a thoughtful chapter ending (250 words) with 4-5 reflection questions that help readers apply [CHAPTER TOPIC] to their specific situation. Each question should prompt deep thinking and personal application. Add 2-3 sentences encouraging readers to journal or discuss their answers."</p>
+
+      <h3>Book Conclusion Prompts</h3>
+
+      <p><strong>Prompt 27: Transformation Recap</strong></p>
+      <p>"Write a compelling ebook conclusion (500 words) that: 1) Recaps the journey readers have taken, 2) Highlights the transformation they can achieve, 3) Addresses common doubts or fears, 4) Provides encouragement and motivation, 5) Issues a clear challenge or call to action. Inspirational but grounded tone."</p>
+
+      <p><strong>Prompt 28: Next Steps Framework</strong></p>
+      <p>"Create a practical ebook conclusion (600 words) outlining the next steps for readers. Include: immediate actions (next 24 hours), short-term goals (next 30 days), long-term vision (next 90 days). Add resources for continued learning. Actionable, supportive tone."</p>
+
+      <h3>Call-to-Action Prompts</h3>
+
+      <p><strong>Prompt 29: Soft CTA Integration</strong></p>
+      <p>"Write 3-4 variations (100 words each) of subtle CTAs that can be integrated naturally throughout an ebook about [TOPIC]. CTAs should invite readers to: [DESIRED ACTION - e.g., join email list, try software, book consultation]. Make them helpful, not salesy. Value-focused language."</p>
+
+      <p><strong>Prompt 30: Strong Closing CTA</strong></p>
+      <p>"Create a compelling call-to-action (300 words) for the end of an ebook about [TOPIC]. The CTA should: 1) Acknowledge reader's progress, 2) Highlight the gap between knowledge and implementation, 3) Present [YOUR OFFER] as the logical next step, 4) Address objections, 5) Create urgency. Persuasive but authentic tone."</p>
+
+      <h2>Creative & Engagement Prompts</h2>
+
+      <h3>Storytelling Prompts</h3>
+
+      <p><strong>Prompt 31: Personal Narrative</strong></p>
+      <p>"Write a personal story (400 words) illustrating [KEY CONCEPT] from your experience. Include: setup (the situation), conflict (the challenge), resolution (what you learned/did), and lesson (what readers should take away). Make it vulnerable and relatable. First-person, authentic voice."</p>
+
+      <p><strong>Prompt 32: Scenario-Based Learning</strong></p>
+      <p>"Create a hypothetical scenario (500 words) showing [TARGET READER] facing [COMMON CHALLENGE]. Walk through how they would apply [YOUR FRAMEWORK/STRATEGY] step-by-step in this situation. Make it realistic and detailed. Include their thought process and decision-making."</p>
+
+      <h3>Interactive Content</h3>
+
+      <p><strong>Prompt 33: Self-Assessment Quiz</strong></p>
+      <p>"Design a self-assessment (700 words) helping readers evaluate their current [SKILL/SITUATION] related to [TOPIC]. Include: intro explaining the assessment's purpose, 10-12 questions with multiple choice answers, scoring guide, interpretation of results with specific next steps for each level. Encouraging, non-judgmental tone."</p>
+
+      <p><strong>Prompt 34: Worksheet/Exercise</strong></p>
+      <p>"Create a practical worksheet (400 words) guiding readers through [SPECIFIC EXERCISE] to apply [CONCEPT]. Include: clear instructions, prompting questions, space for responses (indicated), example of completed worksheet. Make it actionable and immediately valuable."</p>
+
+      <h2>Technical & Reference Prompts</h2>
+
+      <h3>Definition & Glossary Content</h3>
+
+      <p><strong>Prompt 35: Glossary of Terms</strong></p>
+      <p>"Compile a glossary (800 words) of 20-25 essential terms related to [TOPIC]. Organize alphabetically or by category. Each definition should be: concise (2-3 sentences), clear to beginners, include brief example of usage. Add intro paragraph explaining how to use this glossary as a reference."</p>
+
+      <p><strong>Prompt 36: Concept Deep-Dive</strong></p>
+      <p>"Write an in-depth explanation (900 words) of [COMPLEX CONCEPT] for [TARGET AUDIENCE]. Structure: simple definition, detailed breakdown, why it matters, how it works in practice, common misunderstandings, advanced considerations. Use analogies and examples liberally. Educational, thorough tone."</p>
+
+      <h3>Data & Research Prompts</h3>
+
+      <p><strong>Prompt 37: Statistics Summary</strong></p>
+      <p>"Summarize key statistics and research findings (600 words) related to [TOPIC]. Present 8-10 important stats with: the number, what it means, source (if known), why readers should care. Group related stats into themes. Add context making data meaningful, not just listing numbers."</p>
+
+      <p><strong>Prompt 38: Trend Analysis</strong></p>
+      <p>"Analyze current trends (700 words) in [INDUSTRY/TOPIC]. Identify 4-5 major trends, explaining: what's happening, why it matters, how [TARGET AUDIENCE] should respond, future predictions. Data-informed but accessible. Forward-looking, strategic tone."</p>
+
+      <h2>SEO-Optimized Content Prompts</h2>
+
+      <h3>Keyword Integration</h3>
+
+      <p><strong>Prompt 39: Keyword-Rich Introduction</strong></p>
+      <p>"Write an SEO-optimized chapter introduction (300 words) about [TOPIC] targeting the keyword '[TARGET KEYWORD].' Naturally include the keyword 2-3 times. Also include 3-4 related keywords: [LIST]. Content should be valuable and readable first, SEO second. Engaging, informative tone."</p>
+
+      <p><strong>Prompt 40: Long-Form Pillar Content</strong></p>
+      <p>"Create a comprehensive pillar section (1200 words) covering everything about [SUBTOPIC] within [MAIN TOPIC]. Target keyword: '[KEYWORD].' Structure with H2/H3 headings including keywords naturally. Cover: fundamentals, strategies, tools, common questions, best practices. Thorough, authoritative, well-organized."</p>
+
+      <h2>Revision & Enhancement Prompts</h2>
+
+      <h3>Content Improvement</h3>
+
+      <p><strong>Prompt 41: Readability Enhancement</strong></p>
+      <p>"Review and improve this draft section [PASTE CONTENT]. Make it: 1) More conversational without losing professionalism, 2) Clearer and more concise, 3) More engaging with better transitions, 4) More scannable with better formatting. Maintain all key information but improve delivery."</p>
+
+      <p><strong>Prompt 42: Adding Examples</strong></p>
+      <p>"Take this conceptual explanation [PASTE CONTENT] and add 3-4 specific, concrete examples that illustrate the concepts for [TARGET AUDIENCE]. Examples should be realistic, relatable, and varied. Insert examples naturally where they strengthen understanding."</p>
+
+      <p><strong>Prompt 43: Voice Consistency Check</strong></p>
+      <p>"Review this chapter [PASTE CONTENT] for voice consistency. The desired voice is: [DESCRIBE VOICE - e.g., 'professional but friendly, authoritative yet approachable, uses occasional humor']. Identify any sections that feel off-brand and suggest rewrites maintaining the same information."</p>
+
+      <h2>Specialized Prompts by Ebook Type</h2>
+
+      <h3>For How-To Guides</h3>
+
+      <p><strong>Prompt 44: Tutorial Chapter</strong></p>
+      <p>"Write a tutorial-style chapter (800 words) teaching [SPECIFIC SKILL]. Assume zero prior knowledge. Break into clear, numbered steps. Include: what the reader will learn, required materials/tools, step-by-step instructions with expected outcomes, troubleshooting tips, practice exercises. Patient, encouraging teaching voice."</p>
+
+      <h3>For Business Strategy Books</h3>
+
+      <p><strong>Prompt 45: Strategy Framework</strong></p>
+      <p>"Develop a strategic framework chapter (900 words) for [BUSINESS CHALLENGE]. Present a clear methodology with 4-6 components. For each component: what it is, why it's essential, how to implement, metrics to track. Include a real business example showing the framework in action. MBA-level insights, accessible language."</p>
+
+      <h3>For Personal Development Books</h3>
+
+      <p><strong>Prompt 46: Transformation Story</strong></p>
+      <p>"Write a personal development chapter (700 words) focused on [MINDSET/BEHAVIOR CHANGE]. Structure: current limiting belief/behavior, why it holds people back, new empowering perspective, specific actions to make the shift, expected challenges and how to overcome them. Inspirational yet practical. Empathetic coaching voice."</p>
+
+      <h2>Meta Prompts (Prompts About Prompts)</h2>
+
+      <h3>Custom Prompt Creation</h3>
+
+      <p><strong>Prompt 47: Generate Custom Prompts</strong></p>
+      <p>"I'm writing an ebook about [TOPIC] for [TARGET AUDIENCE]. Generate 5 custom AI prompts I can use to create: 1) chapter introductions, 2) case studies, 3) how-to sections, 4) troubleshooting content, 5) actionable summaries. Each prompt should be specific to my topic and audience, following the format: role + context + task + format + constraints."</p>
+
+      <p><strong>Prompt 48: Prompt Refinement</strong></p>
+      <p>"Here's a prompt I'm using: [PASTE YOUR PROMPT]. The output isn't quite right—it's [DESCRIBE ISSUE: too generic, wrong tone, missing key elements, etc.]. Analyze the prompt and suggest improvements to get better results. Show the revised prompt."</p>
+
+      <h2>Bonus: Prompt Chains for Complex Content</h2>
+
+      <h3>Multi-Step Content Development</h3>
+
+      <p><strong>Prompt Chain 49: Comprehensive Chapter Creation</strong></p>
+      <p><strong>Step 1:</strong> "Create a detailed outline for a chapter about [TOPIC]. Include: main argument, 4-5 major sections, key points under each section, examples needed."</p>
+      <p><strong>Step 2:</strong> "Using this outline [PASTE], write the first section (300 words) in [DESCRIBE TONE/STYLE]."</p>
+      <p><strong>Step 3:</strong> "Continue the chapter with section 2..." (repeat for all sections)</p>
+      <p><strong>Step 4:</strong> "Review the complete chapter [PASTE ALL SECTIONS] and suggest improvements for flow, transitions, and impact."</p>
+
+      <p><strong>Prompt Chain 50: Research-to-Content Pipeline</strong></p>
+      <p><strong>Step 1:</strong> "Research the top 10 strategies for [TOPIC]. Summarize each in 2-3 sentences."</p>
+      <p><strong>Step 2:</strong> "From these 10 strategies, identify the 5 most relevant for [TARGET AUDIENCE]. Explain why."</p>
+      <p><strong>Step 3:</strong> "Create a comprehensive guide (800 words) teaching these 5 strategies with examples and action steps."</p>
+
+      <h2>How to Customize These Prompts</h2>
+
+      <h3>Variables to Replace</h3>
+      <ul>
+        <li><strong>[TOPIC]:</strong> Your ebook's main subject</li>
+        <li><strong>[TARGET AUDIENCE]:</strong> Specific reader persona</li>
+        <li><strong>[KNOWLEDGE LEVEL]:</strong> Beginner, intermediate, advanced</li>
+        <li><strong>[TONE/STYLE]:</strong> Professional, casual, academic, friendly</li>
+        <li><strong>[WORD COUNT]:</strong> Adjust based on chapter length needs</li>
+        <li><strong>[FRAMEWORK NAME]:</strong> Your proprietary system/methodology</li>
+      </ul>
+
+      <h3>Personalization Tips</h3>
+      <ul>
+        <li>Add your brand voice descriptors</li>
+        <li>Include industry-specific terminology</li>
+        <li>Reference your unique methodologies</li>
+        <li>Specify preferred examples or case study types</li>
+        <li>Set content format preferences (lists vs. paragraphs)</li>
+      </ul>
+
+      <h2>Best Practices for Using These Prompts</h2>
+
+      <ol>
+        <li><strong>Start with outline prompts</strong> before content generation</li>
+        <li><strong>Generate multiple variations</strong> and pick the best</li>
+        <li><strong>Always customize output</strong> with your personal touch</li>
+        <li><strong>Iterate and refine</strong> if first output isn't perfect</li>
+        <li><strong>Save your best-performing prompts</strong> for reuse</li>
+        <li><strong>Combine prompts</strong> for complex content needs</li>
+        <li><strong>Test different phrasings</strong> to see what works best</li>
+      </ol>
+
+      <h2>Conclusion: Your Prompt Library = Your Superpower</h2>
+      <p>These 50+ prompts are your secret weapon for creating professional ebook content at scale. But remember: prompts are starting points, not finish lines. AI generates the foundation—your expertise, examples, and unique perspective make content exceptional.</p>
+
+      <p>Build your own prompt library. Save the prompts that work best for your style. Refine them over time. Share them with your team. The authors who master AI prompting will dominate ebook creation in 2025 and beyond.</p>
+
+      <p>Start with 3-5 prompts from this guide. Test them on your next ebook chapter. Refine based on results. Soon you'll have a personalized prompt library that makes ebook creation effortless.</p>
+
+      <p><strong><a href="/?signin=true">Use these prompts with Inkfluence AI's powerful content generation engine →</a></strong></p>
+    `,
+    author: {
+      name: 'Alex Johnson',
+      avatar: '/images/authors/alex.jpg'
+    },
+    category: 'AI Writing',
+    tags: ['AI Prompts', 'Content Generation', 'Writing', 'Templates'],
+    readTime: 15,
+    publishDate: '2025-10-06T09:00:00Z',
+    featured: false,
+    image: '/images/blog/ai-prompts.jpg',
+    imageAlt: 'AI writing prompts displayed on computer screen with notepad',
+    metaTitle: '50+ AI Writing Prompts for Ebook Creators | Inkfluence AI',
+    metaDescription: 'Copy-paste AI prompts specifically designed for ebook creation. Generate professional content for chapters, intros, conclusions, and more.',
+    keywords: ['AI writing prompts', 'ChatGPT prompts for writing', 'ebook content generation', 'AI content prompts', 'writing prompts for authors', 'GPT prompts for books']
   }
 ];
 
