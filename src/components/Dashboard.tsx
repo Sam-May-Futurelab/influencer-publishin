@@ -717,10 +717,10 @@ export function Dashboard({
                 <div className="flex items-start gap-2">
                   <div className="mt-0.5">💡</div>
                   <div>
-                    <p className="font-semibold text-gray-900 dark:text-gray-100">
+                    <p className="font-semibold text-blue-950 dark:text-blue-100">
                       Chapter Detection
                     </p>
-                    <p className="text-gray-700 dark:text-gray-300 mt-1 leading-relaxed">
+                    <p className="text-blue-900 dark:text-blue-200 mt-1 leading-relaxed">
                       Use <strong>Heading 1</strong> style for chapter titles{splitOnH2 && <> or <strong>Heading 2/3</strong></>}. 
                       All content under each heading becomes that chapter's content.
                     </p>

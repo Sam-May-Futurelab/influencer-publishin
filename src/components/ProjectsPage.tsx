@@ -28,7 +28,7 @@ import { PreviewDialog } from '@/components/PreviewDialog';
 interface ProjectsPageProps {
   projects: EbookProject[];
   onSelectProject: (project: EbookProject) => void;
-  onCreateProject: (title: string) => void;
+  onCreateProject: (projectData: { title: string; author?: string; category?: string; targetAudience?: string; description?: string }) => void;
   onShowTemplateGallery: () => void;
   onDeleteProject?: (projectId: string) => void;
   onRenameProject?: (projectId: string, newTitle: string) => void;
@@ -474,7 +474,7 @@ export function ProjectsPage({
                 onChange={(e) => setNewProjectTitle(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && newProjectTitle.trim()) {
-                    onCreateProject(newProjectTitle.trim());
+                    onCreateProject({ title: newProjectTitle.trim() });
                     setNewProjectTitle('');
                     setShowNewProjectDialog(false);
                   }
@@ -498,7 +498,7 @@ export function ProjectsPage({
               <Button
                 onClick={() => {
                   if (newProjectTitle.trim()) {
-                    onCreateProject(newProjectTitle.trim());
+                    onCreateProject({ title: newProjectTitle.trim() });
                     setNewProjectTitle('');
                     setShowNewProjectDialog(false);
                   }

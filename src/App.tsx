@@ -346,9 +346,7 @@ function App() {
       
       // Show different success message based on whether setup was completed
       if (projectData.author && projectData.category) {
-        toast.success('Project created with AI-ready setup! 🎉', {
-          description: 'Your project details will help generate better content suggestions.',
-        });
+        toast.success('Project created! 🎉');
       } else {
         toast.success('New ebook project created!');
       }
