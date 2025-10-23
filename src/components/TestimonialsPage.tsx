@@ -482,6 +482,9 @@ export function TestimonialsPage() {
         onNavigateToBlog={() => navigate('/blog')}
         onNavigateToPricing={() => navigate('/pricing')}
         onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToTestimonials={() => navigate('/testimonials')}
+        onNavigateToCaseStudies={() => navigate('/case-studies')}
+        onNavigateToFAQ={() => navigate('/faq')}
       />
     </div>
   );

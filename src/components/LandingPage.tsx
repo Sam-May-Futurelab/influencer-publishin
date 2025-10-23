@@ -618,6 +618,148 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* Success Stories Section */}
+      <section className="bg-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium mb-4">
+              Success Stories
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Real Results from Real Authors</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              See how Inkfluence AI has transformed the writing journey for thousands of creators
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Card className="p-6 h-full shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-[#9b87b8]">
+                <CardContent className="p-0 space-y-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      SJ
+                    </div>
+                    <div>
+                      <h3 className="font-bold">Sarah Johnson</h3>
+                      <p className="text-sm text-gray-600">Non-Fiction Author</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 italic">
+                    "Published 6 ebooks in 8 months and generated $12K in revenue. Inkfluence AI cut my production time by 85%."
+                  </p>
+                  <div className="flex gap-4 text-center pt-4 border-t">
+                    <div>
+                      <div className="text-2xl font-bold text-[#7a5f96]">6</div>
+                      <div className="text-xs text-gray-600">eBooks</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-[#7a5f96]">$12K</div>
+                      <div className="text-xs text-gray-600">Revenue</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-[#7a5f96]">85%</div>
+                      <div className="text-xs text-gray-600">Faster</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+            >
+              <Card className="p-6 h-full shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-[#9b87b8]">
+                <CardContent className="p-0 space-y-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      MC
+                    </div>
+                    <div>
+                      <h3 className="font-bold">Michael Chen</h3>
+                      <p className="text-sm text-gray-600">Marketing Consultant</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 italic">
+                    "Created lead magnets that generate 500+ qualified leads per month for my clients. A 400% increase in lead generation."
+                  </p>
+                  <div className="flex gap-4 text-center pt-4 border-t">
+                    <div>
+                      <div className="text-2xl font-bold text-[#7a5f96]">500+</div>
+                      <div className="text-xs text-gray-600">Leads/Month</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-[#7a5f96]">400%</div>
+                      <div className="text-xs text-gray-600">Increase</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="p-6 h-full shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-[#9b87b8]">
+                <CardContent className="p-0 space-y-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      EW
+                    </div>
+                    <div>
+                      <h3 className="font-bold">Emma Williams</h3>
+                      <p className="text-sm text-gray-600">Online Course Creator</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 italic">
+                    "Course companion workbooks boosted my completion rate from 23% to 67%. Students love the structured approach."
+                  </p>
+                  <div className="flex gap-4 text-center pt-4 border-t">
+                    <div>
+                      <div className="text-2xl font-bold text-[#7a5f96]">67%</div>
+                      <div className="text-xs text-gray-600">Completion</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-[#7a5f96]">3x</div>
+                      <div className="text-xs text-gray-600">Improvement</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Button 
+              onClick={() => navigate('/testimonials')}
+              size="lg"
+              variant="outline"
+              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8]"
+            >
+              View All Success Stories
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+            <Button 
+              onClick={() => navigate('/case-studies')}
+              size="lg"
+              className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
+            >
+              Read Detailed Case Studies
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section id="faq" className="bg-gradient-to-b from-white to-[#f0e8f8] py-20">
         <div className="container mx-auto px-4 max-w-3xl">
@@ -738,6 +880,9 @@ export function LandingPage() {
         onNavigateToFeatures={() => navigate('/features')}
         onNavigateToBlog={() => navigate('/blog')}
         onNavigateToContact={() => navigate('/contact')}
+        onNavigateToTestimonials={() => navigate('/testimonials')}
+        onNavigateToCaseStudies={() => navigate('/case-studies')}
+        onNavigateToFAQ={() => navigate('/faq')}
       />
       
       <AuthModal isOpen={showAuthModal} onOpenChange={(open) => !open && handleAuthModalClose()} />

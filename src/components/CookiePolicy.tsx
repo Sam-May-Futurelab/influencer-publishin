@@ -297,15 +297,18 @@ export function CookiePolicy() {
       </div>
       
       <LandingFooter 
+        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToHelp={() => navigate('/help')}
         onNavigateToPrivacy={() => navigate('/privacy')}
         onNavigateToTerms={() => navigate('/terms')}
         onNavigateToCookies={() => navigate('/cookies')}
-        onNavigateToHelp={() => navigate('/help')}
-        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToContact={() => navigate('/contact')}
         onNavigateToPricing={() => navigate('/pricing')}
         onNavigateToFeatures={() => navigate('/features')}
         onNavigateToBlog={() => navigate('/blog')}
-        onNavigateToContact={() => navigate('/contact')}
+        onNavigateToTestimonials={() => navigate('/testimonials')}
+        onNavigateToCaseStudies={() => navigate('/case-studies')}
+        onNavigateToFAQ={() => navigate('/faq')}
       />
     </div>
   );

@@ -1,8 +1,14 @@
 import { Button } from '@/components/ui/button';
-import { BookOpen, Menu } from 'lucide-react';
+import { BookOpen, Menu, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { MobileMenu } from './MobileMenu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface LandingHeaderProps {
   onGetStarted?: () => void;
@@ -56,23 +62,34 @@ export function LandingHeader({
             >
               Pricing
             </button>
-            <button 
-              onClick={onNavigateToBlog || (() => navigate('/blog'))}
-              className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
-            >
-              Blog
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium flex items-center gap-1">
+                Resources
+                <ChevronDown className="w-4 h-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={onNavigateToBlog || (() => navigate('/blog'))}>
+                  Blog
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/help')}>
+                  Help Center
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/faq')}>
+                  FAQ
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/testimonials')}>
+                  Testimonials
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/case-studies')}>
+                  Case Studies
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <button 
               onClick={() => navigate('/about')}
               className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
             >
               About
-            </button>
-            <button 
-              onClick={() => navigate('/help')}
-              className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
-            >
-              Help
             </button>
           </div>
         )}

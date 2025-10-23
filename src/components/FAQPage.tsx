@@ -461,6 +461,9 @@ export function FAQPage() {
         onNavigateToBlog={() => navigate('/blog')}
         onNavigateToPricing={() => navigate('/pricing')}
         onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToTestimonials={() => navigate('/testimonials')}
+        onNavigateToCaseStudies={() => navigate('/case-studies')}
+        onNavigateToFAQ={() => navigate('/faq')}
       />
     </div>
   );

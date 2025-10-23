@@ -10,6 +10,9 @@ interface LandingFooterProps {
   onNavigateToFeatures?: () => void;
   onNavigateToBlog?: () => void;
   onNavigateToContact?: () => void;
+  onNavigateToTestimonials?: () => void;
+  onNavigateToCaseStudies?: () => void;
+  onNavigateToFAQ?: () => void;
 }
 
 export function LandingFooter({ 
@@ -21,7 +24,10 @@ export function LandingFooter({
   onNavigateToPricing,
   onNavigateToFeatures,
   onNavigateToBlog,
-  onNavigateToContact
+  onNavigateToContact,
+  onNavigateToTestimonials,
+  onNavigateToCaseStudies,
+  onNavigateToFAQ
 }: LandingFooterProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -82,26 +88,20 @@ export function LandingFooter({
           <div>
             <h4 className="font-semibold mb-4">Resources</h4>
             <ul className="space-y-2 text-gray-300">
-              {onNavigateToHelp && (
-                <>
-                  <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Help Center</button></li>
-                  <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Tutorials</button></li>
-                </>
-              )}
-              {onNavigateToBlog ? (
+              {onNavigateToBlog && (
                 <li><button onClick={onNavigateToBlog} className="hover:text-white transition-colors">Blog</button></li>
-              ) : (
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
               )}
-              {onNavigateToFeatures ? (
-                <li><button onClick={onNavigateToFeatures} className="hover:text-white transition-colors">Features</button></li>
-              ) : (
-                <li><a href="#features" onClick={() => scrollToSection('features')} className="hover:text-white transition-colors cursor-pointer">Features</a></li>
+              {onNavigateToHelp && (
+                <li><button onClick={onNavigateToHelp} className="hover:text-white transition-colors">Help Center</button></li>
               )}
-              {onNavigateToPricing ? (
-                <li><button onClick={onNavigateToPricing} className="hover:text-white transition-colors">Pricing</button></li>
-              ) : (
-                <li><a href="#pricing" onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors cursor-pointer">Pricing</a></li>
+              {onNavigateToFAQ && (
+                <li><button onClick={onNavigateToFAQ} className="hover:text-white transition-colors">FAQ</button></li>
+              )}
+              {onNavigateToTestimonials && (
+                <li><button onClick={onNavigateToTestimonials} className="hover:text-white transition-colors">Testimonials</button></li>
+              )}
+              {onNavigateToCaseStudies && (
+                <li><button onClick={onNavigateToCaseStudies} className="hover:text-white transition-colors">Case Studies</button></li>
               )}
             </ul>
           </div>

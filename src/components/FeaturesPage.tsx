@@ -7,7 +7,7 @@ import { Separator } from './ui/separator';
 import { LandingHeader } from './LandingHeader';
 import { LandingFooter } from './LandingFooter';
 import { SEO, createSoftwareApplicationSchema, createBreadcrumbSchema } from './SEO';
-import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud, Mic } from 'lucide-react';
+import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud, Mic, Star } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 
 export default function FeaturesPage() {
@@ -305,6 +305,194 @@ export default function FeaturesPage() {
           </div>
         </div>
 
+        {/* Testimonials Section */}
+        <div className="mt-20">
+          <div className="text-center mb-12">
+            <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium mb-4">
+              Loved by Creators
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              See What Features Users Love Most
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Real feedback from creators using Inkfluence AI every day
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <CardContent className="p-0 space-y-3">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-700 italic">
+                  "The AI Content Assistant is mind-blowing. It understands my writing style and generates perfectly on-brand content every time."
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    SJ
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">Sarah Johnson</div>
+                    <div className="text-xs text-gray-600">Non-Fiction Author</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <CardContent className="p-0 space-y-3">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-700 italic">
+                  "The Cover Designer and custom branding features made my ebooks look incredibly professional. Worth the upgrade alone."
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    MC
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">Michael Chen</div>
+                    <div className="text-xs text-gray-600">Marketing Consultant</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <CardContent className="p-0 space-y-3">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-700 italic">
+                  "Voice-to-text is a game changer. I dictate ideas during my commute and they're perfectly formatted when I get home."
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    EW
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">Emma Williams</div>
+                    <div className="text-xs text-gray-600">Course Creator</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button 
+              onClick={() => navigate('/testimonials')}
+              variant="outline"
+              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8]"
+            >
+              Read More Success Stories
+              <Star className="ml-2 w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Testimonials Section */}
+        <div className="mb-16">
+          <div className="text-center mb-12">
+            <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium mb-4">
+              Feature Highlights
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Loved by Creators Worldwide
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              See how our features transform the content creation process
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <Card className="p-6 shadow-lg">
+              <CardContent className="p-0 space-y-3">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-700 italic">
+                  "The AI Assistant is like having a co-author who never gets tired. It's helped me overcome writer's block countless times."
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    SJ
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">Sarah Johnson</div>
+                    <div className="text-xs text-gray-600">Non-Fiction Author</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 shadow-lg">
+              <CardContent className="p-0 space-y-3">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-700 italic">
+                  "The Cover Designer is phenomenal. My books look professional without spending hours on design or hiring expensive designers."
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    MC
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">Michael Chen</div>
+                    <div className="text-xs text-gray-600">Marketing Consultant</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 shadow-lg">
+              <CardContent className="p-0 space-y-3">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-700 italic">
+                  "Voice-to-text changed my workflow completely. I can brainstorm while walking and capture everything instantly."
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    EW
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">Emma Williams</div>
+                    <div className="text-xs text-gray-600">Course Creator</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button 
+              onClick={() => navigate('/testimonials')}
+              variant="outline"
+              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8]"
+            >
+              Read More Success Stories
+              <Star className="ml-2 w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
         {/* CTA Section */}
         <div className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] rounded-2xl p-8 md:p-12 text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -348,6 +536,9 @@ export default function FeaturesPage() {
         onNavigateToFeatures={() => navigate('/features')}
         onNavigateToBlog={() => navigate('/blog')}
         onNavigateToContact={() => navigate('/contact')}
+        onNavigateToTestimonials={() => navigate('/testimonials')}
+        onNavigateToCaseStudies={() => navigate('/case-studies')}
+        onNavigateToFAQ={() => navigate('/faq')}
       />
     </div>
   );

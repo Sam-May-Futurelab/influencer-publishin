@@ -468,6 +468,102 @@ export function PricingPage() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-[#f0e8f8]">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium mb-4">
+              What Our Users Say
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Real Value, Real Results
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              See why thousands of creators choose Inkfluence AI
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <Card className="p-6 shadow-lg">
+              <CardContent className="p-0 space-y-3">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-700 italic">
+                  "The ROI is incredible. Premium paid for itself in the first month from increased productivity alone."
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    RG
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">Rachel Green</div>
+                    <div className="text-xs text-gray-600">Life Coach</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 shadow-lg">
+              <CardContent className="p-0 space-y-3">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-700 italic">
+                  "Started with Free tier to test, upgraded to Premium within a week. Best decision for my writing business."
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    DR
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">David Rodriguez</div>
+                    <div className="text-xs text-gray-600">Author</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 shadow-lg">
+              <CardContent className="p-0 space-y-3">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-700 italic">
+                  "Premium features are worth every penny. The custom branding alone has elevated my entire brand image."
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    LM
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">Lisa Martinez</div>
+                    <div className="text-xs text-gray-600">Entrepreneur</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button 
+              onClick={() => navigate('/testimonials')}
+              variant="outline"
+              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8]"
+            >
+              See All Reviews
+              <Star className="ml-2 w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -547,6 +643,9 @@ export function PricingPage() {
         onNavigateToFeatures={() => navigate('/features')}
         onNavigateToBlog={() => navigate('/blog')}
         onNavigateToContact={() => navigate('/contact')}
+        onNavigateToTestimonials={() => navigate('/testimonials')}
+        onNavigateToCaseStudies={() => navigate('/case-studies')}
+        onNavigateToFAQ={() => navigate('/faq')}
       />
     </div>
   );

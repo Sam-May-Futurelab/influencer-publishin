@@ -367,6 +367,9 @@ export default function ContactPage() {
         onNavigateToFeatures={() => navigate('/features')}
         onNavigateToBlog={() => navigate('/blog')}
         onNavigateToContact={() => navigate('/contact')}
+        onNavigateToTestimonials={() => navigate('/testimonials')}
+        onNavigateToCaseStudies={() => navigate('/case-studies')}
+        onNavigateToFAQ={() => navigate('/faq')}
       />
     </div>
   );

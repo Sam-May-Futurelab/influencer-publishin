@@ -13,6 +13,7 @@ import { AuthModal } from '@/components/AuthModal';
 import { Onboarding } from '@/components/Onboarding';
 import { UpgradeModal } from '@/components/UpgradeModal';
 import { LandingPage } from '@/components/LandingPage';
+import { ScrollToTop } from '@/components/ScrollToTop';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
@@ -662,6 +663,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background font-['Inter']">
+      <ScrollToTop />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={!user ? <LandingPage /> : <Navigate to="/app/dashboard" replace />} />
