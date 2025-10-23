@@ -583,7 +583,7 @@ export function CoverDesigner({
                   {STOCK_IMAGES.map((image) => (
                     <Card
                       key={image.id}
-                      className="cursor-pointer neomorph-flat border-0 overflow-hidden hover:neomorph-raised transition-all hover:scale-[1.02]"
+                      className="cursor-pointer neomorph-flat border-0 overflow-hidden hover:neomorph-raised transition-all hover:scale-[1.02] rounded-lg"
                       onClick={() => {
                         updateDesign({
                           backgroundType: 'image',
@@ -593,11 +593,11 @@ export function CoverDesigner({
                         toast.success(`Applied ${image.name}`);
                       }}
                     >
-                      <div className="relative aspect-[5/8] overflow-hidden">
+                      <div className="relative aspect-[5/8] overflow-hidden rounded-lg">
                         <img 
                           src={image.url} 
                           alt={image.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover rounded-lg"
                         />
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
                           <p className="text-white text-sm font-medium">{image.name}</p>
@@ -1040,6 +1040,98 @@ export function CoverDesigner({
                         className="flex-1 h-11 text-sm"
                       />
                     </div>
+                  </div>
+                </div>
+
+                {/* Quick Color Palettes */}
+                <div className="space-y-3 pt-4 border-t">
+                  <Label className="text-base font-medium">Quick Color Palettes</Label>
+                  <p className="text-xs text-muted-foreground">Apply coordinated colors to title, subtitle, and author</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => updateDesign({ 
+                        titleColor: '#ffffff', 
+                        subtitleColor: '#e0e0e0', 
+                        authorColor: '#ffffff' 
+                      })}
+                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
+                    >
+                      <div className="flex gap-1">
+                        <div className="w-6 h-6 rounded-full bg-white border border-gray-300" />
+                        <div className="w-6 h-6 rounded-full bg-gray-200 border border-gray-300" />
+                      </div>
+                      <span className="text-sm font-medium">Classic White</span>
+                    </button>
+                    <button
+                      onClick={() => updateDesign({ 
+                        titleColor: '#000000', 
+                        subtitleColor: '#333333', 
+                        authorColor: '#000000' 
+                      })}
+                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
+                    >
+                      <div className="flex gap-1">
+                        <div className="w-6 h-6 rounded-full bg-black border border-gray-300" />
+                        <div className="w-6 h-6 rounded-full bg-gray-700 border border-gray-300" />
+                      </div>
+                      <span className="text-sm font-medium">Bold Black</span>
+                    </button>
+                    <button
+                      onClick={() => updateDesign({ 
+                        titleColor: '#ffd700', 
+                        subtitleColor: '#fff8dc', 
+                        authorColor: '#ffd700' 
+                      })}
+                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
+                    >
+                      <div className="flex gap-1">
+                        <div className="w-6 h-6 rounded-full bg-yellow-400 border border-gray-300" />
+                        <div className="w-6 h-6 rounded-full bg-yellow-100 border border-gray-300" />
+                      </div>
+                      <span className="text-sm font-medium">Elegant Gold</span>
+                    </button>
+                    <button
+                      onClick={() => updateDesign({ 
+                        titleColor: '#e91e63', 
+                        subtitleColor: '#fce4ec', 
+                        authorColor: '#c2185b' 
+                      })}
+                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
+                    >
+                      <div className="flex gap-1">
+                        <div className="w-6 h-6 rounded-full bg-pink-600 border border-gray-300" />
+                        <div className="w-6 h-6 rounded-full bg-pink-100 border border-gray-300" />
+                      </div>
+                      <span className="text-sm font-medium">Vibrant Pink</span>
+                    </button>
+                    <button
+                      onClick={() => updateDesign({ 
+                        titleColor: '#2196f3', 
+                        subtitleColor: '#e3f2fd', 
+                        authorColor: '#1976d2' 
+                      })}
+                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
+                    >
+                      <div className="flex gap-1">
+                        <div className="w-6 h-6 rounded-full bg-blue-500 border border-gray-300" />
+                        <div className="w-6 h-6 rounded-full bg-blue-100 border border-gray-300" />
+                      </div>
+                      <span className="text-sm font-medium">Ocean Blue</span>
+                    </button>
+                    <button
+                      onClick={() => updateDesign({ 
+                        titleColor: '#8b5cf6', 
+                        subtitleColor: '#ede9fe', 
+                        authorColor: '#7c3aed' 
+                      })}
+                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
+                    >
+                      <div className="flex gap-1">
+                        <div className="w-6 h-6 rounded-full bg-violet-500 border border-gray-300" />
+                        <div className="w-6 h-6 rounded-full bg-violet-100 border border-gray-300" />
+                      </div>
+                      <span className="text-sm font-medium">Royal Purple</span>
+                    </button>
                   </div>
                 </div>
               </TabsContent>
