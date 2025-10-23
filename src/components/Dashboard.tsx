@@ -694,7 +694,7 @@ export function Dashboard({
 
             {/* Info Section */}
             <div className="space-y-3 text-sm">
-              <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800/50">
+              <div className="p-4 rounded-lg border border-blue-200 dark:border-blue-800/50">
                 <div className="flex items-start gap-2">
                   <div className="mt-0.5">💡</div>
                   <div>
