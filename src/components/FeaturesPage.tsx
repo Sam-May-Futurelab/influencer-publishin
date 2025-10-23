@@ -335,7 +335,7 @@ export default function FeaturesPage() {
                     SJ
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">Sarah Johnson</div>
+                    <div className="font-semibold text-sm">Kira Patel</div>
                     <div className="text-xs text-gray-600">Non-Fiction Author</div>
                   </div>
                 </div>
@@ -357,7 +357,7 @@ export default function FeaturesPage() {
                     MC
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">Michael Chen</div>
+                    <div className="font-semibold text-sm">Marcus Thornton</div>
                     <div className="text-xs text-gray-600">Marketing Consultant</div>
                   </div>
                 </div>
@@ -379,7 +379,7 @@ export default function FeaturesPage() {
                     EW
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">Emma Williams</div>
+                    <div className="font-semibold text-sm">Jade Moreno</div>
                     <div className="text-xs text-gray-600">Course Creator</div>
                   </div>
                 </div>
@@ -429,7 +429,7 @@ export default function FeaturesPage() {
                     SJ
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">Sarah Johnson</div>
+                    <div className="font-semibold text-sm">Kira Patel</div>
                     <div className="text-xs text-gray-600">Non-Fiction Author</div>
                   </div>
                 </div>
@@ -451,7 +451,7 @@ export default function FeaturesPage() {
                     MC
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">Michael Chen</div>
+                    <div className="font-semibold text-sm">Marcus Thornton</div>
                     <div className="text-xs text-gray-600">Marketing Consultant</div>
                   </div>
                 </div>
@@ -473,7 +473,7 @@ export default function FeaturesPage() {
                     EW
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">Emma Williams</div>
+                    <div className="font-semibold text-sm">Jade Moreno</div>
                     <div className="text-xs text-gray-600">Course Creator</div>
                   </div>
                 </div>

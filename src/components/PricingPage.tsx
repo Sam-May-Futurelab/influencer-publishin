@@ -499,7 +499,7 @@ export function PricingPage() {
                     RG
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">Rachel Green</div>
+                    <div className="font-semibold text-sm">Nina Voss</div>
                     <div className="text-xs text-gray-600">Life Coach</div>
                   </div>
                 </div>
@@ -521,7 +521,7 @@ export function PricingPage() {
                     DR
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">David Rodriguez</div>
+                    <div className="font-semibold text-sm">Tyler Brennan</div>
                     <div className="text-xs text-gray-600">Author</div>
                   </div>
                 </div>
@@ -543,7 +543,7 @@ export function PricingPage() {
                     LM
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">Lisa Martinez</div>
+                    <div className="font-semibold text-sm">Aria Castellano</div>
                     <div className="text-xs text-gray-600">Entrepreneur</div>
                   </div>
                 </div>

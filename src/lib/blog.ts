@@ -212,7 +212,7 @@ export const blogPosts: BlogPost[] = [
       <p><strong><a href="/?signin=true">Start your free trial with Inkfluence AI today →</a></strong></p>
     `,
     author: {
-      name: 'Sarah Johnson',
+      name: 'Kira Patel',
       avatar: '/images/authors/sarah.jpg'
     },
     category: 'AI Writing',
@@ -485,7 +485,7 @@ export const blogPosts: BlogPost[] = [
       <p><strong><a href="/?signin=true">Ready to create and market your ebook? Start your free trial today →</a></strong></p>
     `,
     author: {
-      name: 'Michael Chen',
+      name: 'Marcus Thornton',
       avatar: '/images/authors/michael.jpg'
     },
     category: 'Marketing',
@@ -2257,7 +2257,7 @@ export const blogPosts: BlogPost[] = [
       <p><strong><a href="/?signin=true">Create monetizable ebooks faster with Inkfluence AI →</a></strong></p>
     `,
     author: {
-      name: 'Michael Chen',
+      name: 'Marcus Thornton',
       avatar: '/images/authors/michael.jpg'
     },
     category: 'Marketing',
@@ -2691,7 +2691,7 @@ export const blogPosts: BlogPost[] = [
       <p><strong><a href="/?signin=true">Create and launch your ebook with Inkfluence AI's comprehensive platform →</a></strong></p>
     `,
     author: {
-      name: 'Sarah Johnson',
+      name: 'Kira Patel',
       avatar: '/images/authors/sarah.jpg'
     },
     category: 'Marketing',

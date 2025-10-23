@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Flame, Target, TrendingUp, Calendar } from 'lucide-react';
+import { Flame, Target, TrendingUp, Calendar, Award, Star, Zap, PenTool } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -19,12 +19,48 @@ export function WritingStreakCard({
   className 
 }: WritingStreakCardProps) {
   const getStreakLevel = (streak: number) => {
-    if (streak >= 30) return { level: 'Legend', color: 'text-purple-600', bgColor: 'bg-purple-100', emoji: '👑' };
-    if (streak >= 21) return { level: 'Expert', color: 'text-blue-600', bgColor: 'bg-blue-100', emoji: '💎' };
-    if (streak >= 14) return { level: 'Advanced', color: 'text-green-600', bgColor: 'bg-green-100', emoji: '💪' };
-    if (streak >= 7) return { level: 'Consistent', color: 'text-yellow-600', bgColor: 'bg-yellow-100', emoji: '⚡' };
-    if (streak >= 3) return { level: 'Building', color: 'text-orange-600', bgColor: 'bg-orange-100', emoji: '🔥' };
-    return { level: 'Starting', color: 'text-gray-600', bgColor: 'bg-gray-100', emoji: '✍️' };
+    if (streak >= 30) return { 
+      level: 'Legend', 
+      color: 'text-purple-600', 
+      bgColor: 'bg-purple-100',
+      iconColor: 'text-purple-600',
+      icon: <Award className="w-8 h-8" />
+    };
+    if (streak >= 21) return { 
+      level: 'Expert', 
+      color: 'text-blue-600', 
+      bgColor: 'bg-blue-100',
+      iconColor: 'text-blue-600',
+      icon: <Star className="w-8 h-8 fill-current" />
+    };
+    if (streak >= 14) return { 
+      level: 'Advanced', 
+      color: 'text-green-600', 
+      bgColor: 'bg-green-100',
+      iconColor: 'text-green-600',
+      icon: <TrendingUp className="w-8 h-8" />
+    };
+    if (streak >= 7) return { 
+      level: 'Consistent', 
+      color: 'text-yellow-600', 
+      bgColor: 'bg-yellow-100',
+      iconColor: 'text-yellow-600',
+      icon: <Zap className="w-8 h-8 fill-current" />
+    };
+    if (streak >= 3) return { 
+      level: 'Building', 
+      color: 'text-orange-600', 
+      bgColor: 'bg-orange-100',
+      iconColor: 'text-orange-600',
+      icon: <Flame className="w-8 h-8 fill-current" />
+    };
+    return { 
+      level: 'Starting', 
+      color: 'text-gray-600', 
+      bgColor: 'bg-gray-100',
+      iconColor: 'text-gray-600',
+      icon: <PenTool className="w-8 h-8" />
+    };
   };
 
   const streakInfo = getStreakLevel(currentStreak);
@@ -53,7 +89,9 @@ export function WritingStreakCard({
               </div>
             </div>
           </div>
-          <div className="text-4xl">{streakInfo.emoji}</div>
+          <div className={cn("flex items-center justify-center", streakInfo.iconColor)}>
+            {streakInfo.icon}
+          </div>
         </div>
 
         <div className="space-y-3">

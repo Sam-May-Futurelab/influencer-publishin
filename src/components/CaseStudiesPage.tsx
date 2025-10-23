@@ -29,7 +29,7 @@ export function CaseStudiesPage() {
   const caseStudies = [
     {
       id: 'sarah-johnson',
-      name: 'Sarah Johnson',
+      name: 'Kira Patel',
       role: 'Self-Published Author',
       image: '/images/case-studies/sarah.jpg',
       featured: true,
@@ -56,7 +56,7 @@ export function CaseStudiesPage() {
     },
     {
       id: 'michael-chen',
-      name: 'Michael Chen',
+      name: 'Marcus Thornton',
       role: 'Marketing Consultant',
       image: '/images/case-studies/michael.jpg',
       featured: true,
@@ -83,7 +83,7 @@ export function CaseStudiesPage() {
     },
     {
       id: 'emma-williams',
-      name: 'Emma Williams',
+      name: 'Jade Moreno',
       role: 'Online Course Creator',
       image: '/images/case-studies/emma.jpg',
       featured: true,
@@ -110,7 +110,7 @@ export function CaseStudiesPage() {
     },
     {
       id: 'david-rodriguez',
-      name: 'David Rodriguez',
+      name: 'Tyler Brennan',
       role: 'Digital Product Seller',
       image: '/images/case-studies/david.jpg',
       featured: false,
@@ -137,7 +137,7 @@ export function CaseStudiesPage() {
     },
     {
       id: 'rachel-green',
-      name: 'Rachel Green',
+      name: 'Nina Voss',
       role: 'Fitness Coach',
       image: '/images/case-studies/rachel.jpg',
       featured: false,

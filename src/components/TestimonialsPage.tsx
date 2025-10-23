@@ -33,27 +33,27 @@ export function TestimonialsPage() {
 
   const featuredTestimonials = [
     {
-      name: 'Sarah Johnson',
+      name: 'Kira Patel',
       role: 'Self-Published Author',
-      avatar: '/images/testimonials/sarah.jpg',
+      avatar: '/images/testimonials/kira.jpg',
       rating: 5,
       text: "Inkfluence AI transformed my writing process. What used to take me 3 months now takes 2 weeks. I've published 6 ebooks this year and made over $12,000 in passive income. The AI writing assistant is like having a co-author who never gets tired!",
       result: '6 ebooks in 8 months, $12K revenue',
       featured: true
     },
     {
-      name: 'Michael Chen',
+      name: 'Marcus Thornton',
       role: 'Marketing Consultant',
-      avatar: '/images/testimonials/michael.jpg',
+      avatar: '/images/testimonials/marcus.jpg',
       rating: 5,
       text: "I use Inkfluence AI to create lead magnets for my clients. The quality is incredible, and the speed is unmatched. We've generated 500+ qualified leads per month using these ebooks. ROI is through the roof.",
       result: '500+ leads/month for clients',
       featured: true
     },
     {
-      name: 'Emma Williams',
+      name: 'Jade Moreno',
       role: 'Course Creator',
-      avatar: '/images/testimonials/emma.jpg',
+      avatar: '/images/testimonials/jade.jpg',
       rating: 5,
       text: "The template gallery saved me countless hours. I went from zero design skills to creating professional-looking ebooks in minutes. My students love the resources I create now. Premium subscription paid for itself in the first week.",
       result: 'Professional ebooks in minutes',
@@ -63,7 +63,7 @@ export function TestimonialsPage() {
 
   const testimonials = [
     {
-      name: 'David Rodriguez',
+      name: 'Tyler Brennan',
       role: 'Digital Marketer',
       rating: 5,
       text: "Best investment I've made for my content marketing. Created 12 lead magnets in a month. Lead generation increased by 300%.",
@@ -84,7 +84,7 @@ export function TestimonialsPage() {
       verified: true
     },
     {
-      name: 'Rachel Green',
+      name: 'Nina Voss',
       role: 'Fitness Coach',
       rating: 5,
       text: "Created my first ebook in 48 hours using Inkfluence AI. Sold 200 copies in the first month at $27 each. This tool pays for itself instantly.",

@@ -469,19 +469,19 @@ export function LandingPage() {
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
               {
-                name: "Sarah Johnson",
+                name: "Kira Patel",
                 role: "Fiction Author",
                 content: "Inkfluence AI helped me finish my first novel in half the time. The AI suggestions were incredibly helpful!",
                 rating: 5
               },
               {
-                name: "Michael Chen",
+                name: "Marcus Thornton",
                 role: "Business Coach",
                 content: "Perfect for creating professional eBooks for my coaching business. The customization options are fantastic.",
                 rating: 5
               },
               {
-                name: "Emma Williams",
+                name: "Jade Moreno",
                 role: "Content Creator",
                 content: "I've published 3 books using Inkfluence AI. The organization features keep me on track and productive.",
                 rating: 5
@@ -645,7 +645,7 @@ export function LandingPage() {
                       SJ
                     </div>
                     <div>
-                      <h3 className="font-bold">Sarah Johnson</h3>
+                      <h3 className="font-bold">Kira Patel</h3>
                       <p className="text-sm text-gray-600">Non-Fiction Author</p>
                     </div>
                   </div>
@@ -683,7 +683,7 @@ export function LandingPage() {
                       MC
                     </div>
                     <div>
-                      <h3 className="font-bold">Michael Chen</h3>
+                      <h3 className="font-bold">Marcus Thornton</h3>
                       <p className="text-sm text-gray-600">Marketing Consultant</p>
                     </div>
                   </div>
@@ -717,7 +717,7 @@ export function LandingPage() {
                       EW
                     </div>
                     <div>
-                      <h3 className="font-bold">Emma Williams</h3>
+                      <h3 className="font-bold">Jade Moreno</h3>
                       <p className="text-sm text-gray-600">Online Course Creator</p>
                     </div>
                   </div>
