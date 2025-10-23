@@ -679,10 +679,10 @@ export function Dashboard({
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label htmlFor="split-h2" className="text-sm font-medium cursor-pointer">
-                    Also split on Heading 2
+                    Also split on Heading 2/3
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Create new chapters for both Heading 1 and Heading 2 styles
+                    Create new chapters for Heading 1, 2, and 3 styles
                   </p>
                 </div>
                 <Switch
@@ -704,7 +704,7 @@ export function Dashboard({
                       Chapter Detection
                     </p>
                     <p className="text-blue-900 dark:text-blue-100 mt-1 leading-relaxed">
-                      Use <strong>Heading 1</strong> style for chapter titles{splitOnH2 && <> or <strong>Heading 2</strong></>}. 
+                      Use <strong>Heading 1</strong> style for chapter titles{splitOnH2 && <> or <strong>Heading 2/3</strong></>}. 
                       All content under each heading becomes that chapter's content.
                     </p>
                   </div>

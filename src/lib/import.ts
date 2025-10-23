@@ -9,7 +9,7 @@ export interface ImportResult {
 }
 
 export interface ImportOptions {
-  splitOnH2?: boolean; // If true, H2 headings also create new chapters
+  splitOnH2?: boolean; // If true, H2 and H3 headings also create new chapters
 }
 
 /**
@@ -97,8 +97,8 @@ function parseHTMLIntoChapters(html: string, splitOnH2: boolean = false): Chapte
     console.log(`  ${index}. <${tagName}>: "${text}"`);
     
     // H1 = New chapter (always)
-    // H2 = New chapter (if splitOnH2 is true)
-    const isNewChapter = tagName === 'h1' || (splitOnH2 && tagName === 'h2');
+    // H2/H3 = New chapter (if splitOnH2 is true)
+    const isNewChapter = tagName === 'h1' || (splitOnH2 && (tagName === 'h2' || tagName === 'h3'));
     
     if (isNewChapter) {
       console.log(`    ✅ Creating new chapter from <${tagName}>`);

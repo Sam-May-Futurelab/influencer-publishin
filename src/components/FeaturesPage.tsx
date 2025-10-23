@@ -7,7 +7,7 @@ import { Separator } from './ui/separator';
 import { LandingHeader } from './LandingHeader';
 import { LandingFooter } from './LandingFooter';
 import { SEO, createSoftwareApplicationSchema, createBreadcrumbSchema } from './SEO';
-import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud, Mic, Star } from 'lucide-react';
+import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud, Mic, Star, Upload } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 
 export default function FeaturesPage() {
@@ -35,6 +35,13 @@ export default function FeaturesPage() {
       description: "Fully customize your ebook's appearance with colors, fonts, logos, and professional styling options.",
       benefits: ["Match your brand identity", "Professional appearance", "Stand out from competition", "Build brand recognition"],
       badge: "Premium"
+    },
+    {
+      icon: <Upload className="h-8 w-8 text-indigo-600" />,
+      title: "Document Import",
+      description: "Import existing content from Google Docs (.docx) or text files with automatic chapter detection.",
+      benefits: ["Migrate existing content", "Auto-detect chapters", "Preserve formatting", "Quick project setup"],
+      badge: "New"
     },
     {
       icon: <Download className="h-8 w-8 text-green-600" />,
