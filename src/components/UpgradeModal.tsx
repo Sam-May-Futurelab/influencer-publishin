@@ -25,7 +25,6 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
       return;
     }
 
-    console.log('Starting upgrade with:', { priceId, userId: user.uid, email: user.email });
     setLoading(planId);
 
     try {

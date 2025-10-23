@@ -56,7 +56,6 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
     };
     
     await setDoc(projectRef, projectData);
-    console.log('✅ Successfully saved project to Firestore');
   } catch (error) {
     console.error('Error saving project:', error);
     throw new Error('Failed to save project');

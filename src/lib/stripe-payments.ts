@@ -98,7 +98,6 @@ export class StripePaymentService {
     userEmail: string
   ): Promise<{ url: string } | { error: string }> {
     try {
-      console.log('Creating checkout session with:', { priceId, userId, userEmail });
       
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',

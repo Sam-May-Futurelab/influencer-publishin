@@ -203,7 +203,6 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     const success = await purchaseSubscription(planId);
     if (success) {
       // Success message is already shown by the hook
-      console.log(`Successfully upgraded to ${planId} plan`);
     }
   };
 

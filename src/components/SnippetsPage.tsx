@@ -78,7 +78,6 @@ export function SnippetsPage() {
     setLoading(true);
     try {
       const userSnippets = await getUserSnippets(user.uid);
-      console.log('Loaded snippets:', userSnippets.length);
       setSnippets(userSnippets);
     } catch (error) {
       console.error('Error loading snippets:', error);

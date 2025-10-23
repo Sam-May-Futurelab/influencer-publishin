@@ -131,8 +131,6 @@ export function Dashboard({
   const processFile = async (file: File) => {
     setIsImporting(true);
     
-    console.log('🔄 Importing file with options:', { splitOnH2 });
-    
     try {
       const result = await importFile(file, { splitOnH2 });
       

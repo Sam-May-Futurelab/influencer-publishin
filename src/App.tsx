@@ -137,14 +137,7 @@ function App() {
       const userAtCleanup = currentUserRef.current;
       
       if (projectToSave && userAtCleanup) {
-        console.log('🔄 Force saving on unmount...', {
-          id: projectToSave.id,
-          title: projectToSave.title,
-          chaptersCount: projectToSave.chapters.length
-        });
-        saveProject(userAtCleanup.uid, projectToSave).then(() => {
-          console.log('✅ Force save completed');
-        }).catch(error => {
+        saveProject(userAtCleanup.uid, projectToSave).catch(error => {
           // Only log error if it's not a permissions error (which happens on logout)
           if (!error.message?.includes('permissions')) {
             console.error('❌ Error saving on unmount:', error);
@@ -263,10 +256,8 @@ function App() {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
-      console.log('💾 Saving before returning to dashboard...');
       try {
         await saveProject(user.uid, currentProject);
-        console.log('✅ Save completed');
       } catch (error) {
         console.error('❌ Error saving:', error);
         toast.error('Failed to save. Please try again.');
@@ -286,10 +277,8 @@ function App() {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
-      console.log('💾 Saving before going to projects page...');
       try {
         await saveProject(user.uid, currentProject);
-        console.log('✅ Save completed');
       } catch (error) {
         console.error('❌ Error saving:', error);
         toast.error('Failed to save. Please try again.');
@@ -448,7 +437,6 @@ function App() {
           }))
         });
         await saveProject(user.uid, updatedProject);
-        console.log('✅ Project auto-saved to Firebase successfully');
       } catch (error) {
         console.error('❌ Error saving project:', error);
         toast.error('Failed to save changes. Please try again.');

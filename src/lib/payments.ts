@@ -53,7 +53,6 @@ export class PaymentService {
     try {
       // TODO: Initialize React Native StoreKit
       // await RNIap.initConnection();
-      console.log('Payment service initialized');
       return true;
     } catch (error) {
       console.error('Failed to initialize payment service:', error);
@@ -130,7 +129,6 @@ export class PaymentService {
     try {
       // TODO: End StoreKit connection
       // await RNIap.endConnection();
-      console.log('Payment service disposed');
     } catch (error) {
       console.error('Failed to dispose payment service:', error);
     }

@@ -38,7 +38,6 @@ export const getUserSnippets = async (userId: string): Promise<ContentSnippet[]>
       updatedAt: doc.data().updatedAt?.toDate(),
     } as ContentSnippet));
     
-    console.log(`Retrieved ${snippets.length} snippets for user ${userId}`);
     return snippets;
   } catch (error) {
     console.error('Error getting snippets:', error);
@@ -65,7 +64,6 @@ export const getUserSnippets = async (userId: string): Promise<ContentSnippet[]>
           return bTime - aTime;
         });
         
-        console.log(`Retrieved ${snippets.length} snippets (fallback method)`);
         return snippets;
       } catch (fallbackError) {
         console.error('Fallback query also failed:', fallbackError);

@@ -40,7 +40,6 @@ export function useAutoSave({
       setHasUnsavedChanges(false);
       
       // Subtle success indication
-      console.log('Auto-saved successfully');
     } catch (error) {
       console.error('Auto-save failed:', error);
       toast.error('Failed to save changes. Please try again.');

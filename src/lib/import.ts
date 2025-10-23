@@ -87,21 +87,15 @@ function parseHTMLIntoChapters(html: string, splitOnH2: boolean = false): Chapte
   // Process all body elements
   const bodyElements = Array.from(doc.body.children);
   
-  console.log('📄 Parsing HTML, splitOnH2:', splitOnH2);
-  console.log('📝 Found elements:', bodyElements.length);
-  
   bodyElements.forEach((element, index) => {
     const tagName = element.tagName.toLowerCase();
     const text = element.textContent?.trim();
-    
-    console.log(`  ${index}. <${tagName}>: "${text}"`);
     
     // H1 = New chapter (always)
     // H2/H3 = New chapter (if splitOnH2 is true)
     const isNewChapter = tagName === 'h1' || (splitOnH2 && (tagName === 'h2' || tagName === 'h3'));
     
     if (isNewChapter) {
-      console.log(`    ✅ Creating new chapter from <${tagName}>`);
       // Save previous chapter if exists
       if (currentChapterTitle) {
         chapters.push({
@@ -112,7 +106,6 @@ function parseHTMLIntoChapters(html: string, splitOnH2: boolean = false): Chapte
           createdAt: new Date(),
           updatedAt: new Date()
         });
-        console.log(`    💾 Saved chapter: "${currentChapterTitle}" (${contentBuffer.length} content blocks)`);
         contentBuffer = [];
       }
       
@@ -148,10 +141,7 @@ function parseHTMLIntoChapters(html: string, splitOnH2: boolean = false): Chapte
       createdAt: new Date(),
       updatedAt: new Date()
     });
-    console.log(`    💾 Saved final chapter: "${currentChapterTitle}" (${contentBuffer.length} content blocks)`);
   }
-  
-  console.log(`✨ Created ${chapters.length} chapter(s)`);
   
   // If no chapters were created (no headings), create one chapter with all content
   if (chapters.length === 0 && doc.body.textContent?.trim()) {
