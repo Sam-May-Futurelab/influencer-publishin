@@ -110,6 +110,20 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
         </div>
 
         <div className="flex items-center gap-2 w-full lg:w-auto lg:gap-3 flex-wrap lg:flex-nowrap">
+          {/* Cover Design Button - More Prominent */}
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1 lg:flex-none">
+            <Button 
+              onClick={() => setShowCoverDesigner(true)} 
+              variant="outline"
+              size="sm"
+              className="gap-1 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4 w-full"
+            >
+              <ImageIcon size={18} />
+              <span className="hidden lg:inline">Cover Design</span>
+              <span className="lg:hidden">Cover</span>
+            </Button>
+          </motion.div>
+
           {/* Customize Dropdown Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -127,10 +141,6 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
               <DropdownMenuItem onClick={onBrandCustomize} className="cursor-pointer gap-2 p-3">
                 <Palette size={18} />
                 <span>Brand Style</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShowCoverDesigner(true)} className="cursor-pointer gap-2 p-3">
-                <ImageIcon size={18} />
-                <span>Cover Design</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setIsEditing(true)} className="cursor-pointer gap-2 p-3">
                 <Gear size={18} />

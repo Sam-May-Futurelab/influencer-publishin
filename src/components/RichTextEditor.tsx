@@ -39,6 +39,11 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVoiceInput } from '@/hooks/use-voice-input';
 import { toast } from 'sonner';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface RichTextEditorProps {
   content: string;
@@ -266,49 +271,64 @@ export function RichTextEditor({
         <div className="flex items-center gap-1 pr-2 border-r border-border/50">
           {/* AI Assistant Button */}
           {onAIAssistantClick && (
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button
-                onClick={onAIAssistantClick}
-                className="h-8 px-3 gap-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 border-0"
-                size="sm"
-                type="button"
-              >
-                <Sparkle size={16} weight="fill" />
-                <span className="font-medium">AI Assistant</span>
-              </Button>
-            </motion.div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    onClick={onAIAssistantClick}
+                    className="h-8 px-3 gap-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 border-0"
+                    size="sm"
+                    type="button"
+                  >
+                    <Sparkle size={16} weight="fill" />
+                    <span className="font-medium">AI Assistant</span>
+                  </Button>
+                </motion.div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="max-w-xs">
+                <p className="font-semibold mb-1">✨ AI Assistant - Generate New Content</p>
+                <p className="text-xs opacity-90">Opens a sidebar to brainstorm ideas, generate paragraphs, or create entire sections from scratch</p>
+              </TooltipContent>
+            </Tooltip>
           )}
 
           {/* AI Enhancement Button */}
           {onAIEnhanceSelected && (
-            <Button
-              onClick={handleAIEnhance}
-              disabled={isEnhancing}
-              className={cn(
-                "h-8 px-3 gap-1.5 border font-medium transition-all duration-200",
-                hasSelection && !isEnhancing
-                  ? "bg-purple-600 text-white border-purple-600 hover:bg-purple-700"
-                  : "bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 border-purple-300 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-950/30"
-              )}
-              size="sm"
-              type="button"
-              title="Select text in your document to improve it with AI"
-            >
-              <MagicWand 
-                size={16} 
-                weight={hasSelection ? "fill" : "regular"} 
-                className={cn(isEnhancing && "animate-spin")}
-              />
-              <span className="font-medium hidden sm:inline">
-                {isEnhancing ? "Enhancing..." : "Enhance"}
-              </span>
-              <span className="font-medium sm:hidden">
-                {isEnhancing ? "..." : "Enhance"}
-              </span>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleAIEnhance}
+                  disabled={isEnhancing}
+                  className={cn(
+                    "h-8 px-3 gap-1.5 border font-medium transition-all duration-200",
+                    hasSelection && !isEnhancing
+                      ? "bg-purple-600 text-white border-purple-600 hover:bg-purple-700"
+                      : "bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 border-purple-300 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-950/30"
+                  )}
+                  size="sm"
+                  type="button"
+                >
+                  <MagicWand 
+                    size={16} 
+                    weight={hasSelection ? "fill" : "regular"} 
+                    className={cn(isEnhancing && "animate-spin")}
+                  />
+                  <span className="font-medium hidden sm:inline">
+                    {isEnhancing ? "Enhancing..." : "Enhance"}
+                  </span>
+                  <span className="font-medium sm:hidden">
+                    {isEnhancing ? "..." : "Enhance"}
+                  </span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="max-w-xs">
+                <p className="font-semibold mb-1">🪄 Enhance - Improve Existing Text</p>
+                <p className="text-xs opacity-90">Select any text you've written, then click to make it more engaging, fix grammar, or improve clarity</p>
+              </TooltipContent>
+            </Tooltip>
           )}
 
           {/* Voice Input Button */}
