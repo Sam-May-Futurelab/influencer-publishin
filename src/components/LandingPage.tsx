@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { LandingHeader } from '@/components/LandingHeader';
 import { LandingFooter } from '@/components/LandingFooter';
+import { NewsletterSignup } from '@/components/NewsletterSignup';
 import { SEO, createOrganizationSchema, createSoftwareApplicationSchema } from '@/components/SEO';
 import { 
   BookOpen, Sparkles, FileText, Download, Palette, TrendingUp, 
@@ -830,6 +831,13 @@ export function LandingPage() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+        </div>
+      </section>
+
+      {/* Newsletter / Lead Magnet Section */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="max-w-2xl mx-auto">
+          <NewsletterSignup showLeadMagnet={true} />
         </div>
       </section>
 

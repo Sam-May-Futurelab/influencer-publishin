@@ -337,56 +337,6 @@ export function TestimonialsPage() {
         </div>
       </section>
 
-      {/* Video Testimonials */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <Badge variant="secondary" className="mb-4">
-              <Award className="w-3 h-3 mr-1" />
-              Video Success Stories
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              See the Results for Yourself
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Watch how successful creators use Inkfluence AI to grow their business
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {videoTestimonials.map((video, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="neomorph-flat border-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow">
-                  <div className="relative aspect-video bg-gradient-to-br from-primary/10 to-primary/5">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
-                        <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-primary border-b-8 border-b-transparent ml-1"></div>
-                      </div>
-                    </div>
-                    <div className="absolute top-3 right-3 bg-black/70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {video.duration}
-                    </div>
-                  </div>
-                  <CardContent className="p-6">
-                    <h3 className="font-semibold mb-2">{video.title}</h3>
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span>{video.name}</span>
-                      <span>{video.views} views</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* All Testimonials Grid */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">

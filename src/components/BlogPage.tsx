@@ -7,6 +7,7 @@ import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { LandingHeader } from './LandingHeader';
 import { LandingFooter } from './LandingFooter';
+import { NewsletterSignup } from './NewsletterSignup';
 import { SEO, createArticleSchema, createBreadcrumbSchema, createOrganizationSchema } from './SEO';
 import { getAllPosts, getFeaturedPosts, getPostBySlug, getRelatedPosts, BlogPost } from '@/lib/blog';
 import { 
@@ -80,15 +81,18 @@ function BlogPostView({ post, relatedPosts }: { post: BlogPost; relatedPosts: Bl
         onNavigateToBlog={() => navigate('/blog')}
       />
 
-      <article className="container mx-auto px-4 py-12 max-w-4xl">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
-          <button onClick={() => navigate('/')} className="hover:text-primary">Home</button>
-          <span>/</span>
-          <button onClick={() => navigate('/blog')} className="hover:text-primary">Blog</button>
-          <span>/</span>
-          <span className="text-gray-900">{post.title}</span>
-        </div>
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid lg:grid-cols-[1fr_300px] gap-8 max-w-7xl mx-auto">
+          {/* Main Content */}
+          <article>
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+              <button onClick={() => navigate('/')} className="hover:text-primary">Home</button>
+              <span>/</span>
+              <button onClick={() => navigate('/blog')} className="hover:text-primary">Blog</button>
+              <span>/</span>
+              <span className="text-gray-900">{post.title}</span>
+            </div>
 
         {/* Post Header */}
         <header className="mb-8">
@@ -219,7 +223,14 @@ function BlogPostView({ post, relatedPosts }: { post: BlogPost; relatedPosts: Bl
             </div>
           </div>
         )}
-      </article>
+          </article>
+
+          {/* Sidebar */}
+          <aside className="space-y-6">
+            <NewsletterSignup variant="sidebar" showLeadMagnet={false} />
+          </aside>
+        </div>
+      </div>
 
       <LandingFooter 
         onNavigateToPrivacy={() => navigate('/privacy')}
