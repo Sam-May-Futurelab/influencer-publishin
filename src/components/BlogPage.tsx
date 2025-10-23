@@ -506,7 +506,11 @@ export default function BlogPage() {
                         </Badge>
                       ))}
                     </div>
-                    <Button variant="ghost" className="text-[#9b87b8] hover:text-[#8a7ba7] p-0">
+                    <Button 
+                      variant="ghost" 
+                      className="text-[#9b87b8] hover:text-[#8a7ba7] p-0"
+                      onClick={() => navigate(`/blog/${post.slug}`)}
+                    >
                       Read Article
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -558,7 +562,12 @@ export default function BlogPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">{post.excerpt}</p>
-                    <Button variant="ghost" size="sm" className="text-[#9b87b8] hover:text-[#8a7ba7] p-0">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-[#9b87b8] hover:text-[#8a7ba7] p-0"
+                      onClick={() => navigate(`/blog/${post.slug}`)}
+                    >
                       Read More
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
