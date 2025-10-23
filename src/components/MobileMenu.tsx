@@ -62,58 +62,58 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
           {/* Navigation Links */}
           <div className="flex-1 p-6 bg-white overflow-y-auto" style={{ backgroundColor: '#ffffff' }}>
-            <nav className="space-y-2">
+            <nav className="space-y-3">
               <button
                 onClick={() => handleNavigation('/features')}
-                className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-colors font-medium"
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-colors font-medium"
               >
                 Features
               </button>
               
               <button
                 onClick={() => handleNavigation('/pricing')}
-                className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-colors font-medium"
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-colors font-medium"
               >
                 Pricing
               </button>
 
               {/* Resources Section */}
-              <div className="pt-4 pb-2">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <div className="pt-3">
+                <div className="px-5 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   Resources
                 </div>
-                <div className="space-y-1 mt-1">
+                <div className="space-y-2 mt-1">
                   <button
                     onClick={() => handleNavigation('/blog')}
-                    className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-colors"
+                    className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-colors"
                   >
                     Blog
                   </button>
 
                   <button
                     onClick={() => handleNavigation('/help')}
-                    className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-colors"
+                    className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-colors"
                   >
                     Help Center
                   </button>
 
                   <button
                     onClick={() => handleNavigation('/faq')}
-                    className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-colors"
+                    className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-colors"
                   >
                     FAQ
                   </button>
 
                   <button
                     onClick={() => handleNavigation('/testimonials')}
-                    className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-colors"
+                    className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-colors"
                   >
                     Testimonials
                   </button>
 
                   <button
                     onClick={() => handleNavigation('/case-studies')}
-                    className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-colors"
+                    className="w-full text-left px-5 py-3 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-colors"
                   >
                     Case Studies
                   </button>
@@ -122,7 +122,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
               <button
                 onClick={() => handleNavigation('/about')}
-                className="w-full text-left px-4 py-3 text-gray-700 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-lg transition-colors font-medium"
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-colors font-medium"
               >
                 About
               </button>
