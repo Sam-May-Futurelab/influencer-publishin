@@ -6,6 +6,8 @@ import { LandingHeader } from '@/components/LandingHeader';
 import { LandingFooter } from '@/components/LandingFooter';
 import { SEO, createSoftwareApplicationSchema, createBreadcrumbSchema } from '@/components/SEO';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/use-auth';
 import { 
   CheckCircle, 
   Crown, 
@@ -24,12 +26,9 @@ import {
   Brain
 } from 'lucide-react';
 
-interface PricingPageProps {
-  onNavigate: (page: string) => void;
-  isAuthenticated: boolean;
-}
-
-export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
+export function PricingPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
 
   // SEO Meta Tags
@@ -241,13 +240,13 @@ export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
         }}
       />
       <LandingHeader 
-        onSignIn={() => onNavigate('signin')}
-        onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
+        onSignIn={() => navigate('/signin')}
+        onGetStarted={() => navigate(user ? '/app/dashboard' : '/signin')}
         showNavLinks={true}
-        isAuthenticated={isAuthenticated}
-        onNavigateToFeatures={() => onNavigate('features')}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToBlog={() => onNavigate('blog')}
+        isAuthenticated={!!user}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToBlog={() => navigate('/blog')}
       />
 
       {/* Hero Section */}
@@ -352,7 +351,7 @@ export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
                         }`}
                         variant={plan.ctaStyle === 'primary' ? 'default' : 'outline'}
                         size="lg"
-                        onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
+                        onClick={() => navigate(user ? '/app/dashboard' : '/')}
                       >
                         {plan.ctaText}
                         <ArrowRight className="w-4 h-4 ml-2" />
@@ -494,7 +493,7 @@ export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
+              onClick={() => navigate(user ? '/app/dashboard' : '/')}
               className="bg-gradient-to-r from-primary to-accent text-white"
             >
               Start Free Today
@@ -503,7 +502,7 @@ export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
             <Button 
               size="lg" 
               variant="outline" 
-              onClick={() => onNavigate('help')}
+              onClick={() => navigate('/help')}
             >
               <HelpCircle className="w-5 h-5 mr-2" />
               Have Questions?
@@ -513,15 +512,15 @@ export function PricingPage({ onNavigate, isAuthenticated }: PricingPageProps) {
       </section>
 
       <LandingFooter 
-        onNavigateToAbout={() => onNavigate('about')}
-        onNavigateToHelp={() => onNavigate('help')}
-        onNavigateToPrivacy={() => onNavigate('privacy')}
-        onNavigateToTerms={() => onNavigate('terms')}
-        onNavigateToCookies={() => onNavigate('cookies')}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToFeatures={() => onNavigate('features')}
-        onNavigateToBlog={() => onNavigate('blog')}
-        onNavigateToContact={() => onNavigate('contact')}
+        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToHelp={() => navigate('/help')}
+        onNavigateToPrivacy={() => navigate('/privacy')}
+        onNavigateToTerms={() => navigate('/terms')}
+        onNavigateToCookies={() => navigate('/cookies')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
+        onNavigateToContact={() => navigate('/contact')}
       />
     </div>
   );

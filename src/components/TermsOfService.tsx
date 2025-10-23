@@ -2,30 +2,28 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { LandingHeader } from './LandingHeader';
 import { LandingFooter } from './LandingFooter';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/use-auth';
 
-interface TermsOfServiceProps {
-  onBack: () => void;
-  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog', action?: 'signin') => void;
-  isAuthenticated?: boolean;
-}
-
-export function TermsOfService({ onBack, onNavigate, isAuthenticated = false }: TermsOfServiceProps) {
+export function TermsOfService() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   return (
     <div className="min-h-screen bg-background">
       <LandingHeader 
-        onSignIn={() => onNavigate('signin')}
-        onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
+        onSignIn={() => navigate('/signin')}
+        onGetStarted={() => navigate(user ? '/app/dashboard' : '/signin')}
         showNavLinks={true}
-        isAuthenticated={isAuthenticated}
-        onNavigateToFeatures={() => onNavigate('features')}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToBlog={() => onNavigate('blog')}
+        isAuthenticated={!!user}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToBlog={() => navigate('/blog')}
       />
       
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Button
           variant="ghost"
-          onClick={onBack}
+          onClick={() => navigate(-1)}
           className="mb-6"
         >
           <ArrowLeft className="mr-2 w-4 h-4" />
@@ -284,14 +282,15 @@ export function TermsOfService({ onBack, onNavigate, isAuthenticated = false }: 
       </div>
       
       <LandingFooter 
-        onNavigateToPrivacy={() => onNavigate('home')}
-        onNavigateToTerms={() => onNavigate('home')}
-        onNavigateToCookies={() => onNavigate('home')}
-        onNavigateToHelp={() => onNavigate('help')}
-        onNavigateToAbout={() => onNavigate('about')}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToFeatures={() => onNavigate('features')}
-        onNavigateToBlog={() => onNavigate('blog')}
+        onNavigateToPrivacy={() => navigate('/privacy')}
+        onNavigateToTerms={() => navigate('/terms')}
+        onNavigateToCookies={() => navigate('/cookies')}
+        onNavigateToHelp={() => navigate('/help')}
+        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
+        onNavigateToContact={() => navigate('/contact')}
       />
     </div>
   );

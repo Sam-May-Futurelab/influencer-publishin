@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
@@ -7,13 +8,11 @@ import { LandingHeader } from './LandingHeader';
 import { LandingFooter } from './LandingFooter';
 import { SEO, createSoftwareApplicationSchema, createBreadcrumbSchema } from './SEO';
 import { Sparkles, BookOpen, Palette, Target, Zap, Shield, Globe, Users, Clock, Download, Share2, TrendingUp, Brain, Eye, Layers, MousePointer, Smartphone, Cloud, Mic } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 
-interface FeaturesPageProps {
-  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'contact', action?: 'signin') => void;
-  isAuthenticated?: boolean;
-}
-
-export default function FeaturesPage({ onNavigate, isAuthenticated = false }: FeaturesPageProps) {
+export default function FeaturesPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const coreFeatures = [
     {
@@ -143,13 +142,13 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
         }}
       />
       <LandingHeader 
-        onGetStarted={() => onNavigate('signin')}
-        onSignIn={() => onNavigate('signin')}
+        onGetStarted={() => navigate('/signin')}
+        onSignIn={() => navigate('/signin')}
         showNavLinks={true}
-        isAuthenticated={isAuthenticated}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToFeatures={() => onNavigate('features')}
-        onNavigateToBlog={() => onNavigate('blog')}
+        isAuthenticated={!!user}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
       />
 
       {/* Hero Section */}
@@ -171,7 +170,7 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
               <Button 
                 size="lg" 
                 className="bg-white text-[#9b87b8] hover:bg-gray-50 font-semibold px-8 py-4 text-lg"
-                onClick={() => onNavigate('signin')}
+                onClick={() => navigate('/signin')}
               >
                 <Zap className="mr-2 h-5 w-5" />
                 Start Creating Free
@@ -180,7 +179,7 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
                 size="lg" 
                 variant="outline" 
                 className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-4 text-lg"
-                onClick={() => onNavigate('pricing')}
+                onClick={() => navigate('/pricing')}
               >
                 View Pricing
               </Button>
@@ -318,7 +317,7 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
             <Button 
               size="lg" 
               className="bg-white text-[#9b87b8] hover:bg-gray-50 font-semibold px-8 py-4 text-lg"
-              onClick={() => onNavigate('signin')}
+              onClick={() => navigate('/signin')}
             >
               <BookOpen className="mr-2 h-5 w-5" />
               Start Creating Now
@@ -327,7 +326,7 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
               size="lg" 
               variant="outline" 
               className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-4 text-lg"
-              onClick={() => onNavigate('help')}
+              onClick={() => navigate('/help')}
             >
               <Globe className="mr-2 h-5 w-5" />
               Learn More
@@ -340,15 +339,15 @@ export default function FeaturesPage({ onNavigate, isAuthenticated = false }: Fe
       </div>
 
       <LandingFooter 
-        onNavigateToPrivacy={() => onNavigate('privacy')}
-        onNavigateToTerms={() => onNavigate('terms')}
-        onNavigateToCookies={() => onNavigate('cookies')}
-        onNavigateToHelp={() => onNavigate('help')}
-        onNavigateToAbout={() => onNavigate('about')}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToFeatures={() => onNavigate('features')}
-        onNavigateToBlog={() => onNavigate('blog')}
-        onNavigateToContact={() => onNavigate('contact')}
+        onNavigateToPrivacy={() => navigate('/privacy')}
+        onNavigateToTerms={() => navigate('/terms')}
+        onNavigateToCookies={() => navigate('/cookies')}
+        onNavigateToHelp={() => navigate('/help')}
+        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
+        onNavigateToContact={() => navigate('/contact')}
       />
     </div>
   );

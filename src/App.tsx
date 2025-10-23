@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { useAuth } from '@/hooks/use-auth';
 import { incrementPageUsage, syncPageUsage, updateUserProfile } from '@/lib/auth';
@@ -66,7 +66,6 @@ function App() {
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [viewMode, setViewMode] = useState<'dashboard' | 'projects' | 'templates' | 'snippets' | 'profile' | 'project' | 'privacy' | 'terms' | 'cookies' | 'about' | 'help' | 'pricing' | 'features' | 'blog' | 'contact'>('dashboard');
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -116,32 +115,7 @@ function App() {
     }
   }, [user, userProfile]);
 
-  // Simple URL-based routing without circular dependencies
-  useEffect(() => {
-    const path = location.pathname;
-    
-    if (path === '/about') {
-      setViewMode('about');
-    } else if (path === '/help') {
-      setViewMode('help');
-    } else if (path === '/pricing') {
-      setViewMode('pricing');
-    } else if (path === '/features') {
-      setViewMode('features');
-    } else if (path === '/blog') {
-      setViewMode('blog');
-    } else if (path === '/contact') {
-      setViewMode('contact');
-    } else if (path === '/privacy') {
-      setViewMode('privacy');
-    } else if (path === '/terms') {
-      setViewMode('terms');
-    } else if (path === '/cookies') {
-      setViewMode('cookies');
-    } else if (path === '/') {
-      setViewMode('dashboard');
-    }
-  }, [location.pathname]);
+  // URL-based routing is now handled by React Router
 
   // Force save on unmount or when currentProject changes
   useEffect(() => {
@@ -227,7 +201,7 @@ function App() {
           refreshProfile();
         }, 2000);
         // Navigate to dashboard after showing success
-        setViewMode('dashboard');
+        navigate('/app/dashboard');
       }
       // Clean up URL
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -235,7 +209,7 @@ function App() {
       toast.info('Payment canceled. You can upgrade anytime!');
       // Navigate to dashboard if authenticated, otherwise landing page
       if (user) {
-        setViewMode('dashboard');
+        navigate('/app/dashboard');
       }
       // Clean up URL
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -275,7 +249,7 @@ function App() {
     // Auto-select first chapter if available
     const firstChapter = project.chapters.length > 0 ? project.chapters[0] : null;
     setCurrentChapter(firstChapter);
-    setViewMode('project');
+    navigate('/app/editor');
     setCurrentSection('editor');
   };
 
@@ -298,7 +272,7 @@ function App() {
     
     setCurrentProject(null);
     setCurrentChapter(null);
-    setViewMode('dashboard');
+    navigate('/app/dashboard');
     setCurrentSection('dashboard');
   };
 
@@ -321,21 +295,21 @@ function App() {
     
     setCurrentProject(null);
     setCurrentChapter(null);
-    setViewMode('projects');
+    navigate('/app/projects');
     setCurrentSection('projects');
   };
 
   const goToTemplatesPage = () => {
     setCurrentProject(null);
     setCurrentChapter(null);
-    setViewMode('templates');
+    navigate('/app/templates');
     setCurrentSection('templates');
   };
 
   const goToSnippetsPage = () => {
     setCurrentProject(null);
     setCurrentChapter(null);
-    setViewMode('snippets');
+    navigate('/app/snippets');
     setCurrentSection('snippets');
   };
 
@@ -343,14 +317,14 @@ function App() {
     // Settings merged into Profile page
     setCurrentProject(null);
     setCurrentChapter(null);
-    setViewMode('profile');
+    navigate('/app/profile');
     setCurrentSection('profile');
   };
 
   const goToProfilePage = () => {
     setCurrentProject(null);
     setCurrentChapter(null);
-    setViewMode('profile');
+    navigate('/app/profile');
     setCurrentSection('profile');
   };
 
@@ -503,7 +477,7 @@ function App() {
       // Clear current project without saving
       setCurrentProject(null);
       setCurrentChapter(null);
-      setViewMode('dashboard');
+      navigate('/app/dashboard');
       setCurrentSection('dashboard');
       
       toast.success('Project deleted successfully');
@@ -685,375 +659,243 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background font-['Inter']">
-      {/* Show legal pages for both authenticated and non-authenticated users */}
-      {viewMode === 'privacy' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <PrivacyPolicy 
-              onBack={() => navigate('/')} 
-              onNavigate={handleNavigation}
-              isAuthenticated={!!user}
-            />
-          </Suspense>
-        </main>
-      ) : viewMode === 'terms' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <TermsOfService 
-              onBack={() => navigate('/')} 
-              onNavigate={handleNavigation}
-              isAuthenticated={!!user}
-            />
-          </Suspense>
-        </main>
-      ) : viewMode === 'cookies' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <CookiePolicy 
-              onBack={() => navigate('/')} 
-              onNavigate={handleNavigation}
-              isAuthenticated={!!user}
-            />
-          </Suspense>
-        </main>
-      ) : viewMode === 'about' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <AboutPage 
-              onNavigate={(page) => {
-                if (page === 'landing') {
-                  navigate('/');
-                } else if (page === 'signin') {
-                  navigate('/');
-                  setShowAuthModal(true);
-                } else if (page === 'dashboard') {
-                  if (user) {
-                    navigate('/');
-                  } else {
-                    setShowAuthModal(true);
-                  }
-                } else if (page === 'help') {
-                  navigate('/help');
-                }
-              }}
-              isAuthenticated={!!user}
-            />
-          </Suspense>
-        </main>
-      ) : viewMode === 'help' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <HelpCenter 
-              onNavigate={(page) => {
-                if (page === 'landing') {
-                  navigate('/');
-                } else if (page === 'signin') {
-                  navigate('/');
-                  setShowAuthModal(true);
-                } else if (page === 'dashboard') {
-                  if (user) {
-                    navigate('/');
-                  } else {
-                    setShowAuthModal(true);
-                  }
-                } else if (page === 'about') {
-                  navigate('/about');
-                } else if (page === 'contact') {
-                  navigate('/contact');
-                }
-              }}
-              isAuthenticated={!!user}
-            />
-          </Suspense>
-        </main>
-      ) : viewMode === 'pricing' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <PricingPage 
-              onNavigate={(page) => {
-                if (page === 'landing') {
-                  navigate('/');
-                } else if (page === 'signin') {
-                  navigate('/');
-                  setShowAuthModal(true);
-                } else if (page === 'dashboard') {
-                  if (user) {
-                    navigate('/');
-                  } else {
-                    setShowAuthModal(true);
-                  }
-                } else if (page === 'help') {
-                  navigate('/help');
-                } else if (page === 'about') {
-                  navigate('/about');
-                }
-              }}
-              isAuthenticated={!!user}
-            />
-          </Suspense>
-        </main>
-      ) : viewMode === 'features' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <FeaturesPage 
-              onNavigate={(page, action) => {
-                if (page === 'signin' || (page === 'home' && action === 'signin')) {
-                  navigate('/');
-                  setShowAuthModal(true);
-                } else if (page === 'home') {
-                  navigate('/');
-                } else if (page === 'pricing') {
-                  navigate('/pricing');
-                } else if (page === 'help') {
-                  navigate('/help');
-                } else if (page === 'about') {
-                  navigate('/about');
-                } else if (page === 'features') {
-                  navigate('/features');
-                } else if (page === 'dashboard') {
-                  if (user) {
-                    navigate('/');
-                  } else {
-                    setShowAuthModal(true);
-                  }
-                }
-              }}
-              isAuthenticated={!!user}
-            />
-          </Suspense>
-        </main>
-      ) : viewMode === 'blog' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <BlogPage 
-              onNavigate={(page, action) => {
-                if (page === 'signin' || (page === 'home' && action === 'signin')) {
-                  navigate('/');
-                  setShowAuthModal(true);
-                } else if (page === 'home') {
-                  navigate('/');
-                } else if (page === 'pricing') {
-                  navigate('/pricing');
-                } else if (page === 'features') {
-                  navigate('/features');
-                } else if (page === 'help') {
-                  navigate('/help');
-                } else if (page === 'about') {
-                  navigate('/about');
-                } else if (page === 'blog') {
-                  navigate('/blog');
-                } else if (page === 'dashboard') {
-                  if (user) {
-                    navigate('/');
-                  } else {
-                    setShowAuthModal(true);
-                  }
-                }
-              }}
-              isAuthenticated={!!user}
-            />
-          </Suspense>
-        </main>
-      ) : viewMode === 'contact' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <ContactPage 
-              onNavigate={(page) => {
-                if (page === 'signin') {
-                  navigate('/');
-                  setShowAuthModal(true);
-                } else if (page === 'home') {
-                  navigate('/');
-                } else if (page === 'pricing') {
-                  navigate('/pricing');
-                } else if (page === 'features') {
-                  navigate('/features');
-                } else if (page === 'help') {
-                  navigate('/help');
-                } else if (page === 'about') {
-                  navigate('/about');
-                } else if (page === 'blog') {
-                  navigate('/blog');
-                } else if (page === 'privacy') {
-                  navigate('/privacy');
-                } else if (page === 'terms') {
-                  navigate('/terms');
-                } else if (page === 'cookies') {
-                  navigate('/cookies');
-                } else if (page === 'dashboard') {
-                  if (user) {
-                    navigate('/');
-                  } else {
-                    setShowAuthModal(true);
-                  }
-                }
-              }}
-              isAuthenticated={!!user}
-            />
-          </Suspense>
-        </main>
-      ) : !user ? (
-        /* Show Landing Page if user is not authenticated */
-        <LandingPage 
-          onGetStarted={() => setShowAuthModal(true)}
-          onSignIn={() => setShowAuthModal(true)}
-          onNavigateToPrivacy={() => navigate('/privacy')}
-          onNavigateToTerms={() => navigate('/terms')}
-          onNavigateToCookies={() => navigate('/cookies')}
-          onNavigateToHelp={() => navigate('/help')}
-          onNavigateToAbout={() => navigate('/about')}
-          onNavigateToPricing={() => navigate('/pricing')}
-          onNavigateToFeatures={() => navigate('/features')}
-          onNavigateToBlog={() => navigate('/blog')}
-          onNavigateToContact={() => navigate('/contact')}
-        />
-      ) : user && (
-        <>
-          <Header
-            logoText="Inkfluence AI"
-            onNavigate={handleNavigation}
-            currentSection={currentSection}
-            notifications={0}
-          />
-          
-          {viewMode === 'dashboard' ? (
-            <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-              <Suspense fallback={<PageLoading />}>
-                {projectsLoading ? (
-                  <PageLoading />
-                ) : (
-              <Dashboard
-                projects={projects}
-                onSelectProject={selectProject}
-                onCreateProject={createProject}
-                onShowTemplateGallery={goToTemplatesPage}
-                onDeleteProject={deleteProject}
-              />
-            )}
-          </Suspense>
-        </main>
-      ) : viewMode === 'projects' ? (
-        <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-          <Suspense fallback={<PageLoading />}>
-            {projectsLoading ? (
-              <PageLoading />
-            ) : (
-              <ProjectsPage
-                projects={projects}
-                onSelectProject={selectProject}
-                onCreateProject={createProject}
-                onShowTemplateGallery={goToTemplatesPage}
-                onDeleteProject={deleteProject}
-                onRenameProject={renameProject}
-                onDuplicateProject={duplicateProject}
-                onToggleFavorite={toggleFavorite}
-              />
-            )}
-          </Suspense>
-        </main>
-      ) : viewMode === 'templates' ? (
-        <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-          <Suspense fallback={<PageLoading />}>
-            <TemplateGallery
-              onSelectTemplate={createProjectFromTemplate}
-              onShowUpgradeModal={() => setShowUpgradeModal(true)}
-              onClose={() => {
-                // Go back to where we came from
-                if (currentSection === 'projects') {
-                  goToProjectsPage();
-                } else {
-                  returnToDashboard();
-                }
-              }}
-            />
-          </Suspense>
-        </main>
-      ) : viewMode === 'snippets' ? (
-        <main className="p-3 lg:p-6 pb-6 lg:pb-8">
-          <Suspense fallback={<PageLoading />}>
-            <SnippetsPage />
-          </Suspense>
-        </main>
-      ) : viewMode === 'profile' ? (
-        <main className="p-0">
-          <Suspense fallback={<PageLoading />}>
-            <ProfilePage onNavigate={handleNavigation} />
-          </Suspense>
-        </main>
-      ) : currentProject ? (
-        <>
-          <div className="flex items-center gap-3 px-3 lg:px-6 pt-3 lg:pt-6">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                if (viewMode === 'project') {
-                  // Go back to where we came from (dashboard, projects, or templates)
-                  if (currentSection === 'projects') {
-                    goToProjectsPage();
-                  } else if (currentSection === 'templates') {
-                    goToTemplatesPage();
-                  } else {
-                    returnToDashboard();
-                  }
-                }
-              }}
-              className="neomorph-button border-0 gap-2"
-            >
-              <ArrowLeft size={16} />
-              <span className="hidden lg:inline">
-                {currentSection === 'projects' ? 'Back to Projects' : 
-                 currentSection === 'templates' ? 'Back to Templates' : 
-                 'Back to Dashboard'}
-              </span>
-              <span className="lg:hidden">Back</span>
-            </Button>
-          </div>
-          
-          <ProjectHeader
-            project={currentProject}
-            onProjectUpdate={updateProject}
-            onBrandCustomize={() => setShowBrandCustomizer(true)}
-            onUpgradeClick={() => setCurrentSection('profile')}
-            onDeleteProject={handleDeleteCurrentProject}
-          />
-          
-          <main className="p-3 lg:p-6 pb-6 lg:pb-8 space-y-6">
-            <UsageTracker 
-              onUpgradeClick={() => setShowUpgradeModal(true)}
-            />
-            
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={!user ? <LandingPage /> : <Navigate to="/app/dashboard" replace />} />
+        <Route path="/privacy" element={
+          <main className="p-0">
             <Suspense fallback={<PageLoading />}>
-              <ChapterEditor
-                chapters={currentProject.chapters}
-                currentChapter={currentChapter}
-                onChapterSelect={setCurrentChapter}
-                onChapterCreate={createChapter}
-                onChapterUpdate={updateChapter}
-                onChapterDelete={deleteChapter}
-                onChapterReorder={reorderChapters}
-                onRecordWritingSession={recordWritingSession}
-                projectId={currentProject.id}
-                ebookCategory={currentProject.category || 'general'}
-                targetAudience={currentProject.targetAudience}
-                projectTitle={currentProject.title}
-                projectAuthor={currentProject.author}
-                projectDescription={currentProject.description}
-                brandConfig={currentProject.brandConfig}
-              />
+              <PrivacyPolicy />
             </Suspense>
           </main>
+        } />
+        <Route path="/terms" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <TermsOfService />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/cookies" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <CookiePolicy />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/about" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <AboutPage />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/help" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <HelpCenter />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/pricing" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <PricingPage />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/features" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <FeaturesPage />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/blog" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <BlogPage />
+            </Suspense>
+          </main>
+        } />
+        <Route path="/contact" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <ContactPage />
+            </Suspense>
+          </main>
+        } />
 
-          <Suspense fallback={<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>}>
-            <BrandCustomizer
-              brandConfig={currentProject.brandConfig || defaultBrandConfig}
-              onUpdate={updateBrandConfig}
-              isOpen={showBrandCustomizer}
-              onClose={() => setShowBrandCustomizer(false)}
-            />
-          </Suspense>
-        </>
-      ) : null}
+        {/* Protected Routes */}
+        <Route path="/app/*" element={
+          user ? (
+            <>
+              <Header
+                logoText="Inkfluence AI"
+                onNavigate={handleNavigation}
+                currentSection={currentSection}
+                notifications={0}
+              />
+              <Routes>
+                <Route path="dashboard" element={
+                  <main className="p-3 lg:p-6 pb-6 lg:pb-8">
+                    <Suspense fallback={<PageLoading />}>
+                      {projectsLoading ? (
+                        <PageLoading />
+                      ) : (
+                        <Dashboard
+                          projects={projects}
+                          onSelectProject={selectProject}
+                          onCreateProject={createProject}
+                          onShowTemplateGallery={goToTemplatesPage}
+                          onDeleteProject={deleteProject}
+                        />
+                      )}
+                    </Suspense>
+                  </main>
+                } />
+                <Route path="projects" element={
+                  <main className="p-3 lg:p-6 pb-6 lg:pb-8">
+                    <Suspense fallback={<PageLoading />}>
+                      {projectsLoading ? (
+                        <PageLoading />
+                      ) : (
+                        <ProjectsPage
+                          projects={projects}
+                          onSelectProject={selectProject}
+                          onCreateProject={createProject}
+                          onShowTemplateGallery={goToTemplatesPage}
+                          onDeleteProject={deleteProject}
+                          onRenameProject={renameProject}
+                          onDuplicateProject={duplicateProject}
+                          onToggleFavorite={toggleFavorite}
+                        />
+                      )}
+                    </Suspense>
+                  </main>
+                } />
+                <Route path="templates" element={
+                  <main className="p-3 lg:p-6 pb-6 lg:pb-8">
+                    <Suspense fallback={<PageLoading />}>
+                      <TemplateGallery
+                        onSelectTemplate={createProjectFromTemplate}
+                        onShowUpgradeModal={() => setShowUpgradeModal(true)}
+                        onClose={() => {
+                          // Go back to where we came from
+                          if (currentSection === 'projects') {
+                            goToProjectsPage();
+                          } else {
+                            returnToDashboard();
+                          }
+                        }}
+                      />
+                    </Suspense>
+                  </main>
+                } />
+                <Route path="snippets" element={
+                  <main className="p-3 lg:p-6 pb-6 lg:pb-8">
+                    <Suspense fallback={<PageLoading />}>
+                      <SnippetsPage />
+                    </Suspense>
+                  </main>
+                } />
+                <Route path="profile" element={
+                  <main className="p-0">
+                    <Suspense fallback={<PageLoading />}>
+                      <ProfilePage onNavigate={handleNavigation} />
+                    </Suspense>
+                  </main>
+                } />
+                <Route path="editor" element={
+                  currentProject ? (
+                    <>
+                      <div className="flex items-center gap-3 px-3 lg:px-6 pt-3 lg:pt-6">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            // Go back to where we came from (dashboard, projects, or templates)
+                            if (currentSection === 'projects') {
+                              goToProjectsPage();
+                            } else if (currentSection === 'templates') {
+                              goToTemplatesPage();
+                            } else {
+                              returnToDashboard();
+                            }
+                          }}
+                          className="neomorph-button border-0 gap-2"
+                        >
+                          <ArrowLeft size={16} />
+                          <span className="hidden lg:inline">
+                            {currentSection === 'projects' ? 'Back to Projects' : 
+                             currentSection === 'templates' ? 'Back to Templates' : 
+                             'Back to Dashboard'}
+                          </span>
+                          <span className="lg:hidden">Back</span>
+                        </Button>
+                      </div>
+                      
+                      <ProjectHeader
+                        project={currentProject}
+                        onProjectUpdate={updateProject}
+                        onBrandCustomize={() => setShowBrandCustomizer(true)}
+                        onUpgradeClick={() => setCurrentSection('profile')}
+                        onDeleteProject={handleDeleteCurrentProject}
+                      />
+                      
+                      <main className="p-3 lg:p-6 pb-6 lg:pb-8 space-y-6">
+                        <UsageTracker 
+                          onUpgradeClick={() => setShowUpgradeModal(true)}
+                        />
+                        
+                        <Suspense fallback={<PageLoading />}>
+                          <ChapterEditor
+                            chapters={currentProject.chapters}
+                            currentChapter={currentChapter}
+                            onChapterSelect={setCurrentChapter}
+                            onChapterCreate={createChapter}
+                            onChapterUpdate={updateChapter}
+                            onChapterDelete={deleteChapter}
+                            onChapterReorder={reorderChapters}
+                            onRecordWritingSession={recordWritingSession}
+                            projectId={currentProject.id}
+                            ebookCategory={currentProject.category || 'general'}
+                            targetAudience={currentProject.targetAudience}
+                            projectTitle={currentProject.title}
+                            projectAuthor={currentProject.author}
+                            projectDescription={currentProject.description}
+                            brandConfig={currentProject.brandConfig}
+                          />
+                        </Suspense>
+                      </main>
+
+                      <Suspense fallback={<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>}>
+                        <BrandCustomizer
+                          brandConfig={currentProject.brandConfig || defaultBrandConfig}
+                          onUpdate={updateBrandConfig}
+                          isOpen={showBrandCustomizer}
+                          onClose={() => setShowBrandCustomizer(false)}
+                        />
+                      </Suspense>
+                    </>
+                  ) : (
+                    <Navigate to="/app/dashboard" replace />
+                  )
+                } />
+              </Routes>
+              <AppFooter 
+                onNavigateToPrivacy={() => navigate('/privacy')}
+                onNavigateToTerms={() => navigate('/terms')}
+                onNavigateToCookies={() => navigate('/cookies')}
+                onNavigateToHelp={() => navigate('/help')}
+                onNavigateToAbout={() => navigate('/about')}
+              />
+            </>
+          ) : (
+            <Navigate to="/?signin=true" replace />
+          )
+        } />
+      </Routes>
 
       <AuthGuardDialog
         isOpen={showAuthGuard}
@@ -1076,17 +918,6 @@ function App() {
         onClose={() => setShowUpgradeModal(false)}
         highlightMessage="You've reached your page limit! Upgrade to Premium for unlimited pages."
       />
-
-          {/* App Footer - Only show when authenticated */}
-          <AppFooter 
-            onNavigateToPrivacy={() => navigate('/privacy')}
-            onNavigateToTerms={() => navigate('/terms')}
-            onNavigateToCookies={() => navigate('/cookies')}
-            onNavigateToHelp={() => navigate('/help')}
-            onNavigateToAbout={() => navigate('/about')}
-          />
-        </>
-      )}
 
       {/* Auth Modal - Show for both authenticated and non-authenticated users */}
       <AuthModal

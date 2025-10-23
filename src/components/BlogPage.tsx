@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
@@ -22,11 +24,6 @@ import {
   Brain,
   Sparkles
 } from 'lucide-react';
-
-interface BlogPageProps {
-  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog', action?: 'signin') => void;
-  isAuthenticated?: boolean;
-}
 
 interface BlogPost {
   id: string;
@@ -125,7 +122,9 @@ const blogPosts: BlogPost[] = [
 
 const categories = ['All', 'AI Writing', 'Marketing', 'Design', 'Productivity', 'SEO'];
 
-export default function BlogPage({ onNavigate, isAuthenticated = false }: BlogPageProps) {
+export default function BlogPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
@@ -191,13 +190,13 @@ export default function BlogPage({ onNavigate, isAuthenticated = false }: BlogPa
       />
       
       <LandingHeader 
-        onGetStarted={() => onNavigate('signin')}
-        onSignIn={() => onNavigate('signin')}
+        onGetStarted={() => navigate('/signin')}
+        onSignIn={() => navigate('/signin')}
         showNavLinks={true}
-        isAuthenticated={isAuthenticated}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToFeatures={() => onNavigate('features')}
-        onNavigateToBlog={() => onNavigate('blog')}
+        isAuthenticated={!!user}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
       />
 
       {/* Hero Section */}
@@ -371,7 +370,7 @@ export default function BlogPage({ onNavigate, isAuthenticated = false }: BlogPa
             />
             <Button 
               className="bg-white text-[#9b87b8] hover:bg-gray-50 font-semibold whitespace-nowrap"
-              onClick={() => onNavigate('signin')}
+              onClick={() => navigate('/signin')}
             >
               Get Started Free
             </Button>
@@ -383,13 +382,15 @@ export default function BlogPage({ onNavigate, isAuthenticated = false }: BlogPa
       </div>
 
       <LandingFooter 
-        onNavigateToPrivacy={() => onNavigate('home')}
-        onNavigateToTerms={() => onNavigate('home')}
-        onNavigateToCookies={() => onNavigate('home')}
-        onNavigateToHelp={() => onNavigate('help')}
-        onNavigateToAbout={() => onNavigate('about')}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToFeatures={() => onNavigate('features')}
+        onNavigateToPrivacy={() => navigate('/privacy')}
+        onNavigateToTerms={() => navigate('/terms')}
+        onNavigateToCookies={() => navigate('/cookies')}
+        onNavigateToHelp={() => navigate('/help')}
+        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
+        onNavigateToContact={() => navigate('/contact')}
       />
     </div>
   );

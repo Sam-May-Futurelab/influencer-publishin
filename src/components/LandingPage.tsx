@@ -15,22 +15,42 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { motion } from 'framer-motion';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '@/hooks/use-auth';
+import { useState, useEffect } from 'react';
+import { AuthModal } from './AuthModal';
 
-interface LandingPageProps {
-  onGetStarted: () => void;
-  onSignIn: () => void;
-  onNavigateToPrivacy?: () => void;
-  onNavigateToTerms?: () => void;
-  onNavigateToCookies?: () => void;
-  onNavigateToHelp?: () => void;
-  onNavigateToAbout?: () => void;
-  onNavigateToPricing?: () => void;
-  onNavigateToFeatures?: () => void;
-  onNavigateToBlog?: () => void;
-  onNavigateToContact?: () => void;
-}
-
-export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout, onNavigateToPricing, onNavigateToFeatures, onNavigateToBlog, onNavigateToContact }: LandingPageProps) {
+export function LandingPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  
+  // Check if signin param is in URL
+  useEffect(() => {
+    if (searchParams.get('signin') === 'true') {
+      setShowAuthModal(true);
+    }
+  }, [searchParams]);
+  
+  const handleGetStarted = () => {
+    if (user) {
+      navigate('/app/dashboard');
+    } else {
+      setShowAuthModal(true);
+    }
+  };
+  
+  const handleSignIn = () => {
+    setShowAuthModal(true);
+  };
+  
+  const handleAuthModalClose = () => {
+    setShowAuthModal(false);
+    // Remove signin param from URL
+    searchParams.delete('signin');
+    setSearchParams(searchParams);
+  };
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -54,14 +74,14 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
         }}
       />
       <LandingHeader 
-        onGetStarted={onGetStarted}
-        onSignIn={onSignIn}
+        onGetStarted={handleGetStarted}
+        onSignIn={handleSignIn}
         scrollToSection={scrollToSection}
         showNavLinks={true}
-        isAuthenticated={false}
-        onNavigateToPricing={onNavigateToPricing}
-        onNavigateToFeatures={onNavigateToFeatures}
-        onNavigateToBlog={onNavigateToBlog}
+        isAuthenticated={!!user}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
       />
 
       {/* Hero Section */}
@@ -93,7 +113,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg"
-                onClick={onGetStarted}
+                onClick={handleGetStarted}
                 className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90 text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all"
               >
                 <Sparkles className="mr-2 w-5 h-5" />
@@ -210,7 +230,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 </li>
               </ul>
               <Button 
-                onClick={onGetStarted}
+                onClick={handleGetStarted}
                 size="lg"
                 className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
               >
@@ -267,7 +287,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 </li>
               </ul>
               <Button 
-                onClick={onGetStarted}
+                onClick={handleGetStarted}
                 size="lg"
                 className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
               >
@@ -311,7 +331,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 </li>
               </ul>
               <Button 
-                onClick={onGetStarted}
+                onClick={handleGetStarted}
                 size="lg"
                 className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
               >
@@ -368,7 +388,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 </li>
               </ul>
               <Button 
-                onClick={onGetStarted}
+                onClick={handleGetStarted}
                 size="lg"
                 className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
               >
@@ -425,7 +445,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 </li>
               </ul>
               <Button 
-                onClick={onGetStarted}
+                onClick={handleGetStarted}
                 size="lg"
                 className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
               >
@@ -533,7 +553,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 </li>
               </ul>
               <Button 
-                onClick={onGetStarted}
+                onClick={handleGetStarted}
                 variant="outline"
                 className="w-full border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8]"
                 size="lg"
@@ -587,7 +607,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
                 </li>
               </ul>
               <Button 
-                onClick={onGetStarted}
+                onClick={handleGetStarted}
                 className="w-full bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
                 size="lg"
               >
@@ -689,7 +709,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg"
-              onClick={onGetStarted}
+              onClick={handleGetStarted}
               variant="secondary"
               className="bg-white text-[#9b87b8] hover:bg-gray-100 text-lg px-8 py-6 shadow-lg"
             >
@@ -698,7 +718,7 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
             </Button>
             <Button 
               size="lg"
-              onClick={onSignIn}
+              onClick={handleSignIn}
               variant="outline"
               className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6"
             >
@@ -709,16 +729,18 @@ export function LandingPage({ onGetStarted, onSignIn, onNavigateToPrivacy, onNav
       </section>
 
       <LandingFooter 
-        onNavigateToPrivacy={onNavigateToPrivacy}
-        onNavigateToTerms={onNavigateToTerms}
-        onNavigateToCookies={onNavigateToCookies}
-        onNavigateToHelp={onNavigateToHelp}
-        onNavigateToAbout={onNavigateToAbout}
-        onNavigateToPricing={onNavigateToPricing}
-        onNavigateToFeatures={onNavigateToFeatures}
-        onNavigateToBlog={onNavigateToBlog}
-        onNavigateToContact={onNavigateToContact}
+        onNavigateToPrivacy={() => navigate('/privacy')}
+        onNavigateToTerms={() => navigate('/terms')}
+        onNavigateToCookies={() => navigate('/cookies')}
+        onNavigateToHelp={() => navigate('/help')}
+        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
+        onNavigateToContact={() => navigate('/contact')}
       />
+      
+      <AuthModal isOpen={showAuthModal} onOpenChange={(open) => !open && handleAuthModalClose()} />
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LandingHeader } from '@/components/LandingHeader';
 import { LandingFooter } from '@/components/LandingFooter';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/use-auth';
 import { 
   Sparkles, 
   Zap, 
@@ -19,12 +21,9 @@ import {
   Globe
 } from 'lucide-react';
 
-interface AboutPageProps {
-  onNavigate: (page: 'home' | 'dashboard' | 'profile' | 'projects' | 'settings' | 'help' | 'pricing' | 'features' | 'about' | 'signin' | 'blog' | 'privacy' | 'terms' | 'cookies' | 'landing' | 'contact') => void;
-  isAuthenticated: boolean;
-}
-
-export function AboutPage({ onNavigate, isAuthenticated }: AboutPageProps) {
+export function AboutPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const features = [
     {
@@ -92,13 +91,13 @@ export function AboutPage({ onNavigate, isAuthenticated }: AboutPageProps) {
   return (
     <div className="min-h-screen bg-background">
       <LandingHeader 
-        onSignIn={() => onNavigate('signin')}
-        onGetStarted={() => onNavigate(isAuthenticated ? 'dashboard' : 'signin')}
+        onSignIn={() => navigate('/signin')}
+        onGetStarted={() => navigate(user ? '/app/dashboard' : '/signin')}
         showNavLinks={true}
-        isAuthenticated={isAuthenticated}
-        onNavigateToFeatures={() => onNavigate('features')}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToBlog={() => onNavigate('blog')}
+        isAuthenticated={!!user}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToBlog={() => navigate('/blog')}
       />
 
       {/* Hero Section */}
@@ -261,11 +260,11 @@ export function AboutPage({ onNavigate, isAuthenticated }: AboutPageProps) {
             Join thousands of creators who are already using Inkfluence AI to bring their ideas to life.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}>
+            <Button size="lg" onClick={() => navigate(user ? '/app/dashboard' : '/')}>
               <Sparkles className="w-5 h-5 mr-2" />
-              {isAuthenticated ? 'Go to Dashboard' : 'Start Creating Free'}
+              {user ? 'Go to Dashboard' : 'Start Creating Free'}
             </Button>
-            <Button size="lg" variant="outline" onClick={() => onNavigate('help')}>
+            <Button size="lg" variant="outline" onClick={() => navigate('/help')}>
               <BookOpen className="w-5 h-5 mr-2" />
               Learn More
             </Button>
@@ -274,15 +273,15 @@ export function AboutPage({ onNavigate, isAuthenticated }: AboutPageProps) {
       </section>
 
       <LandingFooter 
-        onNavigateToAbout={() => onNavigate('about')}
-        onNavigateToHelp={() => onNavigate('help')}
-        onNavigateToPrivacy={() => onNavigate('privacy')}
-        onNavigateToTerms={() => onNavigate('terms')}
-        onNavigateToCookies={() => onNavigate('cookies')}
-        onNavigateToContact={() => onNavigate('contact')}
-        onNavigateToPricing={() => onNavigate('pricing')}
-        onNavigateToFeatures={() => onNavigate('features')}
-        onNavigateToBlog={() => onNavigate('blog')}
+        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToHelp={() => navigate('/help')}
+        onNavigateToPrivacy={() => navigate('/privacy')}
+        onNavigateToTerms={() => navigate('/terms')}
+        onNavigateToCookies={() => navigate('/cookies')}
+        onNavigateToContact={() => navigate('/contact')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
       />
     </div>
   );
