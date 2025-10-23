@@ -15,9 +15,9 @@
     @apply border-border
   }
 
-  /* Force Sonner toast descriptions to use foreground color */
+  /* Force Sonner toast descriptions to be black, not pink */
   [data-sonner-toast] [data-description] {
-    color: hsl(var(--foreground)) !important;
+    color: #000000 !important;
     opacity: 0.9;
   }
 }
