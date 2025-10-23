@@ -1,6 +1,7 @@
 // Vercel Serverless Function for AI Content Generation
 // This keeps your OpenAI API key secure on the server
 import OpenAI from 'openai';
+import { setCorsHeaders, handleCorsPreFlight } from './_cors.js';
 
 // Initialize OpenAI with API key from environment variable
 const openai = new OpenAI({
@@ -8,6 +9,10 @@ const openai = new OpenAI({
 });
 
 export default async function handler(req, res) {
+  // Handle CORS
+  setCorsHeaders(req, res);
+  if (handleCorsPreFlight(req, res)) return;
+
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });

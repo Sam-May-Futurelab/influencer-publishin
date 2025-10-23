@@ -272,7 +272,7 @@ export function Dashboard({
               <CardContent className="p-4 text-center">
                 <Clock size={20} className="mx-auto mb-2 text-orange-600" weight="fill" />
                 <p className="text-2xl font-bold">{stats.totalWordsThisWeek.toLocaleString()}</p>
-                <p className="text-xs text-gray-600">This Week</p>
+                <p className="text-xs text-gray-600">Words This Week</p>
               </CardContent>
             </Card>
           </motion.div>
