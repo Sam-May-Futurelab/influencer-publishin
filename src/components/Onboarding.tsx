@@ -21,45 +21,102 @@ const steps = [
         <p className="text-muted-foreground">
           Inkfluence AI helps you write faster and better with:
         </p>
-        <ul className="space-y-2 text-muted-foreground">
-          <li className="flex items-center gap-2">
-            <CheckCircle size={20} className="text-green-500" weight="fill" />
-            <span>AI-powered content generation</span>
+        <ul className="space-y-3 text-muted-foreground">
+          <li className="flex items-start gap-3">
+            <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-0.5" weight="fill" />
+            <div>
+              <strong>AI-powered content generation</strong>
+              <p className="text-sm text-gray-500 mt-0.5">Get suggestions for any topic in seconds</p>
+            </div>
           </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle size={20} className="text-green-500" weight="fill" />
-            <span>Beautiful chapter organization</span>
+          <li className="flex items-start gap-3">
+            <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-0.5" weight="fill" />
+            <div>
+              <strong>Beautiful chapter organization</strong>
+              <p className="text-sm text-gray-500 mt-0.5">Drag & drop to reorder, easy navigation</p>
+            </div>
           </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle size={20} className="text-green-500" weight="fill" />
-            <span>Export to PDF with custom branding</span>
+          <li className="flex items-start gap-3">
+            <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-0.5" weight="fill" />
+            <div>
+              <strong>Professional PDF exports</strong>
+              <p className="text-sm text-gray-500 mt-0.5">Custom branding, fonts, and colors</p>
+            </div>
           </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle size={20} className="text-green-500" weight="fill" />
-            <span>Writing analytics and goals</span>
+          <li className="flex items-start gap-3">
+            <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-0.5" weight="fill" />
+            <div>
+              <strong>Writing streak tracking</strong>
+              <p className="text-sm text-gray-500 mt-0.5">Stay motivated with daily goals</p>
+            </div>
           </li>
         </ul>
+        <div className="bg-purple-50 p-4 rounded-lg border border-purple-100 mt-4">
+          <p className="text-sm text-purple-900 font-medium">
+            💡 Quick Tip: Start with a template or create from scratch - both work great!
+          </p>
+        </div>
       </div>
     )
   },
   {
     title: "Create Your First Project",
-    description: "Start by creating a project for your ebook or guide",
+    description: "Let's get you started with your first ebook",
     icon: BookOpen,
     content: (
       <div className="space-y-4">
-        <img 
-          src="/images/InkfluenceAILogo.png" 
-          alt="Create Project" 
-          className="w-32 h-32 mx-auto object-contain rounded-lg"
-        />
-        <p className="text-muted-foreground">
-          Click <strong>"New Project"</strong> to create your first ebook. Add a title, 
-          description, and start adding chapters.
-        </p>
-        <div className="bg-primary/10 p-3 rounded-lg">
-          <p className="text-sm text-primary">
-            💡 <strong>Pro tip:</strong> Free users get 4 pages to start. Upgrade to Premium for unlimited!
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-xl border border-purple-100">
+          <h4 className="font-semibold text-lg mb-3">Three Ways to Start:</h4>
+          
+          <div className="space-y-3">
+            <div className="bg-white p-3 rounded-lg shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-purple-600 font-bold">1</span>
+                </div>
+                <div>
+                  <p className="font-medium text-sm">Use a Template</p>
+                  <p className="text-xs text-gray-600 mt-1">
+                    Choose from pre-made templates for your niche
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-3 rounded-lg shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-blue-600 font-bold">2</span>
+                </div>
+                <div>
+                  <p className="font-medium text-sm">Start From Scratch</p>
+                  <p className="text-xs text-gray-600 mt-1">
+                    Click "New Project" and build your own
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-3 rounded-lg shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-green-600 font-bold">3</span>
+                </div>
+                <div>
+                  <p className="font-medium text-sm">AI-Assisted Setup</p>
+                  <p className="text-xs text-gray-600 mt-1">
+                    Tell AI your topic, get instant chapter structure
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+          <p className="text-sm">
+            <strong>Free Tier:</strong> 4 pages to start<br />
+            <strong>Premium:</strong> Unlimited pages & 50 AI generations/day
           </p>
         </div>
       </div>
@@ -67,23 +124,53 @@ const steps = [
   },
   {
     title: "AI Writing Assistant",
-    description: "Let AI help you write amazing content",
+    description: "Your 24/7 co-author that never gets tired",
     icon: MagicWand,
     content: (
       <div className="space-y-4">
-        <p className="text-muted-foreground">
-          Our AI Assistant can generate content for any topic:
-        </p>
-        <ol className="space-y-3 text-muted-foreground list-decimal list-inside">
-          <li>Enter keywords or topics for your chapter</li>
-          <li>Choose your preferred tone and length</li>
-          <li>Click <strong>"Generate"</strong> to create suggestions</li>
-          <li>Insert content into your chapter with one click</li>
-        </ol>
-        <div className="bg-primary/10 p-3 rounded-lg">
-          <p className="text-sm text-primary">
-            🎯 <strong>Free tier:</strong> 3 AI generations per day<br />
-            👑 <strong>Premium:</strong> 50 generations per day
+        <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 rounded-xl">
+          <p className="font-semibold mb-2">✨ AI Can Help You:</p>
+          <ul className="space-y-1 text-sm">
+            <li>• Beat writer's block instantly</li>
+            <li>• Generate chapter outlines</li>
+            <li>• Create engaging introductions</li>
+            <li>• Write compelling conclusions</li>
+            <li>• Brainstorm ideas</li>
+          </ul>
+        </div>
+
+        <div className="space-y-3">
+          <h4 className="font-semibold text-sm">How to Use:</h4>
+          <div className="space-y-2">
+            <div className="flex items-start gap-2">
+              <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</div>
+              <p className="text-sm text-gray-700">Click the AI button (✨) in any chapter</p>
+            </div>
+            <div className="flex items-start gap-2">
+              <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</div>
+              <p className="text-sm text-gray-700">Enter your topic or keywords</p>
+            </div>
+            <div className="flex items-start gap-2">
+              <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</div>
+              <p className="text-sm text-gray-700">Choose content type & tone</p>
+            </div>
+            <div className="flex items-start gap-2">
+              <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">4</div>
+              <p className="text-sm text-gray-700">Insert AI suggestions with one click</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+          <p className="text-xs">
+            <strong>🆓 Free:</strong> 3 generations/day<br />
+            <strong>👑 Premium:</strong> 50 generations/day + priority processing
+          </p>
+        </div>
+
+        <div className="bg-green-50 p-3 rounded-lg border border-green-200">
+          <p className="text-xs text-green-900">
+            💡 <strong>Pro Tip:</strong> AI works best with specific prompts. Instead of "write about dogs", try "write an intro about choosing the right dog breed for families"
           </p>
         </div>
       </div>

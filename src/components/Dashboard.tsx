@@ -27,12 +27,15 @@ import {
   Pencil,
   Fire,
   CheckCircle,
-  Clock
+  Clock,
+  Target,
+  Calendar
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { PreviewDialog } from '@/components/PreviewDialog';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
+import { WritingStreakCard, GoalProgressCard, ProjectCompletionCard } from '@/components/AnalyticsCards';
 
 interface DashboardProps {
   projects: EbookProject[];
@@ -49,7 +52,7 @@ export function Dashboard({
   onShowTemplateGallery,
   onDeleteProject
 }: DashboardProps) {
-  const { stats, totalWords } = useWritingAnalytics(projects);
+  const { stats, totalWords, goals, progress } = useWritingAnalytics(projects);
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -90,81 +93,98 @@ export function Dashboard({
 
   return (
     <div className="space-y-6 lg:space-y-8">
-      {/* Analytics Stats - Only show if user has data */}
+      {/* Enhanced Analytics - Show if user has projects */}
       {projects.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4"
-        >
-          {/* Total Words */}
-          <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
-                  <Pencil size={24} weight="bold" className="text-white" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-br from-blue-600 to-blue-500 bg-clip-text text-transparent">
-                  {totalWords.toLocaleString()}
-                </p>
-                <p className="text-sm font-medium text-muted-foreground">Total Words</p>
-              </div>
-            </CardContent>
-          </Card>
+        <>
+          {/* Streak and Goals Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-4"
+          >
+            <WritingStreakCard
+              currentStreak={stats.currentStreak}
+              longestStreak={stats.longestStreak}
+              lastWriteDate={stats.lastWritingDate || undefined}
+            />
+            
+            {goals?.enabled && (
+              <>
+                <GoalProgressCard
+                  title="Daily Goal"
+                  current={progress.daily.current}
+                  target={progress.daily.target}
+                  period="daily"
+                  icon={<Target className="w-5 h-5 text-blue-600" />}
+                />
+                <GoalProgressCard
+                  title="Weekly Goal"
+                  current={progress.weekly.current}
+                  target={progress.weekly.target}
+                  period="weekly"
+                  icon={<Calendar className="w-5 h-5 text-purple-600" />}
+                />
+              </>
+            )}
 
-          {/* Writing Streak */}
-          <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg">
-                  <Fire size={24} weight="fill" className="text-white" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-br from-orange-600 to-orange-500 bg-clip-text text-transparent">
-                  {stats.currentStreak}
-                </p>
-                <p className="text-sm font-medium text-muted-foreground">Day Streak</p>
-              </div>
-            </CardContent>
-          </Card>
+            {!goals?.enabled && (
+              <Card className="lg:col-span-2">
+                <CardContent className="p-6 text-center">
+                  <Target className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                  <h3 className="font-semibold mb-2">Set Writing Goals</h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Track your progress with daily and weekly word count targets
+                  </p>
+                  <Button size="sm" variant="outline">
+                    Enable Goals
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </motion.div>
 
-          {/* Projects Completed */}
-          <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-lg">
-                  <CheckCircle size={24} weight="fill" className="text-white" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-br from-green-600 to-green-500 bg-clip-text text-transparent">
-                  {projects.length}
-                </p>
-                <p className="text-sm font-medium text-muted-foreground">Projects</p>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Quick Stats Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+          >
+            <Card className="neomorph-flat border-0">
+              <CardContent className="p-4 text-center">
+                <Pencil size={20} className="mx-auto mb-2 text-blue-600" weight="bold" />
+                <p className="text-2xl font-bold">{totalWords.toLocaleString()}</p>
+                <p className="text-xs text-gray-600">Total Words</p>
+              </CardContent>
+            </Card>
 
-          {/* Words This Week */}
-          <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg">
-                  <Clock size={24} weight="fill" className="text-white" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-br from-purple-600 to-purple-500 bg-clip-text text-transparent">
-                  {stats.totalWordsThisWeek.toLocaleString()}
+            <Card className="neomorph-flat border-0">
+              <CardContent className="p-4 text-center">
+                <BookOpen size={20} className="mx-auto mb-2 text-green-600" weight="fill" />
+                <p className="text-2xl font-bold">{projects.length}</p>
+                <p className="text-xs text-gray-600">Projects</p>
+              </CardContent>
+            </Card>
+
+            <Card className="neomorph-flat border-0">
+              <CardContent className="p-4 text-center">
+                <FileText size={20} className="mx-auto mb-2 text-purple-600" weight="fill" />
+                <p className="text-2xl font-bold">
+                  {projects.reduce((sum, p) => sum + p.chapters.length, 0)}
                 </p>
-                <p className="text-sm font-medium text-muted-foreground">This Week</p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+                <p className="text-xs text-gray-600">Chapters</p>
+              </CardContent>
+            </Card>
+
+            <Card className="neomorph-flat border-0">
+              <CardContent className="p-4 text-center">
+                <Clock size={20} className="mx-auto mb-2 text-orange-600" weight="fill" />
+                <p className="text-2xl font-bold">{stats.totalWordsThisWeek.toLocaleString()}</p>
+                <p className="text-xs text-gray-600">This Week</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </>
       )}
 
       {/* Welcome Section */}
