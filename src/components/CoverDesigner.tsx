@@ -204,15 +204,33 @@ const STOCK_IMAGES = [
     category: 'abstract',
   },
   {
+    id: 'abstract-2',
+    name: 'Cosmic Purple',
+    url: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&h=1280&fit=crop',
+    category: 'abstract',
+  },
+  {
     id: 'nature-1',
     name: 'Mountain Landscape',
     url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1280&fit=crop',
     category: 'nature',
   },
   {
+    id: 'nature-2',
+    name: 'Forest Path',
+    url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
     id: 'texture-1',
-    name: 'Marble Texture',
-    url: 'https://images.unsplash.com/photo-1553792770-614c04d3c9cf?w=800&h=1280&fit=crop',
+    name: 'Gold Marble',
+    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  {
+    id: 'texture-2',
+    name: 'Dark Texture',
+    url: 'https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800&h=1280&fit=crop',
     category: 'texture',
   },
   {
@@ -222,9 +240,21 @@ const STOCK_IMAGES = [
     category: 'artistic',
   },
   {
+    id: 'artistic-2',
+    name: 'Paint Splash',
+    url: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&h=1280&fit=crop',
+    category: 'artistic',
+  },
+  {
     id: 'minimal-1',
     name: 'Minimal Gradient',
     url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=1280&fit=crop',
+    category: 'minimal',
+  },
+  {
+    id: 'minimal-2',
+    name: 'Soft Clouds',
+    url: 'https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=800&h=1280&fit=crop',
     category: 'minimal',
   },
   {
@@ -234,15 +264,33 @@ const STOCK_IMAGES = [
     category: 'urban',
   },
   {
+    id: 'urban-2',
+    name: 'Neon Lights',
+    url: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&h=1280&fit=crop',
+    category: 'urban',
+  },
+  {
     id: 'book-1',
     name: 'Book Shelf',
     url: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&h=1280&fit=crop',
     category: 'book-themed',
   },
   {
+    id: 'book-2',
+    name: 'Old Books',
+    url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=1280&fit=crop',
+    category: 'book-themed',
+  },
+  {
     id: 'vintage-1',
     name: 'Vintage Paper',
     url: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=1280&fit=crop',
+    category: 'vintage',
+  },
+  {
+    id: 'vintage-2',
+    name: 'Aged Texture',
+    url: 'https://images.unsplash.com/photo-1534670007418-fbb7f6cf32c3?w=800&h=1280&fit=crop',
     category: 'vintage',
   },
 ];
@@ -575,11 +623,11 @@ export function CoverDesigner({
                 <div className="space-y-3">
                   <Label className="text-base font-semibold">Professional Stock Images</Label>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Choose from our curated collection of high-quality background images
+                    Choose from {STOCK_IMAGES.length} curated high-quality background images
                   </p>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4 lg:gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
                   {STOCK_IMAGES.map((image) => (
                     <Card
                       key={image.id}
@@ -1140,14 +1188,21 @@ export function CoverDesigner({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-6 lg:p-8 pt-5 border-t flex items-center justify-between gap-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="h-12 px-6 text-base">
-            Cancel
-          </Button>
-          <Button onClick={exportCover} className="gap-2 h-12 px-6 text-base">
-            <Download size={18} />
-            Save Cover
-          </Button>
+        <div className="p-6 lg:p-8 pt-5 border-t">
+          <div className="flex items-center justify-between gap-4 mb-3">
+            <p className="text-xs text-muted-foreground">
+              💡 Your cover will be saved as a high-quality PNG image
+            </p>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <Button variant="outline" onClick={() => onOpenChange(false)} className="h-12 px-6 text-base">
+              Cancel
+            </Button>
+            <Button onClick={exportCover} className="gap-2 h-12 px-8 text-base font-semibold">
+              <Download size={20} />
+              Download Cover (PNG)
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
