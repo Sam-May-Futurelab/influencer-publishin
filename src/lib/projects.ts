@@ -34,8 +34,40 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
   try {
     const projectRef = doc(db, 'users', userId, 'projects', project.id);
     
+    // Prepare coverDesign - flatten completely and handle image data separately
+    let coverDesignData: any = null;
+    if (project.coverDesign) {
+      coverDesignData = {
+        title: String(project.coverDesign.title || ''),
+        subtitle: String(project.coverDesign.subtitle || ''),
+        authorName: String(project.coverDesign.authorName || ''),
+        backgroundType: String(project.coverDesign.backgroundType || 'gradient'),
+        backgroundColor: String(project.coverDesign.backgroundColor || '#ffffff'),
+        gradientStart: String(project.coverDesign.gradientStart || '#667eea'),
+        gradientEnd: String(project.coverDesign.gradientEnd || '#764ba2'),
+        gradientDirection: String(project.coverDesign.gradientDirection || 'to-br'),
+        backgroundImage: project.coverDesign.backgroundImage ? String(project.coverDesign.backgroundImage) : '',
+        titleFont: String(project.coverDesign.titleFont || 'Inter'),
+        titleSize: Number(project.coverDesign.titleSize || 48),
+        titleColor: String(project.coverDesign.titleColor || '#ffffff'),
+        subtitleFont: String(project.coverDesign.subtitleFont || 'Inter'),
+        subtitleSize: Number(project.coverDesign.subtitleSize || 24),
+        subtitleColor: String(project.coverDesign.subtitleColor || '#e0e0e0'),
+        authorFont: String(project.coverDesign.authorFont || 'Inter'),
+        authorSize: Number(project.coverDesign.authorSize || 18),
+        authorColor: String(project.coverDesign.authorColor || '#ffffff'),
+        overlay: Boolean(project.coverDesign.overlay),
+        overlayOpacity: Number(project.coverDesign.overlayOpacity || 40),
+        imagePosition: String(project.coverDesign.imagePosition || 'cover'),
+        imageBrightness: Number(project.coverDesign.imageBrightness || 100),
+        imageContrast: Number(project.coverDesign.imageContrast || 100),
+        usePreMadeCover: Boolean(project.coverDesign.usePreMadeCover),
+        // Store image data as string (will be large but valid)
+        coverImageData: project.coverDesign.coverImageData ? String(project.coverDesign.coverImageData) : '',
+      };
+    }
+    
     // Convert Date objects to timestamps for Firestore
-    // Note: serverTimestamp() cannot be used inside arrays, so we use regular Date objects
     const projectData = {
       ...project,
       createdAt: project.createdAt,
@@ -43,36 +75,9 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
       chapters: project.chapters.map(chapter => ({
         ...chapter,
         createdAt: chapter.createdAt,
-        updatedAt: chapter.updatedAt // Use the Date object directly, not serverTimestamp()
+        updatedAt: chapter.updatedAt
       })),
-      // Ensure coverDesign is properly flattened (no nested objects beyond what Firestore allows)
-      coverDesign: project.coverDesign ? {
-        title: project.coverDesign.title,
-        subtitle: project.coverDesign.subtitle,
-        authorName: project.coverDesign.authorName,
-        backgroundType: project.coverDesign.backgroundType,
-        backgroundColor: project.coverDesign.backgroundColor,
-        gradientStart: project.coverDesign.gradientStart,
-        gradientEnd: project.coverDesign.gradientEnd,
-        gradientDirection: project.coverDesign.gradientDirection,
-        backgroundImage: project.coverDesign.backgroundImage || null,
-        titleFont: project.coverDesign.titleFont,
-        titleSize: project.coverDesign.titleSize,
-        titleColor: project.coverDesign.titleColor,
-        subtitleFont: project.coverDesign.subtitleFont,
-        subtitleSize: project.coverDesign.subtitleSize,
-        subtitleColor: project.coverDesign.subtitleColor,
-        authorFont: project.coverDesign.authorFont,
-        authorSize: project.coverDesign.authorSize,
-        authorColor: project.coverDesign.authorColor,
-        overlay: project.coverDesign.overlay,
-        overlayOpacity: project.coverDesign.overlayOpacity,
-        imagePosition: project.coverDesign.imagePosition || 'cover',
-        imageBrightness: project.coverDesign.imageBrightness || 100,
-        imageContrast: project.coverDesign.imageContrast || 100,
-        usePreMadeCover: project.coverDesign.usePreMadeCover || false,
-        coverImageData: project.coverDesign.coverImageData || null,
-      } : null
+      coverDesign: coverDesignData
     };
     
     // Remove any undefined values before saving to Firestore
