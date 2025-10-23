@@ -32,24 +32,12 @@ export default async function handler(req, res) {
     context = {}
   } = req.body;
 
-  console.log('[DEBUG API] Request received:', {
-    contentType,
-    keywordsLength: keywords?.length,
-    chapterTitle,
-    genre,
-    tone,
-    length,
-    format
-  });
-
   // Basic validation
   if (!keywords || keywords.length === 0) {
-    console.log('[DEBUG API] Validation failed: Keywords are required');
     return res.status(400).json({ error: 'Keywords are required' });
   }
 
   if (!chapterTitle) {
-    console.log('[DEBUG API] Validation failed: Chapter title is required');
     return res.status(400).json({ error: 'Chapter title is required' });
   }
 
@@ -184,14 +172,7 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
 
     const content = completion.choices[0]?.message?.content;
 
-    console.log('[DEBUG API] OpenAI response received:', {
-      contentType,
-      contentLength: content?.length,
-      contentPreview: content?.substring(0, 100)
-    });
-
     if (!content) {
-      console.log('[DEBUG API] No content generated from OpenAI');
       throw new Error('No content generated from OpenAI');
     }
 
@@ -207,17 +188,11 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
           throw new Error('Response is not an array');
         }
       } catch (parseError) {
-        console.error('[DEBUG API] JSON Parse Error:', parseError);
-        console.error('[DEBUG API] Raw content:', content);
+        console.error('JSON Parse Error:', parseError);
+        console.error('Raw content:', content);
         throw new Error('Failed to parse AI response as JSON');
       }
     }
-
-    console.log('[DEBUG API] Sending response:', {
-      success: true,
-      contentType: typeof parsedContent,
-      contentLength: typeof parsedContent === 'string' ? parsedContent.length : parsedContent?.length
-    });
 
     // Log usage for monitoring (optional)
     console.log('AI Content Generated', {
@@ -238,12 +213,7 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
     });
 
   } catch (error) {
-    console.error('[DEBUG API] AI Generation Error:', error);
-    console.error('[DEBUG API] Error details:', {
-      message: error.message,
-      code: error.code,
-      type: error.type
-    });
+    console.error('AI Generation Error:', error);
 
     // Return user-friendly error
     if (error.code === 'insufficient_quota') {
@@ -254,7 +224,6 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
 
     return res.status(500).json({
       error: 'Failed to generate AI content. Please try again.',
-      details: error.message
     });
   }
 }

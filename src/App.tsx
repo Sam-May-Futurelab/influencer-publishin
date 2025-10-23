@@ -433,16 +433,6 @@ function App() {
 
     saveTimeoutRef.current = setTimeout(async () => {
       try {
-        console.log('Saving project to Firebase:', {
-          id: updatedProject.id,
-          title: updatedProject.title,
-          chaptersCount: updatedProject.chapters.length,
-          chapters: updatedProject.chapters.map(ch => ({
-            id: ch.id,
-            title: ch.title,
-            contentLength: ch.content.length
-          }))
-        });
         await saveProject(user.uid, updatedProject);
       } catch (error) {
         console.error('❌ Error saving project:', error);

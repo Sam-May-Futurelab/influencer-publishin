@@ -145,17 +145,11 @@ export function RichTextEditor({
 
   // Handle AI text enhancement
   const handleAIEnhance = async () => {
-    console.log('[DEBUG] handleAIEnhance called');
-    console.log('[DEBUG] editor exists?', !!editor);
-    console.log('[DEBUG] onAIEnhanceSelected exists?', !!onAIEnhanceSelected);
-    
     if (!editor || !onAIEnhanceSelected) return;
     
     try {
       const { from, to } = editor.state.selection;
       const selectedText = editor.state.doc.textBetween(from, to);
-      
-      console.log('[DEBUG] Selection:', { from, to, selectedText });
       
       if (!selectedText.trim()) {
         toast.error('Please select some text to enhance');
@@ -163,18 +157,14 @@ export function RichTextEditor({
       }
 
       setIsEnhancing(true);
-      console.log('[DEBUG] Calling onAIEnhanceSelected with:', selectedText);
       const enhancedText = await onAIEnhanceSelected(selectedText);
       
-      console.log('[DEBUG] Enhanced text received:', enhancedText);
-      
       if (enhancedText && enhancedText.trim()) {
-        // Replace selected text with enhanced version
         editor.chain().focus().deleteRange({ from, to }).insertContent(enhancedText).run();
         toast.success('Text enhanced with AI!');
       }
     } catch (error) {
-      console.error('[DEBUG] AI enhancement error:', error);
+      console.error('AI enhancement error:', error);
       toast.error('Failed to enhance text. Please try again.');
     } finally {
       setIsEnhancing(false);
@@ -300,38 +290,24 @@ export function RichTextEditor({
 
         {/* AI Enhancement Button - Always visible */}
         {onAIEnhanceSelected && (
-          <>
-            <AnimatePresence>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                animate={hasSelection ? { scale: [1, 1.1, 1] } : {}}
-                transition={{ duration: 0.3 }}
-              >
-                <Button
-                  onClick={handleAIEnhance}
-                  disabled={!hasSelection || isEnhancing}
-                  className={cn(
-                    "h-8 px-3 gap-1.5 border-0 font-medium transition-all",
-                    hasSelection && !isEnhancing
-                      ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 shadow-lg shadow-purple-500/50"
-                      : "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50"
-                  )}
-                  size="sm"
-                  type="button"
-                  title={hasSelection ? "Enhance selected text with AI" : "Select text first to enhance it with AI"}
-                >
-                  <MagicWand size={16} weight="fill" />
-                  <span className="font-medium">
-                    {isEnhancing ? "Enhancing..." : "Enhance"}
-                  </span>
-                  {!hasSelection && (
-                    <span className="text-[10px] opacity-70 ml-1 hidden sm:inline">(select text)</span>
-                  )}
-                </Button>
-              </motion.div>
-            </AnimatePresence>
-          </>
+          <Button
+            onClick={handleAIEnhance}
+            disabled={!hasSelection || isEnhancing}
+            className={cn(
+              "h-8 px-3 gap-1.5 border-0 font-medium transition-colors",
+              hasSelection && !isEnhancing
+                ? "bg-purple-600 text-white hover:bg-purple-700"
+                : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600"
+            )}
+            size="sm"
+            type="button"
+            title={hasSelection ? "Enhance selected text with AI" : "Select text to enhance with AI"}
+          >
+            <MagicWand size={16} weight={hasSelection ? "fill" : "regular"} />
+            <span className="font-medium">
+              {isEnhancing ? "Enhancing..." : "Enhance"}
+            </span>
+          </Button>
         )}
 
         <Separator orientation="vertical" className="h-6 mx-1" />

@@ -204,22 +204,11 @@ export function ChapterEditor({
 
   // Handle AI text enhancement
   const handleAIEnhancement = async (selectedText: string): Promise<string> => {
-    console.log('[DEBUG ChapterEditor] handleAIEnhancement called with:', selectedText);
-    
     if (!currentChapter) {
-      console.error('[DEBUG ChapterEditor] No active chapter');
       throw new Error('No active chapter');
     }
 
     try {
-      console.log('[DEBUG ChapterEditor] Calling enhanceContent with:', {
-        selectedText,
-        chapterTitle: currentChapter.title,
-        genre: ebookCategory || 'general',
-        targetAudience: targetAudience || 'general audience',
-        bookDescription: projectDescription
-      });
-      
       const enhanced = await enhanceContent(selectedText, currentChapter.title, {
         genre: ebookCategory || 'general',
         context: {
@@ -228,10 +217,9 @@ export function ChapterEditor({
         }
       });
       
-      console.log('[DEBUG ChapterEditor] Enhanced content received:', enhanced);
       return enhanced;
     } catch (error) {
-      console.error('[DEBUG ChapterEditor] AI enhancement failed:', error);
+      console.error('AI enhancement failed:', error);
       throw error;
     }
   };
