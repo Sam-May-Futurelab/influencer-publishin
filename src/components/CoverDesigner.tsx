@@ -381,13 +381,26 @@ export function CoverDesigner({
         gradient.addColorStop(0, design.gradientStart);
         gradient.addColorStop(1, design.gradientEnd);
         ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       } else if (design.backgroundType === 'image' && design.backgroundImage) {
         const img = new Image();
+        img.crossOrigin = 'anonymous'; // Enable CORS for Unsplash images
         img.src = design.backgroundImage;
-        await new Promise((resolve) => {
+        await new Promise((resolve, reject) => {
           img.onload = resolve;
+          img.onerror = () => {
+            console.error('Failed to load image, using fallback');
+            resolve(null);
+          };
         });
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        if (img.complete && img.naturalHeight !== 0) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        } else {
+          // Fallback to gradient if image fails
+          ctx.fillStyle = design.gradientStart || '#667eea';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
         
         // Add overlay if enabled
         if (design.overlay) {
@@ -396,8 +409,8 @@ export function CoverDesigner({
         }
       } else {
         ctx.fillStyle = design.backgroundColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Draw text elements
       const drawText = (

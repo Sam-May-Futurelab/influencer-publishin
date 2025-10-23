@@ -72,6 +72,10 @@ export function ChapterEditor({
   const [snippetContent, setSnippetContent] = useState('');
   const [savingSnippet, setSavingSnippet] = useState(false);
 
+  // Unsaved changes confirmation
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [pendingChapterSwitch, setPendingChapterSwitch] = useState<Chapter | null>(null);
+
   // Load auto-save interval from settings
   useEffect(() => {
     const settings = localStorage.getItem('ebookCrafterSettings');
@@ -124,6 +128,39 @@ export function ChapterEditor({
       toast.success('Chapter title updated!');
     }
     setEditingTitle(false);
+  };
+
+  const handleChapterSelect = (chapter: Chapter) => {
+    // Check if there are unsaved changes
+    if (hasUnsavedChanges && currentChapter && chapter.id !== currentChapter.id) {
+      setPendingChapterSwitch(chapter);
+      setShowUnsavedDialog(true);
+    } else {
+      onChapterSelect(chapter);
+    }
+  };
+
+  const confirmChapterSwitch = async () => {
+    if (pendingChapterSwitch) {
+      // Save current chapter first
+      await forceSave();
+      onChapterSelect(pendingChapterSwitch);
+      setPendingChapterSwitch(null);
+      setShowUnsavedDialog(false);
+    }
+  };
+
+  const discardAndSwitch = () => {
+    if (pendingChapterSwitch) {
+      // Reset to original content
+      if (currentChapter) {
+        setPendingContent(currentChapter.content);
+      }
+      onChapterSelect(pendingChapterSwitch);
+      setPendingChapterSwitch(null);
+      setShowUnsavedDialog(false);
+      markAsSaved();
+    }
   };
 
   const handleContentChange = (content: string) => {
@@ -288,7 +325,7 @@ export function ChapterEditor({
                           ? "neomorph-inset bg-primary/10 ring-2 ring-primary/30" 
                           : "neomorph-flat hover:neomorph-hover"
                       )}
-                      onClick={() => onChapterSelect(chapter)}
+                      onClick={() => handleChapterSelect(chapter)}
                     >
                       {/* Reorder Arrows */}
                       <div className="flex flex-col gap-0.5">
@@ -792,6 +829,57 @@ export function ChapterEditor({
             >
               <BookmarkSimple size={16} weight="fill" />
               {savingSnippet ? 'Saving...' : 'Save Snippet'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Unsaved Changes Confirmation Dialog */}
+      <Dialog open={showUnsavedDialog} onOpenChange={setShowUnsavedDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FloppyDisk size={24} className="text-amber-500" />
+              Unsaved Changes
+            </DialogTitle>
+            <DialogDescription>
+              You have unsaved changes in the current chapter. What would you like to do?
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4 space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Chapter: <span className="font-medium text-foreground">{currentChapter?.title}</span>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Switching to: <span className="font-medium text-foreground">{pendingChapterSwitch?.title}</span>
+            </p>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowUnsavedDialog(false);
+                setPendingChapterSwitch(null);
+              }}
+              className="neomorph-button border-0"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={discardAndSwitch}
+              className="neomorph-button border-0 hover:bg-destructive/10 hover:text-destructive"
+            >
+              Discard Changes
+            </Button>
+            <Button
+              onClick={confirmChapterSwitch}
+              className="neomorph-button border-0 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white gap-2"
+            >
+              <FloppyDisk size={16} weight="fill" />
+              Save & Switch
             </Button>
           </DialogFooter>
         </DialogContent>

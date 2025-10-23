@@ -156,7 +156,7 @@ export function RichTextEditor({
   };
 
   // Handle AI text enhancement
-  const handleAIEnhance = async () => {
+    const handleEnhanceSelection = async () => {
     if (!editor || !onAIEnhanceSelected) return;
     
     const { from, to } = editor.state.selection;
@@ -169,6 +169,10 @@ export function RichTextEditor({
       return;
     }
 
+    // Store the original selection
+    const originalFrom = from;
+    const originalTo = to;
+
     try {
       setIsEnhancing(true);
       toast.loading('AI is enhancing your text...', {
@@ -180,10 +184,20 @@ export function RichTextEditor({
       toast.dismiss('enhancing-toast');
       
       if (enhancedText && enhancedText.trim()) {
-        editor.chain().focus().deleteRange({ from, to }).insertContent(enhancedText).run();
-        toast.success('Text enhanced with AI!', {
-          description: 'Your content has been improved'
-        });
+        // Validate that the range is still valid before replacing
+        const docSize = editor.state.doc.content.size;
+        if (originalFrom >= 0 && originalTo <= docSize && originalFrom < originalTo) {
+          editor.chain().focus().deleteRange({ from: originalFrom, to: originalTo }).insertContent(enhancedText).run();
+          toast.success('Text enhanced with AI!', {
+            description: 'Your content has been improved'
+          });
+        } else {
+          // If range is invalid, just insert at current position
+          editor.chain().focus().insertContent('\n\n' + enhancedText).run();
+          toast.success('Text enhanced and added below', {
+            description: 'The selection changed, so enhanced text was added at the end'
+          });
+        }
       }
     } catch (error) {
       toast.dismiss('enhancing-toast');
@@ -294,7 +308,7 @@ export function RichTextEditor({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={handleAIEnhance}
+                  onClick={handleEnhanceSelection}
                   disabled={isEnhancing}
                   className={cn(
                     "h-8 px-3 gap-1.5 border font-medium transition-all duration-200",
