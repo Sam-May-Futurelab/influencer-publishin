@@ -97,6 +97,27 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
               >
                 Help
               </button>
+
+              <button
+                onClick={() => handleNavigation('/faq')}
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+              >
+                FAQ
+              </button>
+
+              <button
+                onClick={() => handleNavigation('/testimonials')}
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+              >
+                Testimonials
+              </button>
+
+              <button
+                onClick={() => handleNavigation('/case-studies')}
+                className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
+              >
+                Case Studies
+              </button>
             </nav>
           </div>
 
