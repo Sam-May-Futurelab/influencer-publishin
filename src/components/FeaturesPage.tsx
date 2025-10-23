@@ -142,8 +142,8 @@ export default function FeaturesPage() {
         }}
       />
       <LandingHeader 
-        onGetStarted={() => navigate('/signin')}
-        onSignIn={() => navigate('/signin')}
+        onGetStarted={() => navigate('/?signin=true')}
+        onSignIn={() => navigate('/?signin=true')}
         showNavLinks={true}
         isAuthenticated={!!user}
         onNavigateToPricing={() => navigate('/pricing')}
@@ -170,7 +170,7 @@ export default function FeaturesPage() {
               <Button 
                 size="lg" 
                 className="bg-white text-[#9b87b8] hover:bg-gray-50 font-semibold px-8 py-4 text-lg"
-                onClick={() => navigate('/signin')}
+                onClick={() => navigate('/?signin=true')}
               >
                 <Zap className="mr-2 h-5 w-5" />
                 Start Creating Free
@@ -317,7 +317,7 @@ export default function FeaturesPage() {
             <Button 
               size="lg" 
               className="bg-white text-[#9b87b8] hover:bg-gray-50 font-semibold px-8 py-4 text-lg"
-              onClick={() => navigate('/signin')}
+              onClick={() => navigate('/?signin=true')}
             >
               <BookOpen className="mr-2 h-5 w-5" />
               Start Creating Now

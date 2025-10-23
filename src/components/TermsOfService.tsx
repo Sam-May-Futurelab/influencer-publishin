@@ -11,8 +11,8 @@ export function TermsOfService() {
   return (
     <div className="min-h-screen bg-background">
       <LandingHeader 
-        onSignIn={() => navigate('/signin')}
-        onGetStarted={() => navigate(user ? '/app/dashboard' : '/signin')}
+        onSignIn={() => navigate('/?signin=true')}
+        onGetStarted={() => navigate(user ? '/app/dashboard' : '/?signin=true')}
         showNavLinks={true}
         isAuthenticated={!!user}
         onNavigateToFeatures={() => navigate('/features')}

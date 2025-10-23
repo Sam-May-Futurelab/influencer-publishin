@@ -190,8 +190,8 @@ export default function BlogPage() {
       />
       
       <LandingHeader 
-        onGetStarted={() => navigate('/signin')}
-        onSignIn={() => navigate('/signin')}
+        onGetStarted={() => navigate('/?signin=true')}
+        onSignIn={() => navigate('/?signin=true')}
         showNavLinks={true}
         isAuthenticated={!!user}
         onNavigateToPricing={() => navigate('/pricing')}
@@ -370,7 +370,7 @@ export default function BlogPage() {
             />
             <Button 
               className="bg-white text-[#9b87b8] hover:bg-gray-50 font-semibold whitespace-nowrap"
-              onClick={() => navigate('/signin')}
+              onClick={() => navigate('/?signin=true')}
             >
               Get Started Free
             </Button>
