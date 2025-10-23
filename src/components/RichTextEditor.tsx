@@ -255,9 +255,11 @@ export function RichTextEditor({
     <div className={cn("neomorph-inset rounded-lg border-0 bg-background", className)}>
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-1 p-2 border-b border-border/50">
-        {/* AI Assistant Button - Prominent placement */}
-        {onAIAssistantClick && (
-          <>
+        
+        {/* AI Tools Section - Prominent */}
+        <div className="flex items-center gap-1 pr-2 border-r border-border/50">
+          {/* AI Assistant Button */}
+          {onAIAssistantClick && (
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -272,67 +274,70 @@ export function RichTextEditor({
                 <span className="font-medium">AI Assistant</span>
               </Button>
             </motion.div>
-            <Separator orientation="vertical" className="h-6 mx-1" />
-          </>
-        )}
+          )}
 
-        {/* Voice Input Button */}
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Button
-            onClick={handleVoiceToggle}
-            className={cn(
-              "h-8 px-3 gap-1.5 border-0",
-              isListening 
-                ? "bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse" 
-                : "bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700"
-            )}
-            size="sm"
-            type="button"
-            disabled={!isSupported}
-            title={isSupported ? (isListening ? "Stop recording (Esc)" : "Start voice input (⌘M)") : "Voice input not supported"}
+          {/* AI Enhancement Button */}
+          {onAIEnhanceSelected && (
+            <Button
+              onClick={handleAIEnhance}
+              disabled={!hasSelection || isEnhancing}
+              className={cn(
+                "h-8 px-3 gap-1.5 border-0 font-medium transition-all duration-200",
+                hasSelection && !isEnhancing
+                  ? "bg-purple-600 text-white hover:bg-purple-700 shadow-md"
+                  : "bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800"
+              )}
+              size="sm"
+              type="button"
+              title={hasSelection ? "Enhance selected text with AI" : "Select any text in your document to improve it with AI"}
+            >
+              <MagicWand 
+                size={16} 
+                weight={hasSelection ? "fill" : "regular"} 
+                className={cn(isEnhancing && "animate-spin")}
+              />
+              <span className="font-medium hidden sm:inline">
+                {isEnhancing ? "Enhancing..." : hasSelection ? "Enhance Selection" : "Enhance (select text)"}
+              </span>
+              <span className="font-medium sm:hidden">
+                {isEnhancing ? "..." : hasSelection ? "Enhance" : "Select"}
+              </span>
+            </Button>
+          )}
+
+          {/* Voice Input Button */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {isListening ? (
-              <MicrophoneSlash size={16} weight="fill" />
-            ) : (
-              <Microphone size={16} weight="fill" />
-            )}
-            <span className="font-medium">
-              {isListening ? "Recording..." : "Voice"}
-            </span>
-          </Button>
-        </motion.div>
+            <Button
+              onClick={handleVoiceToggle}
+              className={cn(
+                "h-8 px-3 gap-1.5 border-0",
+                isListening 
+                  ? "bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse" 
+                  : "bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700"
+              )}
+              size="sm"
+              type="button"
+              disabled={!isSupported}
+              title={isSupported ? (isListening ? "Stop recording (Esc)" : "Dictate with your voice (⌘M)") : "Voice input not supported"}
+            >
+              {isListening ? (
+                <MicrophoneSlash size={16} weight="fill" />
+              ) : (
+                <Microphone size={16} weight="fill" />
+              )}
+              <span className="font-medium hidden sm:inline">
+                {isListening ? "Recording..." : "Voice"}
+              </span>
+            </Button>
+          </motion.div>
+        </div>
+        {/* End AI Tools Section */}
 
-        {/* AI Enhancement Button - Always visible */}
-        {onAIEnhanceSelected && (
-          <Button
-            onClick={handleAIEnhance}
-            disabled={!hasSelection || isEnhancing}
-            className={cn(
-              "h-8 px-3 gap-1.5 border-0 font-medium transition-all duration-200",
-              hasSelection && !isEnhancing
-                ? "bg-purple-600 text-white hover:bg-purple-700 shadow-md"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-500 cursor-not-allowed"
-            )}
-            size="sm"
-            type="button"
-            title={hasSelection ? "Enhance selected text with AI" : "Select text first to enhance with AI"}
-          >
-            <MagicWand 
-              size={16} 
-              weight={hasSelection ? "fill" : "regular"} 
-              className={cn(isEnhancing && "animate-spin")}
-            />
-            <span className="font-medium">
-              {isEnhancing ? "Enhancing..." : hasSelection ? "Enhance with AI" : "Select Text First"}
-            </span>
-          </Button>
-        )}
-
-        <Separator orientation="vertical" className="h-6 mx-1" />
-
+        {/* Editing Tools Section */}
+        <div className="flex items-center gap-1">
         {/* Undo/Redo */}
         <ToolbarButton
           onClick={() => editor.chain().focus().undo().run()}
@@ -443,7 +448,10 @@ export function RichTextEditor({
           <TextAa size={16} />
           <span className="ml-1 hidden sm:inline">Clear</span>
         </Button>
+        </div>
+        {/* End Editing Tools Section */}
       </div>
+      {/* End Toolbar */}
 
       {/* Voice Feedback Overlay */}
       <AnimatePresence>
