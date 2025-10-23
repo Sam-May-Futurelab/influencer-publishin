@@ -145,11 +145,17 @@ export function RichTextEditor({
 
   // Handle AI text enhancement
   const handleAIEnhance = async () => {
+    console.log('[DEBUG] handleAIEnhance called');
+    console.log('[DEBUG] editor exists?', !!editor);
+    console.log('[DEBUG] onAIEnhanceSelected exists?', !!onAIEnhanceSelected);
+    
     if (!editor || !onAIEnhanceSelected) return;
     
     try {
       const { from, to } = editor.state.selection;
       const selectedText = editor.state.doc.textBetween(from, to);
+      
+      console.log('[DEBUG] Selection:', { from, to, selectedText });
       
       if (!selectedText.trim()) {
         toast.error('Please select some text to enhance');
@@ -157,7 +163,10 @@ export function RichTextEditor({
       }
 
       setIsEnhancing(true);
+      console.log('[DEBUG] Calling onAIEnhanceSelected with:', selectedText);
       const enhancedText = await onAIEnhanceSelected(selectedText);
+      
+      console.log('[DEBUG] Enhanced text received:', enhancedText);
       
       if (enhancedText && enhancedText.trim()) {
         // Replace selected text with enhanced version
@@ -165,7 +174,7 @@ export function RichTextEditor({
         toast.success('Text enhanced with AI!');
       }
     } catch (error) {
-      console.error('AI enhancement error:', error);
+      console.error('[DEBUG] AI enhancement error:', error);
       toast.error('Failed to enhance text. Please try again.');
     } finally {
       setIsEnhancing(false);

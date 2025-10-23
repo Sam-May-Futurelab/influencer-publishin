@@ -130,6 +130,19 @@ export async function enhanceContent(
   try {
     const endpoint = getApiEndpoint();
     
+    console.log('[DEBUG openai-service] enhanceContent called');
+    console.log('[DEBUG openai-service] Endpoint:', endpoint);
+    console.log('[DEBUG openai-service] Request body:', {
+      keywords: [originalContent],
+      chapterTitle,
+      contentType: 'enhance',
+      genre: options?.genre || 'general',
+      tone: options?.tone || 'friendly',
+      length: options?.length || 'standard',
+      format: options?.format || 'narrative',
+      context: options?.context || {},
+    });
+    
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -147,11 +160,16 @@ export async function enhanceContent(
       }),
     });
 
+    console.log('[DEBUG openai-service] Response status:', response.status);
+    
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[DEBUG openai-service] Error response:', errorText);
       throw new Error(`API request failed: ${response.statusText}`);
     }
 
     const data = await response.json();
+    console.log('[DEBUG openai-service] Response data:', data);
 
     if (!data.success || !data.content) {
       throw new Error('Failed to enhance content');
