@@ -195,6 +195,58 @@ const COVER_TEMPLATES = [
   },
 ];
 
+// Stock background images - you can host these on your CDN or use Unsplash API
+const STOCK_IMAGES = [
+  {
+    id: 'abstract-1',
+    name: 'Abstract Purple',
+    url: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=800&h=1280&fit=crop',
+    category: 'abstract',
+  },
+  {
+    id: 'nature-1',
+    name: 'Mountain Landscape',
+    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
+    id: 'texture-1',
+    name: 'Marble Texture',
+    url: 'https://images.unsplash.com/photo-1553792770-614c04d3c9cf?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  {
+    id: 'artistic-1',
+    name: 'Watercolor',
+    url: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=1280&fit=crop',
+    category: 'artistic',
+  },
+  {
+    id: 'minimal-1',
+    name: 'Minimal Gradient',
+    url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=1280&fit=crop',
+    category: 'minimal',
+  },
+  {
+    id: 'urban-1',
+    name: 'City Night',
+    url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&h=1280&fit=crop',
+    category: 'urban',
+  },
+  {
+    id: 'book-1',
+    name: 'Book Shelf',
+    url: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&h=1280&fit=crop',
+    category: 'book-themed',
+  },
+  {
+    id: 'vintage-1',
+    name: 'Vintage Paper',
+    url: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=1280&fit=crop',
+    category: 'vintage',
+  },
+];
+
 export function CoverDesigner({
   open,
   onOpenChange,
@@ -397,61 +449,67 @@ export function CoverDesigner({
                   />
                 )}
 
-                {/* Text Content - Hide if using pre-made cover */}
-                {!design.usePreMadeCover && (
-                  <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
-                    <h1
-                      className="font-bold leading-tight mb-4"
-                      style={{
-                        fontFamily: design.titleFont,
-                        fontSize: `${design.titleSize}px`,
-                        color: design.titleColor,
-                      }}
-                    >
-                      {design.title}
-                    </h1>
-                    <p
-                      className="mb-auto max-w-md"
-                      style={{
-                        fontFamily: design.subtitleFont,
-                        fontSize: `${design.subtitleSize}px`,
-                        color: design.subtitleColor,
-                      }}
-                    >
-                      {design.subtitle}
-                    </p>
-                    <p
-                      className="mt-auto uppercase tracking-wider font-medium"
-                      style={{
-                        fontFamily: design.authorFont,
-                        fontSize: `${design.authorSize}px`,
-                        color: design.authorColor,
-                      }}
-                    >
-                      {design.authorName}
-                    </p>
-                  </div>
-                )}
+                {/* Text Content - Always show so users can add text to custom covers */}
+                <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
+                  <h1
+                    className="font-bold leading-tight mb-4"
+                    style={{
+                      fontFamily: design.titleFont,
+                      fontSize: `${design.titleSize}px`,
+                      color: design.titleColor,
+                    }}
+                  >
+                    {design.title}
+                  </h1>
+                  <p
+                    className="mb-auto max-w-md"
+                    style={{
+                      fontFamily: design.subtitleFont,
+                      fontSize: `${design.subtitleSize}px`,
+                      color: design.subtitleColor,
+                    }}
+                  >
+                    {design.subtitle}
+                  </p>
+                  <p
+                    className="mt-auto uppercase tracking-wider font-medium"
+                    style={{
+                      fontFamily: design.authorFont,
+                      fontSize: `${design.authorSize}px`,
+                      color: design.authorColor,
+                    }}
+                  >
+                    {design.authorName}
+                  </p>
+                </div>
               </div>
           </div>
 
           {/* Controls Panel */}
           <div className="lg:w-[55%] overflow-y-auto p-6 lg:p-10">
             <Tabs defaultValue="quick" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 mb-6 h-12 gap-2">
-                <TabsTrigger value="quick" className="gap-2 text-base px-4">
+              <TabsList className="grid w-full grid-cols-5 mb-6 h-12 gap-2">
+                <TabsTrigger value="quick" className="gap-2 text-base px-3">
                   <UploadSimple size={16} />
-                  <span>Quick Upload</span>
+                  <span className="hidden sm:inline">Quick Upload</span>
+                  <span className="sm:hidden">Upload</span>
                 </TabsTrigger>
-                <TabsTrigger value="templates" className="gap-2 text-base px-4">
-                  <Sparkle size={16} />
-                  <span>Templates</span>
-                </TabsTrigger>
-                <TabsTrigger value="background" className="gap-2 text-base px-4">
+                <TabsTrigger value="stock" className="gap-2 text-base px-3">
                   <ImageIcon size={16} />
-                  <span>Background</span>
+                  <span className="hidden sm:inline">Stock Images</span>
+                  <span className="sm:hidden">Stock</span>
                 </TabsTrigger>
-                <TabsTrigger value="text" className="gap-2 text-base px-4">
+                <TabsTrigger value="templates" className="gap-2 text-base px-3">
+                  <Sparkle size={16} />
+                  <span className="hidden sm:inline">Templates</span>
+                  <span className="sm:hidden">Style</span>
+                </TabsTrigger>
+                <TabsTrigger value="background" className="gap-2 text-base px-3">
+                  <Palette size={16} />
+                  <span className="hidden sm:inline">Background</span>
+                  <span className="sm:hidden">BG</span>
+                </TabsTrigger>
+                <TabsTrigger value="text" className="gap-2 text-base px-3">
                   <TextT size={16} />
                   <span>Text</span>
                 </TabsTrigger>
@@ -514,6 +572,50 @@ export function CoverDesigner({
                   >
                     Design Custom Cover Instead
                   </Button>
+                </div>
+              </TabsContent>
+
+              {/* Stock Images Tab */}
+              <TabsContent value="stock" className="space-y-6">
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold">Professional Stock Images</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Choose from our curated collection of high-quality background images
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 lg:gap-6">
+                  {STOCK_IMAGES.map((image) => (
+                    <Card
+                      key={image.id}
+                      className="cursor-pointer neomorph-flat border-0 overflow-hidden hover:neomorph-raised transition-all hover:scale-[1.02]"
+                      onClick={() => {
+                        updateDesign({
+                          backgroundType: 'image',
+                          backgroundImage: image.url,
+                          usePreMadeCover: false,
+                        });
+                        toast.success(`Applied ${image.name}`);
+                      }}
+                    >
+                      <div className="relative aspect-[5/8] overflow-hidden">
+                        <img 
+                          src={image.url} 
+                          alt={image.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+                          <p className="text-white text-sm font-medium">{image.name}</p>
+                          <p className="text-white/70 text-xs capitalize">{image.category.replace('-', ' ')}</p>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800 font-medium">💡 Pro Tip</p>
+                  <p className="text-xs text-blue-600 mt-1">After selecting a stock image, use the Text tab to customize your title, subtitle, and author name. You can also adjust brightness and contrast in the Background tab.</p>
                 </div>
               </TabsContent>
 
