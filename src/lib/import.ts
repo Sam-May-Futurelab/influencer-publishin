@@ -8,11 +8,15 @@ export interface ImportResult {
   error?: string;
 }
 
+export interface ImportOptions {
+  splitOnH2?: boolean; // If true, H2 headings also create new chapters
+}
+
 /**
  * Import a .docx file and parse it into chapters
  * Headings 1 become chapter titles, content goes into chapters
  */
-export async function importDocx(file: File): Promise<ImportResult> {
+export async function importDocx(file: File, options?: ImportOptions): Promise<ImportResult> {
   try {
     // Convert file to ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
@@ -38,7 +42,7 @@ export async function importDocx(file: File): Promise<ImportResult> {
     }
 
     // Parse HTML into chapters
-    const chapters = parseHTMLIntoChapters(html);
+    const chapters = parseHTMLIntoChapters(html, options?.splitOnH2);
 
     if (chapters.length === 0) {
       return {
@@ -72,7 +76,7 @@ export async function importDocx(file: File): Promise<ImportResult> {
  * Parse HTML content into chapters
  * Uses H1 tags as chapter boundaries
  */
-function parseHTMLIntoChapters(html: string): Chapter[] {
+function parseHTMLIntoChapters(html: string, splitOnH2: boolean = false): Chapter[] {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
   
@@ -86,8 +90,11 @@ function parseHTMLIntoChapters(html: string): Chapter[] {
   bodyElements.forEach((element, index) => {
     const tagName = element.tagName.toLowerCase();
     
-    // H1 = New chapter
-    if (tagName === 'h1') {
+    // H1 = New chapter (always)
+    // H2 = New chapter (if splitOnH2 is true)
+    const isNewChapter = tagName === 'h1' || (splitOnH2 && tagName === 'h2');
+    
+    if (isNewChapter) {
       // Save previous chapter if exists
       if (currentChapterTitle) {
         chapters.push({
@@ -104,7 +111,7 @@ function parseHTMLIntoChapters(html: string): Chapter[] {
       // Start new chapter
       currentChapterTitle = element.textContent?.trim() || `Chapter ${chapters.length + 1}`;
     }
-    // H2 = Subheading (include in content)
+    // H2/H3 = Subheading (include in content when not used as chapter boundary)
     else if (tagName === 'h2' || tagName === 'h3') {
       if (currentChapterTitle) {
         contentBuffer.push(element.outerHTML);
@@ -297,12 +304,12 @@ export function getFileType(file: File): 'docx' | 'txt' | 'unsupported' {
 /**
  * Main import function that handles different file types
  */
-export async function importFile(file: File): Promise<ImportResult> {
+export async function importFile(file: File, options?: ImportOptions): Promise<ImportResult> {
   const fileType = getFileType(file);
   
   switch (fileType) {
     case 'docx':
-      return await importDocx(file);
+      return await importDocx(file, options);
       
     case 'txt':
       const text = await file.text();

@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,6 +49,7 @@ import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { WritingStreakCard, GoalProgressCard, ProjectCompletionCard } from '@/components/AnalyticsCards';
 import { importFile } from '@/lib/import';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface DashboardProps {
   projects: EbookProject[];
@@ -73,6 +76,8 @@ export function Dashboard({
   const [projectToDelete, setProjectToDelete] = useState<EbookProject | null>(null);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [splitOnH2, setSplitOnH2] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filteredProjects = projects.filter(project =>
@@ -91,10 +96,43 @@ export function Dashboard({
     const file = event.target.files?.[0];
     if (!file) return;
 
+    await processFile(file);
+  };
+
+  const handleFileDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    
+    const file = event.dataTransfer.files?.[0];
+    if (!file) return;
+
+    // Check file type
+    const validTypes = ['.docx', '.doc', '.txt'];
+    const fileExt = '.' + file.name.split('.').pop()?.toLowerCase();
+    
+    if (!validTypes.includes(fileExt)) {
+      toast.error('Please upload a .docx or .txt file');
+      return;
+    }
+
+    await processFile(file);
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+  };
+
+  const processFile = async (file: File) => {
     setIsImporting(true);
     
     try {
-      const result = await importFile(file);
+      const result = await importFile(file, { splitOnH2 });
       
       if (result.success && result.chapters && result.project) {
         // Call the parent's import handler
@@ -554,15 +592,15 @@ export function Dashboard({
 
       {/* Import Dialog */}
       <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
-        <DialogContent className="sm:max-w-md neomorph-flat border-0">
+        <DialogContent className="sm:max-w-lg neomorph-flat border-0">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-lg">
               <UploadSimple size={24} className="text-primary" weight="fill" />
               Import Document
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-muted-foreground">
               Upload a .docx file (from Google Docs, Microsoft Word, etc.) or .txt file. 
-              We'll automatically detect chapters from Heading 1 styles.
+              We'll automatically detect chapters from <strong>Heading 1</strong> styles.
             </DialogDescription>
           </DialogHeader>
           
@@ -576,44 +614,107 @@ export function Dashboard({
               disabled={isImporting}
             />
             
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isImporting}
-              className="w-full neomorph-button border-0 h-24 flex-col gap-2"
-            >
-              {isImporting ? (
-                <>
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  >
-                    <FilePlus size={32} />
-                  </motion.div>
-                  <span>Importing...</span>
-                </>
-              ) : (
-                <>
-                  <FilePlus size={32} />
-                  <span>Choose File to Import</span>
-                </>
+            {/* Drag and Drop Area */}
+            <div
+              onDrop={handleFileDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onClick={() => !isImporting && fileInputRef.current?.click()}
+              className={cn(
+                "relative border-2 border-dashed rounded-xl p-8 transition-all cursor-pointer",
+                isDragging 
+                  ? "border-primary bg-primary/5 scale-[1.02]" 
+                  : "border-muted-foreground/30 hover:border-primary/50 hover:bg-muted/30",
+                isImporting && "opacity-50 cursor-not-allowed"
               )}
-            </Button>
+            >
+              <div className="flex flex-col items-center justify-center gap-3 text-center">
+                {isImporting ? (
+                  <>
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    >
+                      <FilePlus size={48} className="text-primary" />
+                    </motion.div>
+                    <div>
+                      <p className="font-semibold text-foreground">Importing document...</p>
+                      <p className="text-sm text-muted-foreground mt-1">Please wait</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={cn(
+                      "p-4 rounded-full transition-colors",
+                      isDragging ? "bg-primary/20" : "bg-muted"
+                    )}>
+                      <UploadSimple 
+                        size={48} 
+                        className={isDragging ? "text-primary" : "text-muted-foreground"} 
+                        weight="fill" 
+                      />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground text-base">
+                        {isDragging ? "Drop file here" : "Drag & drop your file here"}
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        or click to browse
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Badge variant="outline" className="font-normal">.docx</Badge>
+                      <Badge variant="outline" className="font-normal">.doc</Badge>
+                      <Badge variant="outline" className="font-normal">.txt</Badge>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
 
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <p className="font-semibold text-foreground">Supported formats:</p>
-              <ul className="list-disc list-inside space-y-1 ml-2">
-                <li><strong>.docx</strong> - Microsoft Word, Google Docs export</li>
-                <li><strong>.txt</strong> - Plain text with chapter markers</li>
-              </ul>
+            {/* Options Section */}
+            <div className="p-3 bg-muted/30 rounded-lg border">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="split-h2" className="text-sm font-medium cursor-pointer">
+                    Also split on Heading 2
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Create new chapters for both Heading 1 and Heading 2 styles
+                  </p>
+                </div>
+                <Switch
+                  id="split-h2"
+                  checked={splitOnH2}
+                  onCheckedChange={setSplitOnH2}
+                  disabled={isImporting}
+                />
+              </div>
+            </div>
+
+            {/* Info Section */}
+            <div className="space-y-3 text-sm">
+              <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800/50">
+                <div className="flex items-start gap-2">
+                  <div className="mt-0.5">💡</div>
+                  <div>
+                    <p className="font-semibold text-blue-900 dark:text-blue-100">
+                      Chapter Detection
+                    </p>
+                    <p className="text-blue-800 dark:text-blue-200 mt-1 leading-relaxed">
+                      Use <strong>Heading 1</strong> style for chapter titles{splitOnH2 && <> or <strong>Heading 2</strong></>}. 
+                      All content under each heading becomes that chapter's content.
+                    </p>
+                  </div>
+                </div>
+              </div>
               
-              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                <p className="font-semibold text-blue-900 dark:text-blue-100 mb-1">
-                  💡 Tip: Chapter Detection
-                </p>
-                <p className="text-xs text-blue-800 dark:text-blue-200">
-                  Use <strong>Heading 1</strong> style in your document for chapter titles. 
-                  All content under each heading becomes that chapter's content.
-                </p>
+              <div className="text-muted-foreground text-xs space-y-1">
+                <p className="font-medium text-foreground">Supported formats:</p>
+                <ul className="space-y-1 ml-4">
+                  <li>• <strong className="text-foreground">.docx/.doc</strong> - Microsoft Word, Google Docs export</li>
+                  <li>• <strong className="text-foreground">.txt</strong> - Plain text with chapter markers</li>
+                </ul>
               </div>
             </div>
           </div>
