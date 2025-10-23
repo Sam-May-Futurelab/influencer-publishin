@@ -398,7 +398,7 @@ export default function FeaturesPage() {
             <Button 
               onClick={() => navigate('/testimonials')}
               variant="outline"
-              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8]"
+              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8] hover:text-[#7a5f96]"
             >
               Read More Success Stories
               <Star className="ml-2 w-4 h-4" />
@@ -492,7 +492,7 @@ export default function FeaturesPage() {
             <Button 
               onClick={() => navigate('/testimonials')}
               variant="outline"
-              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8]"
+              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8] hover:text-[#7a5f96]"
             >
               Read More Success Stories
               <Star className="ml-2 w-4 h-4" />

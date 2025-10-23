@@ -123,7 +123,7 @@ export function LandingPage() {
               <Button 
                 size="lg"
                 variant="outline"
-                className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8] text-lg px-8 py-6"
+                className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8] hover:text-[#7a5f96] text-lg px-8 py-6"
               >
                 <Play className="mr-2 w-5 h-5" />
                 Watch Demo
@@ -556,7 +556,7 @@ export function LandingPage() {
               <Button 
                 onClick={handleGetStarted}
                 variant="outline"
-                className="w-full border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8]"
+                className="w-full border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8] hover:text-[#7a5f96]"
                 size="lg"
               >
                 Get Started Free
@@ -744,7 +744,7 @@ export function LandingPage() {
               onClick={() => navigate('/testimonials')}
               size="lg"
               variant="outline"
-              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8]"
+              className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8] hover:text-[#7a5f96]"
             >
               View All Success Stories
               <ArrowRight className="ml-2 w-5 h-5" />
