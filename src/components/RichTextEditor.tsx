@@ -154,17 +154,17 @@ export function RichTextEditor({
   const handleAIEnhance = async () => {
     if (!editor || !onAIEnhanceSelected) return;
     
-    try {
-      const { from, to } = editor.state.selection;
-      const selectedText = editor.state.doc.textBetween(from, to);
-      
-      if (!selectedText.trim()) {
-        toast.error('Please select some text to enhance', {
-          description: 'Highlight the text you want to improve with AI'
-        });
-        return;
-      }
+    const { from, to } = editor.state.selection;
+    const selectedText = editor.state.doc.textBetween(from, to);
+    
+    if (!selectedText.trim()) {
+      toast.error('Select text first to enhance it', {
+        description: 'Highlight any text in your document, then click Enhance to improve it with AI'
+      });
+      return;
+    }
 
+    try {
       setIsEnhancing(true);
       toast.loading('AI is enhancing your text...', {
         id: 'enhancing-toast'
@@ -280,16 +280,16 @@ export function RichTextEditor({
           {onAIEnhanceSelected && (
             <Button
               onClick={handleAIEnhance}
-              disabled={!hasSelection || isEnhancing}
+              disabled={isEnhancing}
               className={cn(
-                "h-8 px-3 gap-1.5 border-0 font-medium transition-all duration-200",
+                "h-8 px-3 gap-1.5 border font-medium transition-all duration-200",
                 hasSelection && !isEnhancing
-                  ? "bg-purple-600 text-white hover:bg-purple-700 shadow-md"
-                  : "bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800"
+                  ? "bg-purple-600 text-white border-purple-600 hover:bg-purple-700"
+                  : "bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 border-purple-300 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-950/30"
               )}
               size="sm"
               type="button"
-              title={hasSelection ? "Enhance selected text with AI" : "Select any text in your document to improve it with AI"}
+              title="Select text in your document to improve it with AI"
             >
               <MagicWand 
                 size={16} 
@@ -297,10 +297,10 @@ export function RichTextEditor({
                 className={cn(isEnhancing && "animate-spin")}
               />
               <span className="font-medium hidden sm:inline">
-                {isEnhancing ? "Enhancing..." : hasSelection ? "Enhance Selection" : "Enhance (select text)"}
+                {isEnhancing ? "Enhancing..." : "Enhance"}
               </span>
               <span className="font-medium sm:hidden">
-                {isEnhancing ? "..." : hasSelection ? "Enhance" : "Select"}
+                {isEnhancing ? "..." : "Enhance"}
               </span>
             </Button>
           )}
