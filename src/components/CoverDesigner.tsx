@@ -241,8 +241,8 @@ const STOCK_IMAGES = [
   },
   {
     id: 'artistic-2',
-    name: 'Paint Splash',
-    url: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&h=1280&fit=crop',
+    name: 'Ink Art',
+    url: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&h=1280&fit=crop',
     category: 'artistic',
   },
   {
@@ -664,25 +664,15 @@ export function CoverDesigner({
 
               {/* Background Tab */}
               <TabsContent value="background" className="space-y-6">
-                <div className="space-y-6">
-                  <div className="space-y-3">
-                    <Label className="text-base font-medium">Background Type</Label>
-                    <Select
-                      value={design.backgroundType}
-                      onValueChange={(value: any) => updateDesign({ backgroundType: value })}
-                    >
-                      <SelectTrigger className="h-12 text-base">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="solid" className="text-base py-3">Solid Color</SelectItem>
-                        <SelectItem value="gradient" className="text-base py-3">Gradient</SelectItem>
-                        <SelectItem value="image" className="text-base py-3">Image</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <Tabs defaultValue={design.backgroundType} onValueChange={(value: any) => updateDesign({ backgroundType: value })} className="w-full">
+                  <TabsList className="grid w-full grid-cols-3 h-12 mb-6">
+                    <TabsTrigger value="solid" className="text-sm font-medium">Solid Color</TabsTrigger>
+                    <TabsTrigger value="gradient" className="text-sm font-medium">Gradient</TabsTrigger>
+                    <TabsTrigger value="image" className="text-sm font-medium">Image</TabsTrigger>
+                  </TabsList>
 
-                  {design.backgroundType === 'solid' && (
+                  {/* Solid Color Sub-Tab */}
+                  <TabsContent value="solid" className="space-y-6">
                     <div className="space-y-3">
                       <Label className="text-base font-medium">Background Color</Label>
                       <div className="flex gap-3">
@@ -697,13 +687,61 @@ export function CoverDesigner({
                           value={design.backgroundColor}
                           onChange={(e) => updateDesign({ backgroundColor: e.target.value })}
                           className="flex-1 h-12 text-base"
+                          placeholder="#ffffff"
                         />
                       </div>
                     </div>
-                  )}
 
-                  {design.backgroundType === 'gradient' && (
-                    <>
+                    {/* Quick Color Presets for Solid */}
+                    <div className="space-y-3 pt-4 border-t">
+                      <Label className="text-base font-medium">Quick Color Presets</Label>
+                      <div className="grid grid-cols-4 gap-3">
+                        <button
+                          onClick={() => updateDesign({ backgroundColor: '#000000' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-black"
+                          title="Black"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundColor: '#ffffff' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-white"
+                          title="White"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundColor: '#1e293b' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-slate-800"
+                          title="Slate Gray"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundColor: '#7c3aed' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-violet-600"
+                          title="Purple"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundColor: '#dc2626' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-red-600"
+                          title="Red"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundColor: '#2563eb' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-blue-600"
+                          title="Blue"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundColor: '#059669' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-emerald-600"
+                          title="Green"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundColor: '#d97706' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-amber-600"
+                          title="Amber"
+                        />
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {/* Gradient Sub-Tab */}
+                  <TabsContent value="gradient" className="space-y-6">
                       <div className="space-y-3">
                         <Label className="text-base font-medium">Color 1 (Start)</Label>
                         <div className="flex gap-3">
@@ -820,11 +858,10 @@ export function CoverDesigner({
                           />
                         </div>
                       </div>
-                    </>
-                  )}
+                    </TabsContent>
 
-                  {design.backgroundType === 'image' && (
-                    <>
+                  {/* Image Sub-Tab */}
+                  <TabsContent value="image" className="space-y-6">
                       <div className="space-y-3">
                         <Label className="text-base font-medium">Upload Background Image</Label>
                         <Button
@@ -907,9 +944,8 @@ export function CoverDesigner({
                           </div>
                         )}
                       </div>
-                    </>
-                  )}
-                </div>
+                    </TabsContent>
+                  </Tabs>
               </TabsContent>
 
               {/* Text Tab */}
@@ -1191,14 +1227,46 @@ export function CoverDesigner({
         <div className="p-6 lg:p-8 pt-5 border-t">
           <div className="flex items-center justify-between gap-4 mb-3">
             <p className="text-xs text-muted-foreground">
-              💡 Your cover will be saved as a high-quality PNG image
+              💡 Your cover will be saved as a high-quality PNG image (1600x2560px)
             </p>
           </div>
-          <div className="flex items-center justify-between gap-4">
-            <Button variant="outline" onClick={() => onOpenChange(false)} className="h-12 px-6 text-base">
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="outline" 
+              onClick={() => onOpenChange(false)} 
+              className="h-12 px-6 text-base"
+            >
               Cancel
             </Button>
-            <Button onClick={exportCover} className="gap-2 h-12 px-8 text-base font-semibold">
+            <Button 
+              variant="ghost" 
+              onClick={() => {
+                updateDesign({
+                  title: projectTitle,
+                  subtitle: '',
+                  authorName: '',
+                  backgroundType: 'gradient',
+                  backgroundColor: '#ffffff',
+                  gradientStart: '#667eea',
+                  gradientEnd: '#764ba2',
+                  gradientDirection: 'to-br',
+                  titleColor: '#ffffff',
+                  subtitleColor: '#e0e0e0',
+                  authorColor: '#ffffff',
+                  titleSize: 48,
+                  subtitleSize: 24,
+                  authorSize: 18,
+                });
+                toast.success('Reset to default design');
+              }}
+              className="h-12 px-6 text-base"
+            >
+              Reset Design
+            </Button>
+            <Button 
+              onClick={exportCover} 
+              className="gap-2 h-12 px-8 text-base font-semibold ml-auto"
+            >
               <Download size={20} />
               Download Cover (PNG)
             </Button>
