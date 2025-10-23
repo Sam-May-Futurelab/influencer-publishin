@@ -488,28 +488,23 @@ export function CoverDesigner({
           {/* Controls Panel */}
           <div className="lg:w-[55%] overflow-y-auto p-6 lg:p-10">
             <Tabs defaultValue="quick" className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-6 h-12 gap-2">
-                <TabsTrigger value="quick" className="gap-2 text-base px-3">
+              <TabsList className="grid w-full grid-cols-4 mb-6 h-12 gap-2">
+                <TabsTrigger value="quick" className="gap-2 text-base px-4">
                   <UploadSimple size={16} />
                   <span className="hidden sm:inline">Quick Upload</span>
                   <span className="sm:hidden">Upload</span>
                 </TabsTrigger>
-                <TabsTrigger value="stock" className="gap-2 text-base px-3">
+                <TabsTrigger value="stock" className="gap-2 text-base px-4">
                   <ImageIcon size={16} />
                   <span className="hidden sm:inline">Stock Images</span>
-                  <span className="sm:hidden">Stock</span>
+                  <span className="sm:hidden">Images</span>
                 </TabsTrigger>
-                <TabsTrigger value="templates" className="gap-2 text-base px-3">
-                  <Sparkle size={16} />
-                  <span className="hidden sm:inline">Templates</span>
-                  <span className="sm:hidden">Style</span>
-                </TabsTrigger>
-                <TabsTrigger value="background" className="gap-2 text-base px-3">
+                <TabsTrigger value="background" className="gap-2 text-base px-4">
                   <Palette size={16} />
                   <span className="hidden sm:inline">Background</span>
                   <span className="sm:hidden">BG</span>
                 </TabsTrigger>
-                <TabsTrigger value="text" className="gap-2 text-base px-3">
+                <TabsTrigger value="text" className="gap-2 text-base px-4">
                   <TextT size={16} />
                   <span>Text</span>
                 </TabsTrigger>
@@ -615,32 +610,7 @@ export function CoverDesigner({
 
                 <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-sm text-blue-800 font-medium">💡 Pro Tip</p>
-                  <p className="text-xs text-blue-600 mt-1">After selecting a stock image, use the Text tab to customize your title, subtitle, and author name. You can also adjust brightness and contrast in the Background tab.</p>
-                </div>
-              </TabsContent>
-
-              {/* Templates Tab */}
-              <TabsContent value="templates" className="space-y-6">
-                <div className="space-y-3">
-                  <Label className="text-base font-semibold">Choose a Template</Label>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Start with a professionally designed template and customize it to match your book
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 lg:gap-6">
-                  {COVER_TEMPLATES.map((template) => (
-                    <Card
-                      key={template.id}
-                      className="cursor-pointer neomorph-flat border-0 hover:neomorph-raised transition-all hover:scale-[1.02]"
-                      onClick={() => applyTemplate(template)}
-                    >
-                      <CardContent className="p-5 lg:p-6 text-center space-y-3">
-                        <div className="text-3xl mb-2">{template.preview}</div>
-                        <div className="text-base font-semibold">{template.name}</div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                  <p className="text-xs text-blue-600 mt-1">After selecting a stock image, use the Background tab to adjust colors and the Text tab to customize your title and author.</p>
                 </div>
               </TabsContent>
 
@@ -687,7 +657,7 @@ export function CoverDesigner({
                   {design.backgroundType === 'gradient' && (
                     <>
                       <div className="space-y-3">
-                        <Label className="text-base font-medium">Start Color</Label>
+                        <Label className="text-base font-medium">Color 1 (Start)</Label>
                         <div className="flex gap-3">
                           <Input
                             type="color"
@@ -700,12 +670,13 @@ export function CoverDesigner({
                             value={design.gradientStart}
                             onChange={(e) => updateDesign({ gradientStart: e.target.value })}
                             className="flex-1 h-12 text-base"
+                            placeholder="#667eea"
                           />
                         </div>
                       </div>
 
                       <div className="space-y-3">
-                        <Label className="text-base font-medium">End Color</Label>
+                        <Label className="text-base font-medium">Color 2 (End)</Label>
                         <div className="flex gap-3">
                           <Input
                             type="color"
@@ -718,6 +689,7 @@ export function CoverDesigner({
                             value={design.gradientEnd}
                             onChange={(e) => updateDesign({ gradientEnd: e.target.value })}
                             className="flex-1 h-12 text-base"
+                            placeholder="#764ba2"
                           />
                         </div>
                       </div>
@@ -732,12 +704,73 @@ export function CoverDesigner({
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="to-br" className="text-base py-3">Diagonal (↘)</SelectItem>
-                            <SelectItem value="to-tr" className="text-base py-3">Diagonal (↗)</SelectItem>
-                            <SelectItem value="to-r" className="text-base py-3">Horizontal (→)</SelectItem>
-                            <SelectItem value="to-b" className="text-base py-3">Vertical (↓)</SelectItem>
+                            <SelectItem value="to-br" className="text-base py-3">Diagonal Down-Right (↘)</SelectItem>
+                            <SelectItem value="to-tr" className="text-base py-3">Diagonal Up-Right (↗)</SelectItem>
+                            <SelectItem value="to-r" className="text-base py-3">Horizontal Right (→)</SelectItem>
+                            <SelectItem value="to-b" className="text-base py-3">Vertical Down (↓)</SelectItem>
                           </SelectContent>
                         </Select>
+                      </div>
+
+                      {/* Quick Gradient Presets */}
+                      <div className="space-y-3 pt-4 border-t">
+                        <Label className="text-base font-medium">Quick Gradient Presets</Label>
+                        <div className="grid grid-cols-3 gap-3">
+                          <button
+                            onClick={() => updateDesign({ gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' })}
+                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
+                            style={{ background: 'linear-gradient(to bottom right, #667eea, #764ba2)' }}
+                            title="Purple Dream"
+                          />
+                          <button
+                            onClick={() => updateDesign({ gradientStart: '#f857a6', gradientEnd: '#ff5858', gradientDirection: 'to-br' })}
+                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
+                            style={{ background: 'linear-gradient(to bottom right, #f857a6, #ff5858)' }}
+                            title="Sunset"
+                          />
+                          <button
+                            onClick={() => updateDesign({ gradientStart: '#00c6ff', gradientEnd: '#0072ff', gradientDirection: 'to-br' })}
+                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
+                            style={{ background: 'linear-gradient(to bottom right, #00c6ff, #0072ff)' }}
+                            title="Ocean Blue"
+                          />
+                          <button
+                            onClick={() => updateDesign({ gradientStart: '#f093fb', gradientEnd: '#f5576c', gradientDirection: 'to-r' })}
+                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
+                            style={{ background: 'linear-gradient(to right, #f093fb, #f5576c)' }}
+                            title="Pink Lemonade"
+                          />
+                          <button
+                            onClick={() => updateDesign({ gradientStart: '#4facfe', gradientEnd: '#00f2fe', gradientDirection: 'to-r' })}
+                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
+                            style={{ background: 'linear-gradient(to right, #4facfe, #00f2fe)' }}
+                            title="Fresh Air"
+                          />
+                          <button
+                            onClick={() => updateDesign({ gradientStart: '#43e97b', gradientEnd: '#38f9d7', gradientDirection: 'to-r' })}
+                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
+                            style={{ background: 'linear-gradient(to right, #43e97b, #38f9d7)' }}
+                            title="Mint Fresh"
+                          />
+                          <button
+                            onClick={() => updateDesign({ gradientStart: '#fa709a', gradientEnd: '#fee140', gradientDirection: 'to-b' })}
+                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
+                            style={{ background: 'linear-gradient(to bottom, #fa709a, #fee140)' }}
+                            title="Summer Warmth"
+                          />
+                          <button
+                            onClick={() => updateDesign({ gradientStart: '#30cfd0', gradientEnd: '#330867', gradientDirection: 'to-b' })}
+                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
+                            style={{ background: 'linear-gradient(to bottom, #30cfd0, #330867)' }}
+                            title="Deep Ocean"
+                          />
+                          <button
+                            onClick={() => updateDesign({ gradientStart: '#a8edea', gradientEnd: '#fed6e3', gradientDirection: 'to-b' })}
+                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
+                            style={{ background: 'linear-gradient(to bottom, #a8edea, #fed6e3)' }}
+                            title="Pastel Dream"
+                          />
+                        </div>
                       </div>
                     </>
                   )}
