@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -68,6 +68,7 @@ export function RichTextEditor({
 }: RichTextEditorProps) {
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [hasSelection, setHasSelection] = useState(false);
+  const isSettingContentRef = useRef(false); // Track programmatic content changes
 
   // Voice input hook
   const {
@@ -104,7 +105,10 @@ export function RichTextEditor({
       },
     },
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      // Don't trigger onChange if we're programmatically setting content
+      if (!isSettingContentRef.current) {
+        onChange(editor.getHTML());
+      }
       // Update selection state on content change
       setHasSelection(!editor.state.selection.empty);
     },
@@ -118,9 +122,15 @@ export function RichTextEditor({
   useEffect(() => {
     if (editor && editor.state && content !== editor.getHTML()) {
       try {
+        isSettingContentRef.current = true; // Flag that we're setting content programmatically
         editor.commands.setContent(content);
+        // Reset flag after a brief delay to allow editor to update
+        setTimeout(() => {
+          isSettingContentRef.current = false;
+        }, 100);
       } catch (error) {
         console.warn('Failed to set editor content:', error);
+        isSettingContentRef.current = false;
       }
     }
   }, [content, editor]);

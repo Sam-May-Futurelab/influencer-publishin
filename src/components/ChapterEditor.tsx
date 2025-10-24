@@ -193,7 +193,11 @@ export function ChapterEditor({
       pendingContentRef.current = content; // Update ref
       // Only mark as changed if content actually differs from saved version
       if (content !== currentChapter.content) {
-        console.log('📝 Content changed, marking as changed');
+        console.log('📝 Content changed, marking as changed', {
+          newLength: content?.length,
+          savedLength: currentChapter.content?.length,
+          areDifferent: content !== currentChapter.content
+        });
         markAsChanged();
       }
     }
