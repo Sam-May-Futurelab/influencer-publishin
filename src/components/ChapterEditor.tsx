@@ -102,7 +102,7 @@ export function ChapterEditor({
         const newWordCount = pendingContent?.split(/\s+/).filter(word => word.length > 0).length || 0;
         const wordsAdded = newWordCount - oldWordCount;
 
-        onChapterUpdate(currentChapter.id, { 
+        await onChapterUpdate(currentChapter.id, { 
           content: pendingContent,
           updatedAt: new Date()
         });
@@ -131,6 +131,14 @@ export function ChapterEditor({
   };
 
   const handleChapterSelect = (chapter: Chapter) => {
+    console.log('🔄 Chapter select requested:', {
+      newChapter: chapter.title,
+      hasUnsavedChanges,
+      pendingContentLength: pendingContent?.length || 0,
+      currentContentLength: currentChapter?.content?.length || 0,
+      contentsMatch: pendingContent === currentChapter?.content
+    });
+    
     // Check if there are unsaved changes
     if (hasUnsavedChanges && currentChapter && chapter.id !== currentChapter.id) {
       setPendingChapterSwitch(chapter);
