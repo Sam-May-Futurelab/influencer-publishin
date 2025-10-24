@@ -97,6 +97,11 @@ export function ChapterEditor({
   } = useAutoSave({
     onSave: async () => {
       if (currentChapter && pendingContent !== currentChapter.content) {
+        console.log('💾 Auto-saving enhanced content:', {
+          pendingLength: pendingContent?.length,
+          currentLength: currentChapter.content?.length
+        });
+        
         // Calculate words added/removed
         const oldWordCount = currentChapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0;
         const newWordCount = pendingContent?.split(/\s+/).filter(word => word.length > 0).length || 0;
@@ -111,6 +116,8 @@ export function ChapterEditor({
         if (wordsAdded > 0 && onRecordWritingSession && projectId) {
           onRecordWritingSession(projectId, currentChapter.id, wordsAdded);
         }
+      } else {
+        console.log('⚠️ Skipping save - no changes detected');
       }
     },
     delay: autoSaveInterval,
@@ -167,6 +174,7 @@ export function ChapterEditor({
       setPendingContent(content);
       // Only mark as changed if content actually differs from saved version
       if (content !== currentChapter.content) {
+        console.log('📝 Content changed, marking as changed');
         markAsChanged();
       }
     }
