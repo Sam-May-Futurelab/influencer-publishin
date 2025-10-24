@@ -165,7 +165,10 @@ export function ChapterEditor({
   const handleContentChange = (content: string) => {
     if (currentChapter) {
       setPendingContent(content);
-      markAsChanged();
+      // Only mark as changed if content actually differs from saved version
+      if (content !== currentChapter.content) {
+        markAsChanged();
+      }
     }
   };
 
