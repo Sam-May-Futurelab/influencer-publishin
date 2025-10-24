@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
       // Send email notification
       const result = await resend.emails.send({
-        from: 'InkFluence AI <noreply@send.inkfluenceai.com>',
+        from: 'InkFluence AI <noreply@inkfluenceai.com>',
         to: process.env.CONTACT_EMAIL || 'hello@inkfluenceai.com',
         replyTo: email,
         subject: `${categoryEmoji} Contact Form: ${subject}`,
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
       }
 
       console.log(`✅ Contact form email sent successfully!`);
-      console.log(`From: noreply@send.inkfluenceai.com`);
+      console.log(`From: noreply@inkfluenceai.com`);
       console.log(`To: ${process.env.CONTACT_EMAIL || 'hello@inkfluenceai.com'}`);
       console.log(`Subject: ${subject}`);
       console.log(`Resend Email ID: ${result.data?.id || result.id || 'N/A'}`);
