@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { ContactDialog } from './ContactDialog';
+
 interface AppFooterProps {
   className?: string;
   onNavigateToPrivacy?: () => void;
@@ -9,9 +12,11 @@ interface AppFooterProps {
 
 export function AppFooter({ className = '', onNavigateToPrivacy, onNavigateToTerms, onNavigateToCookies, onNavigateToHelp, onNavigateToAbout }: AppFooterProps) {
   const currentYear = new Date().getFullYear();
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
 
   return (
-    <footer className={`bg-background border-t border-border py-6 mt-auto ${className}`}>
+    <>
+      <footer className={`bg-background border-t border-border py-6 mt-auto ${className}`}>
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
           {/* Left: Copyright */}
@@ -53,12 +58,12 @@ export function AppFooter({ className = '', onNavigateToPrivacy, onNavigateToTer
             >
               Cookies
             </button>
-            <a 
-              href="mailto:hello@inkfluenceai.com" 
+            <button 
+              onClick={() => setContactDialogOpen(true)}
               className="hover:text-foreground transition-colors"
             >
               Contact
-            </a>
+            </button>
           </div>
 
           {/* Right: Designer Credit */}
@@ -76,5 +81,8 @@ export function AppFooter({ className = '', onNavigateToPrivacy, onNavigateToTer
         </div>
       </div>
     </footer>
+
+    <ContactDialog open={contactDialogOpen} onOpenChange={setContactDialogOpen} />
+    </>
   );
 }
