@@ -63,7 +63,7 @@ export function ChapterEditor({
   const [tempTitle, setTempTitle] = useState('');
   const [pendingContent, setPendingContent] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [autoSaveInterval, setAutoSaveInterval] = useState(10000); // Default 10 seconds
+  const [autoSaveInterval, setAutoSaveInterval] = useState(5000); // Default 5 seconds
   
   // Snippet saving state
   const [showSnippetDialog, setShowSnippetDialog] = useState(false);
@@ -82,7 +82,7 @@ export function ChapterEditor({
     if (settings) {
       const parsed = JSON.parse(settings);
       // Convert seconds to milliseconds
-      setAutoSaveInterval((parsed.autoSaveInterval || 10) * 1000);
+      setAutoSaveInterval((parsed.autoSaveInterval || 5) * 1000);
     }
   }, []);
 

@@ -18,7 +18,7 @@ interface UseAutoSaveReturn {
 
 export function useAutoSave({
   onSave,
-  delay = 10000, // 10 seconds default (changed from 30)
+  delay = 5000, // 5 seconds default
   enabled = true
 }: UseAutoSaveOptions): UseAutoSaveReturn {
   const [saving, setSaving] = useState(false);
