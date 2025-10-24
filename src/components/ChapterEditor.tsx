@@ -101,11 +101,6 @@ export function ChapterEditor({
       const currentPendingContent = pendingContentRef.current;
       
       if (currentChapter && currentPendingContent !== currentChapter.content) {
-        console.log('💾 Auto-saving enhanced content:', {
-          pendingLength: currentPendingContent?.length,
-          currentLength: currentChapter.content?.length
-        });
-        
         // Calculate words added/removed
         const oldWordCount = currentChapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0;
         const newWordCount = currentPendingContent?.split(/\s+/).filter(word => word.length > 0).length || 0;
@@ -120,13 +115,6 @@ export function ChapterEditor({
         if (wordsAdded > 0 && onRecordWritingSession && projectId) {
           onRecordWritingSession(projectId, currentChapter.id, wordsAdded);
         }
-      } else {
-        console.log('⚠️ Skipping save - no changes detected', {
-          hasPending: !!currentPendingContent,
-          hasChapter: !!currentChapter,
-          pendingLength: currentPendingContent?.length,
-          currentLength: currentChapter?.content?.length
-        });
       }
     },
     delay: autoSaveInterval,
@@ -147,13 +135,6 @@ export function ChapterEditor({
   };
 
   const handleChapterSelect = (chapter: Chapter) => {
-    console.log('🔄 Switching chapter:', {
-      from: currentChapter?.title,
-      to: chapter.title,
-      hasUnsavedChanges,
-      isSameChapter: chapter.id === currentChapter?.id
-    });
-    
     if (hasUnsavedChanges && chapter.id !== currentChapter?.id) {
       setPendingChapterSwitch(chapter);
       setShowUnsavedDialog(true);
@@ -164,10 +145,8 @@ export function ChapterEditor({
 
   const confirmChapterSwitch = async () => {
     if (pendingChapterSwitch) {
-      console.log('💾 Saving before switch...');
       // Save current chapter first
       await forceSave();
-      console.log('✅ Save complete, switching chapter');
       onChapterSelect(pendingChapterSwitch);
       setPendingChapterSwitch(null);
       setShowUnsavedDialog(false);
@@ -193,11 +172,6 @@ export function ChapterEditor({
       pendingContentRef.current = content; // Update ref
       // Only mark as changed if content actually differs from saved version
       if (content !== currentChapter.content) {
-        console.log('📝 Content changed, marking as changed', {
-          newLength: content?.length,
-          savedLength: currentChapter.content?.length,
-          areDifferent: content !== currentChapter.content
-        });
         markAsChanged();
       }
     }
