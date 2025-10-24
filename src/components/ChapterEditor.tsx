@@ -147,6 +147,13 @@ export function ChapterEditor({
   };
 
   const handleChapterSelect = (chapter: Chapter) => {
+    console.log('🔄 Switching chapter:', {
+      from: currentChapter?.title,
+      to: chapter.title,
+      hasUnsavedChanges,
+      isSameChapter: chapter.id === currentChapter?.id
+    });
+    
     if (hasUnsavedChanges && chapter.id !== currentChapter?.id) {
       setPendingChapterSwitch(chapter);
       setShowUnsavedDialog(true);
@@ -157,8 +164,10 @@ export function ChapterEditor({
 
   const confirmChapterSwitch = async () => {
     if (pendingChapterSwitch) {
+      console.log('💾 Saving before switch...');
       // Save current chapter first
       await forceSave();
+      console.log('✅ Save complete, switching chapter');
       onChapterSelect(pendingChapterSwitch);
       setPendingChapterSwitch(null);
       setShowUnsavedDialog(false);
