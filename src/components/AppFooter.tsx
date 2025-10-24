@@ -54,7 +54,7 @@ export function AppFooter({ className = '', onNavigateToPrivacy, onNavigateToTer
               Cookies
             </button>
             <a 
-              href="mailto:support@inkfluenceai.com" 
+              href="mailto:hello@inkfluenceai.com" 
               className="hover:text-foreground transition-colors"
             >
               Contact

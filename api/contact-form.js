@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       const resend = new Resend(process.env.RESEND_API_KEY);
 
       // Send email notification
-      await resend.emails.send({
+      const result = await resend.emails.send({
         from: 'InkFluence AI <noreply@send.inkfluenceai.com>',
         to: process.env.CONTACT_EMAIL || 'hello@inkfluenceai.com',
         replyTo: email,
@@ -77,10 +77,15 @@ export default async function handler(req, res) {
         `,
       });
 
-      console.log(`✅ Contact form email sent: ${name} (${email}) - ${subject}`);
+      console.log(`✅ Contact form email sent successfully!`);
+      console.log(`From: noreply@send.inkfluenceai.com`);
+      console.log(`To: ${process.env.CONTACT_EMAIL || 'hello@inkfluenceai.com'}`);
+      console.log(`Subject: ${subject}`);
+      console.log(`Resend Email ID: ${result.data?.id || 'N/A'}`);
     } else {
       // Fallback: Just log if no API key (for local development)
-      console.log('📧 Contact Form Submission (no email sent - missing RESEND_API_KEY):', {
+      console.warn('⚠️ RESEND_API_KEY not found - email not sent');
+      console.log('📧 Contact Form Submission (logged only):', {
         name,
         email,
         subject,
