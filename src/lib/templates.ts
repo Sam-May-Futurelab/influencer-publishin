@@ -2187,6 +2187,1016 @@ Remember: Authenticity and entertainment value drive TikTok success more than po
       },
     ],
   },
+  {
+    id: 'content-creator-guide',
+    name: 'Complete Content Creator Guide',
+    description: 'Master YouTube, podcasting, and blogging to build a profitable content empire.',
+    category: 'Content Creation',
+    icon: '🎬',
+    isPremium: true, // 6 chapters
+    brandConfig: {
+      primaryColor: '#DC2626',
+      secondaryColor: '#EF4444',
+      accentColor: '#FEE2E2',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '50 minutes',
+    targetAudience: 'Aspiring content creators and influencers',
+    chapters: [
+      {
+        title: 'Your Content Creation Journey',
+        content: `# Welcome to Content Creation
+
+The creator economy is worth over $100 billion in 2025, and there's never been a better time to start creating content that matters.
+
+## What You'll Learn
+- **YouTube mastery:** Grow subscribers and views organically
+- **Podcast success:** Launch and monetize your show
+- **Blog authority:** Drive traffic and build email lists
+- **Multi-platform strategy:** Repurpose content efficiently
+- **Monetization:** Turn content into consistent income
+- **Systems:** Scale without burning out
+
+## The Creator Mindset
+Success in content creation requires:
+1. **Consistency over perfection** - Ship regularly, improve constantly
+2. **Audience-first thinking** - Solve problems, deliver value
+3. **Long-term vision** - Building an audience takes 6-12 months minimum
+4. **Authenticity** - Your unique perspective is your competitive advantage
+
+## Your First 90 Days
+- **Days 1-30:** Choose your niche, set up platforms, create 10 pieces of content
+- **Days 31-60:** Establish consistent publishing schedule, engage with audience
+- **Days 61-90:** Analyze what works, double down, explore monetization
+
+*This guide will show you exactly how successful creators build audiences, create engaging content, and generate income. Let's begin.*`,
+        order: 0,
+      },
+      {
+        title: 'YouTube Strategy & Growth',
+        content: `# Mastering YouTube in 2025
+
+YouTube remains the king of content platforms with 2.7 billion users. Here's how to grow your channel strategically.
+
+## Channel Foundation
+### Niche Selection
+Choose a niche at the intersection of:
+- **Your expertise/passion** - You'll create 100+ videos on this topic
+- **Market demand** - People actively searching for this content
+- **Monetization potential** - Brands/products you can promote
+
+**Winning YouTube Niches for 2025:**
+- Personal finance and investing
+- Tech reviews and tutorials
+- Health and fitness transformations
+- Business and entrepreneurship
+- Self-improvement and productivity
+- DIY and home improvement
+- Gaming and entertainment
+
+### Channel Setup Checklist
+- [ ] Channel name: Clear, memorable, searchable
+- [ ] Profile picture: Professional headshot or logo
+- [ ] Banner: Shows what you do + upload schedule
+- [ ] About section: Keywords + clear value proposition
+- [ ] Channel trailer: 30-60 seconds for new visitors
+- [ ] Organized playlists: Group content by topic
+
+## The YouTube Algorithm in 2025
+YouTube prioritizes these metrics:
+1. **Click-through rate (CTR)** - Thumbnail + title effectiveness
+2. **Average view duration** - How long people watch
+3. **Session time** - Total time viewers spend on YouTube after your video
+4. **Engagement** - Likes, comments, shares, subscriptions
+
+**Key Insight:** YouTube wants to keep viewers on the platform. Videos that lead to longer viewing sessions get promoted more.
+
+## Content Strategy That Works
+### The 3 Types of YouTube Videos
+**1. SEO Content (40% of your videos)**
+- Answering specific search queries
+- "How to" and tutorial videos
+- Product reviews and comparisons
+- Attracts new viewers through search
+
+**2. Suggested Content (40%)**
+- Trending topics in your niche
+- Reaction videos and commentary
+- Listicles and compilations
+- Gets pushed to existing audiences
+
+**3. Authority Content (20%)**
+- In-depth educational series
+- Personal stories and experiences
+- Unique perspectives
+- Builds loyalty and expertise
+
+### Video Structure Blueprint
+**Hook (First 8 seconds):**
+- State the exact outcome/benefit
+- Create curiosity or urgency
+- Show the most exciting moment
+
+**Pattern Interrupt (Every 30-45 seconds):**
+- Camera angle changes
+- B-roll footage
+- Text overlays and graphics
+- Scene transitions
+
+**Value Delivery:**
+- Clear, organized steps
+- Visual demonstrations
+- Real examples and results
+
+**Call to Action:**
+- Subscribe for more content
+- Watch related video next
+- Download free resource
+
+## Thumbnail & Title Mastery
+Your thumbnail + title get 50% of viewers to click. Here's the formula:
+
+### Winning Thumbnail Elements
+- **Faces with emotion** - Surprise, excitement, shock (if authentic)
+- **High contrast** - Readable from phone screens
+- **3-5 words max** - Big, bold text
+- **Visual intrigue** - What's happening in this video?
+- **Consistent branding** - Same style across videos
+
+### Title Formulas That Work
+- "How I [Achieved Result] in [Timeframe]"
+- "Why Everyone Is Wrong About [Topic]"
+- "[Number] Mistakes Beginners Make With [Topic]"
+- "The ONLY [Thing] You Need for [Result]"
+- "I Tried [Thing] for [Time] - Here's What Happened"
+
+**Testing Tips:**
+- Use YouTube's A/B testing for thumbnails
+- Track CTR in analytics (aim for 10%+)
+- Study competitors' top-performing videos
+
+## Growing Your Channel
+### First 1,000 Subscribers Strategy
+**Weeks 1-4: Publish 8-12 videos**
+- Test different formats and topics
+- Find what resonates with YOUR audience
+- Don't worry about equipment - focus on value
+
+**Weeks 5-8: Double down on what works**
+- Analyze top 3 performing videos
+- Create similar content with variations
+- Engage with every comment
+
+**Weeks 9-12: Community building**
+- Ask questions in videos
+- Create polls and community posts
+- Collaborate with similar-sized creators
+- Cross-promote on other platforms
+
+### Scaling to 10,000+ Subscribers
+Once you find your content-market fit:
+- **Consistency:** Upload 1-2x per week minimum
+- **Series:** Create episodic content people follow
+- **Trends:** Jump on trending topics in your niche quickly
+- **Collabs:** Partner with creators 2-3x your size
+- **Shorts:** Use YouTube Shorts to attract new viewers
+
+## Monetization Timeline
+- **1,000 subscribers + 4,000 watch hours:** YouTube Partner Program (ads)
+- **5,000 subscribers:** Affiliate marketing becomes viable
+- **10,000 subscribers:** Sponsorships reach out to you
+- **50,000+ subscribers:** Consider own products/courses
+
+*Pro Tip: Don't wait for 1,000 subs to monetize. Start with affiliate links from day one.*`,
+        order: 1,
+      },
+      {
+        title: 'Podcast Launch & Growth',
+        content: `# Building a Successful Podcast
+
+Podcasting is intimate, portable, and easier to consume than video. Here's how to launch and grow your show.
+
+## Podcast Foundation
+### Finding Your Podcast Angle
+**The best podcasts solve one of these needs:**
+- **Education:** Teach specific skills (marketing, investing, coding)
+- **Entertainment:** Stories, comedy, true crime
+- **Inspiration:** Interviews with successful people
+- **News/Analysis:** Commentary on industry/niche topics
+- **Community:** Bringing together people with shared interests
+
+**Your Unique Positioning:**
+Answer these questions:
+1. What do you talk about that makes people lean in?
+2. What perspective do you have that others don't?
+3. Who is your dream listener? What do they care about?
+
+### Equipment (Start Simple)
+**Minimum Setup ($150-300):**
+- USB microphone: Audio-Technica ATR2100x or Samson Q2U
+- Headphones: Any closed-back headphones
+- Recording software: Audacity (free) or GarageBand (Mac)
+- Quiet room with soft furnishings (reduces echo)
+
+**Upgrade Later ($500-1000):**
+- XLR microphone: Shure SM7B or Rode PodMic
+- Audio interface: Focusrite Scarlett 2i2
+- Professional software: Adobe Audition or Logic Pro
+- Acoustic treatment panels
+
+**Don't let equipment delay your launch. Start with what you have.**
+
+## Content Strategy
+### Episode Formats That Work
+**1. Solo Commentary (Easiest to start)**
+- Your thoughts on industry news/trends
+- Lessons learned from experiences
+- Step-by-step tutorials and how-tos
+- Q&A episodes answering listener questions
+
+**2. Interview Shows (Builds network)**
+- Industry experts and thought leaders
+- Success stories and case studies
+- Debates and discussions
+- Behind-the-scenes with interesting people
+
+**3. Co-Hosted Shows (More engaging)**
+- Chemistry and banter between hosts
+- Different perspectives on topics
+- Regular segments and recurring jokes
+- Easier to maintain energy for 30-60 minutes
+
+**4. Narrative/Storytelling**
+- Investigative series
+- Personal journey documentation
+- History and deep-dives
+- Requires more production time
+
+### Episode Structure
+**Opening (2-3 minutes):**
+- Hook: Most interesting moment from episode
+- Intro music and show branding
+- Brief preview of what's coming
+- Sponsor message (if applicable)
+
+**Main Content (25-45 minutes):**
+- Organized into 3-5 main segments
+- Natural conversation flow
+- Stories and examples
+- Actionable takeaways
+
+**Closing (3-5 minutes):**
+- Recap key points
+- Call to action (subscribe, review, follow)
+- Preview next episode
+- Final sponsor message
+
+## Recording & Editing Basics
+### Recording Best Practices
+- Test audio levels before each session
+- Use a pop filter to reduce plosives (P and B sounds)
+- Record in a quiet space (closet full of clothes works great)
+- Record locally, not over internet calls when possible
+- Keep a glass of water nearby for dry mouth
+
+### Editing Workflow
+**Essential Edits:**
+- Remove long pauses and dead air
+- Cut obvious mistakes and restarts
+- Adjust audio levels for consistency
+- Remove mouth clicks and background noise
+- Add intro/outro music
+
+**Don't Over-Edit:**
+- Keep natural conversation flow
+- Leave in personality and authentic moments
+- Ums and ahs are fine in moderation
+- Perfect isn't the goal - authentic is
+
+**Tools & Shortcuts:**
+- Use Descript for automatic transcription and editing
+- Auphonic for automatic audio processing
+- Fiverr editors: $20-50 per episode if you want help
+
+## Publishing & Distribution
+### Hosting Platforms
+Choose a podcast host (these are not free, but essential):
+- **Buzzsprout** ($12-24/month) - Easiest for beginners
+- **Transistor** ($19-99/month) - Great analytics
+- **Libsyn** ($5-80/month) - Industry standard
+- **Anchor** (Free) - Spotify's platform, monetization options
+
+Your host distributes to:
+- Apple Podcasts (70% of podcast listening)
+- Spotify (20% and growing)
+- Google Podcasts
+- Amazon Music
+- Overcast, Pocket Casts, etc.
+
+### Episode Publishing Checklist
+- [ ] Eye-catching cover art (3000x3000px)
+- [ ] Optimized episode title with keywords
+- [ ] Detailed show notes with timestamps
+- [ ] Transcript for accessibility and SEO
+- [ ] Links to resources mentioned
+- [ ] Consistent publishing schedule
+
+## Growing Your Podcast Audience
+### First 100 Downloads Per Episode
+**Week 1-2: Personal Network**
+- Share on all your social media
+- Email your contact list
+- Ask friends to subscribe and review
+- Post in relevant Facebook groups
+
+**Week 3-4: Guesting Strategy**
+- Be a guest on similar-sized podcasts
+- Mention your show naturally in interviews
+- Cross-promote with other podcasters
+- Target shows with your ideal audience
+
+**Ongoing: Consistent Publishing**
+- Weekly publishing builds habit with listeners
+- Miss a week = lose momentum
+- Batch record 4-6 episodes at once
+- Schedule releases in advance
+
+### Scaling to 1,000+ Downloads
+**Content Marketing:**
+- Turn episodes into blog posts
+- Create quote graphics for social media
+- Post video clips to YouTube/TikTok
+- Write LinkedIn articles from key points
+
+**SEO Optimization:**
+- Keyword-rich episode titles
+- Detailed show notes with links
+- Transcripts boost search visibility
+- Submit to podcast directories
+
+**Community Building:**
+- Engage with listeners on social media
+- Feature listener questions/feedback
+- Create a Discord or Facebook group
+- Host live Q&As or recordings
+
+## Podcast Monetization
+### Revenue Streams (in order of ease)
+**1. Affiliate Marketing (Start immediately)**
+- Recommend tools/products you actually use
+- Unique tracking links and promo codes
+- Integrate naturally into content
+- Earnings: $100-1,000/month at 1,000 downloads
+
+**2. Sponsorships (500+ downloads per episode)**
+- Direct outreach to brands in your niche
+- Use platforms: Podcorn, AdvertiseCast
+- Rate: $18-25 CPM (per 1,000 downloads)
+- Earnings: $500-2,500/month at 5,000 downloads
+
+**3. Premium Content (Loyal audience required)**
+- Patreon: Bonus episodes, early access
+- Memberful: Private RSS feeds
+- Substack: Newsletter + podcast bundle
+- Earnings: $500-5,000/month with engaged community
+
+**4. Your Own Products (Most profitable)**
+- Online courses related to podcast topic
+- Coaching and consulting services
+- Books and digital guides
+- Earnings: $2,000-20,000+/month
+
+*Most successful podcasters combine multiple revenue streams.*`,
+        order: 2,
+      },
+      {
+        title: 'Blogging for Traffic & Authority',
+        content: `# Building a Profitable Blog in 2025
+
+Blogs aren't dead - they're more valuable than ever for SEO, email list building, and establishing authority.
+
+## Why Blogging Still Works
+**The advantages blogs have over video/audio:**
+- **Search engine dominance** - Google still prioritizes written content
+- **Skimmable** - Readers can quickly find what they need
+- **Evergreen** - Content stays relevant for years
+- **Email capture** - Convert readers to subscribers easily
+- **Lower barrier** - Easier to produce than quality video/audio
+
+## Blog Foundation & Setup
+### Choosing Your Platform
+**Self-Hosted WordPress (Recommended for monetization):**
+- Full control and ownership
+- Unlimited customization
+- Professional appearance
+- Cost: $5-10/month hosting + $15/year domain
+
+**Alternatives:**
+- **Medium:** Built-in audience, less control, limited monetization
+- **Substack:** Great for paid newsletters, limited design
+- **Ghost:** Clean, fast, but fewer plugins than WordPress
+
+### Essential Blog Setup
+**Technical Checklist:**
+- [ ] Fast hosting (SiteGround, Kinsta, or Cloudways)
+- [ ] SSL certificate (HTTPS) for security
+- [ ] Mobile-responsive theme
+- [ ] Fast page load speed (under 3 seconds)
+- [ ] XML sitemap for search engines
+- [ ] Google Analytics + Search Console
+
+**Content Structure:**
+- Clear navigation menu
+- About page telling your story
+- Start here page for new readers
+- Contact page
+- Privacy policy + disclosure
+
+## Content Strategy & SEO
+### Finding Profitable Topics
+**The Goldilocks Zone:**
+You want topics that are:
+- **Searched enough:** 500+ monthly searches
+- **Not too competitive:** You can rank in top 10 results
+- **Monetizable:** Affiliate products or ads pay well
+
+**Research Tools:**
+- Google Keyword Planner (free)
+- Ahrefs or SEMrush (paid, best data)
+- Answer the Public (free idea generator)
+- Competitor research (what ranks for them?)
+
+### Article Types That Rank
+**1. Ultimate Guides (3,000-5,000 words)**
+- Comprehensive coverage of broad topics
+- "The Complete Guide to [Topic]"
+- Ranks for multiple keywords
+- Becomes pillar content you link to
+
+**2. How-To Tutorials (1,500-2,500 words)**
+- Step-by-step instructions
+- Screenshots and examples
+- Clear action steps
+- Answers specific search intent
+
+**3. Product Reviews (1,500-3,000 words)**
+- Honest pros and cons
+- Personal experience and testing
+- Comparison tables
+- Affiliate links to purchase
+
+**4. Comparison Posts (2,000-3,000 words)**
+- "X vs Y: Which Is Better?"
+- Side-by-side feature comparison
+- Clear recommendation
+- Captures high-intent buyers
+
+**5. Listicles (1,200-2,500 words)**
+- "Top 10 [Tools/Tips/Resources]"
+- Easily skimmable
+- Shareable on social media
+- Great for backlink building
+
+### SEO Optimization Checklist
+**On-Page SEO:**
+- [ ] Target keyword in title (front-loaded)
+- [ ] H1 tag matches or includes keyword
+- [ ] Keyword in first 100 words
+- [ ] H2 and H3 subheadings with related keywords
+- [ ] Alt text on all images
+- [ ] Internal links to related posts
+- [ ] External links to authoritative sources
+- [ ] Meta description (155 characters, includes keyword)
+
+**Content Quality Signals:**
+- [ ] Answers search intent completely
+- [ ] Original insights, not rehashed info
+- [ ] Updated regularly (freshness matters)
+- [ ] Easy to read (short paragraphs, bullet points)
+- [ ] Mobile-friendly formatting
+- [ ] Fast load speed
+- [ ] Low bounce rate (engaging content)
+
+## Writing High-Converting Blog Posts
+### The Article Structure That Works
+**Opening (First 150 words):**
+- Hook with bold claim, question, or story
+- Clearly state what reader will learn
+- Address why they should care (benefits)
+- Set expectations (time to read, difficulty)
+
+**Body (Main content):**
+- Break into scannable sections with H2/H3
+- Use short paragraphs (2-4 sentences max)
+- Include visuals every 300-500 words
+- Bold key takeaways
+- Use bullet points and numbered lists
+- Add examples and case studies
+
+**Conclusion:**
+- Summarize key points
+- Provide clear next step
+- CTA: Download resource, join email list, read related post
+
+**Content Upgrades:**
+- Downloadable checklists
+- Templates and worksheets
+- Bonus chapters or guides
+- Email course related to topic
+
+## Growing Blog Traffic
+### First 1,000 Monthly Visitors
+**Months 1-3: Foundation (Publish 12-20 posts)**
+- Focus on long-tail keywords (low competition)
+- Aim for 1,500+ words per post
+- Optimize every post for SEO
+- Build internal linking structure
+
+**Months 4-6: Promotion**
+- Share on all social platforms
+- Engage in niche communities (Reddit, Facebook groups)
+- Comment on related blogs
+- Reach out for guest posting opportunities
+
+**Months 7-12: Link Building**
+- Create "link bait" content (comprehensive guides, data)
+- Reach out to bloggers for backlinks
+- Guest post on established blogs
+- Build relationships with other creators
+
+### Scaling to 10,000+ Monthly Visitors
+**The Compound Effect:**
+- Publish consistently (2-4 posts per week)
+- Update old posts with fresh info (boosts rankings)
+- Expand on successful topics (topic clusters)
+- Interlink related content strategically
+
+**Advanced Tactics:**
+- Publish original research or surveys
+- Create infographics (highly shareable)
+- Build free tools or calculators
+- Appear on podcasts and reference your blog
+- Collaborate with other bloggers
+
+## Blog Monetization
+### Revenue Options (Ranked by profitability)
+**1. Affiliate Marketing (Best ROI)**
+- Promote products you actually use/believe in
+- Amazon Associates: 1-10% commission
+- Software/SaaS: 20-50% recurring commissions
+- Courses: 30-50% commissions
+- Earnings potential: $500-$10,000+/month
+
+**2. Display Ads (Passive, lower pay)**
+- AdSense: $5-20 per 1,000 pageviews
+- Mediavine: $15-30 per 1,000 pageviews (requires 50k sessions/month)
+- Ezoic: Good for smaller blogs
+- Earnings: $500-2,000/month at 50k pageviews
+
+**3. Sponsored Posts (Good for established blogs)**
+- Brands pay for product mentions
+- Typical rates: $100-2,000 per post
+- Maintain editorial integrity
+- Earnings: $1,000-5,000/month
+
+**4. Digital Products (Highest margins)**
+- eBooks and guides: $17-97
+- Online courses: $97-997
+- Templates and tools: $27-197
+- Membership sites: $19-99/month recurring
+- Earnings: $2,000-20,000+/month with audience
+
+**5. Services (Highest per-transaction value)**
+- Consulting: $100-500/hour
+- Coaching: $500-2,000/month
+- Done-for-you services: $1,000-10,000/project
+- Earnings: $5,000-50,000+/month
+
+*Most successful bloggers combine multiple income streams.*`,
+        order: 3,
+      },
+      {
+        title: 'Multi-Platform Content Strategy',
+        content: `# Repurposing Content Across Platforms
+
+Working smarter, not harder: Create once, publish everywhere.
+
+## The Content Multiplication System
+The key to sustainable content creation is repurposing. One piece of content should fuel 10+ posts across platforms.
+
+### The Content Pyramid
+**Pillar Content (1 piece/week):**
+- Long-form YouTube video (10-20 minutes)
+- Blog post (2,000+ words)
+- Podcast episode (30-45 minutes)
+
+**Repurposed Content (10-20 pieces):**
+From that single pillar, create:
+- 5-10 short clips for TikTok/Reels/Shorts
+- 3-5 Twitter/X threads
+- 2-3 LinkedIn posts
+- 1 email newsletter
+- 5-7 Instagram carousel posts
+- Quote graphics
+- Audiogram clips for social
+
+**Micro Content (20-30+ pieces):**
+- Individual tips as tweets
+- Behind-the-scenes stories
+- Engagement posts (polls, questions)
+- Community responses
+
+## Platform-Specific Strategies
+### YouTube (Authority & Evergreen)
+**Best for:**
+- Long-form education
+- SEO traffic
+- Building authority
+- Ad revenue
+
+**Content types:**
+- Tutorials and how-tos
+- Deep-dive explanations
+- Product reviews
+- Vlogs and behind-the-scenes
+
+**Posting frequency:** 1-2x per week
+
+### TikTok/Reels/Shorts (Discovery & Virality)
+**Best for:**
+- Reaching new audiences fast
+- Entertainment and quick tips
+- Trending topics
+- Building personal brand
+
+**Content types:**
+- 15-60 second tips
+- Before/after transformations
+- Hot takes and opinions
+- Trend participation
+
+**Posting frequency:** 1-3x per day
+
+### Blog/Newsletter (Email List Building)
+**Best for:**
+- SEO traffic
+- Email list growth
+- Detailed explanations
+- Monetization
+
+**Content types:**
+- Ultimate guides
+- Case studies
+- Resource roundups
+- Personal stories
+
+**Posting frequency:** 1-2x per week
+
+### Twitter/X (Real-Time & Networking)
+**Best for:**
+- Building relationships
+- Sharing quick insights
+- Joining conversations
+- Driving traffic
+
+**Content types:**
+- Threads (6-10 tweets)
+- Single tweet wisdom
+- Questions and polls
+- Commentary on news
+
+**Posting frequency:** 3-10x per day
+
+### LinkedIn (Professional Authority)
+**Best for:**
+- B2B audience
+- Professional credibility
+- Business opportunities
+- Thought leadership
+
+**Content types:**
+- Career stories and lessons
+- Industry insights
+- Professional advice
+- Case studies
+
+**Posting frequency:** 3-5x per week
+
+## Repurposing Workflow
+### Step 1: Create Pillar Content
+Example: Record 20-minute YouTube video on "5 Content Creation Mistakes"
+
+### Step 2: Extract Short Clips
+- Use Descript or OpusClip to auto-generate clips
+- Each mistake becomes its own 30-60 second video
+- Add captions and hook text overlay
+- Post to TikTok, Reels, Shorts
+
+### Step 3: Write Blog Post
+- Transcribe YouTube video
+- Expand each section with examples
+- Add images and formatting
+- Optimize for SEO
+- Publish on blog
+
+### Step 4: Create Social Posts
+**Twitter threads:**
+"I analyzed 500 content creators. Here are the 5 mistakes keeping them stuck:
+1. [Mistake]
+2. [Mistake]..." (expand each point)
+
+**LinkedIn post:**
+"After coaching 100+ creators, I've identified the #1 reason most fail: [Mistake 1]. Here's what successful creators do instead..."
+
+**Instagram carousels:**
+- Slide 1: "5 Content Mistakes"
+- Slides 2-6: One mistake per slide
+- Slide 7: CTA to full video/blog
+
+### Step 5: Email Newsletter
+- Link to YouTube video
+- Summarize key points
+- Add personal commentary
+- CTA to premium content
+
+**Time Investment:**
+- Create pillar: 2-4 hours
+- Repurpose everything: 1-2 hours
+- Total: 3-6 hours for 20+ pieces of content
+
+## Content Creation Tools
+### Video & Audio
+- **Recording:** OBS Studio (free), Riverside.fm (podcasts)
+- **Editing:** DaVinci Resolve (free), Adobe Premiere
+- **Auto-clips:** OpusClip, Descript, Repurpose.io
+- **Captions:** Descript, CapCut, Subly
+
+### Writing & Organization
+- **Writing:** Notion, Google Docs, Hemingway Editor
+- **Planning:** Trello, Asana, Airtable
+- **Transcription:** Descript, Otter.ai
+- **Grammar:** Grammarly, ProWritingAid
+
+### Design & Graphics
+- **Graphics:** Canva (templates for everything)
+- **Thumbnails:** Photoshop, Figma, Canva
+- **Video editing:** CapCut (mobile), Premiere Rush
+- **Stock images:** Unsplash, Pexels (free)
+
+### Scheduling & Automation
+- **Social media:** Buffer, Hootsuite, Later
+- **Email:** ConvertKit, Mailchimp, Beehiiv
+- **Video:** YouTube Studio, TubeBuddy
+- **Analytics:** Google Analytics, Social Blade
+
+## Time Management for Creators
+### Batching Content Creation
+**The Weekly Schedule:**
+- **Monday:** Planning & research (2 hours)
+- **Tuesday:** Recording pillar content (3-4 hours)
+- **Wednesday:** Editing & repurposing (3-4 hours)
+- **Thursday:** Writing blog post (2-3 hours)
+- **Friday:** Scheduling posts, engagement (2 hours)
+- **Weekend:** Community engagement, ideation
+
+**The Power of Batching:**
+- Record 4-6 videos in one day
+- Write 3-4 blog posts in one session
+- Design 20-30 graphics at once
+- Schedule 2 weeks of content in one sitting
+
+### Avoiding Creator Burnout
+**Set Boundaries:**
+- Define working hours
+- Take one full day off per week
+- Don't check analytics obsessively
+- Unplug evenings and weekends
+
+**Sustainable Pace:**
+- Quality > quantity always
+- Build buffer of content (2 weeks ahead)
+- It's okay to take breaks
+- Delegate or outsource when possible
+
+**Self-Care Checklist:**
+- Exercise 3-4x per week
+- Sleep 7-8 hours
+- Limit social media consumption
+- Connect with friends offline
+- Have hobbies outside content creation
+
+*Remember: Content creation is a marathon, not a sprint. Consistency over time beats intensity that leads to burnout.*`,
+        order: 4,
+      },
+      {
+        title: 'Monetization & Scaling',
+        content: `# Turning Content Into Consistent Income
+
+Building an audience is step one. Here's how to monetize effectively and scale your creator business.
+
+## The Creator Monetization Ladder
+### Level 1: $0-1,000/month (Audience building)
+**Focus:** Create consistently, grow audience, test monetization
+
+**Primary income sources:**
+- Affiliate marketing (recommend tools you use)
+- Platform ad revenue (YouTube, Medium)
+- Sponsorships from small brands
+- Freelance work leveraging your expertise
+
+**Milestone:** 1,000-5,000 followers/subscribers
+
+### Level 2: $1,000-5,000/month (Monetization basics)
+**Focus:** Diversify income, build email list, create simple products
+
+**Income sources:**
+- More lucrative affiliate programs (software, courses)
+- Regular sponsorships ($200-1,000 per post)
+- First digital product (eBook, guide) at $17-47
+- Premium content (Patreon, memberships) at $5-25/month
+
+**Milestone:** 5,000-20,000 followers + 1,000 email subscribers
+
+### Level 3: $5,000-15,000/month (Product creator)
+**Focus:** Scale products, team building, systems
+
+**Income sources:**
+- Multiple digital products ($500-5,000/month each)
+- Online courses ($97-497) with regular launches
+- High-ticket coaching ($500-2,000/client)
+- Brand deals ($1,000-5,000 per campaign)
+- Affiliate commissions ($2,000-5,000/month)
+
+**Milestone:** 20,000-100,000 followers + 5,000 email subscribers
+
+### Level 4: $15,000-50,000+/month (Business owner)
+**Focus:** Team, systems, multiple revenue streams, investments
+
+**Income sources:**
+- Subscription products ($10,000-30,000/month)
+- High-ticket programs ($2,000-10,000 per client)
+- Licensing and speaking ($5,000-25,000 per event)
+- Business investments and acquisitions
+- Agency or done-for-you services
+
+**Milestone:** 100,000+ followers + 25,000+ email subscribers
+
+## Building Your Product Ecosystem
+### Digital Products Ranked by Profitability
+**1. Online Courses ($97-997)**
+- **Time to create:** 20-60 hours
+- **Average conversion:** 2-5% of email list
+- **Profit margin:** 95%+
+- **Best for:** Teaching complex skills with transformation
+
+**2. Membership Communities ($19-99/month)**
+- **Time to create:** 10-20 hours setup + ongoing
+- **Average retention:** 3-8 months
+- **Profit margin:** 90%+
+- **Best for:** Ongoing support, community, content
+
+**3. High-Ticket Coaching ($500-5,000)**
+- **Time to create:** Minimal (offer your time)
+- **Average conversion:** 1-3% of qualified leads
+- **Profit margin:** 100% (pure time)
+- **Best for:** Personalized guidance, accountability
+
+**4. Templates & Tools ($27-197)**
+- **Time to create:** 5-30 hours
+- **Average conversion:** 3-7%
+- **Profit margin:** 95%+
+- **Best for:** Saving time, providing frameworks
+
+**5. eBooks & Guides ($17-47)**
+- **Time to create:** 10-40 hours
+- **Average conversion:** 5-10%
+- **Profit margin:** 95%+
+- **Best for:** Lead generation, authority building
+
+## Email List = Your Most Valuable Asset
+### Why Email Beats Social Media
+- **You own it** - Platform changes can't destroy your business
+- **Higher engagement** - 20-30% open rates vs 2-5% social reach
+- **Direct sales** - 1-5% purchase rate on promotions
+- **Builds relationships** - Inbox is intimate space
+
+### Growing Your Email List
+**Lead Magnets That Convert:**
+- Free chapter from paid course
+- Checklists and templates
+- Resource libraries
+- Email courses (5-7 day series)
+- Free tools and calculators
+
+**Conversion Rate Goals:**
+- Blog to email: 3-7%
+- YouTube to email: 1-3%
+- Social media to email: 0.5-2%
+
+**Newsletter Strategy:**
+- Send consistently (weekly minimum)
+- 80% value, 20% promotion
+- Personal stories build connection
+- Every email has clear CTA
+
+## Sponsorships & Brand Deals
+### Getting Your First Sponsorship
+**When you're ready:**
+- 5,000+ engaged followers
+- Consistent content output
+- Clear niche/audience
+- Professional content quality
+
+**How to approach brands:**
+1. Create media kit (audience demographics, engagement stats)
+2. Identify brands your audience uses
+3. Direct outreach via email/LinkedIn
+4. Pitch specific collaboration ideas
+5. Start with product trades, then negotiate payment
+
+**Pricing Formula:**
+- Minimum: $100 per 10,000 followers
+- Industry standard: $100-250 per 10,000 followers for dedicated post
+- Video integration: 2-3x higher rates
+- Ongoing partnerships: Monthly retainer (5-10x single post rate)
+
+### Sponsorship Platforms
+- **Podcorn:** Podcast and YouTube sponsorships
+- **GRIN:** Influencer marketplace
+- **AspireIQ:** Brand collaboration platform
+- **FameBit:** YouTube sponsorships (owned by YouTube)
+
+## Scaling Your Creator Business
+### When to Hire Help
+**First hires (in order):**
+1. **Video editor** ($20-100 per video) - Saves 5-10 hours/week
+2. **Virtual assistant** ($15-30/hour) - Admin, scheduling, emails
+3. **Content writer** ($0.10-0.50/word) - Blog posts, scripts
+4. **Graphic designer** ($25-75/hour) - Thumbnails, social graphics
+5. **Community manager** ($500-2,000/month) - Engage with audience
+
+**Finding freelancers:**
+- Upwork, Fiverr (lower cost, more vetting required)
+- Twitter/X (quality creators looking for work)
+- Slack communities in your niche
+- Referrals from other creators
+
+### Systems & Automation
+**Content Creation:**
+- Template all recurring content types
+- Standard operating procedures (SOPs)
+- Shared drives and asset libraries
+- Project management tools (Asana, Monday)
+
+**Business Operations:**
+- Payment processing: Stripe, Gumroad, ThriveCart
+- Course platforms: Teachable, Kajabi, Podia
+- Email automation: ConvertKit, ActiveCampaign
+- Scheduling: Calendly for calls, Buffer for social
+
+### Avoiding Common Scaling Mistakes
+**❌ Hiring too fast** - Revenue should support 2-3x salary cost
+**❌ Chasing every opportunity** - Focus beats scattered energy
+**❌ Neglecting existing audience** - Retention > acquisition
+**❌ Overcomplicating products** - Simple often sells better
+**❌ Ignoring financials** - Track revenue, expenses, profit margins
+
+## Long-Term Creator Success
+### Diversification Strategy
+**Never rely on one platform or revenue source:**
+- Multiple content platforms (2-3 primary)
+- Multiple income streams (4-6 different sources)
+- Email list ownership (cannot be taken away)
+- Investments outside your business (financial security)
+
+### The Creator Mindset for Longevity
+**1. Think in years, not months**
+- True success takes 2-3 years minimum
+- Compound growth is real
+- Consistency beats intensity
+
+**2. Serve your audience first**
+- Help people get results
+- Deliver more value than you charge
+- Listen to feedback and adapt
+
+**3. Evolve with your audience**
+- Your content will change over time
+- That's healthy and expected
+- Don't be afraid to pivot when needed
+
+**4. Build a real business**
+- Treat content creation professionally
+- Track metrics and finances
+- Plan for the long term
+- Create systems and processes
+
+*The creator economy is just beginning. Those who build sustainable businesses around their expertise and creativity will thrive for decades to come. Your journey starts now.*`,
+        order: 5,
+      },
+    ],
+  },
 ];
 
 export function createProjectFromTemplate(template: EbookTemplate, customTitle?: string): EbookProject {
