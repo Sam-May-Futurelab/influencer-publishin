@@ -669,12 +669,62 @@ export function ChapterEditor({
 
                         {pendingContent ? (
                           <div 
-                            className="prose prose-sm sm:prose lg:prose-lg max-w-none"
+                            className="chapter-content-preview"
                             style={{ 
                               fontFamily: brandConfig?.fontFamily || 'Inter, sans-serif',
+                              fontSize: '1.15em',
+                              lineHeight: '1.9',
+                              textAlign: 'justify',
+                              color: '#374151',
+                              hyphens: 'auto',
+                              wordSpacing: '0.05em'
                             }}
-                            dangerouslySetInnerHTML={{ __html: pendingContent }}
-                          />
+                          >
+                            <style>{`
+                              .chapter-content-preview p {
+                                margin-bottom: 1.5em;
+                                text-indent: 1.5em;
+                              }
+                              .chapter-content-preview p:first-of-type,
+                              .chapter-content-preview p:first-child {
+                                text-indent: 0;
+                              }
+                              .chapter-content-preview p:first-child::first-letter {
+                                font-size: 3.5em;
+                                font-weight: 700;
+                                color: ${brandConfig?.primaryColor || '#8B5CF6'};
+                                float: left;
+                                line-height: 0.9;
+                                margin-right: 0.1em;
+                                margin-top: 0.1em;
+                              }
+                              .chapter-content-preview h1,
+                              .chapter-content-preview h2,
+                              .chapter-content-preview h3 {
+                                color: ${brandConfig?.primaryColor || '#8B5CF6'};
+                                margin-top: 1.5em;
+                                margin-bottom: 0.8em;
+                                text-indent: 0;
+                              }
+                              .chapter-content-preview ul,
+                              .chapter-content-preview ol {
+                                margin-bottom: 1.5em;
+                                padding-left: 2em;
+                              }
+                              .chapter-content-preview li {
+                                margin-bottom: 0.5em;
+                              }
+                              .chapter-content-preview strong {
+                                font-weight: 600;
+                                color: ${brandConfig?.primaryColor || '#8B5CF6'};
+                              }
+                              .chapter-content-preview a {
+                                color: ${brandConfig?.primaryColor || '#8B5CF6'};
+                                text-decoration: underline;
+                              }
+                            `}</style>
+                            <div dangerouslySetInnerHTML={{ __html: pendingContent }} />
+                          </div>
                         ) : (
                           <div className="text-center py-12 text-muted-foreground">
                             <Eye size={48} className="mx-auto mb-4 opacity-50" />

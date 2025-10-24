@@ -24,37 +24,62 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
     }, 0);
   };
 
-  const isHTML = (content: string) => {
-    // Check if content contains HTML tags
-    return /<\/?[a-z][\s\S]*>/i.test(content);
-  };
-
   const formatContent = (content: string) => {
-    // If content is HTML (from rich text editor), render it directly
-    if (isHTML(content)) {
-      return (
-        <div 
-          className="prose prose-sm lg:prose-base max-w-none"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
-      );
+    if (!content) return <p className="text-muted-foreground italic">No content yet...</p>;
+    
+    // Check if content is markdown (contains markdown syntax)
+    const isMarkdown = content.includes('**') || content.includes('##') || content.includes('- ') || content.includes('# ');
+    
+    if (isMarkdown) {
+      // Convert markdown to HTML (same logic as export.ts)
+      let html = content;
+      
+      // Headers
+      html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+      
+      // Bold
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      
+      // Italic
+      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      
+      // Links
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+      
+      // Unordered lists (bullet points)
+      html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+      html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+      // Fix nested ul tags
+      html = html.replace(/<\/ul>\s*<ul>/g, '');
+      
+      // Ordered lists (numbered)
+      html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+      
+      // Checkboxes
+      html = html.replace(/- \[ \] (.+)/g, '<li>☐ $1</li>');
+      html = html.replace(/- \[x\] (.+)/gi, '<li>☑ $1</li>');
+      
+      // Paragraphs (lines separated by blank lines)
+      html = html.replace(/\n\n/g, '</p><p>');
+      html = html.replace(/^(?!<[hul])/gm, '<p>');
+      html = html.replace(/(?<![>])$/gm, '</p>');
+      
+      // Clean up extra p tags around headers and lists
+      html = html.replace(/<p>(<h[1-6]>)/g, '$1');
+      html = html.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
+      html = html.replace(/<p>(<ul>)/g, '$1');
+      html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+      html = html.replace(/<p>(<ol>)/g, '$1');
+      html = html.replace(/(<\/ol>)<\/p>/g, '$1');
+      html = html.replace(/<p><\/p>/g, '');
+      
+      return <div dangerouslySetInnerHTML={{ __html: html }} />;
     }
     
-    // Otherwise, treat as plain text (from AI or old content)
-    return content
-      .split('\n\n')
-      .map((paragraph, index) => {
-        if (paragraph.startsWith('#')) {
-          // Handle markdown headers
-          const level = paragraph.match(/^#+/)?.[0].length || 1;
-          const text = paragraph.replace(/^#+\s*/, '');
-          const className = level === 1 ? 'text-xl font-bold mb-4' : 
-                           level === 2 ? 'text-lg font-semibold mb-3' : 
-                           'text-base font-medium mb-2';
-          return <h2 key={index} className={className}>{text}</h2>;
-        }
-        return <p key={index} className="mb-3 leading-relaxed">{paragraph}</p>;
-      });
+    // Content is already HTML from the rich text editor
+    return <div dangerouslySetInnerHTML={{ __html: content }} />;
   };
 
   const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
@@ -224,29 +249,62 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
                     {chapter.title}
                   </h2>
                   
-                  {/* Chapter Content with drop cap styling */}
+                  {/* Chapter Content with drop cap styling - matching export.ts */}
                   <div 
-                    className="text-base lg:text-lg leading-relaxed text-foreground/90"
+                    className="text-foreground/90 chapter-content-preview"
                     style={{ 
+                      fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif',
+                      fontSize: '1.15em',
+                      lineHeight: '1.9',
                       textAlign: 'justify',
-                      lineHeight: '1.8',
-                      fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                      color: '#374151',
+                      hyphens: 'auto',
+                      wordSpacing: '0.05em'
                     }}
                   >
                     {chapter.content ? (
-                      <div className="chapter-content-preview">
+                      <div>
                         <style>{`
-                          .chapter-content-preview p:first-of-type::first-letter {
-                            font-size: 3em;
+                          .chapter-content-preview p {
+                            margin-bottom: 1.5em;
+                            text-indent: 1.5em;
+                          }
+                          .chapter-content-preview p:first-of-type,
+                          .chapter-content-preview p:first-child {
+                            text-indent: 0;
+                          }
+                          .chapter-content-preview p:first-child::first-letter {
+                            font-size: 3.5em;
                             font-weight: 700;
                             color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
                             float: left;
-                            line-height: 1;
-                            margin-right: 8px;
-                            margin-top: 4px;
+                            line-height: 0.9;
+                            margin-right: 0.1em;
+                            margin-top: 0.1em;
                           }
-                          .chapter-content-preview p {
-                            margin-bottom: 1.2em;
+                          .chapter-content-preview h1,
+                          .chapter-content-preview h2,
+                          .chapter-content-preview h3 {
+                            color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
+                            margin-top: 1.5em;
+                            margin-bottom: 0.8em;
+                            text-indent: 0;
+                          }
+                          .chapter-content-preview ul,
+                          .chapter-content-preview ol {
+                            margin-bottom: 1.5em;
+                            padding-left: 2em;
+                          }
+                          .chapter-content-preview li {
+                            margin-bottom: 0.5em;
+                          }
+                          .chapter-content-preview strong {
+                            font-weight: 600;
+                            color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
+                          }
+                          .chapter-content-preview a {
+                            color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
+                            text-decoration: underline;
                           }
                         `}</style>
                         {formatContent(chapter.content)}
