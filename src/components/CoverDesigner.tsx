@@ -497,11 +497,12 @@ export function CoverDesigner({
             <div className="text-xs font-semibold text-muted-foreground text-center uppercase tracking-wide mb-4">
               Live Preview
             </div>
-            <div
-              ref={canvasRef}
-              className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-sm bg-white"
-              style={getBackgroundStyle()}
-            >
+            <div className="w-full flex justify-center items-center">
+              <div
+                ref={canvasRef}
+                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm bg-white"
+                style={getBackgroundStyle()}
+              >
                 {/* Overlay */}
                 {design.backgroundType === 'image' && design.overlay && (
                   <div
@@ -544,6 +545,7 @@ export function CoverDesigner({
                   </p>
                 </div>
               </div>
+            </div>
           </div>
 
           {/* Controls Panel */}
