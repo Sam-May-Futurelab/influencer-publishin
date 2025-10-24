@@ -62,6 +62,7 @@ export function ChapterEditor({
   const [editingTitle, setEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState('');
   const [pendingContent, setPendingContent] = useState('');
+  const pendingContentRef = useRef(''); // Ref to avoid stale closures
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [autoSaveInterval, setAutoSaveInterval] = useState(5000); // Default 5 seconds
   
@@ -96,19 +97,22 @@ export function ChapterEditor({
     markAsSaved
   } = useAutoSave({
     onSave: async () => {
-      if (currentChapter && pendingContent !== currentChapter.content) {
+      // Use ref to get current value, avoiding stale closure
+      const currentPendingContent = pendingContentRef.current;
+      
+      if (currentChapter && currentPendingContent !== currentChapter.content) {
         console.log('💾 Auto-saving enhanced content:', {
-          pendingLength: pendingContent?.length,
+          pendingLength: currentPendingContent?.length,
           currentLength: currentChapter.content?.length
         });
         
         // Calculate words added/removed
         const oldWordCount = currentChapter.content?.split(/\s+/).filter(word => word.length > 0).length || 0;
-        const newWordCount = pendingContent?.split(/\s+/).filter(word => word.length > 0).length || 0;
+        const newWordCount = currentPendingContent?.split(/\s+/).filter(word => word.length > 0).length || 0;
         const wordsAdded = newWordCount - oldWordCount;
 
         await onChapterUpdate(currentChapter.id, { 
-          content: pendingContent,
+          content: currentPendingContent,
           updatedAt: new Date()
         });
 
@@ -117,7 +121,12 @@ export function ChapterEditor({
           onRecordWritingSession(projectId, currentChapter.id, wordsAdded);
         }
       } else {
-        console.log('⚠️ Skipping save - no changes detected');
+        console.log('⚠️ Skipping save - no changes detected', {
+          hasPending: !!currentPendingContent,
+          hasChapter: !!currentChapter,
+          pendingLength: currentPendingContent?.length,
+          currentLength: currentChapter?.content?.length
+        });
       }
     },
     delay: autoSaveInterval,
@@ -172,6 +181,7 @@ export function ChapterEditor({
   const handleContentChange = (content: string) => {
     if (currentChapter) {
       setPendingContent(content);
+      pendingContentRef.current = content; // Update ref
       // Only mark as changed if content actually differs from saved version
       if (content !== currentChapter.content) {
         console.log('📝 Content changed, marking as changed');
@@ -275,6 +285,7 @@ export function ChapterEditor({
   useEffect(() => {
     if (currentChapter) {
       setPendingContent(currentChapter.content);
+      pendingContentRef.current = currentChapter.content; // Update ref
       markAsSaved(); // Reset state for new chapter
     }
   }, [currentChapter?.id]); // Only run when chapter ID changes
