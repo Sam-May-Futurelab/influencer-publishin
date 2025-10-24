@@ -4,19 +4,6 @@
       "maxDuration": 30
     }
   },
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.inkfluenceai.com"
-        }
-      ],
-      "destination": "https://inkfluenceai.com/$1",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/api/stripe-webhook",
