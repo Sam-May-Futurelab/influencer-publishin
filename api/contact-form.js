@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
       // Send email notification
       await resend.emails.send({
-        from: 'InkFluence AI <noreply@inkfluenceai.com>', // You'll need to verify this domain in Resend
+        from: 'InkFluence AI <noreply@send.inkfluenceai.com>',
         to: process.env.CONTACT_EMAIL || 'hello@inkfluenceai.com',
         replyTo: email,
         subject: `${categoryEmoji} Contact Form: ${subject}`,
