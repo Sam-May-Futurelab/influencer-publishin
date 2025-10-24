@@ -81,7 +81,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     authorWebsite: '',
     
     // Publishing Preferences
-    autoSaveInterval: 30,
+    autoSaveInterval: 10,
     defaultExportFormat: 'pdf',
     customWatermark: '',
   });
@@ -124,7 +124,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         authorName: '',
         authorBio: '',
         authorWebsite: '',
-        autoSaveInterval: 30,
+        autoSaveInterval: 10,
         defaultExportFormat: 'pdf',
         customWatermark: '',
       };

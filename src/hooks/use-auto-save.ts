@@ -18,7 +18,7 @@ interface UseAutoSaveReturn {
 
 export function useAutoSave({
   onSave,
-  delay = 30000, // 30 seconds default
+  delay = 10000, // 10 seconds default (changed from 30)
   enabled = true
 }: UseAutoSaveOptions): UseAutoSaveReturn {
   const [saving, setSaving] = useState(false);
@@ -34,14 +34,16 @@ export function useAutoSave({
       savingRef.current = true;
       setSaving(true);
       
+      console.log('💾 Auto-saving...');
       await onSave();
       
       setLastSaved(new Date());
       setHasUnsavedChanges(false);
+      console.log('✅ Auto-save complete');
       
       // Subtle success indication
     } catch (error) {
-      console.error('Auto-save failed:', error);
+      console.error('❌ Auto-save failed:', error);
       toast.error('Failed to save changes. Please try again.');
     } finally {
       setSaving(false);
