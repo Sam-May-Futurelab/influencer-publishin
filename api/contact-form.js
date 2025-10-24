@@ -90,6 +90,71 @@ export default async function handler(req, res) {
       console.log(`To: ${process.env.CONTACT_EMAIL || 'hello@inkfluenceai.com'}`);
       console.log(`Subject: ${subject}`);
       console.log(`Resend Email ID: ${result.data?.id || result.id || 'N/A'}`);
+
+      // Send confirmation email to customer
+      const ticketId = `INK-${Date.now().toString(36).toUpperCase()}`;
+      const confirmationResult = await resend.emails.send({
+        from: 'InkFluence AI <hello@inkfluenceai.com>',
+        to: email,
+        subject: `✅ We received your message - ${subject}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #7a5f96; margin: 0;">InkFluence AI</h1>
+              <p style="color: #666; margin-top: 5px;">AI-Powered Book Writing Platform</p>
+            </div>
+
+            <div style="background: #f0e8f8; border-left: 4px solid #9b87b8; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+              <h2 style="color: #7a5f96; margin-top: 0;">Message Received!</h2>
+              <p style="color: #333; margin-bottom: 0;">
+                Thank you for contacting us, <strong>${name}</strong>. We've received your message and will respond within 24 hours.
+              </p>
+            </div>
+
+            <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+              <h3 style="color: #333; margin-top: 0; font-size: 16px;">Ticket Details</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; color: #666; font-size: 14px;">Reference Number:</td>
+                  <td style="padding: 8px 0; color: #333; font-weight: bold; font-size: 14px;">${ticketId}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #666; font-size: 14px;">Category:</td>
+                  <td style="padding: 8px 0; color: #333; font-size: 14px;">${category.charAt(0).toUpperCase() + category.slice(1)}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #666; font-size: 14px;">Subject:</td>
+                  <td style="padding: 8px 0; color: #333; font-size: 14px;">${subject}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #666; font-size: 14px;">Submitted:</td>
+                  <td style="padding: 8px 0; color: #333; font-size: 14px;">${new Date().toLocaleString()}</td>
+                </tr>
+              </table>
+            </div>
+
+            <div style="background: #fff9e6; border: 1px solid #ffe066; border-radius: 8px; padding: 15px; margin-bottom: 30px;">
+              <p style="margin: 0; color: #666; font-size: 14px;">
+                <strong>💡 Tip:</strong> Keep this reference number handy if you need to follow up on your request.
+              </p>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 30px;">
+              <p style="color: #666; margin-bottom: 15px;">In the meantime, check out our resources:</p>
+              <a href="https://www.inkfluenceai.com/help" style="display: inline-block; background: #9b87b8; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 5px;">Help Center</a>
+              <a href="https://www.inkfluenceai.com/faq" style="display: inline-block; background: #7a5f96; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 5px;">FAQ</a>
+            </div>
+
+            <div style="border-top: 1px solid #e0e0e0; padding-top: 20px; text-align: center; color: #999; font-size: 12px;">
+              <p>This is an automated confirmation. Please do not reply to this email.</p>
+              <p>Need immediate help? Email us at <a href="mailto:hello@inkfluenceai.com" style="color: #9b87b8;">hello@inkfluenceai.com</a></p>
+              <p style="margin-top: 20px;">© 2025 InkFluence AI. All rights reserved.</p>
+            </div>
+          </div>
+        `,
+      });
+
+      console.log(`📬 Confirmation email sent to customer: ${confirmationResult.data?.id || 'N/A'}`);
     } else {
       // Fallback: Just log if no API key (for local development)
       console.warn('⚠️ RESEND_API_KEY not found - email not sent');
