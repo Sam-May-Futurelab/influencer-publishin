@@ -51,10 +51,8 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
     }
 
     setSubmitting(true);
-    console.log('📤 Submitting contact form:', { ...form, message: form.message.substring(0, 50) + '...' });
 
     try {
-      console.log('🌐 Sending to /api/contact-form');
       const response = await fetch('/api/contact-form', {
         method: 'POST',
         headers: {
@@ -63,15 +61,13 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
         body: JSON.stringify(form),
       });
 
-      console.log('📥 Response status:', response.status);
       const data = await response.json();
-      console.log('📦 Response data:', data);
       
       if (!response.ok) {
         throw new Error(data.error || 'Failed to send message');
       }
       
-      toast.success('Message sent successfully! We\'ll get back to you within 24 hours.');
+      toast.success('Message sent! Check your email for confirmation.');
       setForm({ 
         name: user?.displayName || '', 
         email: user?.email || '', 
@@ -81,7 +77,7 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
       });
       onOpenChange(false);
     } catch (error) {
-      console.error('❌ Contact form error:', error);
+      console.error('Contact form error:', error);
       toast.error('Failed to send message. Please try again or email us directly at hello@inkfluenceai.com');
     } finally {
       setSubmitting(false);

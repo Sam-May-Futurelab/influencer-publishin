@@ -77,19 +77,10 @@ export default async function handler(req, res) {
         `,
       });
 
-      // Log the full response for debugging
-      console.log('📧 Resend API Response:', JSON.stringify(result, null, 2));
-
       if (result.error) {
         console.error('❌ Resend API Error:', result.error);
         throw new Error(`Resend API error: ${result.error.message || 'Unknown error'}`);
       }
-
-      console.log(`✅ Contact form email sent successfully!`);
-      console.log(`From: noreply@inkfluenceai.com`);
-      console.log(`To: ${process.env.CONTACT_EMAIL || 'hello@inkfluenceai.com'}`);
-      console.log(`Subject: ${subject}`);
-      console.log(`Resend Email ID: ${result.data?.id || result.id || 'N/A'}`);
 
       // Send confirmation email to customer
       const ticketId = `INK-${Date.now().toString(36).toUpperCase()}`;
@@ -154,11 +145,11 @@ export default async function handler(req, res) {
         `,
       });
 
-      console.log(`📬 Confirmation email sent to customer: ${confirmationResult.data?.id || 'N/A'}`);
+      console.log(`✅ Contact form processed: ${ticketId} | To: ${email}`);
     } else {
       // Fallback: Just log if no API key (for local development)
       console.warn('⚠️ RESEND_API_KEY not found - email not sent');
-      console.log('📧 Contact Form Submission (logged only):', {
+      console.log('📧 Contact Form Submission:', {
         name,
         email,
         subject,
