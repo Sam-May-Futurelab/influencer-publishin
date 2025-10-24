@@ -131,16 +131,10 @@ export function ChapterEditor({
   };
 
   const handleChapterSelect = (chapter: Chapter) => {
-    console.log('🔄 Chapter select requested:', {
-      newChapter: chapter.title,
-      hasUnsavedChanges,
-      pendingContentLength: pendingContent?.length || 0,
-      currentContentLength: currentChapter?.content?.length || 0,
-      contentsMatch: pendingContent === currentChapter?.content
-    });
+    // Check if there are ACTUAL unsaved changes (compare content directly)
+    const hasActualChanges = currentChapter && pendingContent !== currentChapter.content;
     
-    // Check if there are unsaved changes
-    if (hasUnsavedChanges && currentChapter && chapter.id !== currentChapter.id) {
+    if (hasActualChanges && chapter.id !== currentChapter.id) {
       setPendingChapterSwitch(chapter);
       setShowUnsavedDialog(true);
     } else {

@@ -34,12 +34,10 @@ export function useAutoSave({
       savingRef.current = true;
       setSaving(true);
       
-      console.log('💾 Auto-saving...');
       await onSave();
       
       setLastSaved(new Date());
       setHasUnsavedChanges(false);
-      console.log('✅ Auto-save complete');
       
       // Subtle success indication
     } catch (error) {

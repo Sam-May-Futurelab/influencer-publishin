@@ -99,15 +99,26 @@ export const getUserProjects = async (userId: string): Promise<EbookProject[]> =
     const projects: EbookProject[] = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
+      
+      // Helper to safely convert timestamps or dates
+      const toDate = (field: any): Date => {
+        if (!field) return new Date();
+        if (field instanceof Date) return field;
+        if (typeof field.toDate === 'function') return field.toDate();
+        if (typeof field === 'string') return new Date(field);
+        if (typeof field === 'number') return new Date(field);
+        return new Date();
+      };
+      
       projects.push({
         ...data,
         id: doc.id,
-        createdAt: data.createdAt?.toDate() || new Date(),
-        updatedAt: data.updatedAt?.toDate() || new Date(),
+        createdAt: toDate(data.createdAt),
+        updatedAt: toDate(data.updatedAt),
         chapters: data.chapters?.map((chapter: any) => ({
           ...chapter,
-          createdAt: chapter.createdAt?.toDate() || new Date(),
-          updatedAt: chapter.updatedAt?.toDate() || new Date()
+          createdAt: toDate(chapter.createdAt),
+          updatedAt: toDate(chapter.updatedAt)
         })) || []
       } as EbookProject);
     });
@@ -127,15 +138,26 @@ export const getProject = async (userId: string, projectId: string): Promise<Ebo
     
     if (projectDoc.exists()) {
       const data = projectDoc.data();
+      
+      // Helper to safely convert timestamps or dates
+      const toDate = (field: any): Date => {
+        if (!field) return new Date();
+        if (field instanceof Date) return field;
+        if (typeof field.toDate === 'function') return field.toDate();
+        if (typeof field === 'string') return new Date(field);
+        if (typeof field === 'number') return new Date(field);
+        return new Date();
+      };
+      
       return {
         ...data,
         id: projectDoc.id,
-        createdAt: data.createdAt?.toDate() || new Date(),
-        updatedAt: data.updatedAt?.toDate() || new Date(),
+        createdAt: toDate(data.createdAt),
+        updatedAt: toDate(data.updatedAt),
         chapters: data.chapters?.map((chapter: any) => ({
           ...chapter,
-          createdAt: chapter.createdAt?.toDate() || new Date(),
-          updatedAt: chapter.updatedAt?.toDate() || new Date()
+          createdAt: toDate(chapter.createdAt),
+          updatedAt: toDate(chapter.updatedAt)
         })) || []
       } as EbookProject;
     }
