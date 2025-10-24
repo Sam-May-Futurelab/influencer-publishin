@@ -493,14 +493,14 @@ export function CoverDesigner({
 
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">
           {/* Preview Panel */}
-          <div className="lg:w-[45%] p-6 lg:p-8 flex flex-col items-center justify-center bg-muted/20 border-r overflow-y-auto">
-            <div className="text-xs font-semibold text-muted-foreground text-center uppercase tracking-wide mb-4">
+          <div className="lg:w-[40%] p-3 sm:p-4 lg:p-8 flex flex-col items-center justify-center bg-muted/20 border-r overflow-y-auto">
+            <div className="text-xs font-semibold text-muted-foreground text-center uppercase tracking-wide mb-2 sm:mb-4">
               Live Preview
             </div>
-            <div className="w-full flex justify-center items-center">
+            <div className="w-full flex justify-center items-center max-h-[calc(100vh-16rem)] sm:max-h-none">
               <div
                 ref={canvasRef}
-                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm bg-white"
+                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[220px] sm:max-w-[280px] lg:max-w-sm bg-white"
                 style={getBackgroundStyle()}
               >
                 {/* Overlay */}
