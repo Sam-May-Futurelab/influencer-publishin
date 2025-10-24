@@ -3197,6 +3197,787 @@ Building an audience is step one. Here's how to monetize effectively and scale y
       },
     ],
   },
+  {
+    id: 'linkedin-authority',
+    name: 'LinkedIn Authority Builder',
+    description: 'Build your professional brand, grow your network, and attract opportunities on LinkedIn.',
+    category: 'Professional Development',
+    icon: '💼',
+    brandConfig: {
+      primaryColor: '#0A66C2',
+      secondaryColor: '#378FE9',
+      accentColor: '#E7F3FF',
+      fontFamily: 'Inter, sans-serif',
+      coverStyle: 'gradient',
+    },
+    estimatedReadTime: '30 minutes',
+    targetAudience: 'Professionals, entrepreneurs, and job seekers',
+    chapters: [
+      {
+        title: 'LinkedIn in 2025: Your Professional Superpower',
+        content: `# Why LinkedIn Is Your Most Important Platform
+
+LinkedIn has 1 billion users and is the #1 platform for B2B networking, job opportunities, and establishing professional credibility.
+
+## What You'll Achieve with This Guide
+- **Optimized profile** that attracts recruiters and opportunities
+- **Content strategy** that positions you as an industry authority
+- **Network growth** with the right people in your field
+- **Lead generation** for your business or services
+
+## Why LinkedIn Beats Other Platforms for Professionals
+**Career advancement:**
+- 3x more likely to get a job through networking
+- Recruiters search LinkedIn before hiring
+- 90% of recruiters use LinkedIn to find candidates
+
+**Business growth:**
+- 80% of B2B leads come from LinkedIn
+- 4x higher conversion rate than other platforms
+- Decision-makers actively engage on LinkedIn
+
+**Authority building:**
+- Your content reaches professional audiences
+- Demonstrates expertise to peers and clients
+- Builds trust with potential customers
+
+## The LinkedIn Opportunity in 2025
+**Low competition, high reward:**
+- Only 1% of LinkedIn users post weekly
+- Algorithm favors consistent creators
+- Organic reach is 10x higher than Facebook/Instagram
+- Video content gets 5x more engagement
+
+**The LinkedIn Algorithm Loves:**
+- Original content (not links to external sites)
+- Personal stories and experiences
+- Engaging discussions in comments
+- Consistency (2-5 posts per week)
+- Native video and documents
+
+## Your 90-Day LinkedIn Transformation
+**Days 1-30: Foundation**
+- Optimize your profile completely
+- Connect with 100-200 relevant people
+- Engage on others' posts daily (10-15 comments)
+- Publish 8-12 posts to test what resonates
+
+**Days 31-60: Momentum**
+- Post 3-5x per week consistently
+- Start conversations with valuable connections
+- Share client wins and case studies
+- Collaborate and tag others in your content
+
+**Days 61-90: Authority**
+- Publish longer-form articles (1-2 per month)
+- Host LinkedIn Live or audio events
+- Get endorsements and recommendations
+- Track what's working and double down
+
+*This guide will show you exactly how to leverage LinkedIn to create opportunities, build authority, and grow your career or business. Let's begin.*`,
+        order: 0,
+      },
+      {
+        title: 'Profile Optimization: Your Digital Resume',
+        content: `# Creating a Profile That Attracts Opportunities
+
+Your LinkedIn profile is your digital storefront. Here's how to optimize every section for maximum impact.
+
+## Profile Photo & Banner
+### Profile Photo (Critical - First Impression)
+**What works:**
+- Professional headshot with genuine smile
+- Clear, high-resolution image (400x400px minimum)
+- Simple background (not distracting)
+- Business casual or professional attire
+- Face takes up 60% of frame
+
+**What to avoid:**
+- Group photos or cropped images
+- Sunglasses, hats, or filters
+- Selfies or casual vacation photos
+- Low quality or pixelated images
+- Dark or unclear lighting
+
+**Pro tip:** Profiles with photos get 21x more profile views and 9x more connection requests.
+
+### Banner Image (Prime Real Estate)
+Your banner should communicate:
+- What you do or your expertise
+- Your value proposition
+- Call to action (contact info, website)
+
+**Options:**
+- **Text-based:** "Helping [audience] achieve [outcome]"
+- **Design showcase:** Portfolio pieces if you're creative
+- **Personal brand:** Professional photo + your tagline
+- **Social proof:** Client logos or testimonials
+
+**Free tools:** Canva (templates), Photoshop, Figma
+**Size:** 1584 x 396 pixels
+
+## Headline: Your 220-Character Pitch
+**The formula that works:**
+[Your Role] | [What You Do] | [Who You Help] | [Outcome/Benefit]
+
+**Examples:**
+❌ "Marketing Manager at ABC Company"
+✅ "Marketing Manager | Helping B2B SaaS Companies Generate 5x More Qualified Leads Through Content Marketing"
+
+❌ "Freelance Designer"
+✅ "Brand Designer | I Help Coaches & Consultants Stand Out With High-Converting Visual Identity | 200+ Clients"
+
+❌ "Entrepreneur"
+✅ "E-commerce Founder | Built & Sold 3 Businesses | Teaching Others How to Launch Profitable Online Stores"
+
+**Key elements to include:**
+- Keywords for searchability (recruiter searches)
+- Clear value proposition
+- Quantifiable results if possible
+- Who you serve (target audience)
+
+## About Section: Your Story
+Your About section should answer:
+1. Who are you?
+2. What do you do?
+3. Who do you help?
+4. How do you help them?
+5. What results have you achieved?
+6. How can people work with you?
+
+**Structure that converts:**
+
+**Paragraph 1 (Hook):**
+Start with a bold statement, question, or story that grabs attention.
+Example: "Three years ago, I was drowning in marketing tactics that didn't work. Then I discovered the one strategy that changed everything..."
+
+**Paragraph 2-3 (Credibility & Expertise):**
+Share your background, experience, and what makes you different.
+Example: "Since then, I've helped 150+ B2B companies generate $10M+ in revenue through content marketing. I've worked with companies like [Client A], [Client B], and [Client C]."
+
+**Paragraph 4 (Services/Offerings):**
+What can you do for others?
+Example: "I specialize in:
+• Content strategy development
+• SEO-optimized blog writing
+• LinkedIn thought leadership
+• Lead generation campaigns"
+
+**Paragraph 5 (Call to Action):**
+Clear next step for readers.
+Example: "Let's connect! Send me a message if you want to discuss how content marketing can grow your business. I respond to every message personally."
+
+**Formatting tips:**
+- Use line breaks for readability
+- Bullet points for lists
+- Emojis sparingly (1-2 max)
+- First 2-3 lines are crucial (visible without "see more")
+
+## Experience Section
+**For each role, include:**
+- **Specific achievements** with numbers
+- **Impact** of your work
+- **Skills used** (keyword optimization)
+- **Media:** Add presentations, articles, portfolio pieces
+
+**Before:**
+"Marketing Manager - Managed marketing campaigns and social media."
+
+**After:**
+"Marketing Manager - ABC Company
+• Increased lead generation by 340% in 12 months through content marketing strategy
+• Managed $500K annual marketing budget with 5:1 ROI
+• Built and led team of 4 marketers
+• Created thought leadership program resulting in 15 industry speaking engagements"
+
+**Action verbs that work:**
+- Increased, Decreased, Improved, Generated
+- Launched, Built, Created, Developed
+- Managed, Led, Directed, Coached
+- Achieved, Exceeded, Delivered, Optimized
+
+## Skills & Endorsements
+**How to optimize:**
+- Add 50 skills (LinkedIn's maximum)
+- Pin your top 3 most important skills
+- Prioritize skills recruiters search for
+- Ask connections for endorsements
+- Endorse others (they often reciprocate)
+
+**Skills should include:**
+- Hard skills specific to your role
+- Industry-specific tools and software
+- Transferable professional skills
+- Trending skills in your field
+
+## Recommendations
+**Why they matter:**
+- Social proof of your abilities
+- Trust signals for recruiters/clients
+- Specific examples of your impact
+
+**How to get recommendations:**
+- Give recommendations first
+- Ask satisfied clients/colleagues
+- Make it easy: "Would you mind writing a brief recommendation about our project together? Specifically about [X outcome]?"
+- Aim for 5-10 quality recommendations
+
+**What to highlight:**
+- Results you delivered
+- Your unique strengths
+- Working relationship and collaboration
+
+## Featured Section
+Showcase your best work:
+- Articles you've written
+- Media mentions and interviews
+- Case studies and portfolio pieces
+- Presentations and webinars
+- Certifications and awards
+
+**Tip:** Update this monthly with your latest achievements.
+
+## Custom LinkedIn URL
+Change from: linkedin.com/in/john-smith-123456789
+To: linkedin.com/in/johnsmith or linkedin.com/in/johnsmithmarketing
+
+**Why:**
+- More professional
+- Easier to share
+- Better for personal branding
+
+**How to change:**
+Settings → Edit public profile → Edit custom URL
+
+## Profile Completion Checklist
+- [ ] Professional profile photo
+- [ ] Custom banner image
+- [ ] Optimized headline with keywords
+- [ ] About section tells your story
+- [ ] All experience roles include achievements
+- [ ] 50 skills added and top 3 pinned
+- [ ] 5+ recommendations received
+- [ ] Featured section with best work
+- [ ] Custom LinkedIn URL
+- [ ] Contact info visible (email, website)
+- [ ] Open to opportunities (if job seeking)
+
+*A complete, optimized profile is 40x more likely to receive opportunities. Spend the time to do this right.*`,
+        order: 1,
+      },
+      {
+        title: 'Content Strategy That Builds Authority',
+        content: `# Posting Content That Gets Attention & Engagement
+
+Consistent, valuable content is how you build authority and stay top-of-mind with your network.
+
+## Understanding the LinkedIn Algorithm
+**What the algorithm prioritizes:**
+1. **Dwell time** - How long people spend reading your post
+2. **Engagement velocity** - How quickly people engage (first 60 minutes)
+3. **Meaningful interactions** - Comments > Likes
+4. **Connection strength** - Engagement from close connections matters more
+5. **Content type** - Native content > external links
+
+**The algorithm's goal:** Keep people on LinkedIn as long as possible.
+
+## Content Types That Perform
+### 1. Personal Stories & Lessons (Highest engagement)
+**What works:**
+- Vulnerability and authenticity
+- Lessons learned from failures
+- Career journey and pivots
+- Behind-the-scenes of your work
+
+**Structure:**
+- Hook: Dramatic opening line
+- Story: What happened (conflict/challenge)
+- Lesson: What you learned
+- Takeaway: How readers can apply it
+
+**Example hook:**
+"I got fired from my dream job. Best thing that ever happened to me. Here's why..."
+
+### 2. Educational Posts (Value-driven)
+**What works:**
+- Step-by-step guides
+- Industry insights and analysis
+- Tool recommendations
+- Process breakdowns
+
+**Formats:**
+- "5 ways to [achieve outcome]"
+- "The [process] that helped me [result]"
+- "Here's how to [solve problem] in [timeframe]"
+
+### 3. Thought Leadership & Hot Takes
+**What works:**
+- Contrarian opinions (respectfully stated)
+- Predictions and trends
+- Industry commentary
+- Challenging conventional wisdom
+
+**Example:**
+"Everyone says you need 10,000 hours to master a skill. That's not true. Here's what actually matters..."
+
+### 4. Data & Case Studies
+**What works:**
+- Original research and surveys
+- Client results and testimonials
+- Before/after transformations
+- Industry statistics
+
+**Example:**
+"I analyzed 500 LinkedIn profiles that got hired fast. Here are the 7 things they all had in common:"
+
+### 5. Engagement Posts (Community building)
+**What works:**
+- Questions for discussion
+- Polls and surveys
+- Fill-in-the-blank prompts
+- Tag-someone posts
+
+**Example:**
+"What's one skill every [profession] should learn in 2025? 
+
+I'll go first..."
+
+## Writing Posts That Get Read
+### The Hook (First 1-2 Lines)
+Your first lines appear in the feed before "see more." They must hook attention.
+
+**Hook formulas:**
+- "I made a $50,000 mistake. Here's what I learned..."
+- "After analyzing 1,000 [things], I found the pattern..."
+- "Nobody talks about this, but..."
+- "3 years ago, I was [problem]. Today, I'm [solution]."
+- "Here's the [thing] that changed everything for me:"
+
+**Test:** Would you click "see more" after reading your first line?
+
+### The Body (150-300 words sweet spot)
+**Formatting for readability:**
+- Short paragraphs (1-3 lines)
+- Line breaks between thoughts
+- Bullet points and numbered lists
+- Bold key phrases (use ** on mobile)
+- Emojis as visual breaks (don't overdo)
+
+**Content structure:**
+1. Hook (1-2 lines)
+2. Context or story (2-3 paragraphs)
+3. Main value/lesson (bullet points or numbered list)
+4. Closing thought (1-2 lines)
+5. Call to action (engagement prompt)
+
+### The Close (CTA)
+Every post should end with an engagement prompt:
+- "What's your experience with this?"
+- "Agree or disagree? Let me know in comments."
+- "What would you add to this list?"
+- "Tag someone who needs to see this"
+- "Repost if you found this valuable ♻️"
+
+## Posting Strategy & Frequency
+### How Often to Post
+**Minimum:** 2-3x per week
+**Optimal:** 3-5x per week
+**Maximum:** 1x per day (more = diminishing returns)
+
+**Consistency beats intensity:** Better to post 3x/week consistently than 7x one week and nothing for 3 weeks.
+
+### Best Times to Post
+**General guidelines:**
+- Tuesday-Thursday: Best days
+- 7-8am, 12-1pm, 5-6pm: Peak engagement times
+- Test your audience (your analytics will show)
+
+**Varies by industry:**
+- B2B: Weekday mornings
+- Creative fields: Evenings and weekends
+- Global audience: Stagger times
+
+### Content Calendar
+**Plan 1 week ahead:**
+- Monday: Personal story/lesson learned
+- Wednesday: Educational/how-to post
+- Friday: Thought leadership/industry take
+
+**Theme ideas:**
+- **Monday Motivation:** Inspirational stories
+- **Tip Tuesday:** Actionable advice
+- **Wins Wednesday:** Celebrate successes
+- **Throwback Thursday:** Career reflections
+- **Feature Friday:** Spotlight others
+
+## Engagement Strategy
+### The First Hour Is Critical
+**Why:** LinkedIn shows your post to a small group first. If they engage, it reaches more people.
+
+**Maximize early engagement:**
+- Post when your audience is active
+- Tag relevant people (2-5 max)
+- Reply to comments immediately
+- Share in DMs with close connections
+- Ask a question that prompts comments
+
+### Responding to Comments
+**Why it matters:**
+- Shows you care about your audience
+- Triggers more notifications (more reach)
+- Builds relationships
+- Encourages more comments
+
+**How to respond:**
+- Reply within first 2 hours
+- Ask follow-up questions
+- Tag others to bring them into conversation
+- Use names ("Great point, Sarah!")
+- Thank people for engaging
+
+### Engaging on Others' Posts
+**The 1-3-1 Rule:**
+- 1 hour creating content
+- 3 hours engaging with others
+- 1 hour responding to your comments
+
+**Where to engage:**
+- Posts from your target audience
+- Industry leaders and influencers
+- Your connections' content
+- Posts in your niche/expertise
+
+**How to comment (not just "Great post!"):**
+- Add your perspective or experience
+- Ask a thoughtful question
+- Share a relevant example
+- Agree and elaborate on a point
+
+**Quality comments get noticed** - They can attract profile views and connection requests.
+
+## Content Ideas (Never Run Out)
+### 30 Post Ideas You Can Use
+1. Your biggest career lesson
+2. Tools you use daily
+3. Mistakes you made and learned from
+4. Unpopular opinion in your industry
+5. Day in the life of [your role]
+6. How you landed your current position
+7. Skills that helped you succeed
+8. Books/podcasts that changed your thinking
+9. How you overcome [common challenge]
+10. Productivity tips that work for you
+11. Client success story (with permission)
+12. Industry trends you're watching
+13. How you made a difficult career decision
+14. Your morning/evening routine
+15. Advice you'd give your younger self
+16. How to break into your industry
+17. Red flags to watch for in [situation]
+18. Green flags of [good thing]
+19. Process breakdown of how you [do thing]
+20. Controversial take (backed by reasoning)
+21. Statistics that surprised you
+22. Question for your network
+23. Biggest challenge in your industry right now
+24. How you stay updated in your field
+25. Career pivot story
+26. What you wish you knew 5 years ago
+27. Skills that are overrated/underrated
+28. Your content creation process
+29. Networking tips that worked
+30. What success means to you
+
+*Remember: Your unique experiences and perspective are valuable. Don't wait to be "qualified enough" - share what you're learning along the way.*`,
+        order: 2,
+      },
+      {
+        title: 'Networking & Opportunity Generation',
+        content: `# Building Relationships That Create Opportunities
+
+LinkedIn's power isn't just posting content - it's strategic relationship building.
+
+## Strategic Connection Building
+### Who to Connect With
+**Priority connections:**
+1. **Decision-makers** in companies you want to work with
+2. **Industry peers** at your level (collaboration opportunities)
+3. **Mentors & leaders** you admire and learn from
+4. **Potential clients** who fit your ideal customer profile
+5. **Recruiters** in your industry
+6. **Alumni** from your school/previous companies
+7. **Event attendees** from conferences/webinars
+
+**Quality > Quantity:**
+- 500 relevant connections > 5,000 random people
+- Focus on building real relationships
+- Engage before sending connection requests
+
+### Connection Request Best Practices
+**Never use the default message** - 80% of people ignore generic requests.
+
+**Personalized message template:**
+"Hi [Name],
+
+I came across your profile while researching [topic/industry] and was impressed by [specific thing - their post, achievement, company].
+
+I'm a [your role] focused on [your specialty]. I'd love to connect and learn from your experience in [their expertise].
+
+Looking forward to connecting!
+
+[Your name]"
+
+**Key elements:**
+- Use their name
+- Mention something specific (shows you read their profile)
+- Explain why you want to connect
+- Keep it brief (300 characters max)
+- Friendly, not salesy
+
+**When to mention common ground:**
+- Mutual connections
+- Same company/school alumni
+- Industry events you both attended
+- Shared interests or groups
+
+### After They Accept
+**Don't immediately pitch** - That's the fastest way to get ignored.
+
+**Instead, build relationship first:**
+
+**Day 1:** Thank them for connecting
+"Thanks for connecting, [Name]! Looking forward to seeing your content in my feed."
+
+**Week 1-2:** Engage with their posts
+Comment thoughtfully on 2-3 of their posts. Add value, don't just say "great post."
+
+**Week 3-4:** Start a conversation
+Share something valuable:
+- Article they might find interesting
+- Insight related to their work
+- Congratulate them on achievements
+- Ask a thoughtful question
+
+**Month 2+:** Nurture relationship
+- Continue engaging with content
+- Offer help or introductions
+- Look for collaboration opportunities
+- When appropriate, mention how you can work together
+
+## LinkedIn DMs That Get Responses
+### When to Message
+**Good reasons:**
+- Thank someone for engaging with your content
+- Ask a specific, thoughtful question
+- Offer genuine value or help
+- Suggest collaboration
+- Follow up after meeting in person
+
+**Bad reasons:**
+- Immediate sales pitch
+- Mass message campaign
+- Generic networking ("let's grab coffee sometime")
+- Asking for favors from strangers
+
+### Message Templates That Work
+**Following up after they engage with your content:**
+"Hi [Name], 
+
+I noticed you commented on my post about [topic] - really appreciated your perspective on [their point]. 
+
+Are you working on anything related to [topic] right now? I'd be curious to hear more about your experience."
+
+**Asking for advice (relationship exists):**
+"Hi [Name],
+
+I'm working on [specific project/challenge] and remembered you have experience with [relevant expertise]. 
+
+Would you be open to a quick 15-minute call? I'd love to get your take on [specific question].
+
+Happy to return the favor however I can!"
+
+**Offering value first:**
+"Hi [Name],
+
+I just came across [resource/article/tool] and immediately thought of you based on your work with [topic].
+
+[Link]
+
+Thought you might find it useful. Keep up the great content!"
+
+### What NOT to Do
+❌ "I hope this message finds you well..." (nobody cares)
+❌ "I'd love to pick your brain" (vague, time-consuming)
+❌ Long paragraphs (keep messages scannable)
+❌ Immediate sales pitch in first message
+❌ Copy-pasted mass messages (people can tell)
+
+## Leveraging LinkedIn Features
+### LinkedIn Articles (Long-form content)
+**When to publish articles:**
+- In-depth tutorials (1,000-2,000 words)
+- Comprehensive guides
+- Thought leadership pieces
+- Case studies and results
+
+**Benefits:**
+- Shows up on your profile permanently
+- Better for SEO (Google indexes them)
+- Positions you as expert
+- Can be 10x longer than posts
+
+**Frequency:** 1-2 articles per month
+
+### LinkedIn Live & Audio Events
+**Use cases:**
+- Q&A sessions with your audience
+- Panel discussions with industry experts
+- Workshop or training sessions
+- Behind-the-scenes of your work
+
+**Benefits:**
+- Followers get notified
+- Higher engagement than regular posts
+- Positions you as authority
+- Can be repurposed as content
+
+### LinkedIn Groups
+**Why join groups:**
+- Network with niche professionals
+- Establish expertise by answering questions
+- Share your content to relevant audiences
+- Find collaboration opportunities
+
+**How to leverage:**
+- Join 5-10 relevant groups
+- Participate regularly (not just self-promotion)
+- Answer questions with genuine help
+- Build relationships with active members
+
+### Creator Mode
+**Enable creator mode if:**
+- You post content regularly (2+ times per week)
+- You want to grow followers (not just connections)
+- You want to highlight content topics
+
+**Benefits:**
+- "Follow" button more prominent than "Connect"
+- Featured section shows recent posts
+- Access to LinkedIn Live and newsletters
+- Analytics dashboard
+
+**Enable at:** Settings → Creator mode → Turn on
+
+## Job Searching & Career Opportunities
+### Optimizing for Recruiters
+**Make yourself findable:**
+- Complete profile with relevant keywords
+- Turn on "Open to Work" (visible to recruiters only option)
+- Add "Open to" career opportunities in profile
+- Join relevant groups where recruiters search
+- Engage with company pages you want to work for
+
+**Recruiter search tips:**
+- Use industry-specific keywords in headline and about
+- List specific skills recruiters search for
+- Update profile when you learn new skills
+- Get endorsements for top skills
+
+### Reaching Out to Hiring Managers
+**When applying for jobs:**
+1. Apply through company site
+2. Find hiring manager on LinkedIn
+3. Send thoughtful connection request mentioning:
+   - The role you applied for
+   - Why you're excited about it
+   - One specific reason you're a fit
+
+**Example:**
+"Hi [Name],
+
+I just applied for the [Job Title] role at [Company] and wanted to reach out directly. 
+
+I've been following [Company]'s growth in [industry] and I'm particularly excited about [specific project/initiative].
+
+My experience with [relevant skill] at [Previous Company] directly aligns with the challenges this role will tackle.
+
+I'd love the opportunity to discuss how I can contribute to the team.
+
+Best,
+[Your name]"
+
+## Turning LinkedIn Into Business Opportunities
+### Lead Generation Strategy
+**For service providers, coaches, consultants:**
+
+**Step 1: Define ideal client**
+- Industry, role, company size
+- Problems they're facing
+- Budget range
+
+**Step 2: Create valuable content**
+- Address their pain points
+- Showcase your expertise
+- Share client results
+
+**Step 3: Engage strategically**
+- Comment on ideal clients' posts
+- Connect with warm introduction
+- Start conversations in DMs
+
+**Step 4: Offer value first**
+- Free resource or audit
+- Helpful advice
+- Relevant introduction
+
+**Step 5: When timing is right**
+- Reference previous conversations
+- Ask if they're open to discussing [specific outcome]
+- Make it about them, not your pitch
+
+### Tracking Your LinkedIn Success
+**Metrics to monitor:**
+- Profile views (growing over time?)
+- Search appearances (showing up in results?)
+- Post engagement rate (likes + comments / impressions)
+- Connection acceptance rate (personalizing messages?)
+- DM response rate (building relationships?)
+
+**Monthly goals:**
+- 100+ profile views
+- 2-5% post engagement rate
+- 50-100 new quality connections
+- 5-10 meaningful conversations
+- 1-2 opportunities generated
+
+## Long-Term LinkedIn Strategy
+### Building Sustainable Authority
+**Year 1: Foundation & Consistency**
+- Optimize profile completely
+- Post 2-3x per week
+- Build network to 500+ connections
+- Test content to find what works
+- Engage daily on others' posts
+
+**Year 2: Thought Leadership**
+- Post 3-5x per week
+- Publish 1-2 articles per month
+- Speak at industry events (virtual or in-person)
+- Collaborate with other creators
+- Develop signature topics/themes
+
+**Year 3+: Established Authority**
+- Consistent content machine
+- Opportunities come to you
+- Mentoring others in your field
+- Speaking, consulting, partnerships
+- Building team/systems to scale
+
+*LinkedIn success doesn't happen overnight. But with consistent effort - optimizing your profile, posting valuable content, and building genuine relationships - opportunities will find you. Start today.*`,
+        order: 3,
+      },
+    ],
+  },
 ];
 
 export function createProjectFromTemplate(template: EbookTemplate, customTitle?: string): EbookProject {
