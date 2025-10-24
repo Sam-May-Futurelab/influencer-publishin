@@ -26,9 +26,15 @@ export function useAutoSave({
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const savingRef = useRef(false);
+  const hasUnsavedChangesRef = useRef(false);
+  
+  // Keep ref in sync with state
+  useEffect(() => {
+    hasUnsavedChangesRef.current = hasUnsavedChanges;
+  }, [hasUnsavedChanges]);
 
   const performSave = useCallback(async () => {
-    if (savingRef.current || !hasUnsavedChanges) return;
+    if (savingRef.current || !hasUnsavedChangesRef.current) return;
     
     try {
       savingRef.current = true;
@@ -36,8 +42,9 @@ export function useAutoSave({
       
       await onSave();
       
-      setLastSaved(new Date());
+      // Update state after save completes
       setHasUnsavedChanges(false);
+      setLastSaved(new Date());
       
       // Subtle success indication
     } catch (error) {
@@ -47,7 +54,7 @@ export function useAutoSave({
       setSaving(false);
       savingRef.current = false;
     }
-  }, [onSave, hasUnsavedChanges]);
+  }, [onSave]);
 
   const forceSave = useCallback(async () => {
     if (timeoutRef.current) {
@@ -60,6 +67,7 @@ export function useAutoSave({
     if (!enabled) return;
     
     setHasUnsavedChanges(true);
+    hasUnsavedChangesRef.current = true;
     
     // Clear existing timeout
     if (timeoutRef.current) {
@@ -74,6 +82,7 @@ export function useAutoSave({
 
   const markAsSaved = useCallback(() => {
     setHasUnsavedChanges(false);
+    hasUnsavedChangesRef.current = false;
     setLastSaved(new Date());
     
     // Clear timeout since we're manually marking as saved

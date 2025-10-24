@@ -131,10 +131,7 @@ export function ChapterEditor({
   };
 
   const handleChapterSelect = (chapter: Chapter) => {
-    // Check if there are ACTUAL unsaved changes (compare content directly)
-    const hasActualChanges = currentChapter && pendingContent !== currentChapter.content;
-    
-    if (hasActualChanges && chapter.id !== currentChapter.id) {
+    if (hasUnsavedChanges && chapter.id !== currentChapter?.id) {
       setPendingChapterSwitch(chapter);
       setShowUnsavedDialog(true);
     } else {
@@ -267,9 +264,9 @@ export function ChapterEditor({
   useEffect(() => {
     if (currentChapter) {
       setPendingContent(currentChapter.content);
-      markAsSaved(); // Reset auto-save state for new chapter
+      markAsSaved(); // Reset state for new chapter
     }
-  }, [currentChapter?.id, currentChapter?.content, markAsSaved]);
+  }, [currentChapter?.id]); // Only run when chapter ID changes
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 min-h-0 relative">
