@@ -42,7 +42,8 @@ export interface CoverDesign {
   imageBrightness?: number;
   imageContrast?: number;
   usePreMadeCover?: boolean;
-  coverImageData?: string; // Base64 image data
+  coverImageData?: string; // Base64 image data (used locally, not stored in Firestore)
+  coverImageUrl?: string; // Storage URL (stored in Firestore)
 }
 
 export interface EbookProject {

@@ -10,7 +10,8 @@ import {
   serverTimestamp,
   updateDoc 
 } from 'firebase/firestore';
-import { db } from './firebase';
+import { ref, uploadString, getDownloadURL, deleteObject } from 'firebase/storage';
+import { db, storage } from './firebase';
 import { EbookProject } from './types';
 
 // Helper to remove undefined values from objects (Firestore doesn't allow undefined)
@@ -34,7 +35,25 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
   try {
     const projectRef = doc(db, 'users', userId, 'projects', project.id);
     
-    // Prepare coverDesign - flatten completely and handle image data separately
+    // Handle cover image upload to Storage if it exists
+    let coverImageUrl = '';
+    if (project.coverDesign?.coverImageData) {
+      try {
+        // Create a reference to the cover image in Storage
+        const coverImageRef = ref(storage, `users/${userId}/projects/${project.id}/cover.png`);
+        
+        // Upload the base64 image data
+        await uploadString(coverImageRef, project.coverDesign.coverImageData, 'data_url');
+        
+        // Get the download URL
+        coverImageUrl = await getDownloadURL(coverImageRef);
+      } catch (uploadError) {
+        console.error('Error uploading cover image to Storage:', uploadError);
+        // Continue saving without the image rather than failing completely
+      }
+    }
+    
+    // Prepare coverDesign - flatten completely and store image URL instead of data
     let coverDesignData: any = null;
     if (project.coverDesign) {
       coverDesignData = {
@@ -62,8 +81,8 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
         imageBrightness: Number(project.coverDesign.imageBrightness || 100),
         imageContrast: Number(project.coverDesign.imageContrast || 100),
         usePreMadeCover: Boolean(project.coverDesign.usePreMadeCover),
-        // Store image data as string (will be large but valid)
-        coverImageData: project.coverDesign.coverImageData ? String(project.coverDesign.coverImageData) : '',
+        // Store URL instead of base64 data
+        coverImageUrl: coverImageUrl,
       };
     }
     
@@ -97,8 +116,9 @@ export const getUserProjects = async (userId: string): Promise<EbookProject[]> =
     const querySnapshot = await getDocs(projectsRef);
     
     const projects: EbookProject[] = [];
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
+    
+    for (const docSnapshot of querySnapshot.docs) {
+      const data = docSnapshot.data();
       
       // Helper to safely convert timestamps or dates
       const toDate = (field: any): Date => {
@@ -110,18 +130,43 @@ export const getUserProjects = async (userId: string): Promise<EbookProject[]> =
         return new Date();
       };
       
+      // Load cover image from Storage if URL exists and convert to base64
+      let coverDesign = data.coverDesign;
+      if (coverDesign?.coverImageUrl) {
+        try {
+          // Fetch the image and convert to base64
+          const response = await fetch(coverDesign.coverImageUrl);
+          const blob = await response.blob();
+          const base64data = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(blob);
+          });
+          
+          // Add base64 data to coverDesign for local use
+          coverDesign = {
+            ...coverDesign,
+            coverImageData: base64data
+          };
+        } catch (error) {
+          console.error('Error loading cover image:', error);
+          // Continue without the image
+        }
+      }
+      
       projects.push({
         ...data,
-        id: doc.id,
+        id: docSnapshot.id,
         createdAt: toDate(data.createdAt),
         updatedAt: toDate(data.updatedAt),
+        coverDesign,
         chapters: data.chapters?.map((chapter: any) => ({
           ...chapter,
           createdAt: toDate(chapter.createdAt),
           updatedAt: toDate(chapter.updatedAt)
         })) || []
       } as EbookProject);
-    });
+    }
     
     return projects.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
   } catch (error) {
@@ -149,11 +194,36 @@ export const getProject = async (userId: string, projectId: string): Promise<Ebo
         return new Date();
       };
       
+      // Load cover image from Storage if URL exists and convert to base64
+      let coverDesign = data.coverDesign;
+      if (coverDesign?.coverImageUrl) {
+        try {
+          // Fetch the image and convert to base64
+          const response = await fetch(coverDesign.coverImageUrl);
+          const blob = await response.blob();
+          const base64data = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(blob);
+          });
+          
+          // Add base64 data to coverDesign for local use
+          coverDesign = {
+            ...coverDesign,
+            coverImageData: base64data
+          };
+        } catch (error) {
+          console.error('Error loading cover image:', error);
+          // Continue without the image
+        }
+      }
+      
       return {
         ...data,
         id: projectDoc.id,
         createdAt: toDate(data.createdAt),
         updatedAt: toDate(data.updatedAt),
+        coverDesign,
         chapters: data.chapters?.map((chapter: any) => ({
           ...chapter,
           createdAt: toDate(chapter.createdAt),
@@ -172,6 +242,16 @@ export const getProject = async (userId: string, projectId: string): Promise<Ebo
 // Delete a project
 export const deleteProject = async (userId: string, projectId: string): Promise<void> => {
   try {
+    // Delete cover image from Storage if it exists
+    try {
+      const coverImageRef = ref(storage, `users/${userId}/projects/${projectId}/cover.png`);
+      await deleteObject(coverImageRef);
+    } catch (storageError) {
+      // Image might not exist, continue with project deletion
+      console.log('No cover image to delete or error deleting:', storageError);
+    }
+    
+    // Delete the project document
     const projectRef = doc(db, 'users', userId, 'projects', projectId);
     await deleteDoc(projectRef);
   } catch (error) {
