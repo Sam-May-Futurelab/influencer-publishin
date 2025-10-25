@@ -412,30 +412,63 @@ export function CoverDesigner({
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // Draw text elements
+      // Draw text elements with word wrapping
       const drawText = (
         text: string,
         font: string,
         size: number,
         color: string,
         y: number,
-        align: 'center' | 'left' | 'right' = 'center'
+        align: 'center' | 'left' | 'right' = 'center',
+        maxWidth?: number
       ) => {
         ctx.fillStyle = color;
         ctx.font = `${size * 3}px ${font}`;
         ctx.textAlign = align;
         const x = align === 'center' ? canvas.width / 2 : align === 'left' ? 100 : canvas.width - 100;
-        ctx.fillText(text, x, y);
+        
+        // If no maxWidth or text fits, draw normally
+        const actualMaxWidth = maxWidth || canvas.width - 200;
+        if (ctx.measureText(text).width <= actualMaxWidth) {
+          ctx.fillText(text, x, y);
+          return;
+        }
+        
+        // Word wrap for long text
+        const words = text.split(' ');
+        const lines: string[] = [];
+        let currentLine = words[0];
+        
+        for (let i = 1; i < words.length; i++) {
+          const testLine = currentLine + ' ' + words[i];
+          const metrics = ctx.measureText(testLine);
+          
+          if (metrics.width > actualMaxWidth) {
+            lines.push(currentLine);
+            currentLine = words[i];
+          } else {
+            currentLine = testLine;
+          }
+        }
+        lines.push(currentLine);
+        
+        // Draw each line
+        const lineHeight = size * 3.5; // 1.2x line height
+        const startY = y - ((lines.length - 1) * lineHeight) / 2;
+        
+        lines.forEach((line, index) => {
+          ctx.fillText(line, x, startY + (index * lineHeight));
+        });
       };
 
-      // Title
-      drawText(design.title, design.titleFont, design.titleSize, design.titleColor, canvas.height * 0.4);
+      // Title with word wrapping (max 80% of canvas width)
+      drawText(design.title, design.titleFont, design.titleSize, design.titleColor, canvas.height * 0.4, 'center', canvas.width * 0.8);
 
       // Subtitle
-      drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, canvas.height * 0.5);
+      drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, canvas.height * 0.5, 'center', canvas.width * 0.8);
 
       // Author
-      drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, canvas.height * 0.85);
+      drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, canvas.height * 0.85, 'center', canvas.width * 0.8);
 
       const imageData = canvas.toDataURL('image/png');
       onSave(design, imageData);
@@ -514,31 +547,38 @@ export function CoverDesigner({
                 {/* Text Content - Always show so users can add text to custom covers */}
                 <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
                   <h1
-                    className="font-bold leading-tight mb-4"
+                    className="font-bold leading-tight mb-4 break-words px-2"
                     style={{
                       fontFamily: design.titleFont,
                       fontSize: `${design.titleSize}px`,
                       color: design.titleColor,
+                      wordBreak: 'break-word',
+                      hyphens: 'auto',
+                      maxWidth: '90%'
                     }}
                   >
                     {design.title}
                   </h1>
                   <p
-                    className="mb-auto max-w-md"
+                    className="mb-auto max-w-md break-words px-2"
                     style={{
                       fontFamily: design.subtitleFont,
                       fontSize: `${design.subtitleSize}px`,
                       color: design.subtitleColor,
+                      wordBreak: 'break-word',
+                      hyphens: 'auto'
                     }}
                   >
                     {design.subtitle}
                   </p>
                   <p
-                    className="mt-auto uppercase tracking-wider font-medium"
+                    className="mt-auto uppercase tracking-wider font-medium break-words px-2"
                     style={{
                       fontFamily: design.authorFont,
                       fontSize: `${design.authorSize}px`,
                       color: design.authorColor,
+                      wordBreak: 'break-word',
+                      maxWidth: '90%'
                     }}
                   >
                     {design.authorName}

@@ -154,10 +154,12 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
               )}
               
               <h1 
-                className="text-4xl lg:text-5xl font-bold mb-6 leading-tight"
+                className="text-3xl lg:text-4xl font-bold mb-6 leading-tight px-4"
                 style={{ 
                   color: project.brandConfig?.primaryColor || '#8B5CF6',
-                  fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                  fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif',
+                  wordBreak: 'break-word',
+                  hyphens: 'auto'
                 }}
               >
                 {project.title}
@@ -215,15 +217,102 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
             </motion.div>
             )}
 
+            {/* Copyright Page */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="py-12 mb-12 border-b-2 border-border/20"
+              style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
+            >
+              <div className="max-w-xl mx-auto space-y-6 text-sm text-muted-foreground">
+                <p className="font-semibold text-base text-foreground">{project.title}</p>
+                {project.author && (
+                  <p className="text-foreground">by {project.author}</p>
+                )}
+                
+                <div className="space-y-2">
+                  <p>Copyright © {new Date().getFullYear()} {project.author || 'Author'}</p>
+                  <p>All rights reserved.</p>
+                </div>
+                
+                <p className="leading-relaxed">
+                  No part of this book may be reproduced in any form or by any electronic or mechanical means, 
+                  including information storage and retrieval systems, without written permission from the author, 
+                  except for the use of brief quotations in a book review.
+                </p>
+                
+                <div className="pt-4 border-t border-border/20 text-xs space-y-1">
+                  <p><strong>First Edition:</strong> {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+                  <p>Created with Inkfluence AI</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Table of Contents */}
+            {sortedChapters.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="py-12 mb-12"
+                style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
+              >
+                <h2 
+                  className="text-3xl font-bold mb-8 pb-4 text-center"
+                  style={{ 
+                    color: project.brandConfig?.primaryColor || '#8B5CF6',
+                    borderBottom: `3px solid ${project.brandConfig?.accentColor || '#C4B5FD'}`
+                  }}
+                >
+                  Table of Contents
+                </h2>
+                <div className="space-y-3">
+                  {sortedChapters.map((chapter, index) => (
+                    <div 
+                      key={chapter.id}
+                      className="flex items-baseline justify-between py-2 px-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer border-b border-dotted border-border/30"
+                      onClick={() => {
+                        const element = document.getElementById(`chapter-${chapter.id}`);
+                        element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                    >
+                      <div className="flex items-baseline gap-3 flex-1">
+                        <span 
+                          className="text-sm font-semibold"
+                          style={{ color: project.brandConfig?.secondaryColor || '#A78BFA' }}
+                        >
+                          Chapter {index + 1}
+                        </span>
+                        <span 
+                          className="font-medium text-foreground"
+                          style={{ flex: 1 }}
+                        >
+                          {chapter.title}
+                        </span>
+                      </div>
+                      <span 
+                        className="text-sm font-semibold ml-4"
+                        style={{ color: project.brandConfig?.primaryColor || '#8B5CF6' }}
+                      >
+                        {index + 2}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
             {/* Chapters - Enhanced with export-like styling */}
             <div className="space-y-12 mt-8">
               {sortedChapters.map((chapter, index) => (
                 <motion.div
                   key={chapter.id}
+                  id={`chapter-${chapter.id}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="space-y-6 pb-8"
+                  className="space-y-6 pb-8 scroll-mt-24"
                   style={{ 
                     borderBottom: index < sortedChapters.length - 1 ? `2px solid ${project.brandConfig?.accentColor || '#E9D5FF'}` : 'none',
                     fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
