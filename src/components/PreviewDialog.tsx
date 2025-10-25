@@ -86,10 +86,10 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-full h-[80vh] neomorph-raised border-0 p-0 gap-0 [&>button]:hidden">
-        <DialogHeader className="p-4 lg:p-6 border-b border-border/20 relative">
+      <DialogContent className="max-w-6xl w-full h-[90vh] border border-border/50 p-0 gap-0 [&>button]:hidden bg-background shadow-xl">
+        <DialogHeader className="p-4 lg:p-6 border-b border-border/20 relative bg-background">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl neomorph-inset">
+            <div className="p-2 rounded-xl bg-primary/10">
               <BookOpen size={20} className="text-primary" />
             </div>
             <div>
@@ -112,14 +112,14 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="neomorph-button border-0 h-10 w-10 p-0 rounded-full bg-background/80 backdrop-blur-sm hover:bg-primary/10 transition-all duration-200 shadow-lg"
+              className="h-10 w-10 p-0 rounded-full hover:bg-primary/10 transition-all duration-200"
             >
               <X size={18} className="text-muted-foreground hover:text-primary transition-colors" />
             </Button>
           </motion.div>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto p-6 max-h-[calc(80vh-120px)]">
+        <div className="flex-1 overflow-y-auto p-6 max-h-[calc(90vh-120px)] bg-background">
           <div className="max-w-3xl mx-auto">
             {/* Title Page - Show custom cover if available, otherwise use default */}
             {project.coverDesign?.coverImageData ? (
