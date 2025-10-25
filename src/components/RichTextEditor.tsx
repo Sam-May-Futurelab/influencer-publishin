@@ -33,8 +33,10 @@ import {
   MicrophoneSlash,
   MagicWand,
   CheckCircle,
-  Copy
+  Copy,
+  Image as ImageIcon
 } from '@phosphor-icons/react';
+import { compressToLimit } from '@/lib/image-compression';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVoiceInput } from '@/hooks/use-voice-input';
@@ -69,6 +71,7 @@ export function RichTextEditor({
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [hasSelection, setHasSelection] = useState(false);
   const isSettingContentRef = useRef(false); // Track programmatic content changes
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   // Voice input hook
   const {
@@ -217,6 +220,58 @@ export function RichTextEditor({
       });
     } finally {
       setIsEnhancing(false);
+    }
+  };
+
+  // Handle image upload
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !editor) return;
+
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    try {
+      toast.loading('Uploading image...', { id: 'image-upload' });
+
+      // Read file as data URL
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        let imageData = e.target?.result as string;
+
+        // Compress image if it's too large
+        try {
+          const compressed = await compressToLimit(imageData, 300); // 300KB limit for inline images
+          imageData = compressed.dataUrl || imageData;
+        } catch (error) {
+          console.warn('Image compression failed, using original:', error);
+        }
+
+        // Insert image at cursor position
+        editor.chain().focus().insertContent(`<img src="${imageData}" alt="Chapter image" style="max-width: 100%; height: auto; margin: 1em 0; border-radius: 8px;" />`).run();
+        
+        toast.dismiss('image-upload');
+        toast.success('Image added to chapter');
+      };
+
+      reader.onerror = () => {
+        toast.dismiss('image-upload');
+        toast.error('Failed to read image file');
+      };
+
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast.dismiss('image-upload');
+      console.error('Image upload error:', error);
+      toast.error('Failed to upload image');
+    }
+
+    // Reset input
+    if (imageInputRef.current) {
+      imageInputRef.current.value = '';
     }
   };
 
@@ -449,6 +504,34 @@ export function RichTextEditor({
           icon={ListNumbers}
           label="Numbered List"
         />
+
+        <Separator orientation="vertical" className="h-6 mx-1" />
+
+        {/* Image Upload */}
+        <input
+          ref={imageInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={() => imageInputRef.current?.click()}
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 neomorph-button border-0"
+              title="Insert Image"
+              type="button"
+            >
+              <ImageIcon size={16} weight="regular" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Insert Image</p>
+          </TooltipContent>
+        </Tooltip>
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
