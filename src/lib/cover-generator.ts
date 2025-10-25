@@ -115,18 +115,22 @@ export async function generateCoverImage(design: CoverDesign): Promise<string> {
 
 /**
  * Get cover image data for a project
- * If coverImageData exists (from previous session), use it
- * Otherwise, generate it from design parameters
+ * Priority: uploaded image > existing generated image > generate new from design
  */
 export async function getCoverImageData(coverDesign?: CoverDesign): Promise<string | undefined> {
   if (!coverDesign) return undefined;
   
-  // If we already have the generated image data (e.g., from the current session), use it
+  // Priority 1: If we have uploaded/stored cover image data, use it
   if (coverDesign.coverImageData) {
     return coverDesign.coverImageData;
   }
   
-  // Otherwise, generate it on-the-fly from design parameters
+  // Priority 2: If user uploaded a full cover (usePreMadeCover), don't generate
+  if (coverDesign.usePreMadeCover) {
+    return undefined; // Let the default title page show
+  }
+  
+  // Priority 3: Generate from design parameters
   try {
     return await generateCoverImage(coverDesign);
   } catch (error) {

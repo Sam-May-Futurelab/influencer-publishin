@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { EbookProject } from './types';
+import { compressToLimit, isWithinSizeLimit } from './image-compression';
 
 // Helper to remove undefined values from objects (Firestore doesn't allow undefined)
 const sanitizeForFirestore = (obj: any): any => {
@@ -34,7 +35,24 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
   try {
     const projectRef = doc(db, 'users', userId, 'projects', project.id);
     
-    // Prepare coverDesign - store only design parameters, NOT the generated image
+    // Handle uploaded cover images (compress if needed)
+    let uploadedCoverData: string | undefined;
+    if (project.coverDesign?.coverImageData) {
+      const size = project.coverDesign.coverImageData.length / 1024; // Rough size in KB
+      
+      // If it's a user-uploaded image (large), compress it
+      if (size > 100) {
+        console.log(`Compressing uploaded cover image (${size.toFixed(0)}KB)...`);
+        const compressed = await compressToLimit(project.coverDesign.coverImageData, 400);
+        uploadedCoverData = compressed.dataUrl;
+        console.log(`Compressed to ${compressed.size.toFixed(0)}KB at ${(compressed.quality * 100).toFixed(0)}% quality`);
+      } else {
+        // Small image (probably generated), keep as-is
+        uploadedCoverData = project.coverDesign.coverImageData;
+      }
+    }
+    
+    // Prepare coverDesign - store design parameters and compressed uploaded image (if any)
     let coverDesignData: any = null;
     if (project.coverDesign) {
       coverDesignData = {
@@ -62,8 +80,8 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
         imageBrightness: Number(project.coverDesign.imageBrightness || 100),
         imageContrast: Number(project.coverDesign.imageContrast || 100),
         usePreMadeCover: Boolean(project.coverDesign.usePreMadeCover),
-        // DON'T store coverImageData - we'll generate it on-the-fly when needed
-        // This keeps Firestore documents small and avoids 1MB limit issues
+        // Store compressed uploaded cover image if user uploaded one
+        uploadedCoverImage: uploadedCoverData || '',
       };
     }
     
@@ -115,6 +133,11 @@ export const getUserProjects = async (userId: string): Promise<EbookProject[]> =
         id: doc.id,
         createdAt: toDate(data.createdAt),
         updatedAt: toDate(data.updatedAt),
+        // Restore uploaded cover image to coverImageData if it exists
+        coverDesign: data.coverDesign ? {
+          ...data.coverDesign,
+          coverImageData: data.coverDesign.uploadedCoverImage || undefined
+        } : undefined,
         chapters: data.chapters?.map((chapter: any) => ({
           ...chapter,
           createdAt: toDate(chapter.createdAt),
@@ -154,6 +177,11 @@ export const getProject = async (userId: string, projectId: string): Promise<Ebo
         id: projectDoc.id,
         createdAt: toDate(data.createdAt),
         updatedAt: toDate(data.updatedAt),
+        // Restore uploaded cover image to coverImageData if it exists
+        coverDesign: data.coverDesign ? {
+          ...data.coverDesign,
+          coverImageData: data.coverDesign.uploadedCoverImage || undefined
+        } : undefined,
         chapters: data.chapters?.map((chapter: any) => ({
           ...chapter,
           createdAt: toDate(chapter.createdAt),
