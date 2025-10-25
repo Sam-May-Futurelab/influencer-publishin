@@ -315,8 +315,8 @@ const STOCK_IMAGES = [
   },
   {
     id: 'texture-3',
-    name: 'Fabric Pattern',
-    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=1280&fit=crop',
+    name: 'Watercolor Texture',
+    url: 'https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=800&h=1280&fit=crop',
     category: 'texture',
   },
   {
@@ -367,8 +367,8 @@ const STOCK_IMAGES = [
   },
   {
     id: 'urban-3',
-    name: 'Street Art',
-    url: 'https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=800&h=1280&fit=crop',
+    name: 'Urban Graffiti',
+    url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=1280&fit=crop',
     category: 'urban',
   },
   {
@@ -733,7 +733,7 @@ export function CoverDesigner({
                     {design.subtitle}
                   </p>
                   <p
-                    className="mt-auto uppercase tracking-wider font-medium break-words px-2"
+                    className="mt-auto mb-8 uppercase tracking-wider font-medium break-words px-2"
                     style={{
                       fontFamily: design.authorFont,
                       fontSize: `${design.authorSize}px`,
@@ -828,8 +828,8 @@ export function CoverDesigner({
                             backgroundType: 'image'
                           })}
                         >
-                          <span className="font-semibold">Background</span>
-                          <span className="text-xs opacity-80 mt-1">Add custom text on top</span>
+                          <span className="font-semibold">Background Image</span>
+                          <span className="text-xs opacity-80 mt-1">I'll add text overlay</span>
                         </Button>
                         
                         <Button
@@ -840,8 +840,8 @@ export function CoverDesigner({
                             backgroundType: 'image'
                           })}
                         >
-                          <span className="font-semibold">Complete Cover</span>
-                          <span className="text-xs opacity-80 mt-1">Use as-is, no text</span>
+                          <span className="font-semibold">Pre-made Cover</span>
+                          <span className="text-xs opacity-80 mt-1">Ready to use</span>
                         </Button>
                       </div>
                     </div>

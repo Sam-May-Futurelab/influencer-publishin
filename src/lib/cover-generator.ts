@@ -185,7 +185,7 @@ export async function generateCoverImage(design: CoverDesign): Promise<string> {
     // Draw title, subtitle, and author
     drawText(design.title, design.titleFont, design.titleSize, design.titleColor, canvas.height * 0.4, 'center', canvas.width * 0.8);
     drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, canvas.height * 0.5, 'center', canvas.width * 0.8);
-    drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, canvas.height * 0.85, 'center', canvas.width * 0.8);
+    drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, canvas.height * 0.80, 'center', canvas.width * 0.8);
 
     // Return base64 data URL
     return canvas.toDataURL('image/png');
