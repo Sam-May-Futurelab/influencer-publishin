@@ -198,6 +198,7 @@ const COVER_TEMPLATES = [
 
 // Stock background images - you can host these on your CDN or use Unsplash API
 const STOCK_IMAGES = [
+  // Abstract & Artistic
   {
     id: 'abstract-1',
     name: 'Abstract Purple',
@@ -211,28 +212,16 @@ const STOCK_IMAGES = [
     category: 'abstract',
   },
   {
-    id: 'nature-1',
-    name: 'Mountain Landscape',
-    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1280&fit=crop',
-    category: 'nature',
+    id: 'abstract-3',
+    name: 'Fluid Colors',
+    url: 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?w=800&h=1280&fit=crop',
+    category: 'abstract',
   },
   {
-    id: 'nature-2',
-    name: 'Forest Path',
-    url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  {
-    id: 'texture-1',
-    name: 'Gold Marble',
-    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1280&fit=crop',
-    category: 'texture',
-  },
-  {
-    id: 'texture-2',
-    name: 'Dark Texture',
-    url: 'https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800&h=1280&fit=crop',
-    category: 'texture',
+    id: 'abstract-4',
+    name: 'Geometric Waves',
+    url: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=1280&fit=crop',
+    category: 'abstract',
   },
   {
     id: 'artistic-1',
@@ -247,6 +236,98 @@ const STOCK_IMAGES = [
     category: 'artistic',
   },
   {
+    id: 'artistic-3',
+    name: 'Paint Strokes',
+    url: 'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&h=1280&fit=crop',
+    category: 'artistic',
+  },
+  
+  // Nature & Landscapes
+  {
+    id: 'nature-1',
+    name: 'Mountain Landscape',
+    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
+    id: 'nature-2',
+    name: 'Forest Path',
+    url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
+    id: 'nature-3',
+    name: 'Ocean Waves',
+    url: 'https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
+    id: 'nature-4',
+    name: 'Desert Dunes',
+    url: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
+    id: 'nature-5',
+    name: 'Northern Lights',
+    url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  
+  // Business & Professional
+  {
+    id: 'business-1',
+    name: 'Modern Office',
+    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-2',
+    name: 'Workspace',
+    url: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-3',
+    name: 'City Skyline',
+    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-4',
+    name: 'Glass Building',
+    url: 'https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  
+  // Textures & Patterns
+  {
+    id: 'texture-1',
+    name: 'Gold Marble',
+    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  {
+    id: 'texture-2',
+    name: 'Dark Texture',
+    url: 'https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  {
+    id: 'texture-3',
+    name: 'Fabric Pattern',
+    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  {
+    id: 'texture-4',
+    name: 'Concrete Wall',
+    url: 'https://images.unsplash.com/photo-1510936111840-65e151ad71bb?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  
+  // Minimal & Clean
+  {
     id: 'minimal-1',
     name: 'Minimal Gradient',
     url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=1280&fit=crop',
@@ -258,6 +339,20 @@ const STOCK_IMAGES = [
     url: 'https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=800&h=1280&fit=crop',
     category: 'minimal',
   },
+  {
+    id: 'minimal-3',
+    name: 'White Space',
+    url: 'https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=800&h=1280&fit=crop',
+    category: 'minimal',
+  },
+  {
+    id: 'minimal-4',
+    name: 'Pastel Sky',
+    url: 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?w=800&h=1280&fit=crop',
+    category: 'minimal',
+  },
+  
+  // Urban & Modern
   {
     id: 'urban-1',
     name: 'City Night',
@@ -271,6 +366,20 @@ const STOCK_IMAGES = [
     category: 'urban',
   },
   {
+    id: 'urban-3',
+    name: 'Street Art',
+    url: 'https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=800&h=1280&fit=crop',
+    category: 'urban',
+  },
+  {
+    id: 'urban-4',
+    name: 'Architecture',
+    url: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=1280&fit=crop',
+    category: 'urban',
+  },
+  
+  // Book-Themed
+  {
     id: 'book-1',
     name: 'Book Shelf',
     url: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&h=1280&fit=crop',
@@ -283,6 +392,14 @@ const STOCK_IMAGES = [
     category: 'book-themed',
   },
   {
+    id: 'book-3',
+    name: 'Library',
+    url: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&h=1280&fit=crop',
+    category: 'book-themed',
+  },
+  
+  // Vintage & Classic
+  {
     id: 'vintage-1',
     name: 'Vintage Paper',
     url: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=1280&fit=crop',
@@ -293,6 +410,32 @@ const STOCK_IMAGES = [
     name: 'Aged Texture',
     url: 'https://images.unsplash.com/photo-1534670007418-fbb7f6cf32c3?w=800&h=1280&fit=crop',
     category: 'vintage',
+  },
+  {
+    id: 'vintage-3',
+    name: 'Retro Pattern',
+    url: 'https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=800&h=1280&fit=crop',
+    category: 'vintage',
+  },
+  
+  // Tech & Digital
+  {
+    id: 'tech-1',
+    name: 'Digital Code',
+    url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=1280&fit=crop',
+    category: 'tech',
+  },
+  {
+    id: 'tech-2',
+    name: 'Circuit Board',
+    url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=1280&fit=crop',
+    category: 'tech',
+  },
+  {
+    id: 'tech-3',
+    name: 'Data Visualization',
+    url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=1280&fit=crop',
+    category: 'tech',
   },
 ];
 
@@ -331,6 +474,7 @@ export function CoverDesigner({
     ...initialDesign,
   });
 
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -831,9 +975,104 @@ export function CoverDesigner({
                     Choose from {STOCK_IMAGES.length} curated high-quality background images
                   </p>
                 </div>
+
+                {/* Category Filter */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Filter by Category</Label>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('all')}
+                      className="text-xs"
+                    >
+                      All ({STOCK_IMAGES.length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'abstract' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('abstract')}
+                      className="text-xs"
+                    >
+                      Abstract ({STOCK_IMAGES.filter(img => img.category === 'abstract').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'nature' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('nature')}
+                      className="text-xs"
+                    >
+                      Nature ({STOCK_IMAGES.filter(img => img.category === 'nature').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'business' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('business')}
+                      className="text-xs"
+                    >
+                      Business ({STOCK_IMAGES.filter(img => img.category === 'business').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'minimal' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('minimal')}
+                      className="text-xs"
+                    >
+                      Minimal ({STOCK_IMAGES.filter(img => img.category === 'minimal').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'urban' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('urban')}
+                      className="text-xs"
+                    >
+                      Urban ({STOCK_IMAGES.filter(img => img.category === 'urban').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'artistic' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('artistic')}
+                      className="text-xs"
+                    >
+                      Artistic ({STOCK_IMAGES.filter(img => img.category === 'artistic').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'texture' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('texture')}
+                      className="text-xs"
+                    >
+                      Texture ({STOCK_IMAGES.filter(img => img.category === 'texture').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'book-themed' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('book-themed')}
+                      className="text-xs"
+                    >
+                      Books ({STOCK_IMAGES.filter(img => img.category === 'book-themed').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'vintage' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('vintage')}
+                      className="text-xs"
+                    >
+                      Vintage ({STOCK_IMAGES.filter(img => img.category === 'vintage').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'tech' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('tech')}
+                      className="text-xs"
+                    >
+                      Tech ({STOCK_IMAGES.filter(img => img.category === 'tech').length})
+                    </Button>
+                  </div>
+                </div>
                 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
-                  {STOCK_IMAGES.map((image) => (
+                  {STOCK_IMAGES.filter(img => selectedCategory === 'all' || img.category === selectedCategory).map((image) => (
                     <Card
                       key={image.id}
                       className="cursor-pointer neomorph-flat border-0 overflow-hidden hover:neomorph-raised transition-all hover:scale-[1.02] rounded-lg"
