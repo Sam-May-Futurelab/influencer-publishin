@@ -228,7 +228,6 @@ export function RichTextEditor({
     const file = event.target.files?.[0];
     if (!file || !editor) return;
 
-    // Check file type
     if (!file.type.startsWith('image/')) {
       toast.error('Please select an image file');
       return;
@@ -237,39 +236,41 @@ export function RichTextEditor({
     try {
       toast.loading('Uploading image...', { id: 'image-upload' });
 
-      // Read file as data URL
       const reader = new FileReader();
       reader.onload = async (e) => {
         let imageData = e.target?.result as string;
 
-        // Compress image if it's too large
         try {
-          const compressed = await compressToLimit(imageData, 300); // 300KB limit for inline images
+          const compressed = await compressToLimit(imageData, 300);
           imageData = compressed.dataUrl || imageData;
         } catch (error) {
           console.warn('Image compression failed, using original:', error);
         }
 
-        // Insert image at cursor position
-        editor.chain().focus().insertContent(`<img src="${imageData}" alt="Chapter image" style="max-width: 100%; height: auto; margin: 1em 0; border-radius: 8px;" />`).run();
+        // Insert image with line breaks for clean editing
+        editor
+          .chain()
+          .focus()
+          .insertContent('<p><br></p>')
+          .insertContent(`<p><img src="${imageData}" alt="${file.name}" style="max-width: 100%; height: auto; display: block; margin: 1em auto; border-radius: 8px;" /></p>`)
+          .insertContent('<p><br></p>')
+          .run();
         
         toast.dismiss('image-upload');
-        toast.success('Image added to chapter');
+        toast.success('Image added');
       };
 
       reader.onerror = () => {
         toast.dismiss('image-upload');
-        toast.error('Failed to read image file');
+        toast.error('Failed to read image');
       };
 
       reader.readAsDataURL(file);
     } catch (error) {
       toast.dismiss('image-upload');
-      console.error('Image upload error:', error);
       toast.error('Failed to upload image');
     }
 
-    // Reset input
     if (imageInputRef.current) {
       imageInputRef.current.value = '';
     }
@@ -630,10 +631,13 @@ export function RichTextEditor({
 
       {/* Editor Content */}
       <div 
-        className="overflow-auto relative" 
+        className="overflow-auto relative prose prose-sm sm:prose max-w-none" 
         style={{ minHeight }}
       >
-        <EditorContent editor={editor} />
+        <EditorContent 
+          editor={editor} 
+          className="[&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-[200px] [&_.ProseMirror]:p-4 [&_.ProseMirror_img]:max-w-full [&_.ProseMirror_img]:h-auto [&_.ProseMirror_img]:rounded-lg [&_.ProseMirror_img]:my-4"
+        />
       </div>
 
       {/* Status Bar */}
