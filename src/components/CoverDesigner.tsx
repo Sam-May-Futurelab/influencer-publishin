@@ -51,6 +51,7 @@ interface CoverDesign {
   overlay: boolean;
   overlayOpacity: number;
   imagePosition: 'cover' | 'contain' | 'fill';
+  imageAlignment?: 'center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   imageBrightness: number;
   imageContrast: number;
   usePreMadeCover: boolean;
@@ -495,10 +496,26 @@ export function CoverDesigner({
       } as React.CSSProperties;
     } else if (design.backgroundType === 'image' && design.backgroundImage) {
       const filterValue = `brightness(${design.imageBrightness}%) contrast(${design.imageContrast}%)`;
+      
+      // Map alignment to CSS background-position
+      let bgPosition = 'center';
+      const alignment = design.imageAlignment || 'center';
+      switch (alignment) {
+        case 'top': bgPosition = 'top center'; break;
+        case 'bottom': bgPosition = 'bottom center'; break;
+        case 'left': bgPosition = 'center left'; break;
+        case 'right': bgPosition = 'center right'; break;
+        case 'top-left': bgPosition = 'top left'; break;
+        case 'top-right': bgPosition = 'top right'; break;
+        case 'bottom-left': bgPosition = 'bottom left'; break;
+        case 'bottom-right': bgPosition = 'bottom right'; break;
+        default: bgPosition = 'center';
+      }
+      
       return {
         backgroundImage: `url(${design.backgroundImage})`,
         backgroundSize: design.imagePosition,
-        backgroundPosition: 'center',
+        backgroundPosition: bgPosition,
         backgroundRepeat: 'no-repeat',
         filter: filterValue,
       } as React.CSSProperties;
@@ -941,11 +958,42 @@ export function CoverDesigner({
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="cover" className="text-base py-3">Cover (Fill entire area)</SelectItem>
-                                <SelectItem value="contain" className="text-base py-3">Contain (Fit inside)</SelectItem>
-                                <SelectItem value="fill" className="text-base py-3">Stretch (Fill completely)</SelectItem>
+                                <SelectItem value="cover" className="text-base py-3">Cover (Fill & crop to fit)</SelectItem>
+                                <SelectItem value="contain" className="text-base py-3">Contain (Fit inside, no crop)</SelectItem>
+                                <SelectItem value="fill" className="text-base py-3">Fill (Stretch to fill)</SelectItem>
                               </SelectContent>
                             </Select>
+                            <p className="text-xs text-muted-foreground">
+                              {design.imagePosition === 'cover' && '• Fills the cover, cropping edges if needed'}
+                              {design.imagePosition === 'contain' && '• Shows full image, may have empty space'}
+                              {design.imagePosition === 'fill' && '• Stretches to fill, may distort image'}
+                            </p>
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label className="text-base font-medium">Image Alignment</Label>
+                            <Select
+                              value={design.imageAlignment || 'center'}
+                              onValueChange={(value: any) => updateDesign({ imageAlignment: value })}
+                            >
+                              <SelectTrigger className="h-12 text-base">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="center" className="text-base py-3">Center</SelectItem>
+                                <SelectItem value="top" className="text-base py-3">Top</SelectItem>
+                                <SelectItem value="bottom" className="text-base py-3">Bottom</SelectItem>
+                                <SelectItem value="left" className="text-base py-3">Left</SelectItem>
+                                <SelectItem value="right" className="text-base py-3">Right</SelectItem>
+                                <SelectItem value="top-left" className="text-base py-3">Top Left</SelectItem>
+                                <SelectItem value="top-right" className="text-base py-3">Top Right</SelectItem>
+                                <SelectItem value="bottom-left" className="text-base py-3">Bottom Left</SelectItem>
+                                <SelectItem value="bottom-right" className="text-base py-3">Bottom Right</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <p className="text-xs text-muted-foreground">
+                              Position the image within the cover area
+                            </p>
                           </div>
 
                           <div className="space-y-3">

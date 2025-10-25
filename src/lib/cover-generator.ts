@@ -35,7 +35,89 @@ export async function generateCoverImage(design: CoverDesign): Promise<string> {
       });
       
       if (img.complete && img.naturalHeight !== 0) {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        // Calculate image position based on alignment
+        const imagePosition = design.imagePosition || 'cover';
+        const imageAlignment = design.imageAlignment || 'center';
+        
+        let sx = 0, sy = 0, sw = img.width, sh = img.height;
+        let dx = 0, dy = 0, dw = canvas.width, dh = canvas.height;
+        
+        if (imagePosition === 'cover') {
+          // Scale to cover, then position based on alignment
+          const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+          sw = canvas.width / scale;
+          sh = canvas.height / scale;
+          
+          // Calculate source position based on alignment
+          switch (imageAlignment) {
+            case 'top':
+            case 'top-left':
+            case 'top-right':
+              sy = 0;
+              break;
+            case 'bottom':
+            case 'bottom-left':
+            case 'bottom-right':
+              sy = img.height - sh;
+              break;
+            default:
+              sy = (img.height - sh) / 2;
+          }
+          
+          switch (imageAlignment) {
+            case 'left':
+            case 'top-left':
+            case 'bottom-left':
+              sx = 0;
+              break;
+            case 'right':
+            case 'top-right':
+            case 'bottom-right':
+              sx = img.width - sw;
+              break;
+            default:
+              sx = (img.width - sw) / 2;
+          }
+        } else if (imagePosition === 'contain') {
+          // Scale to fit inside, then position based on alignment
+          const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+          dw = img.width * scale;
+          dh = img.height * scale;
+          
+          // Calculate destination position based on alignment
+          switch (imageAlignment) {
+            case 'top':
+            case 'top-left':
+            case 'top-right':
+              dy = 0;
+              break;
+            case 'bottom':
+            case 'bottom-left':
+            case 'bottom-right':
+              dy = canvas.height - dh;
+              break;
+            default:
+              dy = (canvas.height - dh) / 2;
+          }
+          
+          switch (imageAlignment) {
+            case 'left':
+            case 'top-left':
+            case 'bottom-left':
+              dx = 0;
+              break;
+            case 'right':
+            case 'top-right':
+            case 'bottom-right':
+              dx = canvas.width - dw;
+              break;
+            default:
+              dx = (canvas.width - dw) / 2;
+          }
+        }
+        // For 'fill', use default full canvas dimensions
+        
+        ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
       } else {
         // Fallback to gradient if image fails
         ctx.fillStyle = design.gradientStart || '#667eea';

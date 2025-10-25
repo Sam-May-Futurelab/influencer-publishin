@@ -39,6 +39,7 @@ export interface CoverDesign {
   overlay: boolean;
   overlayOpacity: number;
   imagePosition?: 'cover' | 'contain' | 'fill';
+  imageAlignment?: 'center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   imageBrightness?: number;
   imageContrast?: number;
   usePreMadeCover?: boolean;
