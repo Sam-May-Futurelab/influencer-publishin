@@ -611,18 +611,18 @@ export function CoverDesigner({
               <TabsList className="grid w-full grid-cols-4 mb-6 h-12 gap-2">
                 <TabsTrigger value="quick" className="gap-2 text-base px-4">
                   <UploadSimple size={16} />
-                  <span className="hidden sm:inline">Quick Upload</span>
+                  <span className="hidden sm:inline">Upload Cover</span>
                   <span className="sm:hidden">Upload</span>
                 </TabsTrigger>
                 <TabsTrigger value="stock" className="gap-2 text-base px-4">
                   <ImageIcon size={16} />
                   <span className="hidden sm:inline">Stock Images</span>
-                  <span className="sm:hidden">Images</span>
+                  <span className="sm:hidden">Stock</span>
                 </TabsTrigger>
                 <TabsTrigger value="background" className="gap-2 text-base px-4">
                   <Palette size={16} />
-                  <span className="hidden sm:inline">Background</span>
-                  <span className="sm:hidden">BG</span>
+                  <span className="hidden sm:inline">Colors/Gradients</span>
+                  <span className="sm:hidden">Colors</span>
                 </TabsTrigger>
                 <TabsTrigger value="text" className="gap-2 text-base px-4">
                   <TextT size={16} />
@@ -633,9 +633,9 @@ export function CoverDesigner({
               {/* Quick Upload Tab */}
               <TabsContent value="quick" className="space-y-6">
                 <div className="space-y-3">
-                  <Label className="text-base font-semibold">Upload Your Own Cover</Label>
+                  <Label className="text-base font-semibold">Upload Your Cover Image</Label>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Already have a cover designed? Upload it here and skip the customization
+                    Upload a complete pre-made cover OR upload a background image to customize
                   </p>
                 </div>
                 
@@ -935,15 +935,10 @@ export function CoverDesigner({
                   {/* Image Sub-Tab */}
                   <TabsContent value="image" className="space-y-6">
                       <div className="space-y-3">
-                        <Label className="text-base font-medium">Upload Background Image</Label>
-                        <Button
-                          variant="outline"
-                          className="w-full h-12 text-base"
-                          onClick={() => fileInputRef.current?.click()}
-                        >
-                          <UploadSimple size={20} className="mr-2" />
-                          Choose Image
-                        </Button>
+                        <Label className="text-base font-medium">Background Image Settings</Label>
+                        <p className="text-sm text-muted-foreground">
+                          These controls adjust how your uploaded background image appears with text overlay
+                        </p>
                       </div>
 
                       {design.backgroundImage && (
