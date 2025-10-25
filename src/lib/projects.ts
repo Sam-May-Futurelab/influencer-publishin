@@ -34,7 +34,7 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
   try {
     const projectRef = doc(db, 'users', userId, 'projects', project.id);
     
-    // Prepare coverDesign - flatten completely and handle image data separately
+    // Prepare coverDesign - store only design parameters, NOT the generated image
     let coverDesignData: any = null;
     if (project.coverDesign) {
       coverDesignData = {
@@ -62,8 +62,8 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
         imageBrightness: Number(project.coverDesign.imageBrightness || 100),
         imageContrast: Number(project.coverDesign.imageContrast || 100),
         usePreMadeCover: Boolean(project.coverDesign.usePreMadeCover),
-        // Store image data as string (will be large but valid)
-        coverImageData: project.coverDesign.coverImageData ? String(project.coverDesign.coverImageData) : '',
+        // DON'T store coverImageData - we'll generate it on-the-fly when needed
+        // This keeps Firestore documents small and avoids 1MB limit issues
       };
     }
     

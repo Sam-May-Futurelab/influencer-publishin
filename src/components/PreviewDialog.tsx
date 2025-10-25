@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { BookOpen, X } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { getCoverImageData } from '@/lib/cover-generator';
 
 interface PreviewDialogProps {
   project: EbookProject;
@@ -12,6 +14,15 @@ interface PreviewDialogProps {
 }
 
 export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) {
+  const [coverImageData, setCoverImageData] = useState<string | undefined>();
+
+  // Generate cover image when dialog opens or project changes
+  useEffect(() => {
+    if (isOpen && project.coverDesign) {
+      getCoverImageData(project.coverDesign).then(setCoverImageData);
+    }
+  }, [isOpen, project.coverDesign]);
+
   const getWordCount = () => {
     return project.chapters.reduce((total, chapter) => {
       if (!chapter.content) return total;
@@ -122,7 +133,7 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
         <div className="flex-1 overflow-y-auto p-6 max-h-[calc(90vh-120px)] bg-background">
           <div className="max-w-3xl mx-auto">
             {/* Title Page - Show custom cover if available, otherwise use default */}
-            {project.coverDesign?.coverImageData ? (
+            {coverImageData ? (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -130,7 +141,7 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
                 style={{ maxWidth: '500px' }}
               >
                 <img 
-                  src={project.coverDesign.coverImageData} 
+                  src={coverImageData} 
                   alt={`${project.title} cover`}
                   className="w-full h-auto"
                 />

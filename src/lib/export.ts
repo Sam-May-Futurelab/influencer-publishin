@@ -1,4 +1,5 @@
 import { EbookProject } from '@/lib/types';
+import { getCoverImageData } from '@/lib/cover-generator';
 
 export type ExportFormat = 'pdf' | 'epub' | 'docx';
 export type ChapterNumberStyle = 'numeric' | 'roman' | 'none';
@@ -69,7 +70,22 @@ export async function exportToFormat(project: EbookProject, format: ExportFormat
 
 export async function exportToPDF(project: EbookProject, options?: ExportOptions): Promise<void> {
   try {
-    const doc = generateHTML(project, options);
+    // Generate cover image if we have cover design
+    let coverImageData: string | undefined;
+    if (project.coverDesign) {
+      coverImageData = await getCoverImageData(project.coverDesign);
+    }
+    
+    // Create a modified project with the generated cover image
+    const projectWithCover = coverImageData ? {
+      ...project,
+      coverDesign: project.coverDesign ? {
+        ...project.coverDesign,
+        coverImageData
+      } : undefined
+    } : project;
+    
+    const doc = generateHTML(projectWithCover, options);
     
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
