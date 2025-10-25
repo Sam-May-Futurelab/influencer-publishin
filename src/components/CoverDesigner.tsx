@@ -664,12 +664,145 @@ export function CoverDesigner({
                   className="w-full h-32 text-base border-2 border-dashed hover:border-primary hover:bg-primary/5"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-col items-center gap-2 text-foreground">
                     <UploadSimple size={32} />
-                    <span className="font-medium">Click to upload your cover image</span>
+                    <span className="font-medium text-foreground">Click to upload your cover image</span>
                     <span className="text-xs text-muted-foreground">Recommended: 1600x2560px (PNG or JPG)</span>
                   </div>
                 </Button>
+
+                {design.backgroundImage && (
+                  <div className="space-y-4 pt-4 border-t">
+                    <div>
+                      <Label className="text-base font-medium mb-2 block">How do you want to use this image?</Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <Button
+                          variant={!design.usePreMadeCover ? "default" : "outline"}
+                          className="h-auto py-4 flex flex-col items-start text-left"
+                          onClick={() => updateDesign({ 
+                            usePreMadeCover: false,
+                            backgroundType: 'image'
+                          })}
+                        >
+                          <span className="font-semibold">Background</span>
+                          <span className="text-xs opacity-80 mt-1">Add custom text on top</span>
+                        </Button>
+                        
+                        <Button
+                          variant={design.usePreMadeCover ? "default" : "outline"}
+                          className="h-auto py-4 flex flex-col items-start text-left"
+                          onClick={() => updateDesign({ 
+                            usePreMadeCover: true,
+                            backgroundType: 'image'
+                          })}
+                        >
+                          <span className="font-semibold">Complete Cover</span>
+                          <span className="text-xs opacity-80 mt-1">Use as-is, no text</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {design.backgroundImage && !design.usePreMadeCover && (
+                  <div className="space-y-6 pt-4 border-t">
+                    <div className="space-y-3">
+                      <Label className="text-base font-medium">Image Fit</Label>
+                      <Select
+                        value={design.imagePosition}
+                        onValueChange={(value: any) => updateDesign({ imagePosition: value })}
+                      >
+                        <SelectTrigger className="h-12 text-base">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="cover" className="text-base py-3">Cover (Fill & crop to fit)</SelectItem>
+                          <SelectItem value="contain" className="text-base py-3">Contain (Fit inside, no crop)</SelectItem>
+                          <SelectItem value="fill" className="text-base py-3">Fill (Stretch to fill)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        {design.imagePosition === 'cover' && '• Fills the cover, cropping edges if needed'}
+                        {design.imagePosition === 'contain' && '• Shows full image, may have empty space'}
+                        {design.imagePosition === 'fill' && '• Stretches to fill, may distort image'}
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-base font-medium">Image Alignment</Label>
+                      <Select
+                        value={design.imageAlignment || 'center'}
+                        onValueChange={(value: any) => updateDesign({ imageAlignment: value })}
+                      >
+                        <SelectTrigger className="h-12 text-base">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="center" className="text-base py-3">Center</SelectItem>
+                          <SelectItem value="top" className="text-base py-3">Top</SelectItem>
+                          <SelectItem value="bottom" className="text-base py-3">Bottom</SelectItem>
+                          <SelectItem value="left" className="text-base py-3">Left</SelectItem>
+                          <SelectItem value="right" className="text-base py-3">Right</SelectItem>
+                          <SelectItem value="top-left" className="text-base py-3">Top Left</SelectItem>
+                          <SelectItem value="top-right" className="text-base py-3">Top Right</SelectItem>
+                          <SelectItem value="bottom-left" className="text-base py-3">Bottom Left</SelectItem>
+                          <SelectItem value="bottom-right" className="text-base py-3">Bottom Right</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        Position the image within the cover area
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-base font-medium">Brightness: {design.imageBrightness}%</Label>
+                      <Slider
+                        value={[design.imageBrightness]}
+                        onValueChange={([value]) => updateDesign({ imageBrightness: value })}
+                        min={50}
+                        max={150}
+                        step={5}
+                        className="py-2"
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-base font-medium">Contrast: {design.imageContrast}%</Label>
+                      <Slider
+                        value={[design.imageContrast]}
+                        onValueChange={([value]) => updateDesign({ imageContrast: value })}
+                        min={50}
+                        max={150}
+                        step={5}
+                        className="py-2"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
+                      <Label className="text-base font-medium">Dark Overlay</Label>
+                      <input
+                        type="checkbox"
+                        checked={design.overlay}
+                        onChange={(e) => updateDesign({ overlay: e.target.checked })}
+                        className="w-5 h-5 rounded cursor-pointer"
+                      />
+                    </div>
+
+                    {design.overlay && (
+                      <div className="space-y-3">
+                        <Label className="text-base font-medium">Overlay Opacity: {design.overlayOpacity}%</Label>
+                        <Slider
+                          value={[design.overlayOpacity]}
+                          onValueChange={([value]) => updateDesign({ overlayOpacity: value })}
+                          min={0}
+                          max={100}
+                          step={5}
+                          className="py-2"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {design.usePreMadeCover && design.backgroundImage && (
                   <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -730,17 +863,16 @@ export function CoverDesigner({
 
                 <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-sm text-blue-800 font-medium">💡 Pro Tip</p>
-                  <p className="text-xs text-blue-600 mt-1">After selecting a stock image, use the Background tab to adjust colors and the Text tab to customize your title and author.</p>
+                  <p className="text-xs text-blue-600 mt-1">After selecting a stock image, go to Upload Cover tab to adjust image placement, or use Text tab to customize your title.</p>
                 </div>
               </TabsContent>
 
               {/* Background Tab */}
               <TabsContent value="background" className="space-y-6">
-                <Tabs defaultValue={design.backgroundType} onValueChange={(value: any) => updateDesign({ backgroundType: value })} className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 h-12 mb-6">
+                <Tabs defaultValue={design.backgroundType === 'image' ? 'solid' : design.backgroundType} onValueChange={(value: any) => updateDesign({ backgroundType: value })} className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 h-12 mb-6">
                     <TabsTrigger value="solid" className="text-sm font-medium">Solid Color</TabsTrigger>
                     <TabsTrigger value="gradient" className="text-sm font-medium">Gradient</TabsTrigger>
-                    <TabsTrigger value="image" className="text-sm font-medium">Image</TabsTrigger>
                   </TabsList>
 
                   {/* Solid Color Sub-Tab */}
@@ -929,118 +1061,6 @@ export function CoverDesigner({
                             title="Pastel Dream"
                           />
                         </div>
-                      </div>
-                    </TabsContent>
-
-                  {/* Image Sub-Tab */}
-                  <TabsContent value="image" className="space-y-6">
-                      <div className="space-y-3">
-                        <Label className="text-base font-medium">Background Image Settings</Label>
-                        <p className="text-sm text-muted-foreground">
-                          These controls adjust how your uploaded background image appears with text overlay
-                        </p>
-                      </div>
-
-                      {design.backgroundImage && (
-                        <>
-                          <div className="space-y-3">
-                            <Label className="text-base font-medium">Image Fit</Label>
-                            <Select
-                              value={design.imagePosition}
-                              onValueChange={(value: any) => updateDesign({ imagePosition: value })}
-                            >
-                              <SelectTrigger className="h-12 text-base">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="cover" className="text-base py-3">Cover (Fill & crop to fit)</SelectItem>
-                                <SelectItem value="contain" className="text-base py-3">Contain (Fit inside, no crop)</SelectItem>
-                                <SelectItem value="fill" className="text-base py-3">Fill (Stretch to fill)</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <p className="text-xs text-muted-foreground">
-                              {design.imagePosition === 'cover' && '• Fills the cover, cropping edges if needed'}
-                              {design.imagePosition === 'contain' && '• Shows full image, may have empty space'}
-                              {design.imagePosition === 'fill' && '• Stretches to fill, may distort image'}
-                            </p>
-                          </div>
-
-                          <div className="space-y-3">
-                            <Label className="text-base font-medium">Image Alignment</Label>
-                            <Select
-                              value={design.imageAlignment || 'center'}
-                              onValueChange={(value: any) => updateDesign({ imageAlignment: value })}
-                            >
-                              <SelectTrigger className="h-12 text-base">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="center" className="text-base py-3">Center</SelectItem>
-                                <SelectItem value="top" className="text-base py-3">Top</SelectItem>
-                                <SelectItem value="bottom" className="text-base py-3">Bottom</SelectItem>
-                                <SelectItem value="left" className="text-base py-3">Left</SelectItem>
-                                <SelectItem value="right" className="text-base py-3">Right</SelectItem>
-                                <SelectItem value="top-left" className="text-base py-3">Top Left</SelectItem>
-                                <SelectItem value="top-right" className="text-base py-3">Top Right</SelectItem>
-                                <SelectItem value="bottom-left" className="text-base py-3">Bottom Left</SelectItem>
-                                <SelectItem value="bottom-right" className="text-base py-3">Bottom Right</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <p className="text-xs text-muted-foreground">
-                              Position the image within the cover area
-                            </p>
-                          </div>
-
-                          <div className="space-y-3">
-                            <Label className="text-base font-medium">Brightness: {design.imageBrightness}%</Label>
-                            <Slider
-                              value={[design.imageBrightness]}
-                              onValueChange={([value]) => updateDesign({ imageBrightness: value })}
-                              min={50}
-                              max={150}
-                              step={5}
-                              className="py-2"
-                            />
-                          </div>
-
-                          <div className="space-y-3">
-                            <Label className="text-base font-medium">Contrast: {design.imageContrast}%</Label>
-                            <Slider
-                              value={[design.imageContrast]}
-                              onValueChange={([value]) => updateDesign({ imageContrast: value })}
-                              min={50}
-                              max={150}
-                              step={5}
-                              className="py-2"
-                            />
-                          </div>
-                        </>
-                      )}
-
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
-                          <Label className="text-base font-medium">Dark Overlay</Label>
-                          <input
-                            type="checkbox"
-                            checked={design.overlay}
-                            onChange={(e) => updateDesign({ overlay: e.target.checked })}
-                            className="w-5 h-5 rounded cursor-pointer"
-                          />
-                        </div>
-
-                        {design.overlay && (
-                          <div className="space-y-3">
-                            <Label className="text-base font-medium">Overlay Opacity: {design.overlayOpacity}%</Label>
-                            <Slider
-                              value={[design.overlayOpacity]}
-                              onValueChange={([value]) => updateDesign({ overlayOpacity: value })}
-                              min={0}
-                              max={100}
-                              step={5}
-                              className="py-2"
-                            />
-                          </div>
-                        )}
                       </div>
                     </TabsContent>
                   </Tabs>
