@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
 import { AuthModal } from '@/components/AuthModal';
 import { UsageTracker } from '@/components/UsageTracker';
+import { NotificationsPanel } from '@/components/NotificationsPanel';
 
 interface HeaderProps {
   logoUrl?: string;
@@ -162,21 +163,7 @@ export function Header({
               whileTap={{ scale: 0.95 }}
               className="relative"
             >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-10 w-10 p-0 neomorph-button border-0 text-foreground hover:text-foreground"
-              >
-                <Bell size={18} />
-                {notifications > 0 && (
-                  <Badge 
-                    variant="destructive" 
-                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
-                  >
-                    {notifications > 9 ? '9+' : notifications}
-                  </Badge>
-                )}
-              </Button>
+              <NotificationsPanel />
             </motion.div>
 
             {/* User Profile */}
