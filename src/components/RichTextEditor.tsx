@@ -57,14 +57,30 @@ const ImageExtension = Node.create({
     return {
       src: { default: null },
       alt: { default: null },
-      style: { default: 'max-width: 100%; height: auto; display: block; margin: 1em auto; border-radius: 8px;' }
+      width: { default: null },
+      opacity: { default: '1' },
+      alignment: { default: 'center' },
     };
   },
   parseHTML() {
     return [{ tag: 'img[src]' }];
   },
   renderHTML({ HTMLAttributes }) {
-    return ['img', HTMLAttributes];
+    const { width, opacity, alignment } = HTMLAttributes;
+    const align = alignment === 'left' ? 'flex-start' : alignment === 'right' ? 'flex-end' : 'center';
+    
+    const style = `
+      max-width: ${width || '100%'};
+      height: auto;
+      display: block;
+      margin: 1em auto;
+      border-radius: 8px;
+      opacity: ${opacity || '1'};
+      margin-left: ${alignment === 'left' ? '0' : alignment === 'right' ? 'auto' : 'auto'};
+      margin-right: ${alignment === 'left' ? 'auto' : alignment === 'right' ? '0' : 'auto'};
+    `.trim();
+    
+    return ['img', { ...HTMLAttributes, style }];
   },
 });
 
@@ -93,6 +109,12 @@ export function RichTextEditor({
   const [hasSelection, setHasSelection] = useState(false);
   const isSettingContentRef = useRef(false); // Track programmatic content changes
   const imageInputRef = useRef<HTMLInputElement>(null);
+  
+  // Image editing state
+  const [selectedImage, setSelectedImage] = useState<{ node: any; pos: number } | null>(null);
+  const [imageWidth, setImageWidth] = useState('100%');
+  const [imageOpacity, setImageOpacity] = useState(100);
+  const [imageAlignment, setImageAlignment] = useState('center');
 
   // Voice input hook
   const {
@@ -126,6 +148,19 @@ export function RichTextEditor({
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg focus:outline-none max-w-none p-4',
         style: 'line-height: 1.6',
+      },
+      handleClickOn: (view, pos, node, nodePos, event) => {
+        if (node.type.name === 'image') {
+          event.preventDefault();
+          const attrs = node.attrs;
+          setSelectedImage({ node, pos: nodePos });
+          setImageWidth(attrs.width || '100%');
+          setImageOpacity(parseInt(attrs.opacity || '1') * 100);
+          setImageAlignment(attrs.alignment || 'center');
+          return true;
+        }
+        setSelectedImage(null);
+        return false;
       },
     },
     onUpdate: ({ editor }) => {
@@ -299,6 +334,38 @@ export function RichTextEditor({
     if (imageInputRef.current) {
       imageInputRef.current.value = '';
     }
+  };
+
+  // Update selected image attributes
+  const updateImageAttribute = (attr: string, value: any) => {
+    if (!editor || !selectedImage) return;
+
+    const { pos } = selectedImage;
+    const node = editor.state.doc.nodeAt(pos);
+    
+    if (node && node.type.name === 'image') {
+      editor.view.dispatch(
+        editor.state.tr.setNodeMarkup(pos, undefined, {
+          ...node.attrs,
+          [attr]: value,
+        })
+      );
+    }
+  };
+
+  const handleWidthChange = (value: string) => {
+    setImageWidth(value);
+    updateImageAttribute('width', value);
+  };
+
+  const handleOpacityChange = (value: number) => {
+    setImageOpacity(value);
+    updateImageAttribute('opacity', (value / 100).toString());
+  };
+
+  const handleAlignmentChange = (value: string) => {
+    setImageAlignment(value);
+    updateImageAttribute('alignment', value);
   };
 
   // Keyboard shortcuts for voice input
@@ -605,6 +672,97 @@ export function RichTextEditor({
         {/* End Editing Tools Section */}
       </div>
       {/* End Toolbar */}
+
+      {/* Image Controls - Show when image is selected */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="border-b border-border/50 bg-muted/30"
+          >
+            <div className="flex flex-wrap items-center gap-4 p-3">
+              <div className="text-xs font-medium text-muted-foreground">Image Settings:</div>
+              
+              {/* Width Control */}
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-muted-foreground">Width:</label>
+                <Select value={imageWidth} onValueChange={handleWidthChange}>
+                  <SelectTrigger className="h-7 w-[100px] text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="25%">25%</SelectItem>
+                    <SelectItem value="50%">50%</SelectItem>
+                    <SelectItem value="75%">75%</SelectItem>
+                    <SelectItem value="100%">100%</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Opacity Control */}
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-muted-foreground">Opacity:</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={imageOpacity}
+                  onChange={(e) => handleOpacityChange(parseInt(e.target.value))}
+                  className="w-24 h-1 bg-border rounded-lg appearance-none cursor-pointer"
+                />
+                <span className="text-xs text-muted-foreground w-10">{imageOpacity}%</span>
+              </div>
+
+              {/* Alignment Control */}
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-muted-foreground">Align:</label>
+                <div className="flex gap-1">
+                  <Button
+                    onClick={() => handleAlignmentChange('left')}
+                    variant={imageAlignment === 'left' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="h-7 w-7 p-0"
+                    type="button"
+                  >
+                    <TextAlignLeft size={14} />
+                  </Button>
+                  <Button
+                    onClick={() => handleAlignmentChange('center')}
+                    variant={imageAlignment === 'center' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="h-7 w-7 p-0"
+                    type="button"
+                  >
+                    <TextAlignCenter size={14} />
+                  </Button>
+                  <Button
+                    onClick={() => handleAlignmentChange('right')}
+                    variant={imageAlignment === 'right' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="h-7 w-7 p-0"
+                    type="button"
+                  >
+                    <TextAlignRight size={14} />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Close Button */}
+              <Button
+                onClick={() => setSelectedImage(null)}
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs ml-auto"
+                type="button"
+              >
+                Done
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Voice Feedback Overlay */}
       <AnimatePresence>
