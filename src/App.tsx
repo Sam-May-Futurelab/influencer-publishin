@@ -1,6 +1,7 @@
 import { useState, useEffect, lazy, Suspense, useRef } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { useAuth } from '@/hooks/use-auth';
 import { incrementPageUsage, syncPageUsage, updateUserProfile } from '@/lib/auth';
 import { getUserProjects, saveProject, deleteProject as deleteProjectFromFirestore } from '@/lib/projects';
@@ -14,6 +15,7 @@ import { Onboarding } from '@/components/Onboarding';
 import { UpgradeModal } from '@/components/UpgradeModal';
 import { LandingPage } from '@/components/LandingPage';
 import { ScrollToTop } from '@/components/ScrollToTop';
+import { KeyboardShortcutsDialog } from '@/components/KeyboardShortcutsDialog';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
@@ -85,6 +87,29 @@ function App() {
 
   // Writing analytics
   const { recordWritingSession } = useWritingAnalytics(projects);
+
+  // Keyboard shortcuts - save current project
+  const handleSave = async () => {
+    if (currentProject && user) {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      try {
+        await saveProject(user.uid, currentProject);
+      } catch (error) {
+        console.error('Error saving:', error);
+        toast.error('Failed to save');
+      }
+    }
+  };
+
+  useKeyboardShortcuts(
+    handleSave,
+    undefined, // AI assist handled in editor
+    undefined, // Export handled per page
+    undefined, // New project handled in dashboard
+    undefined  // Search not implemented yet
+  );
 
   // Load projects from Firebase when user logs in
   useEffect(() => {
@@ -982,6 +1007,9 @@ function App() {
         isOpen={showAuthModal}
         onOpenChange={setShowAuthModal}
       />
+
+      {/* Keyboard Shortcuts Dialog */}
+      <KeyboardShortcutsDialog />
     </div>
   );
 }

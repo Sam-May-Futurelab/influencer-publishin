@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -110,6 +111,19 @@ export function Dashboard({
     setNewProjectTitle('');
     setPendingProjectTitle('');
   };
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts(
+    undefined,
+    undefined,
+    undefined,
+    () => {
+      // Focus the new project input on Cmd/Ctrl+N
+      const input = document.querySelector('input[placeholder*="project"]') as HTMLInputElement;
+      if (input) input.focus();
+    },
+    undefined
+  );
 
   const handleFileImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
