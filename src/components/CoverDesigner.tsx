@@ -26,6 +26,8 @@ import {
   Download,
   Sparkle,
   UploadSimple,
+  ArrowsOut,
+  ArrowsIn,
 } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 
@@ -475,6 +477,7 @@ export function CoverDesigner({
   });
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -687,9 +690,40 @@ export function CoverDesigner({
 
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">
           {/* Preview Panel */}
-          <div className="lg:w-[45%] p-6 lg:p-8 flex flex-col items-center bg-muted/20 border-r overflow-y-auto">
-            <div className="text-xs font-semibold text-muted-foreground text-center uppercase tracking-wide mb-4">
-              Live Preview
+          <div 
+            className={`p-6 lg:p-8 flex flex-col items-center bg-muted/20 border-r overflow-y-auto transition-all ${
+              isPreviewExpanded ? 'flex-1 lg:w-[45%]' : 'lg:w-[45%]'
+            } ${!isPreviewExpanded ? 'lg:flex' : ''}`}
+            onClick={() => {
+              // Only toggle on mobile (not lg screens)
+              if (window.innerWidth < 1024) {
+                setIsPreviewExpanded(!isPreviewExpanded);
+              }
+            }}
+          >
+            <div className="flex items-center justify-between w-full mb-4">
+              <div className="text-xs font-semibold text-muted-foreground text-center uppercase tracking-wide flex-1">
+                Live Preview
+              </div>
+              <button 
+                className="lg:hidden flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded hover:bg-muted/50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsPreviewExpanded(!isPreviewExpanded);
+                }}
+              >
+                {isPreviewExpanded ? (
+                  <>
+                    <ArrowsIn size={14} weight="bold" />
+                    <span>Back</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Expand</span>
+                    <ArrowsOut size={14} weight="bold" />
+                  </>
+                )}
+              </button>
             </div>
             <div className="w-full flex justify-center items-start py-4">
               <div
@@ -750,7 +784,9 @@ export function CoverDesigner({
           </div>
 
           {/* Controls Panel */}
-          <div className="lg:w-[55%] overflow-y-auto p-6 lg:p-10">
+          <div className={`lg:w-[55%] overflow-y-auto p-6 lg:p-10 ${
+            isPreviewExpanded ? 'hidden lg:block' : 'block'
+          }`}>
             <Tabs defaultValue="quick" className="w-full">
               <TabsList className="grid w-full grid-cols-4 mb-6 h-12 gap-2">
                 <TabsTrigger value="quick" className="gap-2 text-base px-4">
