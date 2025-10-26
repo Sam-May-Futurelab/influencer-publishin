@@ -94,7 +94,7 @@ export function FAQPage() {
     {
       category: 'features',
       question: 'Can I collaborate with others on an ebook?',
-      answer: 'Currently, each ebook is associated with one account. However, you can export and share drafts, or use our premium features to manage client projects. Team collaboration features are on our roadmap for 2025.'
+      answer: 'Currently, each ebook is associated with one account. You can export your ebook in multiple formats (PDF, EPUB, DOCX) and share files with collaborators or editors outside the platform.'
     },
     {
       category: 'features',

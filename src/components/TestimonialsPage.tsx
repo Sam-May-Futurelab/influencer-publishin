@@ -11,7 +11,7 @@ import {
   Star, 
   Quote, 
   Award, 
-  Users, 
+  Zap, 
   BookOpen, 
   TrendingUp,
   CheckCircle,
@@ -25,10 +25,10 @@ export function TestimonialsPage() {
   const { user } = useAuth();
 
   const stats = [
-    { icon: Users, label: 'Active Users', value: '10,000+' },
-    { icon: BookOpen, label: 'Ebooks Created', value: '50,000+' },
+    { icon: Zap, label: 'AI-Powered', value: 'GPT-4' },
+    { icon: BookOpen, label: 'Export Formats', value: 'PDF, EPUB, DOCX' },
     { icon: Star, label: 'Average Rating', value: '4.9/5' },
-    { icon: Award, label: 'Success Stories', value: '500+' }
+    { icon: Award, label: 'Free to Start', value: '0 Cost' }
   ];
 
   const featuredTestimonials = [
@@ -176,8 +176,8 @@ export function TestimonialsPage() {
   ];
 
   const trustBadges = [
-    { icon: Users, text: '10,000+ Happy Users' },
-    { icon: BookOpen, text: '50,000+ Ebooks Created' },
+    { icon: Zap, text: 'AI-Powered Generation' },
+    { icon: BookOpen, text: 'Multi-Format Export' },
     { icon: Star, text: '4.9/5 Average Rating' },
     { icon: CheckCircle, text: 'Verified Reviews' }
   ];
@@ -185,8 +185,8 @@ export function TestimonialsPage() {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Testimonials & Reviews - See Why 10,000+ Users Love Inkfluence AI"
-        description="Read real success stories from authors, marketers, and creators who use Inkfluence AI to create professional ebooks. 4.9/5 rating, 10,000+ satisfied users."
+        title="Testimonials & Reviews - Real Success Stories from Inkfluence AI Users"
+        description="Read authentic success stories from authors, marketers, and creators who use Inkfluence AI to create professional ebooks. 4.9/5 rating from verified users."
         keywords="inkfluence ai reviews, ebook creator testimonials, user success stories, ai writing tool reviews, customer feedback"
         canonicalUrl="https://inkfluenceai.com/testimonials"
         structuredData={{
@@ -235,7 +235,7 @@ export function TestimonialsPage() {
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Loved by 10,000+ Creators
+              Real Results from Real Authors
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
               See why authors, marketers, and entrepreneurs trust Inkfluence AI to create professional ebooks faster than ever before.
@@ -396,10 +396,10 @@ export function TestimonialsPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Join 10,000+ Happy Creators
+              Start Creating Your Ebook Today
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Start creating professional ebooks today. No credit card required.
+              Join authors who are creating professional ebooks faster with AI. No credit card required.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button 
