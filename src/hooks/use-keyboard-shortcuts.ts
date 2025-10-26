@@ -35,7 +35,7 @@ export function useKeyboardShortcuts(
       handler: () => {
         if (onSave) {
           onSave();
-          toast.success('Saved!', { duration: 2000 });
+          // Don't show toast - SaveIndicator will handle visual feedback
         }
       },
       description: `${modifierKey}+S - Save`,

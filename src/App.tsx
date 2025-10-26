@@ -79,6 +79,7 @@ function App() {
   // Debounce timer for auto-save
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const currentProjectRef = useRef<EbookProject | null>(null);
+  const editorSaveRef = useRef<(() => void) | null>(null);
 
   // Keep ref in sync with current project
   useEffect(() => {
@@ -90,12 +91,20 @@ function App() {
 
   // Keyboard shortcuts - save current project
   const handleSave = async () => {
+    // If in editor, use editor's forceSave for proper state updates
+    if (editorSaveRef.current) {
+      editorSaveRef.current();
+      return;
+    }
+    
+    // Otherwise save at app level
     if (currentProject && user) {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
       try {
         await saveProject(user.uid, currentProject);
+        toast.success('Saved!', { duration: 2000 });
       } catch (error) {
         console.error('Error saving:', error);
         toast.error('Failed to save');
@@ -948,6 +957,7 @@ function App() {
                             projectAuthor={currentProject.author}
                             projectDescription={currentProject.description}
                             brandConfig={currentProject.brandConfig}
+                            onSaveRef={editorSaveRef}
                           />
                         </Suspense>
                       </main>

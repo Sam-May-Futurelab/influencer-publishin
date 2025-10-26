@@ -36,6 +36,7 @@ interface ChapterEditorProps {
   projectAuthor?: string;
   projectDescription?: string;
   brandConfig?: any;
+  onSaveRef?: React.MutableRefObject<(() => void) | null>;
 }
 
 export function ChapterEditor({
@@ -54,6 +55,7 @@ export function ChapterEditor({
   projectAuthor = '',
   projectDescription = '',
   brandConfig,
+  onSaveRef,
 }: ChapterEditorProps) {
   const { userProfile, user } = useAuth();
   const isPremium = userProfile?.isPremium || false;
@@ -120,6 +122,13 @@ export function ChapterEditor({
     delay: autoSaveInterval,
     enabled: !!currentChapter
   });
+
+  // Expose forceSave to parent via ref
+  useEffect(() => {
+    if (onSaveRef) {
+      onSaveRef.current = forceSave;
+    }
+  }, [forceSave, onSaveRef]);
 
   const handleTitleEdit = (chapter: Chapter) => {
     setEditingTitle(true);
