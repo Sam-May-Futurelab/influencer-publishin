@@ -433,8 +433,9 @@ export function RichTextEditor({
   return (
     <div className={cn("neomorph-inset rounded-lg border-0 bg-background", className)}>
       {/* Toolbar */}
-      <div className="p-2 border-b border-border/50 overflow-x-auto">
-        <div className="flex items-center gap-1 min-w-max">
+      <div className="relative">
+        <div className="p-2 border-b border-border/50 overflow-x-auto scrollbar-hide">
+          <div className="flex items-center gap-1 min-w-max">
         
         {/* AI Tools Section - Prominent */}
         <div className="flex items-center gap-1 pr-2 border-r border-border/50 shrink-0">
@@ -678,6 +679,9 @@ export function RichTextEditor({
         </div>
         {/* End Editing Tools Section */}
         </div>
+        </div>
+        {/* Scroll indicator gradient for mobile */}
+        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent pointer-events-none md:hidden" />
       </div>
       {/* End Toolbar */}
 

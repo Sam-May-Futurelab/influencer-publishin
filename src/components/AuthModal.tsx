@@ -247,7 +247,7 @@ export function AuthModal({
           <div className="relative my-6">
             <Separator />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="bg-card px-3 text-xs text-muted-foreground">
+              <span className="bg-background px-3 text-xs text-muted-foreground">
                 or continue with
               </span>
             </div>

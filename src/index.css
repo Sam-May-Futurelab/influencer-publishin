@@ -77,12 +77,20 @@
       -6px -6px 12px var(--shadow-light);
   }
   
-  .neomorph-pressed {
+    .neomorph-pressed {
     box-shadow: 
-      inset 2px 2px 4px var(--shadow-dark),
-      inset -2px -2px 4px var(--shadow-light),
-      8px 8px 16px var(--shadow-dark),
-      -8px -8px 16px var(--shadow-light);
+      inset 3px 3px 6px var(--shadow-dark),
+      inset -3px -3px 6px var(--shadow-light);
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
   }
   
   /* Enhanced touch and drag interactions */
