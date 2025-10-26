@@ -85,6 +85,7 @@ export function LandingPage() {
         onNavigateToBlog={() => navigate('/blog')}
       />
 
+      <main>
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 md:py-24">
         <div className="max-w-5xl mx-auto">
@@ -877,6 +878,7 @@ export function LandingPage() {
           </div>
         </motion.div>
       </section>
+      </main>
 
       <LandingFooter 
         onNavigateToPrivacy={() => navigate('/privacy')}
