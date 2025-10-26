@@ -1,5 +1,6 @@
 // Contact Form Submission Handler with Resend Email Integration
 import { Resend } from 'resend';
+import validator from 'validator';
 import { setCorsHeaders, handleCorsPreFlight } from './_cors.js';
 
 export default async function handler(req, res) {
@@ -19,10 +20,26 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
+    // Sanitize inputs to prevent XSS
+    const sanitizedName = validator.escape(name.trim());
+    const sanitizedEmail = validator.normalizeEmail(email.trim()) || email.trim();
+    const sanitizedSubject = validator.escape(subject.trim());
+    const sanitizedMessage = validator.escape(message.trim());
+    
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!validator.isEmail(sanitizedEmail)) {
       return res.status(400).json({ error: 'Invalid email format' });
+    }
+    
+    // Validate category is from allowed list
+    const allowedCategories = ['general', 'support', 'feedback', 'business', 'feature', 'bug'];
+    if (!allowedCategories.includes(category)) {
+      return res.status(400).json({ error: 'Invalid category' });
+    }
+    
+    // Length validation
+    if (sanitizedName.length > 100 || sanitizedSubject.length > 200 || sanitizedMessage.length > 5000) {
+      return res.status(400).json({ error: 'Input exceeds maximum length' });
     }
 
     // Verify reCAPTCHA if token provided and secret key configured
@@ -63,8 +80,8 @@ export default async function handler(req, res) {
       const result = await resend.emails.send({
         from: 'InkFluence AI <noreply@inkfluenceai.com>',
         to: process.env.CONTACT_EMAIL || 'hello@inkfluenceai.com',
-        replyTo: email,
-        subject: `${categoryEmoji} Contact Form: ${subject}`,
+        replyTo: sanitizedEmail,
+        subject: `${categoryEmoji} Contact Form: ${sanitizedSubject}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #7a5f96; border-bottom: 2px solid #9b87b8; padding-bottom: 10px;">
@@ -73,14 +90,14 @@ export default async function handler(req, res) {
             
             <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <p><strong>Category:</strong> ${category.charAt(0).toUpperCase() + category.slice(1)}</p>
-              <p><strong>From:</strong> ${name}</p>
-              <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-              <p><strong>Subject:</strong> ${subject}</p>
+              <p><strong>From:</strong> ${sanitizedName}</p>
+              <p><strong>Email:</strong> <a href="mailto:${sanitizedEmail}">${sanitizedEmail}</a></p>
+              <p><strong>Subject:</strong> ${sanitizedSubject}</p>
             </div>
 
             <div style="background: white; padding: 20px; border-left: 4px solid #9b87b8; margin: 20px 0;">
               <h3 style="margin-top: 0; color: #333;">Message:</h3>
-              <p style="white-space: pre-wrap; line-height: 1.6;">${message}</p>
+              <p style="white-space: pre-wrap; line-height: 1.6;">${sanitizedMessage}</p>
             </div>
 
             <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; font-size: 12px; color: #666;">
@@ -105,8 +122,8 @@ export default async function handler(req, res) {
       const ticketId = `INK-${Date.now().toString(36).toUpperCase()}`;
       const confirmationResult = await resend.emails.send({
         from: 'InkFluence AI <hello@inkfluenceai.com>',
-        to: email,
-        subject: `✅ We received your message - ${subject}`,
+        to: sanitizedEmail,
+        subject: `✅ We received your message - ${sanitizedSubject}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -117,7 +134,7 @@ export default async function handler(req, res) {
             <div style="background: #f0e8f8; border-left: 4px solid #9b87b8; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
               <h2 style="color: #7a5f96; margin-top: 0;">Message Received!</h2>
               <p style="color: #333; margin-bottom: 0;">
-                Thank you for contacting us, <strong>${name}</strong>. We've received your message and will respond within 24 hours.
+                Thank you for contacting us, <strong>${sanitizedName}</strong>. We've received your message and will respond within 24 hours.
               </p>
             </div>
 
@@ -134,7 +151,7 @@ export default async function handler(req, res) {
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; color: #666; font-size: 14px;">Subject:</td>
-                  <td style="padding: 8px 0; color: #333; font-size: 14px;">${subject}</td>
+                  <td style="padding: 8px 0; color: #333; font-size: 14px;">${sanitizedSubject}</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; color: #666; font-size: 14px;">Submitted:</td>

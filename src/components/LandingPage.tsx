@@ -166,8 +166,8 @@ export function LandingPage() {
               viewport={{ once: true }}
               className="p-6 rounded-xl bg-white shadow-md"
             >
-              <div className="text-4xl font-bold text-[#9b87b8] mb-2">10,000+</div>
-              <div className="text-gray-600">Books Started</div>
+              <div className="text-4xl font-bold text-[#9b87b8] mb-2">AI-Powered</div>
+              <div className="text-gray-600">Content Generation</div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -176,8 +176,8 @@ export function LandingPage() {
               transition={{ delay: 0.1 }}
               className="p-6 rounded-xl bg-white shadow-md"
             >
-              <div className="text-4xl font-bold text-[#9b87b8] mb-2">50,000+</div>
-              <div className="text-gray-600">Chapters Written</div>
+              <div className="text-4xl font-bold text-[#9b87b8] mb-2">Multi-Format</div>
+              <div className="text-gray-600">PDF, EPUB, DOCX Export</div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -186,10 +186,8 @@ export function LandingPage() {
               transition={{ delay: 0.2 }}
               className="p-6 rounded-xl bg-white shadow-md"
             >
-              <div className="text-4xl font-bold text-[#9b87b8] mb-2 flex items-center justify-center gap-1">
-                4.9 <Star className="w-6 h-6 fill-[#9b87b8]" />
-              </div>
-              <div className="text-gray-600">Average Rating</div>
+              <div className="text-4xl font-bold text-[#9b87b8] mb-2">Free</div>
+              <div className="text-gray-600">To Start Writing</div>
             </motion.div>
           </div>
         </div>

@@ -1,12 +1,91 @@
 // Vercel Serverless Function for AI Content Generation
 // This keeps your OpenAI API key secure on the server
 import OpenAI from 'openai';
+import admin from 'firebase-admin';
 import { setCorsHeaders, handleCorsPreFlight } from './_cors.js';
 
 // Initialize OpenAI with API key from environment variable
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+// Initialize Firebase Admin if not already initialized
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
+  });
+}
+
+const db = admin.firestore();
+
+// Simple in-memory rate limiting (resets on cold starts)
+// For production, use Redis or a database
+const rateLimitStore = new Map();
+
+async function checkRateLimit(userId) {
+  const now = Date.now();
+  const userKey = userId || 'anonymous';
+  
+  // Get or create user's rate limit data
+  if (!rateLimitStore.has(userKey)) {
+    rateLimitStore.set(userKey, { count: 0, resetAt: now + 86400000 }); // 24 hours
+  }
+  
+  const userData = rateLimitStore.get(userKey);
+  
+  // Reset if 24 hours passed
+  if (now > userData.resetAt) {
+    userData.count = 0;
+    userData.resetAt = now + 86400000;
+  }
+  
+  // Check limits based on tier (default to free tier)
+  // Matches pricing page: Free = 3/day, Premium = 50/day
+  const limits = {
+    free: parseInt(process.env.AI_RATE_LIMIT_FREE_TIER) || 3,
+    premium: parseInt(process.env.AI_RATE_LIMIT_PREMIUM_TIER) || 50,
+  };
+  
+  // Check user's actual tier from Firebase
+  let userLimit = limits.free; // Default to free
+  if (userId && userId !== 'anonymous') {
+    try {
+      const userDoc = await db.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        if (userData.isPremium || userData.subscriptionStatus === 'premium') {
+          userLimit = limits.premium;
+        }
+      }
+    } catch (error) {
+      console.error('Error checking user tier:', error);
+      // On error, default to free tier (safe fallback)
+    }
+  }
+  
+  if (userData.count >= userLimit) {
+    return {
+      allowed: false,
+      remaining: 0,
+      resetAt: userData.resetAt,
+      limit: userLimit
+    };
+  }
+  
+  userData.count++;
+  rateLimitStore.set(userKey, userData);
+  
+  return {
+    allowed: true,
+    remaining: userLimit - userData.count,
+    resetAt: userData.resetAt,
+    limit: userLimit
+  };
+}
 
 export default async function handler(req, res) {
   // Handle CORS
@@ -31,6 +110,23 @@ export default async function handler(req, res) {
     format = 'narrative',
     context = {}
   } = req.body;
+
+  // Check rate limit BEFORE processing (async now)
+  const rateLimit = await checkRateLimit(userId);
+  if (!rateLimit.allowed) {
+    const resetDate = new Date(rateLimit.resetAt).toLocaleTimeString();
+    return res.status(429).json({ 
+      error: `AI generation limit reached. You've used ${rateLimit.limit} generations today. Resets at ${resetDate}. Upgrade to Premium for unlimited access.`,
+      limit: rateLimit.limit,
+      remaining: 0,
+      resetAt: rateLimit.resetAt
+    });
+  }
+
+  // Add rate limit headers
+  res.setHeader('X-RateLimit-Limit', rateLimit.limit);
+  res.setHeader('X-RateLimit-Remaining', rateLimit.remaining);
+  res.setHeader('X-RateLimit-Reset', rateLimit.resetAt);
 
   // Basic validation
   if (!keywords || keywords.length === 0) {
@@ -154,26 +250,60 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
       maxTokens = tokenLimits[length] || 1500;
     }
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content: `You are a professional ebook writing assistant specializing in ${genre} content. Write in a ${toneDescriptors[tone] || 'engaging'} tone. Provide helpful, creative, and engaging content suggestions that match the specified format and length.`,
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-      max_tokens: maxTokens,
-      temperature: 0.8,
-    });
+    let completion;
+    try {
+      completion = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `You are a professional ebook writing assistant specializing in ${genre} content. Write in a ${toneDescriptors[tone] || 'engaging'} tone. Provide helpful, creative, and engaging content suggestions that match the specified format and length.`,
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        max_tokens: maxTokens,
+        temperature: 0.8,
+      });
+    } catch (apiError) {
+      console.error('OpenAI API Error:', apiError);
+      
+      // Handle different error types
+      if (apiError.status === 429) {
+        return res.status(503).json({ 
+          error: 'AI service is temporarily overloaded. Please try again in a moment.',
+          retryAfter: 60
+        });
+      }
+      
+      if (apiError.status === 401) {
+        console.error('OpenAI API key invalid or missing');
+        return res.status(500).json({ 
+          error: 'AI service configuration error. Please contact support.'
+        });
+      }
+      
+      if (apiError.code === 'ECONNREFUSED' || apiError.code === 'ETIMEDOUT') {
+        return res.status(503).json({ 
+          error: 'Unable to connect to AI service. Please try again later.'
+        });
+      }
+      
+      // Generic error fallback
+      return res.status(500).json({ 
+        error: 'Failed to generate content. Please try again.'
+      });
+    }
 
     const content = completion.choices[0]?.message?.content;
 
     if (!content) {
-      throw new Error('No content generated from OpenAI');
+      console.error('OpenAI returned empty content');
+      return res.status(500).json({ 
+        error: 'AI service returned empty response. Please try again.'
+      });
     }
 
     // Parse JSON response with better error handling

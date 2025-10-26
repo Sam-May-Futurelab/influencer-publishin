@@ -1,5 +1,6 @@
 // Newsletter Signup Handler with Resend Email Integration
 import { Resend } from 'resend';
+import validator from 'validator';
 import { setCorsHeaders, handleCorsPreFlight } from './_cors.js';
 
 export default async function handler(req, res) {
@@ -19,10 +20,18 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Email is required' });
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // Sanitize inputs
+    const sanitizedName = name ? validator.escape(name.trim()) : '';
+    const sanitizedEmail = validator.normalizeEmail(email.trim()) || email.trim();
+
+    // Validate email format using validator
+    if (!validator.isEmail(sanitizedEmail)) {
       return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    // Length validation
+    if (sanitizedName.length > 100) {
+      return res.status(400).json({ error: 'Name exceeds maximum length' });
     }
 
     // Verify reCAPTCHA if token provided and secret key configured
@@ -44,7 +53,7 @@ export default async function handler(req, res) {
       console.log(`✅ reCAPTCHA verified: score ${verifyData.score}`);
     }
 
-    const subscriberName = name || 'Valued Reader';
+    const subscriberName = sanitizedName || 'Valued Reader';
 
     // Initialize Resend (only if API key exists)
     if (process.env.RESEND_API_KEY) {
@@ -54,7 +63,7 @@ export default async function handler(req, res) {
       await resend.emails.send({
         from: 'InkFluence AI <noreply@inkfluenceai.com>',
         to: process.env.CONTACT_EMAIL || 'hello@inkfluenceai.com',
-        replyTo: email,
+        replyTo: sanitizedEmail,
         subject: `📬 New Newsletter Subscriber${wantsLeadMagnet ? ' + Lead Magnet Request' : ''}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -64,7 +73,7 @@ export default async function handler(req, res) {
             
             <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <p><strong>Name:</strong> ${subscriberName}</p>
-              <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+              <p><strong>Email:</strong> <a href="mailto:${sanitizedEmail}">${sanitizedEmail}</a></p>
               <p><strong>Lead Magnet Requested:</strong> ${wantsLeadMagnet ? 'Yes ✅' : 'No'}</p>
               <p><strong>Subscribed:</strong> ${new Date().toLocaleString()}</p>
             </div>
@@ -85,7 +94,7 @@ export default async function handler(req, res) {
       // Send welcome email to subscriber
       const welcomeResult = await resend.emails.send({
         from: 'InkFluence AI <hello@inkfluenceai.com>',
-        to: email,
+        to: sanitizedEmail,
         subject: wantsLeadMagnet 
           ? '🎉 Welcome to InkFluence AI + Your Free Ebook Template!'
           : '🎉 Welcome to InkFluence AI Newsletter!',
