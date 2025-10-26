@@ -155,8 +155,8 @@ export const createSoftwareApplicationSchema = () => ({
   },
   "aggregateRating": {
     "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "ratingCount": "127",
+    "ratingValue": "4.7",
+    "ratingCount": "23",
     "bestRating": "5",
     "worstRating": "1"
   },

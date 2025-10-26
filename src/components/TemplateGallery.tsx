@@ -176,8 +176,8 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
                         Premium
                       </Badge>
                     )}
-                    <Star size={12} className="text-yellow-500" />
-                    <span className="text-xs text-muted-foreground">4.8</span>
+                    <Star size={12} className="text-yellow-500" weight="fill" />
+                    <span className="text-xs text-muted-foreground">4.6</span>
                   </div>
                 </div>
                 <CardTitle className="text-lg">{template.name}</CardTitle>
