@@ -1587,11 +1587,11 @@ export function CoverDesigner({
               💡 Cover will be saved to your project and can be exported later
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <Button 
               variant="outline" 
               onClick={() => onOpenChange(false)} 
-              className="h-12 px-6 text-base"
+              className="h-12 px-6 text-base order-3 sm:order-1"
             >
               Cancel
             </Button>
@@ -1616,13 +1616,13 @@ export function CoverDesigner({
                 });
                 toast.success('Reset to default design');
               }}
-              className="h-12 px-6 text-base"
+              className="h-12 px-6 text-base order-2"
             >
               Reset Design
             </Button>
             <Button 
               onClick={exportCover} 
-              className="gap-2 h-12 px-8 text-base font-semibold ml-auto"
+              className="gap-2 h-12 px-8 text-base font-semibold sm:ml-auto order-1 sm:order-3"
             >
               <Download size={20} />
               Save to Project
