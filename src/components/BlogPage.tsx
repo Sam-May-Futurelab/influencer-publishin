@@ -156,7 +156,7 @@ function BlogPostView({ post, relatedPosts }: { post: BlogPost; relatedPosts: Bl
           <img
             src={post.image}
             alt={post.imageAlt || post.title}
-            className="w-full h-[400px] object-cover rounded-xl mb-8"
+            className="w-full h-[400px] object-contain bg-gray-50 rounded-xl mb-8"
           />
         )}
 
@@ -403,10 +403,18 @@ export default function BlogPage() {
             <div className="grid md:grid-cols-2 gap-8">
               {featuredPosts.map((post) => (
                 <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border-0 shadow-md bg-white/80 backdrop-blur">
-                  <div className="aspect-video bg-gradient-to-br from-[#9b87b8]/10 to-[#b89ed6]/10 relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {getCategoryIcon(post.category)}
-                    </div>
+                  <div className="aspect-video bg-gray-100 relative overflow-hidden">
+                    {post.image ? (
+                      <img 
+                        src={post.image} 
+                        alt={post.imageAlt || post.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#9b87b8]/10 to-[#b89ed6]/10">
+                        {getCategoryIcon(post.category)}
+                      </div>
+                    )}
                     <Badge className="absolute top-4 left-4 bg-[#9b87b8] text-white">
                       Featured
                     </Badge>
@@ -473,10 +481,18 @@ export default function BlogPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post) => (
                 <Card key={post.id} className="hover:shadow-lg transition-shadow duration-300 border-0 shadow-md bg-white/60 backdrop-blur">
-                  <div className="aspect-video bg-gradient-to-br from-[#9b87b8]/10 to-[#b89ed6]/10 relative">
-                    <div className="absolute inset-0 flex items-center justify-center text-[#9b87b8]">
-                      {getCategoryIcon(post.category)}
-                    </div>
+                  <div className="aspect-video bg-gray-100 relative overflow-hidden">
+                    {post.image ? (
+                      <img 
+                        src={post.image} 
+                        alt={post.imageAlt || post.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-[#9b87b8] bg-gradient-to-br from-[#9b87b8]/10 to-[#b89ed6]/10">
+                        {getCategoryIcon(post.category)}
+                      </div>
+                    )}
                     <Badge className="absolute top-3 left-3 bg-white/90 text-[#9b87b8] border border-[#9b87b8]/20">
                       {post.category}
                     </Badge>

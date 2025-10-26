@@ -51,6 +51,15 @@
   [data-sonner-toast] [data-close-button]:hover {
     background-color: #f3f4f6 !important;
   }
+
+  /* Blog content images - prevent zooming */
+  .prose img {
+    object-fit: contain !important;
+    max-height: 500px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    background-color: #f9fafb !important;
+  }
 }
 
 @layer utilities {
