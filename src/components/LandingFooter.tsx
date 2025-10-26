@@ -147,15 +147,38 @@ export function LandingFooter({
             </div>
           </div>
           <div className="text-center text-gray-400 text-sm pt-4 border-t border-gray-700">
-            Designed by{' '}
-            <a 
-              href="https://www.futurelab.solutions/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-[#b89ed6] hover:text-[#9b87b8] transition-colors font-medium"
-            >
-              Futurelab
-            </a>
+            <p className="mb-2">
+              This site is protected by reCAPTCHA and the Google{' '}
+              <a 
+                href="https://policies.google.com/privacy" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[#b89ed6] hover:text-[#9b87b8] transition-colors underline"
+              >
+                Privacy Policy
+              </a>
+              {' '}and{' '}
+              <a 
+                href="https://policies.google.com/terms" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[#b89ed6] hover:text-[#9b87b8] transition-colors underline"
+              >
+                Terms of Service
+              </a>
+              {' '}apply.
+            </p>
+            <p>
+              Designed by{' '}
+              <a 
+                href="https://www.futurelab.solutions/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[#b89ed6] hover:text-[#9b87b8] transition-colors font-medium"
+              >
+                Futurelab
+              </a>
+            </p>
           </div>
         </div>
       </div>
