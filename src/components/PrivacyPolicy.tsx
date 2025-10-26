@@ -141,10 +141,10 @@ export function PrivacyPolicy() {
             </p>
           </section>
 
-          <section className="mb-8">
+                    <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">8. Your Rights</h2>
             <p className="mb-4">You have the right to:</p>
-            <ul className="list-disc pl-6">
+            <ul className="list-disc pl-6 mb-4">
               <li><strong>Access:</strong> Request a copy of your personal data</li>
               <li><strong>Correction:</strong> Update or correct your information</li>
               <li><strong>Deletion:</strong> Request deletion of your account and data</li>
@@ -152,6 +152,17 @@ export function PrivacyPolicy() {
               <li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
               <li><strong>Withdraw Consent:</strong> Stop processing based on consent</li>
             </ul>
+            <p className="mb-4">
+              <strong>How to Exercise Your Rights:</strong>
+            </p>
+            <ul className="list-disc pl-6">
+              <li><strong>Export Your Data:</strong> Go to Settings → Your Data Rights (GDPR) → "Download My Data" to receive a complete JSON export of all your data</li>
+              <li><strong>Delete Your Account:</strong> Go to Settings → Your Data Rights (GDPR) → "Delete My Account" to permanently remove all your data from our systems</li>
+              <li><strong>Other Requests:</strong> Email privacy@inkfluenceai.com and we will respond within 30 days</li>
+            </ul>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Note: Account deletion is permanent and cannot be undone. We retain deletion logs for compliance purposes only.
+            </p>
           </section>
 
           <section className="mb-8">
@@ -163,6 +174,7 @@ export function PrivacyPolicy() {
           </section>
 
           <section className="mb-8">
+```
             <h2 className="text-2xl font-semibold mb-4">10. Children's Privacy</h2>
             <p>
               Our services are not intended for children under 13. We do not knowingly collect personal information 

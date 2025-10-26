@@ -55,7 +55,7 @@ interface AppSettings {
 }
 
 export function SettingsPage({ onBack }: SettingsPageProps) {
-  const { userProfile } = useAuth();
+  const { user, userProfile } = useAuth();
   const [settings, setSettings] = useState<AppSettings>({
     // User Profile
     authorName: '',
@@ -436,6 +436,102 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                   checked={settings.crashReporting}
                   onCheckedChange={(checked) => updateSetting('crashReporting', checked)}
                 />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* GDPR Data Rights */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+        >
+          <Card className="neomorph-flat border-0">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2">
+                <Download size={20} className="text-primary" />
+                Your Data Rights (GDPR)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label className="font-semibold">Export Your Data</Label>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Download all your data including profile, projects, and manuscripts in JSON format.
+                </p>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('/api/export-user-data', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: user?.uid })
+                      });
+                      
+                      if (!response.ok) throw new Error('Export failed');
+                      
+                      const blob = await response.blob();
+                      const url = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `inkfluenceai-data-${Date.now()}.json`;
+                      document.body.appendChild(a);
+                      a.click();
+                      window.URL.revokeObjectURL(url);
+                      document.body.removeChild(a);
+                      
+                      toast.success('Data exported successfully');
+                    } catch (error) {
+                      toast.error('Failed to export data');
+                    }
+                  }}
+                >
+                  <Download size={16} className="mr-2" />
+                  Download My Data
+                </Button>
+              </div>
+
+              <div className="border-t pt-6 space-y-2">
+                <Label className="font-semibold text-destructive">Delete Account</Label>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Permanently delete your account and all associated data. This action cannot be undone.
+                </p>
+                <Button 
+                  variant="destructive" 
+                  className="w-full"
+                  onClick={async () => {
+                    const confirmation = prompt('Type "DELETE MY DATA" to confirm account deletion:');
+                    if (confirmation !== 'DELETE MY DATA') {
+                      toast.error('Deletion cancelled');
+                      return;
+                    }
+
+                    try {
+                      const response = await fetch('/api/delete-user-data', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                          userId: user?.uid,
+                          confirmationText: 'DELETE MY DATA'
+                        })
+                      });
+                      
+                      if (!response.ok) throw new Error('Deletion failed');
+                      
+                      toast.success('Account deleted. Signing you out...');
+                      setTimeout(() => {
+                        window.location.href = '/';
+                      }, 2000);
+                    } catch (error) {
+                      toast.error('Failed to delete account. Please contact support.');
+                    }
+                  }}
+                >
+                  Delete My Account
+                </Button>
               </div>
             </CardContent>
           </Card>
