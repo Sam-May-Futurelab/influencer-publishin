@@ -30,7 +30,6 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
 import { AuthModal } from '@/components/AuthModal';
 import { UsageTracker } from '@/components/UsageTracker';
-import { NotificationsPanel } from '@/components/NotificationsPanel';
 
 interface HeaderProps {
   logoUrl?: string;
@@ -157,15 +156,6 @@ export function Header({
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2 lg:gap-3"
           >
-            {/* Notifications */}
-            <motion.div 
-              whileHover={{ scale: 1.05 }} 
-              whileTap={{ scale: 0.95 }}
-              className="relative"
-            >
-              <NotificationsPanel />
-            </motion.div>
-
             {/* User Profile */}
             {user ? (
               <motion.div 
