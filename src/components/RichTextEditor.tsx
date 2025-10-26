@@ -433,10 +433,11 @@ export function RichTextEditor({
   return (
     <div className={cn("neomorph-inset rounded-lg border-0 bg-background", className)}>
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-1 p-2 border-b border-border/50">
+      <div className="p-2 border-b border-border/50 overflow-x-auto">
+        <div className="flex items-center gap-1 min-w-max">
         
         {/* AI Tools Section - Prominent */}
-        <div className="flex items-center gap-1 pr-2 border-r border-border/50">
+        <div className="flex items-center gap-1 pr-2 border-r border-border/50 shrink-0">
           {/* AI Assistant Button */}
           {onAIAssistantClick && (
             <Tooltip>
@@ -531,7 +532,7 @@ export function RichTextEditor({
         {/* End AI Tools Section */}
 
         {/* Editing Tools Section */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 shrink-0">
         {/* Undo/Redo */}
         <ToolbarButton
           onClick={() => editor.chain().focus().undo().run()}
@@ -568,21 +569,23 @@ export function RichTextEditor({
           label="Underline (⌘U)"
         />
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="h-6 mx-1 hidden sm:block" />
 
-        {/* Headings */}
+        {/* Headings - Hide H2 on mobile */}
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           isActive={editor.isActive('heading', { level: 1 })}
           icon={TextHOne}
           label="Heading 1"
         />
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          isActive={editor.isActive('heading', { level: 2 })}
-          icon={TextHTwo}
-          label="Heading 2"
-        />
+        <div className="hidden sm:block">
+          <ToolbarButton
+            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            isActive={editor.isActive('heading', { level: 2 })}
+            icon={TextHTwo}
+            label="Heading 2"
+          />
+        </div>
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
@@ -630,7 +633,8 @@ export function RichTextEditor({
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
-        {/* Text Alignment */}
+        {/* Text Alignment - Hide on mobile */}
+        <div className="hidden md:flex items-center gap-1">
         <ToolbarButton
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
           isActive={editor.isActive({ textAlign: 'left' })}
@@ -671,7 +675,9 @@ export function RichTextEditor({
           <span className="ml-1 hidden sm:inline">Clear</span>
         </Button>
         </div>
+        </div>
         {/* End Editing Tools Section */}
+        </div>
       </div>
       {/* End Toolbar */}
 
