@@ -155,7 +155,9 @@ export function RichTextEditor({
           const attrs = node.attrs;
           setSelectedImage({ node, pos: nodePos });
           setImageWidth(attrs.width || '100%');
-          setImageOpacity(parseInt(attrs.opacity || '1') * 100);
+          // Convert opacity from decimal (0-1) to percentage (0-100)
+          const opacityValue = parseFloat(attrs.opacity || '1') * 100;
+          setImageOpacity(Math.round(opacityValue));
           setImageAlignment(attrs.alignment || 'center');
           return true;
         }
