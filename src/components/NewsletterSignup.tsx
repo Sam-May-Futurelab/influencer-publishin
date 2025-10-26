@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Mail, Gift, CheckCircle2, Sparkles } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Recaptcha, RecaptchaRef } from '@/components/Recaptcha';
 
 interface NewsletterSignupProps {
   variant?: 'default' | 'minimal' | 'sidebar';
@@ -16,6 +17,7 @@ export function NewsletterSignup({ variant = 'default', showLeadMagnet = true }:
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
+  const recaptchaRef = useRef<RecaptchaRef>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,23 +25,26 @@ export function NewsletterSignup({ variant = 'default', showLeadMagnet = true }:
     setError('');
 
     try {
-      // Using contact form API as a temporary solution
+      // Execute reCAPTCHA if configured
+      let recaptchaToken: string | null = null;
+      if (recaptchaRef.current) {
+        recaptchaToken = await recaptchaRef.current.execute();
+        if (!recaptchaToken) {
+          throw new Error('reCAPTCHA verification failed');
+        }
+      }
+      // Use dedicated newsletter signup endpoint
       // TODO: Replace with proper email service provider (Mailchimp, ConvertKit, Beehiiv, etc.)
-      const response = await fetch('/api/contact-form', {
+      const response = await fetch('/api/newsletter-signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: name || 'Newsletter Subscriber',
+          name: name || '',
           email,
-          subject: showLeadMagnet 
-            ? '📩 Newsletter Signup + Lead Magnet Request' 
-            : '📩 Newsletter Signup',
-          category: 'general',
-          message: showLeadMagnet 
-            ? `New newsletter subscriber requesting the free ebook template lead magnet.\n\nName: ${name || 'Not provided'}\nEmail: ${email}`
-            : `New newsletter subscriber.\n\nName: ${name || 'Not provided'}\nEmail: ${email}`,
+          wantsLeadMagnet: showLeadMagnet,
+          recaptchaToken,
         }),
       });
 
@@ -224,6 +229,9 @@ export function NewsletterSignup({ variant = 'default', showLeadMagnet = true }:
         <p className="text-xs text-center text-gray-500">
           We respect your privacy. Unsubscribe anytime. No spam, ever.
         </p>
+
+        {/* Invisible reCAPTCHA */}
+        <Recaptcha ref={recaptchaRef} onVerify={() => {}} />
       </CardContent>
     </Card>
   );

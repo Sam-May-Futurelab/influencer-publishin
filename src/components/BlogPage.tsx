@@ -277,11 +277,17 @@ export default function BlogPage() {
   // Otherwise show blog listing
   const allPosts = getAllPosts();
   const filteredPosts = allPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    // Safety checks for undefined values
+    const title = post.title || '';
+    const excerpt = post.excerpt || '';
+    const tags = post.tags || [];
+    const category = post.category || '';
     
-    const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
+    const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         tags.some(tag => tag?.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesCategory = selectedCategory === 'All' || category === selectedCategory;
     
     return matchesSearch && matchesCategory;
   });

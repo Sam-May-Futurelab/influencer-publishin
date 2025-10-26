@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, subject, category, message } = req.body;
+    const { name, email, subject, category, message, recaptchaToken } = req.body;
 
     // Validate required fields
     if (!name || !email || !subject || !category || !message) {
@@ -23,6 +23,25 @@ export default async function handler(req, res) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    // Verify reCAPTCHA if token provided and secret key configured
+    if (recaptchaToken && process.env.RECAPTCHA_SECRET_KEY) {
+      const verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+      const verifyResponse = await fetch(verifyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+      });
+
+      const verifyData = await verifyResponse.json();
+      
+      if (!verifyData.success || verifyData.score < 0.5) {
+        console.warn('⚠️ reCAPTCHA verification failed:', verifyData);
+        return res.status(400).json({ error: 'reCAPTCHA verification failed. Please try again.' });
+      }
+      
+      console.log(`✅ reCAPTCHA verified: score ${verifyData.score}`);
     }
 
     // Get category emoji

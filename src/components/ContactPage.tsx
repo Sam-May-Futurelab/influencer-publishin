@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { LandingHeader } from '@/components/LandingHeader';
 import { LandingFooter } from '@/components/LandingFooter';
+import { Recaptcha, RecaptchaRef } from '@/components/Recaptcha';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { toast } from 'sonner';
@@ -67,6 +68,7 @@ const FAQ_ITEMS = [
 export default function ContactPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const recaptchaRef = useRef<RecaptchaRef>(null);
   const [form, setForm] = useState<ContactForm>({
     name: '',
     email: '',
@@ -87,12 +89,24 @@ export default function ContactPage() {
     setSubmitting(true);
 
     try {
+      // Execute reCAPTCHA if configured
+      let recaptchaToken: string | null = null;
+      if (recaptchaRef.current) {
+        recaptchaToken = await recaptchaRef.current.execute();
+        if (!recaptchaToken) {
+          throw new Error('reCAPTCHA verification failed');
+        }
+      }
+
       const response = await fetch('/api/contact-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          recaptchaToken,
+        }),
       });
 
       const data = await response.json();
@@ -251,6 +265,9 @@ export default function ContactPage() {
                       </>
                     )}
                   </Button>
+
+                  {/* Invisible reCAPTCHA */}
+                  <Recaptcha ref={recaptchaRef} onVerify={() => {}} />
                 </form>
               </CardContent>
             </Card>
