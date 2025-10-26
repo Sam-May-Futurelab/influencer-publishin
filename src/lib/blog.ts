@@ -1577,7 +1577,7 @@ export const blogPosts: BlogPost[] = [
     readTime: 10,
     publishDate: '2025-10-12T10:00:00Z',
     featured: false,
-    image: '/images/blog/Build a Content Creation Workflow That Scales to 100+ Ebooks.jpg',
+    image: '/images/blog/Content Creation Workflow.jpg',
     imageAlt: 'Scalable content workflow system with automation and productivity tools',
     metaTitle: 'Content Creation Workflow: Scale to 100+ Ebooks | Inkfluence AI',
     metaDescription: 'Build a repeatable 5-phase workflow for creating ebooks at scale. Includes templates, automation tools, and batch production systems.',

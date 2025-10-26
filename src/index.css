@@ -52,13 +52,14 @@
     background-color: #f3f4f6 !important;
   }
 
-  /* Blog content images - prevent zooming */
+  /* Blog content images - prevent zooming and add rounded corners */
   .prose img {
     object-fit: contain !important;
     max-height: 500px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     background-color: #f9fafb !important;
+    border-radius: 0.75rem !important; /* 12px rounded */
   }
 }
 
