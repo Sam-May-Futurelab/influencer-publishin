@@ -242,7 +242,7 @@ export function LandingPage() {
             </div>
             <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-4 overflow-hidden shadow-lg">
               <img 
-                src="/images/idea-to-chapter.png" 
+                src="/images/idea-to-chapter.jpg" 
                 alt="AI-powered content generation from idea to chapter in seconds"
                 className="w-full h-full object-cover rounded-xl"
               />
@@ -258,7 +258,7 @@ export function LandingPage() {
           >
             <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-4 overflow-hidden order-2 md:order-1 shadow-lg">
               <img 
-                src="/images/organise-masterpiece.png" 
+                src="/images/organise-masterpiece.jpg" 
                 alt="Organize your book chapters and manuscripts with ease"
                 className="w-full h-full object-cover rounded-xl"
               />
@@ -343,7 +343,7 @@ export function LandingPage() {
             </div>
             <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-4 overflow-hidden shadow-lg">
               <img 
-                src="/images/true-customisation.png" 
+                src="/images/true-customisation.jpg" 
                 alt="Customize your book with custom fonts, colors, and branding"
                 className="w-full h-full object-cover rounded-xl"
               />
@@ -359,7 +359,7 @@ export function LandingPage() {
           >
             <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-4 overflow-hidden order-2 md:order-1 shadow-lg">
               <img 
-                src="/images/export.png" 
+                src="/images/export.jpg" 
                 alt="Export your book in PDF, DOCX, and EPUB formats"
                 className="w-full h-full object-cover rounded-xl"
               />
