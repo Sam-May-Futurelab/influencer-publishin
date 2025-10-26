@@ -16,6 +16,7 @@ import { UpgradeModal } from '@/components/UpgradeModal';
 import { LandingPage } from '@/components/LandingPage';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { KeyboardShortcutsDialog } from '@/components/KeyboardShortcutsDialog';
+import { CookieConsent } from '@/components/CookieConsent';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
@@ -1020,6 +1021,9 @@ function App() {
 
       {/* Keyboard Shortcuts Dialog */}
       <KeyboardShortcutsDialog />
+
+      {/* Cookie Consent Banner */}
+      <CookieConsent />
     </div>
   );
 }

@@ -100,16 +100,16 @@ export function LandingPage() {
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-              From concept to{' '}
+              Write and publish your{' '}
               <span className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] bg-clip-text text-transparent">
-                published book
+                book faster
               </span>
-              {' '}in seconds
+              {' '}with AI
             </h1>
             
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Write, organize, and publish your book with AI-powered assistance. 
-              From chapter outlines to full manuscripts, Inkfluence AI helps authors bring their stories to life.
+              From concept to completed chapters in minutes. AI-powered assistance for outlining, 
+              writing, and publishing your book. Bring your story to life faster than ever before.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -210,11 +210,11 @@ export function LandingPage() {
                 Make it quick
               </div>
               <h2 className="text-4xl md:text-5xl font-bold">
-                From idea to chapter in 10 seconds
+                From idea to chapter in minutes
               </h2>
               <p className="text-lg text-gray-600">
                 No more writer's block—just enter your topic, and let our AI writing assistant 
-                do its magic. Start with AI-generated content, refine your message, and watch 
+                help you create. Start with AI-generated content, refine your message, and watch 
                 your story unfold.
               </p>
               <ul className="space-y-3">
@@ -243,7 +243,7 @@ export function LandingPage() {
             <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-4 overflow-hidden shadow-lg">
               <img 
                 src="/images/idea-to-chapter.jpg" 
-                alt="AI-powered content generation from idea to chapter in seconds"
+                alt="AI-powered content generation from idea to chapter in minutes"
                 className="w-full h-full object-cover rounded-xl"
               />
             </div>
