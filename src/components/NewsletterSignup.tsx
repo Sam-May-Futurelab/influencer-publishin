@@ -23,20 +23,23 @@ export function NewsletterSignup({ variant = 'default', showLeadMagnet = true }:
     setError('');
 
     try {
-      // For now, we'll use the contact form API endpoint
-      // You can replace this with your email service provider (Mailchimp, ConvertKit, etc.)
+      // Using contact form API as a temporary solution
+      // TODO: Replace with proper email service provider (Mailchimp, ConvertKit, Beehiiv, etc.)
       const response = await fetch('/api/contact-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          name: name || 'Newsletter Subscriber',
           email,
-          name,
+          subject: showLeadMagnet 
+            ? '📩 Newsletter Signup + Lead Magnet Request' 
+            : '📩 Newsletter Signup',
+          category: 'general',
           message: showLeadMagnet 
-            ? 'Newsletter signup with lead magnet request' 
-            : 'Newsletter signup',
-          type: 'newsletter'
+            ? `New newsletter subscriber requesting the free ebook template lead magnet.\n\nName: ${name || 'Not provided'}\nEmail: ${email}`
+            : `New newsletter subscriber.\n\nName: ${name || 'Not provided'}\nEmail: ${email}`,
         }),
       });
 
