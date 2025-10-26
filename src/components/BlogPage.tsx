@@ -534,29 +534,8 @@ export default function BlogPage() {
         </section>
 
         {/* Newsletter CTA */}
-        <section className="mt-16 bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] rounded-2xl p-8 md:p-12 text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Stay Ahead of the Curve
-          </h2>
-          <p className="text-xl mb-8 text-purple-100 max-w-2xl mx-auto">
-            Get weekly insights on AI writing, ebook marketing, and content creation. Plus exclusive templates and resources.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-            <Input
-              type="email"
-              placeholder="Enter your email address"
-              className="bg-white/90 text-gray-900 border-white/30 placeholder:text-gray-500"
-            />
-            <Button 
-              className="bg-white text-[#9b87b8] hover:bg-gray-50 font-semibold whitespace-nowrap"
-              onClick={() => navigate('/?signin=true')}
-            >
-              Get Started Free
-            </Button>
-          </div>
-          <p className="text-sm mt-4 text-purple-200">
-            No spam, unsubscribe anytime • 10,000+ creators already subscribed
-          </p>
+        <section className="mt-16">
+          <NewsletterSignup showLeadMagnet={false} />
         </section>
       </div>
 
