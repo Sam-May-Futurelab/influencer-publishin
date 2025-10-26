@@ -692,7 +692,7 @@ export function CoverDesigner({
           {/* Preview Panel */}
           <div 
             className={`p-6 lg:p-8 flex flex-col items-center bg-muted/20 border-r overflow-y-auto transition-all ${
-              isPreviewExpanded ? 'flex-1 lg:w-[45%]' : 'lg:w-[45%]'
+              isPreviewExpanded ? 'flex-1 lg:w-[45%] pb-28' : 'lg:w-[45%]'
             } ${!isPreviewExpanded ? 'lg:flex' : ''}`}
             onClick={() => {
               // Only toggle on mobile (not lg screens)
