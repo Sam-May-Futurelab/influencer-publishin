@@ -56,7 +56,7 @@ export function LandingFooter({
 
           {/* Product Links */}
           <div>
-            <h4 className="font-semibold mb-4">Product</h4>
+            <h3 className="font-semibold mb-4">Product</h3>
             <ul className="space-y-2 text-gray-300">
               {onNavigateToFeatures ? (
                 <li><button onClick={onNavigateToFeatures} className="hover:text-white transition-colors">Features</button></li>
@@ -73,7 +73,7 @@ export function LandingFooter({
 
           {/* Resources Links */}
           <div>
-            <h4 className="font-semibold mb-4">Resources</h4>
+            <h3 className="font-semibold mb-4">Resources</h3>
             <ul className="space-y-2 text-gray-300">
               {onNavigateToBlog && (
                 <li><button onClick={onNavigateToBlog} className="hover:text-white transition-colors">Blog</button></li>
@@ -95,7 +95,7 @@ export function LandingFooter({
 
           {/* Company Links */}
           <div>
-            <h4 className="font-semibold mb-4">Company</h4>
+            <h3 className="font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-gray-300">
               {onNavigateToAbout && (
                 <li><button onClick={onNavigateToAbout} className="hover:text-white transition-colors">About</button></li>
