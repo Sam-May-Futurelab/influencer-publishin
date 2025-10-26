@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import CharacterCount from '@tiptap/extension-character-count';
 import TextAlign from '@tiptap/extension-text-align';
+import { Node } from '@tiptap/core';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { 
@@ -47,6 +48,26 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+// Simple Image extension for TipTap
+const ImageExtension = Node.create({
+  name: 'image',
+  group: 'block',
+  atom: true,
+  addAttributes() {
+    return {
+      src: { default: null },
+      alt: { default: null },
+      style: { default: 'max-width: 100%; height: auto; display: block; margin: 1em auto; border-radius: 8px;' }
+    };
+  },
+  parseHTML() {
+    return [{ tag: 'img[src]' }];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['img', HTMLAttributes];
+  },
+});
+
 interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
@@ -88,9 +109,9 @@ export function RichTextEditor({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        strike: false, // Disable strike to avoid conflicts
-        // Note: StarterKit now includes underline by default in v3.7.2
+        strike: false,
       }),
+      ImageExtension,
       CharacterCount,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
@@ -251,9 +272,13 @@ export function RichTextEditor({
         editor
           .chain()
           .focus()
-          .insertContent('<p><br></p>')
-          .insertContent(`<p><img src="${imageData}" alt="${file.name}" style="max-width: 100%; height: auto; display: block; margin: 1em auto; border-radius: 8px;" /></p>`)
-          .insertContent('<p><br></p>')
+          .insertContent({
+            type: 'image',
+            attrs: {
+              src: imageData,
+              alt: file.name,
+            },
+          })
           .run();
         
         toast.dismiss('image-upload');
