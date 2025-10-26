@@ -18,7 +18,13 @@ createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <AchievementsProvider>
           <App />
-          <Toaster />
+          <Toaster 
+            position="bottom-center"
+            closeButton
+            richColors
+            expand={false}
+            duration={4000}
+          />
         </AchievementsProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -6,9 +6,11 @@ interface AchievementsContextType extends ReturnType<typeof useAchievements> {
   trackWordCount: (words: number) => void;
   trackChapterCreated: () => void;
   trackProjectCreated: () => void;
+  trackProjectDeleted: () => void;
   trackCoverDesigned: () => void;
   trackAIAssist: () => void;
   trackExport: () => void;
+  addNotification: (notification: Omit<Achievement, 'unlockedAt' | 'read'>) => void;
 }
 
 const AchievementsContext = createContext<AchievementsContextType | null>(null);
@@ -20,13 +22,47 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
   const showAchievementToast = (newAchievements: Achievement[]) => {
     newAchievements.forEach((achievement) => {
       toast.success(
-        `🏆 Achievement Unlocked: ${achievement.title}`,
+        `${achievement.icon} ${achievement.title}`,
         {
           description: achievement.description,
           duration: 5000,
         }
       );
     });
+  };
+
+  // Add a general notification (for non-achievement events)
+  const addNotification = (notification: Omit<Achievement, 'unlockedAt' | 'read'>) => {
+    const newNotification: Achievement = {
+      ...notification,
+      unlockedAt: Date.now(),
+      read: false,
+    };
+    
+    // Add to achievements list (it will show in notifications panel)
+    const currentAchievements = achievements.achievements;
+    achievements.updateStats(stats); // This triggers a re-render
+    
+    // Save to localStorage directly
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(`achievements_${notification.id.split('_')[0]}`);
+      if (stored) {
+        const existing = JSON.parse(stored);
+        localStorage.setItem(
+          `achievements_${notification.id.split('_')[0]}`,
+          JSON.stringify([...existing, newNotification])
+        );
+      }
+    }
+    
+    // Show toast
+    toast.info(
+      `${notification.icon} ${notification.title}`,
+      {
+        description: notification.description,
+        duration: 4000,
+      }
+    );
   };
 
   const trackWordCount = (words: number) => {
@@ -81,6 +117,10 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const trackProjectDeleted = () => {
+    // Just for tracking - could add achievements for cleanup goals later
+  };
+
   return (
     <AchievementsContext.Provider
       value={{
@@ -88,9 +128,11 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
         trackWordCount,
         trackChapterCreated,
         trackProjectCreated,
+        trackProjectDeleted,
         trackCoverDesigned,
         trackAIAssist,
         trackExport,
+        addNotification,
       }}
     >
       {children}
