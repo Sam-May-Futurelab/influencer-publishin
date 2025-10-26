@@ -170,17 +170,8 @@ export function NewsletterSignup({ variant = 'default', showLeadMagnet = true }:
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Input
-              type="text"
-              placeholder="Your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full"
-            />
-          </div>
-          <div>
-            <Input
               type="email"
-              placeholder="Your email address"
+              placeholder="Enter your email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full"
