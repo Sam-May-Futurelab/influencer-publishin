@@ -50,18 +50,7 @@ export function LandingFooter({
               AI-powered book writing platform helping authors bring their stories to life.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-[#b89ed6] transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="hover:text-[#b89ed6] transition-colors">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="hover:text-[#b89ed6] transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a href="#" className="hover:text-[#b89ed6] transition-colors">
-                <Github className="w-5 h-5" />
-              </a>
+              <span className="text-gray-400 text-sm">Follow us (coming soon)</span>
             </div>
           </div>
 
@@ -79,8 +68,6 @@ export function LandingFooter({
               ) : (
                 <li><a href="#pricing" onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors cursor-pointer">Pricing</a></li>
               )}
-              <li><a href="#" className="hover:text-white transition-colors">Templates</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Integrations</a></li>
             </ul>
           </div>
 
@@ -159,7 +146,7 @@ export function LandingFooter({
               )}
             </div>
           </div>
-          <div className="text-center text-gray-500 text-sm pt-4 border-t border-gray-700">
+          <div className="text-center text-gray-400 text-sm pt-4 border-t border-gray-700">
             Designed by{' '}
             <a 
               href="https://www.futurelab.solutions/" 

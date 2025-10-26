@@ -95,7 +95,7 @@ export function LandingPage() {
             transition={{ duration: 0.6 }}
             className="text-center space-y-8"
           >
-            <div className="inline-block px-4 py-2 bg-[#e2d1f0] rounded-full text-[#7a5f96] font-medium">
+            <div className="inline-block px-4 py-2 bg-[#e2d1f0] rounded-full text-[#5c4470] font-medium">
               ✨ AI-Powered Book Writing Platform
             </div>
             
