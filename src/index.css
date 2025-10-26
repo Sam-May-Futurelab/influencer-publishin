@@ -15,6 +15,18 @@
     @apply border-border
   }
 
+  /* Prevent iOS Safari zoom on input focus */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Ensure touch targets are large enough on mobile */
+  @media (max-width: 768px) {
+    input, select, textarea, button {
+      font-size: 16px !important;
+    }
+  }
+
   /* Force Sonner toast descriptions to be black, not pink */
   [data-sonner-toast] [data-description] {
     color: #000000 !important;

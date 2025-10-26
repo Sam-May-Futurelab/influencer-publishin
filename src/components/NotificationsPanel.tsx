@@ -9,11 +9,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Bell, X, Check } from '@phosphor-icons/react';
-import { useAchievements } from '@/hooks/use-achievements';
+import { useAchievementsContext } from '@/hooks/use-achievements-context';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function NotificationsPanel() {
-  const { achievements, unreadCount, markAsRead, markAllAsRead, deleteAchievement } = useAchievements();
+  const { achievements, unreadCount, markAsRead, markAllAsRead, deleteAchievement } = useAchievementsContext();
   const [open, setOpen] = useState(false);
 
   // Sort by most recent first
