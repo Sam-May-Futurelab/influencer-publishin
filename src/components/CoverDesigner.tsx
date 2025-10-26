@@ -1616,8 +1616,10 @@ export function CoverDesigner({
           </div>
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-6 lg:p-8 pt-5 border-t">
+        {/* Footer Actions - Hidden on mobile when preview expanded */}
+        <div className={`p-6 lg:p-8 pt-5 border-t ${
+          isPreviewExpanded ? 'hidden lg:block' : 'block'
+        }`}>
           <div className="flex items-center justify-between gap-4 mb-3">
             <p className="text-xs text-muted-foreground">
               💡 Cover will be saved to your project and can be exported later
@@ -1665,6 +1667,26 @@ export function CoverDesigner({
             </Button>
           </div>
         </div>
+
+        {/* Floating Save Button - Only visible on mobile when preview is expanded */}
+        {isPreviewExpanded && (
+          <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex gap-3">
+            <Button 
+              variant="outline"
+              onClick={() => setIsPreviewExpanded(false)}
+              className="h-12 px-6 text-base shadow-lg bg-background"
+            >
+              Edit Design
+            </Button>
+            <Button 
+              onClick={exportCover}
+              className="gap-2 h-12 px-8 text-base font-semibold shadow-lg"
+            >
+              <Download size={20} />
+              Save to Project
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
