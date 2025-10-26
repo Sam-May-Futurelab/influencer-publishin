@@ -414,7 +414,7 @@ export default function BlogPage() {
                       <img 
                         src={post.image} 
                         alt={post.imageAlt || post.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover scale-110"
                       />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#9b87b8]/10 to-[#b89ed6]/10">
@@ -492,7 +492,7 @@ export default function BlogPage() {
                       <img 
                         src={post.image} 
                         alt={post.imageAlt || post.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover scale-110"
                       />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center text-[#9b87b8] bg-gradient-to-br from-[#9b87b8]/10 to-[#b89ed6]/10">
