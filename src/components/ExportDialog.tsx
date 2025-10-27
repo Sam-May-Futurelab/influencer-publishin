@@ -38,7 +38,7 @@ interface ExportOption {
 const exportOptions: ExportOption[] = [
   {
     format: 'pdf',
-    title: 'PDF Document',
+    title: 'PDF Document (.pdf)',
     description: 'Perfect for professional distribution and printing',
     icon: FilePdf,
     features: ['Print-ready layout', 'Custom branding', 'Universal compatibility', 'Professional formatting'],
@@ -46,14 +46,14 @@ const exportOptions: ExportOption[] = [
   },
   {
     format: 'epub',
-    title: 'EPUB eBook',
+    title: 'EPUB eBook (.epub)',
     description: 'Standard format for digital reading devices',
     icon: BookOpen,
     features: ['E-reader compatible', 'Responsive text', 'Bookmarking support', 'Offline reading'],
   },
   {
     format: 'docx',
-    title: 'Word Document',
+    title: 'Word Document (.docx)',
     description: 'Editable format for further customization',
     icon: FileDoc,
     features: ['Fully editable', 'Track changes', 'Comments support', 'Microsoft Office'],
