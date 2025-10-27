@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
+import { deleteUserAccount } from '@/lib/auth';
 import { 
   Gear, 
   User, 
@@ -510,6 +511,7 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                     }
 
                     try {
+                      // First delete Firestore data via backend
                       const response = await fetch('/api/delete-user-data', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -519,19 +521,27 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                         })
                       });
                       
-                      if (!response.ok) throw new Error('Deletion failed');
+                      if (!response.ok) {
+                        throw new Error('Failed to delete user data from backend');
+                      }
                       
-                      toast.success('Account deleted. Signing you out...');
+                      toast.success('Data deleted. Removing account...');
                       
-                      // Sign out from Firebase Auth
-                      await signOut();
+                      // Then delete the Firebase Auth account from client side
+                      // This MUST happen from the client with the current user's auth token
+                      if (user) {
+                        await deleteUserAccount(user);
+                      }
                       
-                      // Redirect to home
+                      toast.success('Account deleted successfully');
+                      
+                      // Redirect to home (user is already signed out after deleteUser)
                       setTimeout(() => {
                         window.location.href = '/';
                       }, 1000);
-                    } catch (error) {
-                      toast.error('Failed to delete account. Please contact support.');
+                    } catch (error: any) {
+                      console.error('Account deletion error:', error);
+                      toast.error(error?.message || 'Failed to delete account. Please contact support.');
                     }
                   }}
                 >

@@ -6,6 +6,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   updateProfile,
+  deleteUser,
   User
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
@@ -308,5 +309,17 @@ export const updateUserPreferences = async (uid: string, preferences: UserProfil
   } catch (error) {
     console.error('Error updating user preferences:', error);
     return false;
+  }
+};
+
+// Delete user account (client-side deletion for Firebase Auth)
+export const deleteUserAccount = async (currentUser: User) => {
+  try {
+    // Delete the Firebase Auth account
+    await deleteUser(currentUser);
+    return true;
+  } catch (error) {
+    console.error('Error deleting user account:', error);
+    throw error;
   }
 };

@@ -67,9 +67,10 @@ export default async function handler(req, res) {
     await db.collection('users').doc(userId).delete();
     console.log('✅ Deleted user profile');
 
-    // Delete Firebase Auth account (critical - must succeed)
-    await auth.deleteUser(userId);
-    console.log('✅ Deleted Firebase Auth account');
+    // NOTE: Firebase Auth account deletion happens on the client side
+    // The client MUST call deleteUser() from Firebase Auth SDK with the user's current auth token
+    // Admin SDK deleteUser() often fails due to permission issues
+    console.log('ℹ️ Auth account will be deleted by client');
 
     // Log the deletion for compliance records (retain for legal purposes)
     await db.collection('deletion_logs').add({
@@ -79,7 +80,7 @@ export default async function handler(req, res) {
         projects: projectsSnapshot.size,
         snippets: snippetsSnapshot.size,
         userProfile: true,
-        authAccount: true
+        authAccountDeletedByClient: true
       }
     });
 
