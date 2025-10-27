@@ -67,14 +67,9 @@ export default async function handler(req, res) {
     await db.collection('users').doc(userId).delete();
     console.log('✅ Deleted user profile');
 
-    // Delete Firebase Auth account
-    try {
-      await auth.deleteUser(userId);
-      console.log('✅ Deleted Firebase Auth account');
-    } catch (error) {
-      console.error('⚠️ Error deleting auth account:', error.message);
-      // Continue even if auth deletion fails (user might be already deleted)
-    }
+    // Delete Firebase Auth account (critical - must succeed)
+    await auth.deleteUser(userId);
+    console.log('✅ Deleted Firebase Auth account');
 
     // Log the deletion for compliance records (retain for legal purposes)
     await db.collection('deletion_logs').add({

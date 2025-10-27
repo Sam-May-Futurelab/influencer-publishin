@@ -55,7 +55,7 @@ interface AppSettings {
 }
 
 export function SettingsPage({ onBack }: SettingsPageProps) {
-  const { user, userProfile } = useAuth();
+  const { user, userProfile, signOut } = useAuth();
   const [settings, setSettings] = useState<AppSettings>({
     // User Profile
     authorName: '',
@@ -522,9 +522,14 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                       if (!response.ok) throw new Error('Deletion failed');
                       
                       toast.success('Account deleted. Signing you out...');
+                      
+                      // Sign out from Firebase Auth
+                      await signOut();
+                      
+                      // Redirect to home
                       setTimeout(() => {
                         window.location.href = '/';
-                      }, 2000);
+                      }, 1000);
                     } catch (error) {
                       toast.error('Failed to delete account. Please contact support.');
                     }
