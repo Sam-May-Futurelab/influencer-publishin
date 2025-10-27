@@ -510,6 +510,12 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                       return;
                     }
 
+                    const password = prompt('Enter your password to confirm:');
+                    if (!password) {
+                      toast.error('Password required');
+                      return;
+                    }
+
                     try {
                       // First delete Firestore data via backend
                       const response = await fetch('/api/delete-user-data', {
@@ -522,26 +528,25 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                       });
                       
                       if (!response.ok) {
-                        throw new Error('Failed to delete user data from backend');
+                        throw new Error('Failed to delete user data');
                       }
                       
                       toast.success('Data deleted. Removing account...');
                       
-                      // Then delete the Firebase Auth account from client side
-                      // This MUST happen from the client with the current user's auth token
+                      // Delete Firebase Auth account (requires recent authentication)
                       if (user) {
-                        await deleteUserAccount(user);
+                        await deleteUserAccount(user, password);
                       }
                       
                       toast.success('Account deleted successfully');
                       
-                      // Redirect to home (user is already signed out after deleteUser)
+                      // Redirect to home
                       setTimeout(() => {
                         window.location.href = '/';
                       }, 1000);
                     } catch (error: any) {
                       console.error('Account deletion error:', error);
-                      toast.error(error?.message || 'Failed to delete account. Please contact support.');
+                      toast.error(error?.message || 'Failed to delete account. Please try again.');
                     }
                   }}
                 >

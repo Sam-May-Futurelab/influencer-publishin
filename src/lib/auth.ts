@@ -7,6 +7,8 @@ import {
   signInWithPopup,
   updateProfile,
   deleteUser,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
   User
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
@@ -312,9 +314,15 @@ export const updateUserPreferences = async (uid: string, preferences: UserProfil
   }
 };
 
-// Delete user account (client-side deletion for Firebase Auth)
-export const deleteUserAccount = async (currentUser: User) => {
+// Delete user account (requires re-authentication)
+export const deleteUserAccount = async (currentUser: User, password: string) => {
   try {
+    // Re-authenticate user (required by Firebase before deletion)
+    if (currentUser.email) {
+      const credential = EmailAuthProvider.credential(currentUser.email, password);
+      await reauthenticateWithCredential(currentUser, credential);
+    }
+    
     // Delete the Firebase Auth account
     await deleteUser(currentUser);
     return true;
