@@ -27,25 +27,33 @@
     }
   }
 
-  /* Force Sonner toasts to use light theme (white background) */
+  /* Force Sonner toasts to use neumorphic theme */
   [data-sonner-toast] {
-    background-color: #ffffff !important;
-    border: 1px solid #e5e7eb !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    background-color: oklch(0.94 0.008 220) !important; /* Same as --background */
+    border: none !important;
+  }
+
+  .dark [data-sonner-toast] {
+    background-color: oklch(0.145 0 0) !important; /* Dark mode background */
   }
 
   [data-sonner-toast] [data-title] {
-    color: #1f2937 !important;
+    color: hsl(var(--foreground)) !important;
   }
 
   [data-sonner-toast] [data-description] {
-    color: #4b5563 !important;
+    color: hsl(var(--muted-foreground)) !important;
   }
 
   [data-sonner-toast] [data-close-button] {
-    background-color: transparent !important;
-    border-color: #d1d5db !important;
-    color: #6b7280 !important;
+    background-color: hsl(var(--background)) !important;
+    border: none !important;
+    color: hsl(var(--foreground)) !important;
+    opacity: 1 !important;
+  }
+
+  [data-sonner-toast] [data-close-button]:hover {
+    background-color: hsl(var(--accent)) !important;
   }
 
   [data-sonner-toast] [data-close-button]:hover {
