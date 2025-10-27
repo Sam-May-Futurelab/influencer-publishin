@@ -44,6 +44,7 @@ import {
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
+import { deleteUserAccount } from '@/lib/auth';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { usePayments } from '@/hooks/use-payments';
 
@@ -179,12 +180,38 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
 
   const handleDeleteAccount = async () => {
     try {
-      // In a real app, you'd call a backend API to delete the account
-      await signOut();
-      toast.success('Account deletion initiated. You have been signed out.');
+      // Confirmation (modal already shows); ask for final confirmation and password
+      const ok = confirm('This will permanently delete your account and all your data. Continue?');
+      if (!ok) return;
+
+      const password = prompt('Enter your password to confirm deletion:');
+      if (!password) {
+        toast.error('Password required to delete account');
+        return;
+      }
+
+      // Delete Firestore data via backend
+      const response = await fetch('/api/delete-user-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user?.uid, confirmationText: 'DELETE MY DATA' }),
+      });
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => 'Failed to delete data');
+        throw new Error(text || 'Failed to delete user data');
+      }
+
+      // Re-authenticate & delete Firebase Auth account from client
+      if (user) {
+        await deleteUserAccount(user, password);
+      }
+
+      toast.success('Account deleted. You have been signed out.');
       onNavigate?.('dashboard');
-    } catch (error) {
-      toast.error('Failed to delete account');
+    } catch (error: any) {
+      console.error('Failed to delete account:', error);
+      toast.error(error?.message || 'Failed to delete account');
     }
   };
 
