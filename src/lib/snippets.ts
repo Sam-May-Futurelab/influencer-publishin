@@ -3,19 +3,24 @@ import { db } from './firebase';
 import { ContentSnippet } from './types';
 
 // Save a new snippet
-export const saveSnippet = async (userId: string, snippet: Omit<ContentSnippet, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+export const saveSnippet = async (userId: string, snippet: Omit<ContentSnippet, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<ContentSnippet> => {
   try {
     const snippetRef = doc(collection(db, 'snippets'));
     const newSnippet: ContentSnippet = {
       ...snippet,
       id: snippetRef.id,
       userId,
-      createdAt: Timestamp.now() as any,
-      updatedAt: Timestamp.now() as any,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
-    await setDoc(snippetRef, newSnippet);
-    return snippetRef.id;
+    await setDoc(snippetRef, {
+      ...newSnippet,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
+    
+    return newSnippet;
   } catch (error) {
     console.error('Error saving snippet:', error);
     throw error;

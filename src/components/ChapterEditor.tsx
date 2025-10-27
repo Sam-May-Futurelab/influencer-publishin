@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAutoSave } from '@/hooks/use-auto-save';
 import { useAuth } from '@/hooks/use-auth';
+import { useUsageTracking } from '@/hooks/use-usage-tracking';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -59,6 +60,7 @@ export function ChapterEditor({
 }: ChapterEditorProps) {
   const { userProfile, user } = useAuth();
   const isPremium = userProfile?.isPremium || false;
+  const { usage, incrementUsage, loading: usageLoading } = useUsageTracking(user?.uid || null, isPremium);
   
   const [inputMode, setInputMode] = useState<InputMode>('text');
   const [editingTitle, setEditingTitle] = useState(false);
@@ -259,6 +261,24 @@ export function ChapterEditor({
   const handleAIEnhancement = async (selectedText: string): Promise<string> => {
     if (!currentChapter) {
       throw new Error('No active chapter');
+    }
+
+    // Check usage limit before proceeding
+    if (!usageLoading && usage) {
+      const canUse = await incrementUsage();
+      if (!canUse) {
+        const remaining = usage.dailyGenerations - usage.usedToday;
+        toast.error('Daily AI limit reached', {
+          description: isPremium 
+            ? 'You\'ve used all your AI enhancements for today. Your limit will reset tomorrow.'
+            : `You've used all ${usage.dailyGenerations} free AI enhancements today. Upgrade to Premium for 50 daily enhancements!`,
+          action: isPremium ? undefined : {
+            label: 'Upgrade',
+            onClick: () => window.location.href = '/pricing'
+          }
+        });
+        throw new Error('Usage limit exceeded');
+      }
     }
 
     try {
