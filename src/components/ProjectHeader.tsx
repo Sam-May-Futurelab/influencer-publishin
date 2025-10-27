@@ -84,17 +84,14 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
       <div className="flex flex-col gap-4">
         {/* Top Row: Project Info */}
         <div className="flex items-start justify-between gap-4">
-          <motion.div 
-            className="flex items-center gap-2 lg:gap-3 flex-1 min-w-0"
-            whileHover={{ scale: 1.02 }}
-          >
+          <div className="flex items-center gap-2 lg:gap-3 flex-1 min-w-0">
             {/* Back Button - integrated into header */}
             {onBack && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onBack}
-                className="neomorph-flat border-0 p-2 lg:p-2.5 flex-shrink-0 hover:neomorph-raised transition-all"
+                className="neomorph-flat border-0 p-2 lg:p-2.5 flex-shrink-0"
                 title={backLabel || 'Back'}
               >
                 <ArrowLeft size={18} className="lg:hidden" />
@@ -115,7 +112,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                 <p className="text-xs lg:text-sm text-muted-foreground">by {project.author}</p>
               )}
             </div>
-          </motion.div>
+          </div>
           
           {/* Stats Badge - shows on desktop only, moves to second row on mobile */}
           <Badge 

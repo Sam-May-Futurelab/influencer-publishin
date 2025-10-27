@@ -872,7 +872,7 @@ function generateDocxContent(project: EbookProject, options?: ExportOptions): st
   <title>${escapeHtml(project.title)}</title>
   <style>
     body {
-      font-family: ${brand?.fontFamily || 'Calibri, sans-serif'};
+      font-family: ${brand?.fontFamily || 'serif'};
       line-height: 1.6;
       color: #2c2c2c;
       margin: 1in;

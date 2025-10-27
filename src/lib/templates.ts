@@ -25,7 +25,7 @@ export const ebookTemplates: EbookTemplate[] = [
       primaryColor: '#8B5CF6',
       secondaryColor: '#A78BFA',
       accentColor: '#EDE9FE',
-      fontFamily: 'Georgia, serif',
+      fontFamily: 'serif',
       coverStyle: 'minimal',
     },
     estimatedReadTime: '20 minutes',
