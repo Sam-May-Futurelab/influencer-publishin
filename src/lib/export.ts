@@ -497,27 +497,6 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           word-break: break-all;
         }
         
-        .footer {
-          position: fixed;
-          bottom: 0.5in;
-          left: 0;
-          right: 0;
-          text-align: center;
-          font-size: 0.9em;
-          color: #9ca3af;
-          background: white;
-          padding: 10px 0;
-        }
-        
-        .page-number {
-          position: fixed;
-          bottom: 0.5in;
-          right: 1in;
-          font-size: 0.9em;
-          color: ${brand?.primaryColor || '#8B5CF6'};
-          font-weight: 500;
-        }
-        
         @media print {
           body {
             print-color-adjust: exact;
