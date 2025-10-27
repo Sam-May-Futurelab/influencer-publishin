@@ -767,7 +767,7 @@ export function CoverDesigner({
                     {design.subtitle}
                   </p>
                   <p
-                    className="mt-auto mb-8 uppercase tracking-wider font-medium break-words px-2"
+                    className="mt-auto mb-8 tracking-wider font-medium break-words px-2"
                     style={{
                       fontFamily: design.authorFont,
                       fontSize: `${design.authorSize}px`,
