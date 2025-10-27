@@ -79,13 +79,14 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
       animate={{ y: 0, opacity: 1 }}
       className="bg-card neomorph-flat border-0 mx-3 lg:mx-6 mt-3 lg:mt-6 rounded-2xl px-4 lg:px-8 py-4 lg:py-6"
     >
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 lg:gap-0">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-6 w-full lg:w-auto">
+      <div className="flex flex-col gap-4">
+        {/* Top Row: Project Info */}
+        <div className="flex items-start justify-between gap-4">
           <motion.div 
-            className="flex items-center gap-3 lg:gap-4"
+            className="flex items-center gap-3 lg:gap-4 flex-1 min-w-0"
             whileHover={{ scale: 1.02 }}
           >
-            <div className="p-2 lg:p-3 rounded-xl neomorph-flat">
+            <div className="p-2 lg:p-3 rounded-xl neomorph-flat flex-shrink-0">
               <FileText size={20} className="lg:hidden text-primary" />
               <FileText size={28} className="hidden lg:block text-primary" />
             </div>
@@ -100,79 +101,94 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
             </div>
           </motion.div>
           
-          {/* Compact inline stats - just chapters count */}
+          {/* Stats Badge - shows on desktop only, moves to second row on mobile */}
           <Badge 
             variant="secondary" 
-            className="neomorph-flat border-0 px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-medium"
+            className="hidden lg:flex neomorph-flat border-0 px-4 py-2 text-sm font-medium flex-shrink-0"
           >
             {project.chapters.length} {project.chapters.length === 1 ? 'Chapter' : 'Chapters'} • {wordCount.toLocaleString()} words
           </Badge>
         </div>
 
-        <div className="flex items-center gap-2 w-full lg:w-auto lg:gap-3 flex-wrap lg:flex-nowrap">
-          {/* Cover Design Button - More Prominent */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1 lg:flex-none">
-            <Button 
-              onClick={() => setShowCoverDesigner(true)} 
-              variant="outline"
-              size="sm"
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4 w-full"
-            >
-              <ImageIcon size={18} />
-              <span className="hidden lg:inline">Cover Design</span>
-              <span className="lg:hidden">Cover</span>
-            </Button>
-          </motion.div>
+        {/* Bottom Row: Stats (mobile) + Action Buttons */}
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Stats Badge - mobile only */}
+          <Badge 
+            variant="secondary" 
+            className="lg:hidden neomorph-flat border-0 px-3 py-1.5 text-xs font-medium"
+          >
+            {project.chapters.length} {project.chapters.length === 1 ? 'Chapter' : 'Chapters'} • {wordCount.toLocaleString()} words
+          </Badge>
 
-          {/* Customize Dropdown Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          {/* Spacer to push buttons to the right on mobile */}
+          <div className="flex-1 lg:hidden"></div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Cover Design Button */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button 
-                variant="outline" 
-                size="sm" 
-                className="gap-1 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4 flex-1 lg:flex-none"
+                onClick={() => setShowCoverDesigner(true)} 
+                variant="outline"
+                size="sm"
+                className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
               >
-                <Gear size={18} />
-                <span className="hidden lg:inline">Customize</span>
-                <DotsThree size={18} className="lg:hidden" />
+                <ImageIcon size={18} />
+                <span className="hidden sm:inline">Cover Design</span>
+                <span className="sm:hidden">Cover</span>
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 neomorph-raised border-0">
-              <DropdownMenuItem onClick={onBrandCustomize} className="cursor-pointer gap-2 p-3">
-                <Palette size={18} />
-                <span>Brand Style</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setIsEditing(true)} className="cursor-pointer gap-2 p-3">
-                <Gear size={18} />
-                <span>Project Settings</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </motion.div>
 
-          {/* Preview Button */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1 lg:flex-none">
-            <Button 
-              onClick={() => setShowPreviewDialog(true)} 
-              variant="outline"
-              size="sm"
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4 w-full"
-            >
-              <Eye size={18} />
-              <span className="hidden lg:inline">Preview</span>
-              <span className="lg:hidden">View</span>
-            </Button>
-          </motion.div>
+            {/* Customize Dropdown Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
+                >
+                  <Gear size={18} />
+                  <span className="hidden sm:inline">Customize</span>
+                  <DotsThree size={18} className="sm:hidden" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 neomorph-raised border-0">
+                <DropdownMenuItem onClick={onBrandCustomize} className="cursor-pointer gap-2 p-3">
+                  <Palette size={18} />
+                  <span>Brand Style</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsEditing(true)} className="cursor-pointer gap-2 p-3">
+                  <Gear size={18} />
+                  <span>Project Settings</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-          {/* Export Button - Primary Action */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1 lg:flex-none">
-            <Button 
-              onClick={() => setShowExportDialog(true)} 
-              className="gap-1 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground w-full"
-            >
-              <DownloadSimple size={18} weight="bold" />
-              <span>Export</span>
-            </Button>
-          </motion.div>
+            {/* Preview Button */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                onClick={() => setShowPreviewDialog(true)} 
+                variant="outline"
+                size="sm"
+                className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
+              >
+                <Eye size={18} />
+                <span className="hidden sm:inline">Preview</span>
+                <span className="sm:hidden">View</span>
+              </Button>
+            </motion.div>
+
+            {/* Export Button - Primary Action */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                onClick={() => setShowExportDialog(true)} 
+                className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground"
+              >
+                <DownloadSimple size={18} weight="bold" />
+                <span>Export</span>
+              </Button>
+            </motion.div>
+          </div>
         </div>
       </div>
 
