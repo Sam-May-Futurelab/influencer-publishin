@@ -180,14 +180,18 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
 
   const handleDeleteAccount = async () => {
     try {
-      // Confirmation (modal already shows); ask for final confirmation and password
-      const ok = confirm('This will permanently delete your account and all your data. Continue?');
-      if (!ok) return;
+      // Check if Google user
+      const isGoogleUser = user?.providerData.some(
+        provider => provider.providerId === 'google.com'
+      );
 
-      const password = prompt('Enter your password to confirm deletion:');
-      if (!password) {
-        toast.error('Password required to delete account');
-        return;
+      let password;
+      if (!isGoogleUser) {
+        password = prompt('Enter your password to confirm deletion:');
+        if (!password) {
+          toast.error('Password required to delete account');
+          return;
+        }
       }
 
       // Delete Firestore data via backend
@@ -198,16 +202,18 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
       });
 
       if (!response.ok) {
-        const text = await response.text().catch(() => 'Failed to delete data');
-        throw new Error(text || 'Failed to delete user data');
+        throw new Error('Failed to delete user data');
       }
 
-      // Re-authenticate & delete Firebase Auth account from client
+      toast.success('Data deleted. Removing account...');
+
+      // Re-authenticate & delete Firebase Auth account
+      // For Google users, this will show a popup to re-confirm with Google
       if (user) {
         await deleteUserAccount(user, password);
       }
 
-      toast.success('Account deleted. You have been signed out.');
+      toast.success('Account deleted successfully');
       onNavigate?.('dashboard');
     } catch (error: any) {
       console.error('Failed to delete account:', error);

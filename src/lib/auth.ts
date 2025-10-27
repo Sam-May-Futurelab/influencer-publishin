@@ -8,6 +8,7 @@ import {
   updateProfile,
   deleteUser,
   reauthenticateWithCredential,
+  reauthenticateWithPopup,
   EmailAuthProvider,
   User
 } from 'firebase/auth';
@@ -314,11 +315,20 @@ export const updateUserPreferences = async (uid: string, preferences: UserProfil
   }
 };
 
-// Delete user account (requires re-authentication)
-export const deleteUserAccount = async (currentUser: User, password: string) => {
+// Delete user account (handles both email/password and Google sign-in)
+export const deleteUserAccount = async (currentUser: User, password?: string) => {
   try {
-    // Re-authenticate user (required by Firebase before deletion)
-    if (currentUser.email) {
+    // Check if user signed in with Google (providerData will show google.com)
+    const isGoogleUser = currentUser.providerData.some(
+      provider => provider.providerId === 'google.com'
+    );
+
+    if (isGoogleUser) {
+      // Re-authenticate with Google popup
+      const provider = new GoogleAuthProvider();
+      await reauthenticateWithPopup(currentUser, provider);
+    } else if (currentUser.email && password) {
+      // Re-authenticate with email/password
       const credential = EmailAuthProvider.credential(currentUser.email, password);
       await reauthenticateWithCredential(currentUser, credential);
     }

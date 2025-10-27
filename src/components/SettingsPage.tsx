@@ -510,14 +510,22 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                       return;
                     }
 
-                    const password = prompt('Enter your password to confirm:');
-                    if (!password) {
-                      toast.error('Password required');
-                      return;
-                    }
-
                     try {
-                      // First delete Firestore data via backend
+                      // Check if Google user
+                      const isGoogleUser = user?.providerData.some(
+                        provider => provider.providerId === 'google.com'
+                      );
+
+                      let password;
+                      if (!isGoogleUser) {
+                        password = prompt('Enter your password to confirm:');
+                        if (!password) {
+                          toast.error('Password required');
+                          return;
+                        }
+                      }
+
+                      // Delete Firestore data via backend
                       const response = await fetch('/api/delete-user-data', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -533,7 +541,7 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                       
                       toast.success('Data deleted. Removing account...');
                       
-                      // Delete Firebase Auth account (requires recent authentication)
+                      // Delete Firebase Auth account (Google users will see popup)
                       if (user) {
                         await deleteUserAccount(user, password);
                       }
