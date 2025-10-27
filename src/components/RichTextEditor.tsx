@@ -244,9 +244,18 @@ export function RichTextEditor({
     const originalFrom = from;
     const originalTo = to;
 
+    const loadingMessages = [
+      '✨ Crafting your content...',
+      '🎨 Polishing your words...',
+      '📝 Enhancing readability...',
+      '💡 Adding that special touch...',
+      '🚀 Making it shine...'
+    ];
+    const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+
     try {
       setIsEnhancing(true);
-      toast.loading('AI is enhancing your text...', {
+      toast.loading(randomMessage, {
         id: 'enhancing-toast'
       });
       

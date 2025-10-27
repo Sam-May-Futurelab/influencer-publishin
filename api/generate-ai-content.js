@@ -306,12 +306,22 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
       });
     }
 
+    // Clean up em-dashes and other problematic characters
+    let cleanedContent = content
+      .replace(/—/g, '-')  // Replace em-dash with hyphen
+      .replace(/–/g, '-')  // Replace en-dash with hyphen  
+      .replace(/"/g, '"')  // Replace smart quotes
+      .replace(/"/g, '"')
+      .replace(/'/g, "'")
+      .replace(/'/g, "'")
+      .replace(/…/g, '...'); // Replace ellipsis
+
     // Parse JSON response with better error handling
-    let parsedContent = content;
+    let parsedContent = cleanedContent;
     if (contentType === 'suggestions') {
       try {
         // Remove markdown code blocks if present
-        const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        const cleanContent = cleanedContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
         parsedContent = JSON.parse(cleanContent);
         
         if (!Array.isArray(parsedContent)) {
@@ -319,7 +329,7 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
         }
       } catch (parseError) {
         console.error('JSON Parse Error:', parseError);
-        console.error('Raw content:', content);
+        console.error('Raw content:', cleanedContent);
         throw new Error('Failed to parse AI response as JSON');
       }
     }

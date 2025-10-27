@@ -83,75 +83,61 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="flex flex-col lg:flex-row gap-4 lg:items-center justify-between"
+        className="space-y-4"
       >
         {/* Search */}
-        <div className="relative flex-1 lg:max-w-md">
+        <div className="relative max-w-md">
           <MagnifyingGlass size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search templates..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 neomorph-inset border-0 text-sm"
+            className="pl-10 border"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Category Filter */}
-          <div className="flex rounded-lg neomorph-inset p-1 overflow-x-auto">
+        {/* Category Filter */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+          <Button
+            variant={selectedCategory === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedCategory('all')}
+            className="whitespace-nowrap"
+          >
+            All
+          </Button>
+          <Button
+            variant={selectedCategory === 'free' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedCategory('free')}
+            className="whitespace-nowrap"
+          >
+            Free
+          </Button>
+          {categories.map((category) => (
             <Button
-              variant={selectedCategory === 'all' ? 'default' : 'ghost'}
+              key={category}
+              variant={selectedCategory === category ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setSelectedCategory('all')}
-              className="h-8 px-3 text-xs whitespace-nowrap"
+              onClick={() => setSelectedCategory(category)}
+              className="whitespace-nowrap capitalize"
             >
-              All
+              {category}
             </Button>
-            <Button
-              variant={selectedCategory === 'free' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setSelectedCategory('free')}
-              className="h-8 px-3 text-xs whitespace-nowrap"
-            >
-              Free
-            </Button>
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setSelectedCategory(category)}
-                className="h-8 px-3 text-xs whitespace-nowrap capitalize"
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-
-          {/* View Mode */}
-          <div className="flex rounded-lg neomorph-inset p-1">
-            <Button
-              variant={viewMode === 'grid' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('grid')}
-              className="h-8 px-3"
-            >
-              <GridFour size={14} />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('list')}
-              className="h-8 px-3"
-            >
-              <ListBullets size={14} />
-            </Button>
-          </div>
+          ))}
+          <Button
+            variant={selectedCategory === 'other' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedCategory('other')}
+            className="whitespace-nowrap"
+          >
+            Other
+          </Button>
         </div>
       </motion.div>
 
-      {/* Template Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+      {/* Template Grid/List */}
+      <div className={viewMode === 'grid' ? 'grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6' : 'space-y-4'}>
         {filteredTemplates.map((template, index) => (
           <motion.div
             key={template.id}
@@ -162,12 +148,12 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
             <Card 
               className={`cursor-pointer border-2 transition-all duration-300 ${
                 selectedTemplate?.id === template.id
-                  ? 'border-primary neomorph-raised' 
-                  : 'border-transparent neomorph-flat hover:neomorph-raised'
-              }`}
+                  ? 'border-primary shadow-lg' 
+                  : 'border-border hover:border-primary/50 hover:shadow-md'
+              } ${viewMode === 'list' ? 'flex flex-row' : ''}`}
               onClick={() => handleTemplateSelect(template)}
             >
-              <CardHeader className="pb-3">
+              <CardHeader className={`pb-3 ${viewMode === 'list' ? 'flex-1' : ''}`}>
                 <div className="flex items-center justify-between">
                   <div className="text-2xl">{template.icon}</div>
                   <div className="flex items-center gap-1">
@@ -176,8 +162,6 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
                         Premium
                       </Badge>
                     )}
-                    <Star size={12} className="text-yellow-500" weight="fill" />
-                    <span className="text-xs text-muted-foreground">4.6</span>
                   </div>
                 </div>
                 <CardTitle className="text-lg">{template.name}</CardTitle>
@@ -185,41 +169,59 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
                   {template.description}
                 </p>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className={`space-y-3 ${viewMode === 'list' ? 'flex items-center gap-4' : ''}`}>
                 <div className="flex flex-wrap gap-1">
-                  <Badge variant="secondary" className="text-xs">{template.category}</Badge>
+                  <Badge variant="secondary" className="text-xs capitalize">{template.category}</Badge>
                   <Badge variant="outline" className="text-xs">
                     <Clock size={10} className="mr-1" />
                     {template.estimatedReadTime}
                   </Badge>
                   <Badge variant="outline" className="text-xs">
-                    <Users size={10} className="mr-1" />
-                    {template.targetAudience}
+                    <BookOpen size={10} className="mr-1" />
+                    {template.chapters.length} chapters
                   </Badge>
                 </div>
                 
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{template.chapters.length} chapters</span>
-                  <span>~{template.chapters.reduce((sum, ch) => sum + (ch.content?.split(' ').length || 0), 0).toLocaleString()} words</span>
-                </div>
+                {viewMode === 'grid' && (
+                  <>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>~{template.chapters.reduce((sum, ch) => sum + (ch.content?.split(' ').length || 0), 0).toLocaleString()} words</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex gap-1">
+                        <div 
+                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                          style={{ backgroundColor: template.brandConfig.primaryColor }}
+                        />
+                        <div 
+                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                          style={{ backgroundColor: template.brandConfig.secondaryColor }}
+                        />
+                        <div 
+                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                          style={{ backgroundColor: template.brandConfig.accentColor }}
+                        />
+                      </div>
+                      
+                      {/* Preview Button */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPreviewTemplate(template);
+                        }}
+                        className="h-8 px-3 text-xs gap-1.5"
+                      >
+                        <Eye size={14} weight="duotone" />
+                        Preview
+                      </Button>
+                    </div>
+                  </>
+                )}
                 
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-1">
-                    <div 
-                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                      style={{ backgroundColor: template.brandConfig.primaryColor }}
-                    />
-                    <div 
-                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                      style={{ backgroundColor: template.brandConfig.secondaryColor }}
-                    />
-                    <div 
-                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                      style={{ backgroundColor: template.brandConfig.accentColor }}
-                    />
-                  </div>
-                  
-                  {/* Preview Button */}
+                {viewMode === 'list' && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -227,12 +229,12 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
                       e.stopPropagation();
                       setPreviewTemplate(template);
                     }}
-                    className="h-8 px-3 text-xs gap-1.5 neomorph-button border-2 border-primary/20 hover:border-primary/40 hover:bg-primary/10 transition-all"
+                    className="h-8 px-3 text-xs gap-1.5 ml-auto"
                   >
                     <Eye size={14} weight="duotone" />
                     Preview
                   </Button>
-                </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>
