@@ -118,16 +118,28 @@ export default async function handler(req, res) {
                 <span style="font-size: 24px;">🎁</span> Your Free Ebook Template
               </h3>
               <p style="color: #333; margin-bottom: 20px;">
-                We're preparing your free professional ebook template package! You'll receive a follow-up email shortly with:
+                Your free professional ebook template is ready to download!
               </p>
-              <ul style="color: #333; line-height: 2;">
-                <li>Professional ebook template (Word + Google Docs)</li>
-                <li>50+ AI prompts for ebook writing</li>
-                <li>Quick start guide</li>
-              </ul>
-              <p style="background: #f0e8f8; padding: 15px; border-radius: 8px; margin-top: 20px; color: #555;">
-                <strong>⏱️ Coming soon:</strong> Check your inbox in the next few minutes for your download links!
-              </p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://www.inkfluenceai.com/templates/Ultimate-Ebook-Writing-Template.pdf" 
+                   style="display: inline-block; background: linear-gradient(135deg, #9b87b8 0%, #b89ed6 100%); color: white; padding: 18px 45px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 18px; box-shadow: 0 4px 12px rgba(155, 135, 184, 0.3);">
+                  📥 Download Your Template (PDF)
+                </a>
+              </div>
+              
+              <div style="background: #f0e8f8; padding: 20px; border-radius: 8px; margin-top: 25px;">
+                <h4 style="color: #7a5f96; margin-top: 0; font-size: 16px;">📖 What's Included:</h4>
+                <ul style="color: #333; line-height: 2; margin: 10px 0;">
+                  <li><strong>Professional structure</strong> for any type of ebook</li>
+                  <li><strong>Writing prompts</strong> to guide your content creation</li>
+                  <li><strong>5 ready-to-use chapters</strong> you can customize</li>
+                  <li><strong>Tips and best practices</strong> throughout</li>
+                </ul>
+                <p style="color: #666; margin: 15px 0 5px 0; font-size: 14px;">
+                  💡 <strong>Pro Tip:</strong> Use this template in Google Docs, Microsoft Word, or import it directly into InkFluence AI for AI-powered writing assistance!
+                </p>
+              </div>
             </div>
             ` : ''}
 

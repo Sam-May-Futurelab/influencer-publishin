@@ -58,7 +58,7 @@ export function NewsletterSignup({ variant = 'default', showLeadMagnet = true }:
           // Trigger lead magnet download after short delay
           setTimeout(() => {
             window.open('/api/download-lead-magnet', '_blank');
-          }, 1000);
+          }, 1500);
         }
       } else {
         throw new Error('Failed to subscribe');
@@ -76,7 +76,7 @@ export function NewsletterSignup({ variant = 'default', showLeadMagnet = true }:
         <CheckCircle2 className="h-4 w-4 text-green-600" />
         <AlertDescription className="text-green-800">
           {showLeadMagnet 
-            ? "Success! Check your email for your free ebook template. We've also added you to our newsletter."
+            ? "Success! Your download will start shortly. We've also sent the template to your email."
             : "Success! You've been added to our newsletter. Check your inbox soon!"}
         </AlertDescription>
       </Alert>
