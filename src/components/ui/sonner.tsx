@@ -11,14 +11,16 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       toastOptions={{
         classNames: {
+          toast: 'neomorph-raised border-0 backdrop-blur-sm',
           description: 'text-foreground opacity-90',
+          closeButton: 'neomorph-flat border-0 !bg-background hover:!bg-accent !opacity-100 shadow-sm',
         },
       }}
       style={
         {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--border)",
+          "--normal-bg": "hsl(var(--background))",
+          "--normal-text": "hsl(var(--foreground))",
+          "--normal-border": "transparent",
         } as CSSProperties
       }
       {...props}
