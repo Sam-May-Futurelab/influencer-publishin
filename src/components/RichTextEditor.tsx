@@ -264,16 +264,23 @@ export function RichTextEditor({
       toast.dismiss('enhancing-toast');
       
       if (enhancedText && enhancedText.trim()) {
+        // Convert text with \n\n into proper paragraph nodes
+        const paragraphs = enhancedText.split('\n\n').filter(p => p.trim());
+        const contentNodes = paragraphs.map(para => ({
+          type: 'paragraph',
+          content: para.trim() ? [{ type: 'text', text: para.trim() }] : []
+        }));
+
         // Validate that the range is still valid before replacing
         const docSize = editor.state.doc.content.size;
         if (originalFrom >= 0 && originalTo <= docSize && originalFrom < originalTo) {
-          editor.chain().focus().deleteRange({ from: originalFrom, to: originalTo }).insertContent(enhancedText).run();
+          editor.chain().focus().deleteRange({ from: originalFrom, to: originalTo }).insertContent(contentNodes).run();
           toast.success('Text enhanced with AI!', {
             description: 'Your content has been improved'
           });
         } else {
           // If range is invalid, just insert at current position
-          editor.chain().focus().insertContent('\n\n' + enhancedText).run();
+          editor.chain().focus().insertContent(contentNodes).run();
           toast.success('Text enhanced and added below', {
             description: 'The selection changed, so enhanced text was added at the end'
           });

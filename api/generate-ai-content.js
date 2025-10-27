@@ -87,6 +87,40 @@ async function checkRateLimit(userId) {
   };
 }
 
+// Format content with proper paragraph breaks
+function formatWithParagraphBreaks(text) {
+  // If text already has double line breaks, return as-is
+  if (text.includes('\n\n')) {
+    return text;
+  }
+
+  // Split by single line breaks or periods followed by space and capital letter
+  const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z])/);
+  
+  let formattedText = '';
+  let currentParagraph = '';
+  let sentenceCount = 0;
+  
+  for (const sentence of sentences) {
+    currentParagraph += sentence + ' ';
+    sentenceCount++;
+    
+    // Create new paragraph every 3-4 sentences or after 400 characters
+    if (sentenceCount >= 3 && currentParagraph.length > 200 || currentParagraph.length > 400) {
+      formattedText += currentParagraph.trim() + '\n\n';
+      currentParagraph = '';
+      sentenceCount = 0;
+    }
+  }
+  
+  // Add remaining content
+  if (currentParagraph.trim()) {
+    formattedText += currentParagraph.trim();
+  }
+  
+  return formattedText.trim();
+}
+
 export default async function handler(req, res) {
   // Handle CORS
   setCorsHeaders(req, res);
@@ -257,7 +291,11 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
         messages: [
           {
             role: 'system',
-            content: `You are a professional ebook writing assistant specializing in ${genre} content. Write in a ${toneDescriptors[tone] || 'engaging'} tone. Provide helpful, creative, and engaging content suggestions that match the specified format and length.`,
+            content: `You are a professional ebook writing assistant specializing in ${genre} content. Write in a ${toneDescriptors[tone] || 'engaging'} tone. 
+
+IMPORTANT: Format all content with proper paragraph breaks. Create a new paragraph every 3-4 sentences or after 250-400 characters. Use double line breaks (\\n\\n) between paragraphs to ensure readability. Never create walls of text - break content into digestible chunks.
+
+Provide helpful, creative, and engaging content suggestions that match the specified format and length.`,
           },
           {
             role: 'user',
@@ -315,6 +353,12 @@ Return ONLY the enhanced content as plain text, no JSON or markdown formatting.`
       .replace(/'/g, "'")
       .replace(/'/g, "'")
       .replace(/…/g, '...'); // Replace ellipsis
+
+    // Add paragraph breaks to prevent walls of text
+    // Split long paragraphs (more than 500 chars) into smaller ones
+    if (contentType === 'enhance' || contentType === 'content') {
+      cleanedContent = formatWithParagraphBreaks(cleanedContent);
+    }
 
     // Parse JSON response with better error handling
     let parsedContent = cleanedContent;
