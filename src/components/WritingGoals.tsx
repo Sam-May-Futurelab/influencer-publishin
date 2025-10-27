@@ -37,19 +37,19 @@ export function WritingGoalsComponent({
     setShowSettings(false);
   };
 
-  const getStreakEmoji = (streak: number) => {
-    if (streak >= 30) return '👑';
-    if (streak >= 14) return '💪';
-    if (streak >= 7) return '⚡';
-    if (streak >= 3) return '🔥';
-    return '✍️';
+  const getStreakLabel = (streak: number) => {
+    if (streak >= 30) return 'Legendary';
+    if (streak >= 14) return 'Excellent';
+    if (streak >= 7) return 'Building';
+    if (streak >= 3) return 'Growing';
+    return 'Starting';
   };
 
   const getProgressColor = (percentage: number) => {
-    if (percentage >= 100) return '#10B981'; // green
-    if (percentage >= 75) return '#F59E0B'; // amber
-    if (percentage >= 50) return '#3B82F6'; // blue
-    return '#8B5CF6'; // purple
+    if (percentage >= 100) return 'hsl(var(--primary))'; // Use theme primary
+    if (percentage >= 75) return 'hsl(var(--primary))';
+    if (percentage >= 50) return 'hsl(var(--primary))';
+    return 'hsl(var(--primary))'; // Consistent primary color
   };
 
   if (!goals.enabled) {
@@ -182,14 +182,19 @@ export function WritingGoalsComponent({
                 </ProgressRing>
               </div>
               <div className="space-y-1">
-                <h3 className="font-semibold text-sm">Today's Goal</h3>
+                <h3 className="font-semibold text-sm">Daily Goal</h3>
                 <div className="text-xs text-muted-foreground">
                   {progress.daily.current.toLocaleString()} / {progress.daily.target.toLocaleString()} words
                 </div>
                 {progress.daily.percentage >= 100 && (
-                  <Badge variant="secondary" className="neomorph-flat border-0 text-xs">
-                    🎯 Goal Achieved!
+                  <Badge variant="secondary" className="bg-primary/10 text-primary border-0 text-xs font-medium">
+                    Complete
                   </Badge>
+                )}
+                {progress.daily.percentage < 100 && progress.daily.percentage > 0 && (
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {(progress.daily.target - progress.daily.current).toLocaleString()} words remaining
+                  </div>
                 )}
               </div>
             </CardContent>
@@ -205,9 +210,9 @@ export function WritingGoalsComponent({
           <Card className="neomorph-flat border-0 h-full">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <Calendar size={20} className="text-blue-500" />
+                <Calendar size={20} className="text-primary" weight="duotone" />
                 <div>
-                  <h3 className="font-semibold text-sm">This Week</h3>
+                  <h3 className="font-semibold text-sm">Weekly Goal</h3>
                   <div className="text-xs text-muted-foreground">
                     {progress.weekly.current.toLocaleString()} / {progress.weekly.target.toLocaleString()} words
                   </div>
@@ -231,15 +236,16 @@ export function WritingGoalsComponent({
         >
           <Card className="neomorph-flat border-0 h-full">
             <CardContent className="p-4 lg:p-6 text-center">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="text-2xl">{getStreakEmoji(stats.currentStreak)}</span>
-                <Flame size={20} className="text-orange-500" />
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <Flame size={24} className="text-primary" weight="duotone" />
               </div>
-              <div className="space-y-1">
-                <div className="text-2xl font-bold text-foreground">{stats.currentStreak}</div>
-                <div className="text-xs text-muted-foreground">Day Writing Streak</div>
+              <div className="space-y-2">
+                <div className="text-3xl font-bold text-foreground">{stats.currentStreak}</div>
+                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  {getStreakLabel(stats.currentStreak)} Streak
+                </div>
                 <div className="text-xs text-muted-foreground">
-                  Best: {stats.longestStreak} days
+                  Days • Best: {stats.longestStreak}
                 </div>
               </div>
             </CardContent>
@@ -256,7 +262,7 @@ export function WritingGoalsComponent({
         <Card className="neomorph-flat border-0">
           <CardContent className="p-4 lg:p-6">
             <div className="flex items-center gap-3 mb-4">
-              <TrendUp size={20} className="text-purple-500" />
+              <TrendUp size={20} className="text-primary" weight="duotone" />
               <div>
                 <h3 className="font-semibold">Monthly Progress</h3>
                 <div className="text-sm text-muted-foreground">

@@ -245,11 +245,11 @@ export function RichTextEditor({
     const originalTo = to;
 
     const loadingMessages = [
-      '✨ Crafting your content...',
-      '🎨 Polishing your words...',
-      '📝 Enhancing readability...',
-      '💡 Adding that special touch...',
-      '🚀 Making it shine...'
+      'Analyzing your content...',
+      'Crafting improvements...',
+      'Enhancing readability...',
+      'Refining language...',
+      'Optimizing structure...'
     ];
     const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
 
