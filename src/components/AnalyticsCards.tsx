@@ -20,37 +20,37 @@ export function WritingStreakCard({
 }: WritingStreakCardProps) {
   const getStreakLevel = (streak: number) => {
     if (streak >= 30) return { 
-      level: 'Legendary', 
+      level: 'Legendary Author', 
       gradient: 'from-primary/20 to-primary/10',
       textColor: 'text-primary',
       icon: <Award className="w-8 h-8" />
     };
     if (streak >= 21) return { 
-      level: 'Elite', 
+      level: 'Master Wordsmith', 
       gradient: 'from-primary/20 to-primary/10',
       textColor: 'text-primary',
       icon: <Star className="w-8 h-8 fill-current" />
     };
     if (streak >= 14) return { 
-      level: 'Advanced', 
+      level: 'Dedicated Writer', 
       gradient: 'from-primary/20 to-primary/10',
       textColor: 'text-primary',
       icon: <TrendingUp className="w-8 h-8" />
     };
     if (streak >= 7) return { 
-      level: 'Consistent', 
+      level: 'Committed Creator', 
       gradient: 'from-primary/15 to-primary/5',
       textColor: 'text-primary',
       icon: <Zap className="w-8 h-8 fill-current" />
     };
     if (streak >= 3) return { 
-      level: 'Building', 
+      level: 'Budding Author', 
       gradient: 'from-primary/15 to-primary/5',
       textColor: 'text-primary',
       icon: <Flame className="w-8 h-8 fill-current" />
     };
     return { 
-      level: 'Starting', 
+      level: 'Fresh Start', 
       gradient: 'from-muted/50 to-muted/20',
       textColor: 'text-muted-foreground',
       icon: <PenTool className="w-8 h-8" />

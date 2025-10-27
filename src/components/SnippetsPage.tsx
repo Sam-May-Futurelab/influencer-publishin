@@ -63,6 +63,13 @@ export function SnippetsPage() {
   const [snippetToDelete, setSnippetToDelete] = useState<ContentSnippet | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [previewSnippet, setPreviewSnippet] = useState<ContentSnippet | null>(null);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [newSnippet, setNewSnippet] = useState({
+    title: '',
+    content: '',
+    category: 'other' as ContentSnippet['category'],
+    tags: [] as string[]
+  });
 
   useEffect(() => {
     loadSnippets();
@@ -161,6 +168,37 @@ export function SnippetsPage() {
     toast.success('Copied to clipboard!');
   };
 
+  const handleCreateSnippet = async () => {
+    if (!user) return;
+    if (!newSnippet.title.trim() || !newSnippet.content.trim()) {
+      toast.error('Please provide a title and content');
+      return;
+    }
+
+    try {
+      const snippetData = {
+        title: newSnippet.title.trim(),
+        content: newSnippet.content.trim(),
+        category: newSnippet.category,
+        tags: newSnippet.tags,
+      };
+
+      const savedSnippet = await saveSnippet(user.uid, snippetData);
+      setSnippets([savedSnippet, ...snippets]);
+      toast.success('Snippet created successfully!');
+      setShowCreateDialog(false);
+      setNewSnippet({
+        title: '',
+        content: '',
+        category: 'other',
+        tags: []
+      });
+    } catch (error) {
+      console.error('Error creating snippet:', error);
+      toast.error('Failed to create snippet');
+    }
+  };
+
   const handleDuplicateSnippet = async (snippet: ContentSnippet) => {
     if (!user) return;
 
@@ -220,7 +258,10 @@ export function SnippetsPage() {
             </motion.div>
             <span className="hidden sm:inline">Refresh</span>
           </Button>
-          <Button className="neomorph-button border-0 gap-2">
+          <Button 
+            className="neomorph-button border-0 gap-2"
+            onClick={() => setShowCreateDialog(true)}
+          >
             <Plus size={16} weight="bold" />
             <span className="hidden sm:inline">Create Snippet</span>
           </Button>
@@ -486,6 +527,102 @@ export function SnippetsPage() {
               className="neomorph-button border-0"
             >
               Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Snippet Dialog */}
+      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Create New Snippet</DialogTitle>
+            <DialogDescription>
+              Save reusable content blocks to use across your projects
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Title</label>
+              <Input
+                placeholder="e.g., Call to Action Template"
+                value={newSnippet.title}
+                onChange={(e) => setNewSnippet({ ...newSnippet, title: e.target.value })}
+                className="neomorph-inset border-0"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Category</label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {Object.entries(categoryConfig).map(([key, config]) => {
+                  const Icon = config.icon;
+                  return (
+                    <Button
+                      key={key}
+                      variant={newSnippet.category === key ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setNewSnippet({ ...newSnippet, category: key as ContentSnippet['category'] })}
+                      className="gap-2 justify-start"
+                    >
+                      <Icon size={14} />
+                      <span className="text-xs">{config.label}</span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Content</label>
+              <textarea
+                placeholder="Enter your snippet content..."
+                value={newSnippet.content}
+                onChange={(e) => setNewSnippet({ ...newSnippet, content: e.target.value })}
+                className="w-full min-h-[200px] p-3 rounded-lg neomorph-inset border-0 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Tags (optional)</label>
+              <Input
+                placeholder="Enter tags separated by commas"
+                onChange={(e) => {
+                  const tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+                  setNewSnippet({ ...newSnippet, tags });
+                }}
+                className="neomorph-inset border-0"
+              />
+              <p className="text-xs text-muted-foreground">
+                Separate tags with commas (e.g., sales, email, persuasive)
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowCreateDialog(false);
+                setNewSnippet({
+                  title: '',
+                  content: '',
+                  category: 'other',
+                  tags: []
+                });
+              }}
+              className="neomorph-button border-0"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateSnippet}
+              disabled={!newSnippet.title.trim() || !newSnippet.content.trim()}
+              className="neomorph-button border-0 gap-2"
+            >
+              <Plus size={16} weight="bold" />
+              Create Snippet
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -100,7 +100,7 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
         {/* Category Filter */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2">
           <Button
-            variant={selectedCategory === 'all' ? 'default' : 'outline'}
+            variant={selectedCategory === 'all' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setSelectedCategory('all')}
             className={cn(
@@ -113,7 +113,7 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
             All
           </Button>
           <Button
-            variant={selectedCategory === 'free' ? 'default' : 'outline'}
+            variant={selectedCategory === 'free' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setSelectedCategory('free')}
             className={cn(
@@ -128,7 +128,7 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
           {categories.map((category) => (
             <Button
               key={category}
-              variant={selectedCategory === category ? 'default' : 'outline'}
+              variant={selectedCategory === category ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setSelectedCategory(category)}
               className={cn(
@@ -142,7 +142,7 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
             </Button>
           ))}
           <Button
-            variant={selectedCategory === 'other' ? 'default' : 'outline'}
+            variant={selectedCategory === 'other' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setSelectedCategory('other')}
             className={cn(

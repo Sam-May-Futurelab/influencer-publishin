@@ -275,35 +275,35 @@ export function Dashboard({
           >
             <Card className="neomorph-flat border-0">
               <CardContent className="p-4 text-center">
-                <Pencil size={20} className="mx-auto mb-2 text-blue-600" weight="bold" />
+                <Pencil size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
                 <p className="text-2xl font-bold">{totalWords.toLocaleString()}</p>
-                <p className="text-xs text-gray-600">Total Words</p>
+                <p className="text-xs text-muted-foreground">Total Words</p>
               </CardContent>
             </Card>
 
             <Card className="neomorph-flat border-0">
               <CardContent className="p-4 text-center">
-                <BookOpen size={20} className="mx-auto mb-2 text-green-600" weight="fill" />
+                <BookOpen size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
                 <p className="text-2xl font-bold">{projects.length}</p>
-                <p className="text-xs text-gray-600">Projects</p>
+                <p className="text-xs text-muted-foreground">Projects</p>
               </CardContent>
             </Card>
 
             <Card className="neomorph-flat border-0">
               <CardContent className="p-4 text-center">
-                <FileText size={20} className="mx-auto mb-2 text-purple-600" weight="fill" />
+                <FileText size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
                 <p className="text-2xl font-bold">
                   {projects.reduce((sum, p) => sum + p.chapters.length, 0)}
                 </p>
-                <p className="text-xs text-gray-600">Chapters</p>
+                <p className="text-xs text-muted-foreground">Chapters</p>
               </CardContent>
             </Card>
 
             <Card className="neomorph-flat border-0">
               <CardContent className="p-4 text-center">
-                <Clock size={20} className="mx-auto mb-2 text-orange-600" weight="fill" />
+                <Clock size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
                 <p className="text-2xl font-bold">{stats.totalWordsThisWeek.toLocaleString()}</p>
-                <p className="text-xs text-gray-600">Words This Week</p>
+                <p className="text-xs text-muted-foreground">Words This Week</p>
               </CardContent>
             </Card>
           </motion.div>

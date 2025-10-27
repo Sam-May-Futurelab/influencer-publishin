@@ -38,11 +38,12 @@ export function WritingGoalsComponent({
   };
 
   const getStreakLabel = (streak: number) => {
-    if (streak >= 30) return 'Legendary';
-    if (streak >= 14) return 'Excellent';
-    if (streak >= 7) return 'Building';
-    if (streak >= 3) return 'Growing';
-    return 'Starting';
+    if (streak >= 30) return 'Legendary Author';
+    if (streak >= 21) return 'Master Wordsmith';
+    if (streak >= 14) return 'Dedicated Writer';
+    if (streak >= 7) return 'Committed Creator';
+    if (streak >= 3) return 'Budding Author';
+    return 'Fresh Start';
   };
 
   const getProgressColor = (percentage: number) => {
