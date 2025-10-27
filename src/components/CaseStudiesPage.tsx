@@ -167,8 +167,8 @@ export function CaseStudiesPage() {
   const metrics = [
     { icon: TrendingUp, label: 'Average Revenue Increase', value: '450%' },
     { icon: Clock, label: 'Average Time Saved', value: '80%' },
-    { icon: BookOpen, label: 'Total Ebooks Created', value: '50,000+' },
-    { icon: Users, label: 'Success Stories', value: '500+' }
+    { icon: BookOpen, label: 'Ebooks Created', value: 'Hundreds' },
+    { icon: Users, label: 'Active Creators', value: 'Growing Daily' }
   ];
 
   return (
@@ -465,7 +465,7 @@ export function CaseStudiesPage() {
               Ready to Write Your Success Story?
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Join thousands of creators building profitable ebook businesses with Inkfluence AI
+              Join creators building profitable ebook businesses with Inkfluence AI
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button 

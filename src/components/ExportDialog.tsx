@@ -116,6 +116,22 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
       }
     }
 
+    // Check for empty or very short chapters
+    const emptyChapters = project.chapters.filter(chapter => {
+      const textContent = chapter.content?.replace(/<[^>]*>/g, ' ') || '';
+      const wordCount = textContent.split(/\s+/).filter(word => word.length > 0).length;
+      return wordCount < 50;
+    });
+
+    if (emptyChapters.length > 0) {
+      const proceed = window.confirm(
+        `Warning: ${emptyChapters.length} chapter${emptyChapters.length > 1 ? 's have' : ' has'} less than 50 words and may appear blank or incomplete in your export.\n\n` +
+        `Empty chapters: ${emptyChapters.map(c => c.title).join(', ')}\n\n` +
+        `Do you want to continue anyway?`
+      );
+      if (!proceed) return;
+    }
+
     try {
       setExportingFormat(format);
       toast.loading(`Generating ${format.toUpperCase()}...`, { id: 'export' });

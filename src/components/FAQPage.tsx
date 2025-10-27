@@ -200,7 +200,7 @@ export function FAQPage() {
     {
       category: 'technical',
       question: 'What if I lose my internet connection while working?',
-      answer: 'Your work is saved continuously while connected. If you lose connection, changes are queued and saved automatically when you reconnect. A notification will alert you if saving fails.'
+      answer: 'Your work is auto-saved every few seconds while connected. If you lose connection mid-edit, your last saved version is safe in the cloud. Reconnect to continue - any unsaved changes will need to be re-entered. We recommend stable internet for the best experience.'
     },
     {
       category: 'technical',

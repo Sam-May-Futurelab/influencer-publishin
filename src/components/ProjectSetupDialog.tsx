@@ -61,10 +61,16 @@ export function ProjectSetupDialog({ open, initialTitle, onComplete, onSkip }: P
   }, [initialTitle]);
 
   const handleSubmit = () => {
+    // Validate title length
+    if (formData.title.length > 100) {
+      return; // Prevent submission if title too long
+    }
     onComplete(formData);
   };
 
-  const isValid = formData.title.trim().length > 0 && formData.author.trim().length > 0;
+  const isValid = formData.title.trim().length > 0 && 
+                  formData.title.length <= 100 && 
+                  formData.author.trim().length > 0;
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
@@ -84,7 +90,11 @@ export function ProjectSetupDialog({ open, initialTitle, onComplete, onSkip }: P
           <div className="space-y-2">
             <Label htmlFor="title" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
-              Project Title *
+              Project Title * {formData.title.length > 0 && (
+                <span className={`text-xs ${formData.title.length > 100 ? 'text-red-500' : 'text-muted-foreground'}`}>
+                  ({formData.title.length}/100)
+                </span>
+              )}
             </Label>
             <Input
               id="title"
@@ -92,7 +102,11 @@ export function ProjectSetupDialog({ open, initialTitle, onComplete, onSkip }: P
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="e.g., The Ultimate Guide to Digital Marketing"
               className="text-base"
+              maxLength={120}
             />
+            {formData.title.length > 100 && (
+              <p className="text-xs text-red-500">Title should be 100 characters or less for best compatibility</p>
+            )}
           </div>
 
           {/* Author */}

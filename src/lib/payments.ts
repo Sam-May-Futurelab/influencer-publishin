@@ -1,5 +1,10 @@
-// iOS In-App Purchase Integration
-// This will need to be connected to React Native StoreKit
+// ============================================
+// iOS In-App Purchase Integration (FUTURE USE)
+// ============================================
+// This file is for future iOS native app support.
+// Currently NOT USED - web app uses Stripe integration.
+// See src/hooks/use-payments.ts for active Stripe implementation.
+// ============================================
 
 export interface SubscriptionProduct {
   id: string;
