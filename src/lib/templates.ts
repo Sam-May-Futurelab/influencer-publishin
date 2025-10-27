@@ -33,51 +33,51 @@ export const ebookTemplates: EbookTemplate[] = [
     chapters: [
       {
         title: 'How to Use This Template',
-        content: `# Welcome to Your Ebook Template
+        content: `Welcome to Your Ebook Template
 
 Congratulations on taking the first step toward creating your ebook! This template is designed to help you structure your ideas, organize your content, and create a professional ebook that resonates with your readers.
 
 
-## What You'll Find Here
+WHAT YOU'LL FIND HERE
 
 This template provides a proven structure that works for virtually any type of non-fiction ebook. Whether you're writing a how-to guide, sharing your expertise, telling your story, or teaching a skill, this framework will help you communicate effectively and keep your readers engaged from start to finish.
 
 Each chapter includes helpful prompts, writing tips, and guidance on what to include. Think of this as your roadmap - you can follow it exactly or adapt it to fit your unique voice and topic.
 
 
-## Before You Start Writing
+BEFORE YOU START WRITING
 
 Take a moment to clarify your ebook's purpose. Ask yourself:
 
-**Who is this for?**
+Who is this for?
 Define your ideal reader. What are their challenges, goals, and questions? The more specific you can be about your audience, the more targeted and valuable your content will be.
 
-**What problem does this solve?**
+What problem does this solve?
 Great ebooks address a specific need or desire. What will your reader be able to do, understand, or achieve after reading your ebook?
 
-**What makes your perspective unique?**
+What makes your perspective unique?
 You have experiences, insights, and expertise that no one else has. What special knowledge or angle can you bring to this topic?
 
 
-## How to Use This Template
+HOW TO USE THIS TEMPLATE
 
 Replace the placeholder content in each chapter with your own writing. Use the prompts and questions as guides to develop your ideas. Don't worry about perfection in your first draft - just focus on getting your thoughts down. You can always refine and polish later.
 
 The template includes four main chapters plus this introduction. You can add more chapters, combine sections, or restructure as needed. This is your ebook - make it work for you.
 
 
-## Writing Tips for Success
+WRITING TIPS FOR SUCCESS
 
-**Write conversationally.**
+Write conversationally
 Imagine you're explaining your topic to a friend over coffee. Use "you" and "I" to create a connection with your reader.
 
-**Show, don't just tell.**
+Show, don't just tell
 Include examples, stories, and specific details that bring your points to life. Real-world illustrations make abstract concepts tangible.
 
-**Break up your text.**
+Break up your text
 Use short paragraphs, bullet points, subheadings, and white space to make your content scannable and easy to digest.
 
-**Be authentic.**
+Be authentic
 Your readers will connect with your genuine voice. Don't try to sound like someone else or use jargon you wouldn't normally use.
 
 Ready to begin? Let's start crafting your ebook!`,
@@ -85,201 +85,225 @@ Ready to begin? Let's start crafting your ebook!`,
       },
       {
         title: 'Chapter 1: [Your Topic Foundation]',
-        content: `# Chapter 1: [Replace with Your Chapter Title]
+        content: `Chapter 1: [Replace with Your Chapter Title]
 
-*This chapter introduces your core concept and sets the foundation for everything that follows.*
+This chapter introduces your core concept and sets the foundation for everything that follows.
 
 
-## Purpose of This Chapter
+PURPOSE OF THIS CHAPTER
 
 Use this first chapter to establish the "why" behind your topic. Help your reader understand why this subject matters and what they'll gain from learning about it. Address any misconceptions or myths that might be holding them back.
 
 
-## Writing Prompts
+WRITING PROMPTS
 
-**What problem or challenge does your topic address?**
-[Describe the pain point, frustration, or desire that motivated you to write this ebook. Help readers see themselves in this description.]
+What problem or challenge does your topic address?
+Describe the pain point, frustration, or desire that motivated you to write this ebook. Help readers see themselves in this description.
 
-**Why is this topic important right now?**
-[Explain the relevance and urgency. Why should readers care about this today?]
+Why is this topic important right now?
+Explain the relevance and urgency. Why should readers care about this today?
 
-**What are common myths or misconceptions about this topic?**
-[Address any false beliefs that might prevent readers from taking action or understanding your message.]
+What are common myths or misconceptions about this topic?
+Address any false beliefs that might prevent readers from taking action or understanding your message.
 
-**What will readers learn in this ebook?**
-[Provide a roadmap of what's coming. Set clear expectations for the journey ahead.]
-
-
-## Tips for This Chapter
-
-- Start with a relatable story or scenario that illustrates the problem
-- Use statistics or research to establish credibility (if relevant to your topic)
-- Create curiosity about the solutions you'll reveal in later chapters
-- Keep it conversational and engaging - avoid overwhelming readers with too much information upfront
-- End with a clear transition to the next chapter
+What will readers learn in this ebook?
+Provide a roadmap of what's coming. Set clear expectations for the journey ahead.
 
 
-## Sample Structure
+TIPS FOR THIS CHAPTER
 
-1. **Opening Hook**: Start with a compelling story, question, or statement
-2. **The Problem**: Clearly define what challenge or need you're addressing
-3. **Why It Matters**: Explain the stakes and relevance
-4. **What's Possible**: Paint a picture of the transformation or outcome
-5. **What's Ahead**: Preview the journey through your ebook
+• Start with a relatable story or scenario that illustrates the problem
+• Use statistics or research to establish credibility (if relevant to your topic)
+• Create curiosity about the solutions you'll reveal in later chapters
+• Keep it conversational and engaging - avoid overwhelming readers with too much information upfront
+• End with a clear transition to the next chapter
+
+
+SAMPLE STRUCTURE
+
+1. Opening Hook - Start with a compelling story, question, or statement
+
+2. The Problem - Clearly define what challenge or need you're addressing
+
+3. Why It Matters - Explain the stakes and relevance
+
+4. What's Possible - Paint a picture of the transformation or outcome
+
+5. What's Ahead - Preview the journey through your ebook
+
 
 Remember: This chapter should excite readers about what they're going to learn while making them feel understood. You're building trust and establishing yourself as their guide.`,
         order: 1,
       },
       {
         title: 'Chapter 2: [Your Core Method/Process]',
-        content: `# Chapter 2: [Replace with Your Chapter Title]
+        content: `Chapter 2: [Replace with Your Chapter Title]
 
-*This chapter presents your main framework, system, or approach.*
+This chapter presents your main framework, system, or approach.
 
 
-## Purpose of This Chapter
+PURPOSE OF THIS CHAPTER
 
 This is where you introduce your signature method, step-by-step process, or key principles. Think of this as the "how" chapter - you're showing readers your unique approach to solving the problem you identified in Chapter 1.
 
 
-## Writing Prompts
+WRITING PROMPTS
 
-**What is your core method or framework?**
-[Describe your approach in clear, simple terms. If you have a multi-step process, outline each step.]
+What is your core method or framework?
+Describe your approach in clear, simple terms. If you have a multi-step process, outline each step.
 
-**Why does this method work?**
-[Explain the logic or science behind your approach. Help readers understand not just what to do, but why it works.]
+Why does this method work?
+Explain the logic or science behind your approach. Help readers understand not just what to do, but why it works.
 
-**What makes your approach different from others?**
-[Highlight what's unique about your method. What do you do differently that delivers better results?]
+What makes your approach different from others?
+Highlight what's unique about your method. What do you do differently that delivers better results?
 
-**What are the key principles or concepts readers need to understand?**
-[Break down any important terminology or foundational ideas necessary to follow your method.]
-
-
-## Tips for This Chapter
-
-- Use clear, numbered steps if you're teaching a process
-- Include diagrams, charts, or visual aids if helpful (you can add images in the editor)
-- Provide real examples of your method in action
-- Address common questions or concerns that might arise
-- Make it actionable - readers should feel like they can start implementing right away
+What are the key principles or concepts readers need to understand?
+Break down any important terminology or foundational ideas necessary to follow your method.
 
 
-## Sample Structure
+TIPS FOR THIS CHAPTER
 
-1. **Introduce Your Framework**: Give it a name and explain what it is
-2. **Break It Down**: Detail each component or step
-3. **Explain the Why**: Share the reasoning behind your approach
-4. **Show Real Examples**: Demonstrate how it works in practice
-5. **Common Mistakes**: Warn readers about pitfalls to avoid
-6. **Quick Wins**: Share something they can implement immediately
+• Use clear, numbered steps if you're teaching a process
+• Include diagrams, charts, or visual aids if helpful (you can add images in the editor)
+• Provide real examples of your method in action
+• Address common questions or concerns that might arise
+• Make it actionable - readers should feel like they can start implementing right away
+
+
+SAMPLE STRUCTURE
+
+1. Introduce Your Framework - Give it a name and explain what it is
+
+2. Break It Down - Detail each component or step
+
+3. Explain the Why - Share the reasoning behind your approach
+
+4. Show Real Examples - Demonstrate how it works in practice
+
+5. Common Mistakes - Warn readers about pitfalls to avoid
+
+6. Quick Wins - Share something they can implement immediately
+
 
 The goal is to make your method feel both powerful and achievable. Readers should finish this chapter feeling confident they can apply what you've taught.`,
         order: 2,
       },
       {
         title: 'Chapter 3: [Implementation & Examples]',
-        content: `# Chapter 3: [Replace with Your Chapter Title]
+        content: `Chapter 3: [Replace with Your Chapter Title]
 
-*This chapter provides detailed examples, case studies, and practical application of your concepts.*
+This chapter provides detailed examples, case studies, and practical application of your concepts.
 
 
-## Purpose of This Chapter
+PURPOSE OF THIS CHAPTER
 
 Now that readers understand your method, it's time to show them how to apply it in real situations. This chapter bridges the gap between theory and practice with concrete examples, case studies, and step-by-step walkthroughs.
 
 
-## Writing Prompts
+WRITING PROMPTS
 
-**What are 2-3 detailed examples of your method in action?**
-[Share specific scenarios, case studies, or real-world applications. Walk readers through the process from start to finish.]
+What are 2-3 detailed examples of your method in action?
+Share specific scenarios, case studies, or real-world applications. Walk readers through the process from start to finish.
 
-**What variations exist for different situations or contexts?**
-[Show how your approach adapts to different circumstances, skill levels, or goals.]
+What variations exist for different situations or contexts?
+Show how your approach adapts to different circumstances, skill levels, or goals.
 
-**What challenges might readers encounter, and how can they overcome them?**
-[Be honest about obstacles and provide practical solutions.]
+What challenges might readers encounter, and how can they overcome them?
+Be honest about obstacles and provide practical solutions.
 
-**What tools, resources, or materials will readers need?**
-[List any helpful tools, templates, or resources that make implementation easier.]
-
-
-## Tips for This Chapter
-
-- Use before-and-after examples to show transformation
-- Include step-by-step instructions for complex processes
-- Add checklists or worksheets readers can use
-- Share stories from your own experience or from others who've used your method
-- Provide troubleshooting advice for common problems
-- Make it scannable with clear subheadings and bullet points
+What tools, resources, or materials will readers need?
+List any helpful tools, templates, or resources that make implementation easier.
 
 
-## Sample Structure
+TIPS FOR THIS CHAPTER
 
-1. **Example #1**: Detailed walkthrough of your method in action
-2. **Example #2**: Show a different application or variation
-3. **Example #3**: Address a challenging scenario
-4. **Common Questions**: Answer FAQs about implementation
-5. **Troubleshooting Guide**: Help readers overcome obstacles
-6. **Resources & Tools**: Share helpful materials
-7. **Action Steps**: Give readers clear next steps
+• Use before-and-after examples to show transformation
+• Include step-by-step instructions for complex processes
+• Add checklists or worksheets readers can use
+• Share stories from your own experience or from others who've used your method
+• Provide troubleshooting advice for common problems
+• Make it scannable with clear subheadings and bullet points
+
+
+SAMPLE STRUCTURE
+
+1. Example #1 - Detailed walkthrough of your method in action
+
+2. Example #2 - Show a different application or variation
+
+3. Example #3 - Address a challenging scenario
+
+4. Common Questions - Answer FAQs about implementation
+
+5. Troubleshooting Guide - Help readers overcome obstacles
+
+6. Resources & Tools - Share helpful materials
+
+7. Action Steps - Give readers clear next steps
+
 
 This chapter should leave readers feeling equipped and confident. They should have everything they need to take action immediately after finishing your ebook.`,
         order: 3,
       },
       {
         title: 'Chapter 4: [Next Steps & Conclusion]',
-        content: `# Chapter 4: [Replace with Your Chapter Title]
+        content: `Chapter 4: [Replace with Your Chapter Title]
 
-*This chapter wraps up your ebook, reinforces key lessons, and guides readers toward their next steps.*
+This chapter wraps up your ebook, reinforces key lessons, and guides readers toward their next steps.
 
 
-## Purpose of This Chapter
+PURPOSE OF THIS CHAPTER
 
 Your conclusion is just as important as your introduction. This is where you tie everything together, reinforce your main message, and inspire readers to take action. It's also your opportunity to deepen your connection with readers and invite them to continue their journey with you.
 
 
-## Writing Prompts
+WRITING PROMPTS
 
-**What are the 3-5 most important takeaways from your ebook?**
-[Summarize your key points in a memorable way. What do you want readers to remember most?]
+What are the 3-5 most important takeaways from your ebook?
+Summarize your key points in a memorable way. What do you want readers to remember most?
 
-**What should readers do first after finishing this ebook?**
-[Give them a clear, specific action step they can take immediately.]
+What should readers do first after finishing this ebook?
+Give them a clear, specific action step they can take immediately.
 
-**What's possible if readers implement what they've learned?**
-[Paint an inspiring picture of the transformation or results they can achieve.]
+What's possible if readers implement what they've learned?
+Paint an inspiring picture of the transformation or results they can achieve.
 
-**How can readers get more help or continue learning?**
-[Share ways to stay connected - your website, social media, newsletter, coaching, etc.]
+How can readers get more help or continue learning?
+Share ways to stay connected - your website, social media, newsletter, coaching, etc.
 
-**What final encouragement or motivation do you want to leave them with?**
-[End with an inspiring message that energizes readers to take action.]
-
-
-## Tips for This Chapter
-
-- Recap your main points without being repetitive
-- Share a final story or example that illustrates the power of your message
-- Include a clear call-to-action (visit your website, join your community, etc.)
-- Express gratitude for their time and trust
-- Make it personal and authentic
-- End on an uplifting, empowering note
+What final encouragement or motivation do you want to leave them with?
+End with an inspiring message that energizes readers to take action.
 
 
-## Sample Structure
+TIPS FOR THIS CHAPTER
 
-1. **Journey Recap**: Briefly review what you've covered
-2. **Key Takeaways**: List your most important points
-3. **Your Next Step**: Give one clear action to take now
-4. **The Big Picture**: Remind readers what's possible
-5. **Stay Connected**: Share how to continue learning with you
-6. **Final Encouragement**: Leave readers inspired and motivated
-7. **Thank You**: Express genuine appreciation
+• Recap your main points without being repetitive
+• Share a final story or example that illustrates the power of your message
+• Include a clear call-to-action (visit your website, join your community, etc.)
+• Express gratitude for their time and trust
+• Make it personal and authentic
+• End on an uplifting, empowering note
 
 
-## Final Thoughts
+SAMPLE STRUCTURE
+
+1. Journey Recap - Briefly review what you've covered
+
+2. Key Takeaways - List your most important points
+
+3. Your Next Step - Give one clear action to take now
+
+4. The Big Picture - Remind readers what's possible
+
+5. Stay Connected - Share how to continue learning with you
+
+6. Final Encouragement - Leave readers inspired and motivated
+
+7. Thank You - Express genuine appreciation
+
+
+FINAL THOUGHTS
 
 Remember, your conclusion is often what readers remember most. Make it count. Leave them feeling empowered, motivated, and clear on their next steps.
 
