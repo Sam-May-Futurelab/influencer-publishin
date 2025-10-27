@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash, Image as ImageIcon, DotsThree } from '@phosphor-icons/react';
+import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash, Image as ImageIcon, DotsThree, ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, CoverDesign } from '@/lib/types';
 import { ExportDialog } from '@/components/ExportDialog';
 import { PreviewDialog } from '@/components/PreviewDialog';
@@ -27,9 +27,11 @@ interface ProjectHeaderProps {
   onBrandCustomize: () => void;
   onUpgradeClick?: () => void;
   onDeleteProject?: () => void;
+  onBack?: () => void;
+  backLabel?: string;
 }
 
-export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUpgradeClick, onDeleteProject }: ProjectHeaderProps) {
+export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUpgradeClick, onDeleteProject, onBack, backLabel }: ProjectHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
@@ -83,9 +85,23 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
         {/* Top Row: Project Info */}
         <div className="flex items-start justify-between gap-4">
           <motion.div 
-            className="flex items-center gap-3 lg:gap-4 flex-1 min-w-0"
+            className="flex items-center gap-2 lg:gap-3 flex-1 min-w-0"
             whileHover={{ scale: 1.02 }}
           >
+            {/* Back Button - integrated into header */}
+            {onBack && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onBack}
+                className="neomorph-flat border-0 p-2 lg:p-2.5 flex-shrink-0 hover:neomorph-raised transition-all"
+                title={backLabel || 'Back'}
+              >
+                <ArrowLeft size={18} className="lg:hidden" />
+                <ArrowLeft size={20} className="hidden lg:block" />
+              </Button>
+            )}
+            
             <div className="p-2 lg:p-3 rounded-xl neomorph-flat flex-shrink-0">
               <FileText size={20} className="lg:hidden text-primary" />
               <FileText size={28} className="hidden lg:block text-primary" />

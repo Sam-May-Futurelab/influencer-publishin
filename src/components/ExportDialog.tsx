@@ -158,7 +158,7 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] neomorph-raised border-0 p-6 flex flex-col">
+      <DialogContent className="max-w-5xl max-h-[90vh] border-0 shadow-lg p-6 flex flex-col">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-2xl font-bold flex items-center gap-3">
             <div className="p-2 rounded-xl neomorph-flat">

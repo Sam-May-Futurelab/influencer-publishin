@@ -902,38 +902,27 @@ function App() {
                 <Route path="editor" element={
                   currentProject ? (
                     <>
-                      <div className="flex items-center gap-3 px-3 lg:px-6 pt-3 lg:pt-6">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            // Go back to where we came from (dashboard, projects, or templates)
-                            if (currentSection === 'projects') {
-                              goToProjectsPage();
-                            } else if (currentSection === 'templates') {
-                              goToTemplatesPage();
-                            } else {
-                              returnToDashboard();
-                            }
-                          }}
-                          className="neomorph-button border-0 gap-2"
-                        >
-                          <ArrowLeft size={16} />
-                          <span className="hidden lg:inline">
-                            {currentSection === 'projects' ? 'Back to Projects' : 
-                             currentSection === 'templates' ? 'Back to Templates' : 
-                             'Back to Dashboard'}
-                          </span>
-                          <span className="lg:hidden">Back</span>
-                        </Button>
-                      </div>
-                      
                       <ProjectHeader
                         project={currentProject}
                         onProjectUpdate={updateProject}
                         onBrandCustomize={() => setShowBrandCustomizer(true)}
                         onUpgradeClick={() => setCurrentSection('profile')}
                         onDeleteProject={handleDeleteCurrentProject}
+                        onBack={() => {
+                          // Go back to where we came from (dashboard, projects, or templates)
+                          if (currentSection === 'projects') {
+                            goToProjectsPage();
+                          } else if (currentSection === 'templates') {
+                            goToTemplatesPage();
+                          } else {
+                            returnToDashboard();
+                          }
+                        }}
+                        backLabel={
+                          currentSection === 'projects' ? 'Back to Projects' : 
+                          currentSection === 'templates' ? 'Back to Templates' : 
+                          'Back to Dashboard'
+                        }
                       />
                       
                       <main className="p-3 lg:p-6 pb-6 lg:pb-8 space-y-6">
