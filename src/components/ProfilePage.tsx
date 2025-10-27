@@ -192,6 +192,9 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
           toast.error('Password required to delete account');
           return;
         }
+      } else {
+        // Warn Google users about the popup
+        toast.info('You will need to confirm with Google to complete deletion', { duration: 3000 });
       }
 
       // Delete Firestore data via backend
@@ -205,7 +208,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         throw new Error('Failed to delete user data');
       }
 
-      toast.success('Data deleted. Removing account...');
+      toast.success('Data deleted. Confirming with Google...');
 
       // Re-authenticate & delete Firebase Auth account
       // For Google users, this will show a popup to re-confirm with Google

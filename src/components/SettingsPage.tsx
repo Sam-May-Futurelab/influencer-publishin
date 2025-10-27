@@ -523,6 +523,10 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                           toast.error('Password required');
                           return;
                         }
+                      } else {
+                        // Warn Google users about the popup
+                        toast.info('You will need to confirm with Google to complete deletion', { duration: 3000 });
+                        await new Promise(resolve => setTimeout(resolve, 1500)); // Let them read the message
                       }
 
                       // Delete Firestore data via backend
@@ -539,7 +543,7 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                         throw new Error('Failed to delete user data');
                       }
                       
-                      toast.success('Data deleted. Removing account...');
+                      toast.success('Data deleted. Confirming with Google...');
                       
                       // Delete Firebase Auth account (Google users will see popup)
                       if (user) {
