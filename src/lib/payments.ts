@@ -54,10 +54,11 @@ export class PaymentService {
   }
 
   // Initialize StoreKit connection
+  // NOTE: Not implemented - requires React Native StoreKit integration
   async initialize(): Promise<boolean> {
     try {
-      // TODO: Initialize React Native StoreKit
-      // await RNIap.initConnection();
+      // For future iOS app: await RNIap.initConnection();
+      console.warn('iOS StoreKit not available - web app uses Stripe');
       return true;
     } catch (error) {
       console.error('Failed to initialize payment service:', error);
@@ -66,10 +67,11 @@ export class PaymentService {
   }
 
   // Get available subscription products
+  // NOTE: Returns mock data - requires App Store Connect integration
   async getProducts(): Promise<SubscriptionProduct[]> {
     try {
-      // TODO: Get products from App Store
-      // const products = await RNIap.getSubscriptions(productIds);
+      // For future iOS app: const products = await RNIap.getSubscriptions(productIds);
+      console.warn('Using mock products - iOS StoreKit not implemented');
       return this.products;
     } catch (error) {
       console.error('Failed to get products:', error);
@@ -78,14 +80,12 @@ export class PaymentService {
   }
 
   // Purchase a subscription
+  // NOTE: INTENTIONALLY DISABLED - web app uses Stripe, not StoreKit
   async purchaseSubscription(productId: string): Promise<PurchaseResult> {
     try {
-      // TODO: Implement actual StoreKit purchase
-      // const purchase = await RNIap.requestSubscription(productId);
+      // For future iOS app: const purchase = await RNIap.requestSubscription(productId);
       
-      // DISABLED: Mock implementation that auto-succeeds
-      // This was causing users to get premium without payment!
-      // Web users should use Stripe integration instead
+      // Web users must use Stripe integration (see src/hooks/use-payments.ts)
       console.warn('iOS In-App Purchase not implemented. Use Stripe for web payments.');
       return {
         success: false,
@@ -113,10 +113,11 @@ export class PaymentService {
   }
 
   // Restore purchases
+  // NOTE: Not implemented - requires App Store integration
   async restorePurchases(): Promise<PurchaseResult[]> {
     try {
-      // TODO: Restore from App Store
-      // const purchases = await RNIap.getAvailablePurchases();
+      // For future iOS app: const purchases = await RNIap.getAvailablePurchases();
+      console.warn('iOS restore not available - web app syncs with Stripe/Firebase');
       return [];
     } catch (error) {
       console.error('Failed to restore purchases:', error);
@@ -130,10 +131,11 @@ export class PaymentService {
   }
 
   // Clean up
+  // NOTE: Not implemented - no StoreKit connection to close
   async dispose(): Promise<void> {
     try {
-      // TODO: End StoreKit connection
-      // await RNIap.endConnection();
+      // For future iOS app: await RNIap.endConnection();
+      console.warn('No StoreKit connection to dispose - web app only');
     } catch (error) {
       console.error('Failed to dispose payment service:', error);
     }

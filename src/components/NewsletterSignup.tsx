@@ -33,8 +33,8 @@ export function NewsletterSignup({ variant = 'default', showLeadMagnet = true }:
           throw new Error('reCAPTCHA verification failed');
         }
       }
-      // Use dedicated newsletter signup endpoint
-      // TODO: Replace with proper email service provider (Mailchimp, ConvertKit, Beehiiv, etc.)
+      
+      // Newsletter signup via Resend API (configured and working)
       const response = await fetch('/api/newsletter-signup', {
         method: 'POST',
         headers: {
