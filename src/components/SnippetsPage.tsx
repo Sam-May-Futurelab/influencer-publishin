@@ -397,15 +397,15 @@ export function SnippetsPage() {
                       )}
 
                       {/* Actions - Always Visible */}
-                      <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+                      <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/50">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => setPreviewSnippet(snippet)}
-                          className="h-8 gap-2 text-xs flex-1 neomorph-button border-0"
+                          className="h-8 gap-2 text-xs flex-1 min-w-[80px] neomorph-button border-0"
                         >
                           <Eye size={14} weight="bold" />
-                          Preview
+                          <span className="hidden sm:inline">Preview</span>
                         </Button>
                         <Button
                           size="sm"
@@ -415,7 +415,7 @@ export function SnippetsPage() {
                           title="Copy text to clipboard"
                         >
                           <Copy size={14} weight="bold" />
-                          Copy Text
+                          <span className="hidden sm:inline">Copy</span>
                         </Button>
                         <Button
                           size="sm"
@@ -425,13 +425,13 @@ export function SnippetsPage() {
                           title="Create a duplicate of this snippet"
                         >
                           <CopySimple size={14} weight="bold" />
-                          Duplicate
+                          <span className="hidden md:inline">Duplicate</span>
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => setSnippetToDelete(snippet)}
-                          className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          className="h-8 px-2 flex-shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                           title="Delete snippet"
                         >
                           <Trash size={14} weight="bold" />
