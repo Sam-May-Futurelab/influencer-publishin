@@ -9,6 +9,7 @@ import { ebookTemplates, createProjectFromTemplate, EbookTemplate } from '@/lib/
 import { EbookProject } from '@/lib/types';
 import { PreviewDialog } from '@/components/PreviewDialog';
 import { useAuth } from '@/hooks/use-auth';
+import { cn } from '@/lib/utils';
 
 interface TemplateGalleryProps {
   onSelectTemplate: (project: EbookProject) => void;
@@ -102,7 +103,12 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
             variant={selectedCategory === 'all' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setSelectedCategory('all')}
-            className="whitespace-nowrap"
+            className={cn(
+              "whitespace-nowrap transition-all",
+              selectedCategory === 'all'
+                ? "bg-primary text-primary-foreground"
+                : "hover:bg-accent/50 hover:text-foreground"
+            )}
           >
             All
           </Button>
@@ -110,7 +116,12 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
             variant={selectedCategory === 'free' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setSelectedCategory('free')}
-            className="whitespace-nowrap"
+            className={cn(
+              "whitespace-nowrap transition-all",
+              selectedCategory === 'free'
+                ? "bg-primary text-primary-foreground"
+                : "hover:bg-accent/50 hover:text-foreground"
+            )}
           >
             Free
           </Button>
@@ -120,7 +131,12 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
               variant={selectedCategory === category ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedCategory(category)}
-              className="whitespace-nowrap capitalize"
+              className={cn(
+                "whitespace-nowrap capitalize transition-all",
+                selectedCategory === category
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-accent/50 hover:text-foreground"
+              )}
             >
               {category}
             </Button>
@@ -129,7 +145,12 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
             variant={selectedCategory === 'other' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setSelectedCategory('other')}
-            className="whitespace-nowrap"
+            className={cn(
+              "whitespace-nowrap transition-all",
+              selectedCategory === 'other'
+                ? "bg-primary text-primary-foreground"
+                : "hover:bg-accent/50 hover:text-foreground"
+            )}
           >
             Other
           </Button>
