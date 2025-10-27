@@ -122,7 +122,7 @@ export default async function handler(req, res) {
               </p>
               
               <div style="text-align: center; margin: 30px 0;">
-                <a href="https://www.inkfluenceai.com/templates/Ultimate-Ebook-Writing-Template.pdf" 
+                <a href="https://www.inkfluenceai.com/api/download-lead-magnet" 
                    style="display: inline-block; background: linear-gradient(135deg, #9b87b8 0%, #b89ed6 100%); color: white; padding: 18px 45px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 18px; box-shadow: 0 4px 12px rgba(155, 135, 184, 0.3);">
                   📥 Download Your Template (PDF)
                 </a>
