@@ -197,7 +197,10 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
     <html>
     <head>
       <meta charset="UTF-8">
-      <title>${project.title}</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${escapeHtml(project.title)} - Inkfluence AI</title>
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png">
       <style>
         ${fontUrl ? `@import url('${fontUrl}');` : ''}
         
@@ -207,19 +210,28 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           box-sizing: border-box;
         }
         
+        @page {
+          size: letter;
+          margin: 0;
+        }
+        
+        @page :first {
+          margin: 0;
+        }
+        
         body {
           font-family: ${fontFamily};
           line-height: 1.6;
           color: #2c2c2c;
           background: white;
           font-size: 14px;
+          margin: 0;
+          padding: 0;
         }
         
         .container {
           max-width: 8.5in;
           margin: 0 auto;
-          padding: 1.25in;
-          min-height: 11in;
         }
         
         .title-page {
@@ -227,13 +239,12 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          min-height: 9in;
+          width: 8.5in;
+          height: 11in;
           text-align: center;
           ${getCoverStyle()}
           color: white;
-          border-radius: 20px;
-          margin: -1in;
-          margin-bottom: 0;
+          margin: 0;
           padding: 2in;
           page-break-after: always;
           position: relative;
@@ -324,7 +335,8 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
         }
         
         .content-page {
-          margin-top: 1in;
+          margin-top: 0;
+          padding: 1.25in;
         }
         
         .chapter {
@@ -510,24 +522,23 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           body {
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact;
+            margin: 0;
+            padding: 0;
           }
           
-          /* Page setup with headers and footers */
+          /* Page setup - remove default headers/footers */
           @page {
-            margin: 1in 0.75in;
-            
-            @top-left {
-              content: "${escapeHtml(project.title)}";
-              font-size: 9pt;
-              color: #6b7280;
-              font-style: italic;
-            }
-            
-            @top-right {
-              content: "Chapter " counter(page);
-              font-size: 9pt;
-              color: #6b7280;
-            }
+            size: letter;
+            margin: 0;
+          }
+          
+          @page :first {
+            margin: 0;
+          }
+          
+          /* Custom page numbers and headers for content pages */
+          @page content {
+            margin: 0.75in;
             
             @bottom-center {
               content: counter(page);
@@ -537,27 +548,28 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
             }
           }
           
-          /* No headers/footers on title page and TOC */
-          @page :first {
-            @top-left { content: none; }
-            @top-right { content: none; }
-            @bottom-center { content: none; }
-          }
-          
           .container {
             margin: 0;
             padding: 0;
+            max-width: none;
           }
           
           .title-page {
             margin: 0;
-            margin-bottom: 0;
             padding: 2in;
+            width: 100%;
+            height: 100vh;
           }
           
           .content-page {
             margin-top: 0;
-            padding: 0.5in 0.75in;
+            padding: 0.75in;
+            page: content;
+          }
+          
+          .copyright-page {
+            page-break-after: always;
+            margin: 0;
           }
           
           .table-of-contents {
