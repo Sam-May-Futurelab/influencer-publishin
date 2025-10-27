@@ -124,14 +124,36 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
     });
 
     if (emptyChapters.length > 0) {
-      const proceed = window.confirm(
-        `Warning: ${emptyChapters.length} chapter${emptyChapters.length > 1 ? 's have' : ' has'} less than 50 words and may appear blank or incomplete in your export.\n\n` +
-        `Empty chapters: ${emptyChapters.map(c => c.title).join(', ')}\n\n` +
-        `Do you want to continue anyway?`
+      // Show warning toast and wait for user decision
+      const chapterList = emptyChapters.map(c => c.title).join(', ');
+      toast.warning(
+        `${emptyChapters.length} chapter${emptyChapters.length > 1 ? 's have' : ' has'} less than 50 words and may appear blank or incomplete`,
+        {
+          description: `Empty chapters: ${chapterList}`,
+          duration: 8000,
+          action: {
+            label: 'Export Anyway',
+            onClick: () => {
+              // User clicked to proceed - trigger export
+              performExport(format);
+            }
+          },
+          cancel: {
+            label: 'Cancel',
+            onClick: () => {
+              toast.info('Export cancelled');
+            }
+          }
+        }
       );
-      if (!proceed) return;
+      return; // Don't continue automatically
     }
 
+    // If no empty chapters, export directly
+    performExport(format);
+  };
+
+  const performExport = async (format: ExportFormat) => {
     try {
       setExportingFormat(format);
       toast.loading(`Generating ${format.toUpperCase()}...`, { id: 'export' });
