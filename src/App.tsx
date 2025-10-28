@@ -709,7 +709,7 @@ function App() {
         goToProfilePage();
         break;
       case 'help':
-        navigate('/help');
+        navigate('/app/help');
         break;
     }
   };
@@ -905,6 +905,13 @@ function App() {
                   <main className="p-0">
                     <Suspense fallback={<PageLoading />}>
                       <ProfilePage onNavigate={handleNavigation} />
+                    </Suspense>
+                  </main>
+                } />
+                <Route path="help" element={
+                  <main className="p-0">
+                    <Suspense fallback={<PageLoading />}>
+                      <HelpCenter />
                     </Suspense>
                   </main>
                 } />
