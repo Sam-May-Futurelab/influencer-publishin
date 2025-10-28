@@ -509,6 +509,13 @@ body:has(.dashboard-dark) [data-slot="dialog-content"] {
   background-color: oklch(0.27 0.005 250);
   border-color: oklch(0.35 0.010 250);
   box-shadow: none;
+  color: oklch(0.95 0.005 250);
+}
+
+/* Force all text in dialogs to inherit the white color */
+body:has(.dashboard-dark) [data-radix-dialog-content] *:not(.preview-dialog *),
+body:has(.dashboard-dark) [data-slot="dialog-content"] *:not(.preview-dialog *) {
+  color: inherit;
 }
 
 /* TipTap editor text in dark mode */
