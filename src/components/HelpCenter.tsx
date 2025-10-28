@@ -467,15 +467,17 @@ export function HelpCenter() {
 
   return (
     <div className="min-h-screen bg-background">
-      <LandingHeader 
-        onSignIn={() => navigate('/?signin=true')}
-        onGetStarted={() => navigate(user ? '/app/dashboard' : '/?signin=true')}
-        showNavLinks={true}
-        isAuthenticated={!!user}
-        onNavigateToFeatures={() => navigate('/features')}
-        onNavigateToPricing={() => navigate('/pricing')}
-        onNavigateToBlog={() => navigate('/blog')}
-      />
+      {!user && (
+        <LandingHeader 
+          onSignIn={() => navigate('/?signin=true')}
+          onGetStarted={() => navigate(user ? '/app/dashboard' : '/?signin=true')}
+          showNavLinks={true}
+          isAuthenticated={!!user}
+          onNavigateToFeatures={() => navigate('/features')}
+          onNavigateToPricing={() => navigate('/pricing')}
+          onNavigateToBlog={() => navigate('/blog')}
+        />
+      )}
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/5 to-primary/10">
