@@ -326,7 +326,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
               <div className="flex items-center gap-6">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-foreground">
                       {user?.displayName || user?.email?.split('@')[0] || 'User'}
                     </h3>
                     {userProfile?.isPremium && (
@@ -336,8 +336,8 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                       </Badge>
                     )}
                   </div>
-                  <p className="text-gray-600 text-sm">{user?.email}</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-muted-foreground text-sm">{user?.email}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
                     Member since {user?.metadata?.creationTime ? 
                       new Date(user.metadata.creationTime).toLocaleDateString() : 
                       'Recently'
@@ -396,7 +396,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                     className="neomorph-inset border-0"
                   />
                 ) : (
-                  <div className="p-3 bg-gray-50 rounded-lg neomorph-inset">
+                  <div className="p-3 bg-muted rounded-lg neomorph-inset">
                     {user?.displayName || 'No display name set'}
                   </div>
                 )}

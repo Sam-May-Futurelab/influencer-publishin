@@ -497,9 +497,19 @@
 
 /* Dropdown menus in dark mode */
 .dashboard-dark [data-radix-popper-content-wrapper] [role="menu"],
-.dashboard-dark [role="menu"] {
+.dashboard-dark [role="menu"],
+.dashboard-dark [data-slot="dropdown-menu-content"] {
   background-color: oklch(0.27 0.005 250) !important;
   border-color: oklch(0.35 0.010 250) !important;
+  color: oklch(0.95 0.005 250) !important;
+}
+
+/* Popover content in dark mode */
+.dashboard-dark [data-radix-popover-content],
+.dashboard-dark [data-slot="popover-content"] {
+  background-color: oklch(0.27 0.005 250) !important;
+  border-color: oklch(0.35 0.010 250) !important;
+  color: oklch(0.95 0.005 250) !important;
 }
 
 /*
