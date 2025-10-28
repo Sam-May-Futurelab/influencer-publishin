@@ -535,6 +535,27 @@ body:has(.dashboard-dark) [data-slot="dialog-content"] {
   --color-card-foreground: var(--card-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  
+  /* Set default text color for dialog content */
+  color: var(--foreground);
+}
+
+/* Ensure headings and labels in dialogs inherit proper color */
+body:has(.dashboard-dark) [data-radix-dialog-content] h1,
+body:has(.dashboard-dark) [data-radix-dialog-content] h2,
+body:has(.dashboard-dark) [data-radix-dialog-content] h3,
+body:has(.dashboard-dark) [data-radix-dialog-content] h4,
+body:has(.dashboard-dark) [data-radix-dialog-content] h5,
+body:has(.dashboard-dark) [data-radix-dialog-content] h6,
+body:has(.dashboard-dark) [data-radix-dialog-content] label,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h1,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h2,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h3,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h4,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h5,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h6,
+body:has(.dashboard-dark) [data-slot="dialog-content"] label {
+  color: var(--foreground);
 }
 
 /* TipTap editor text in dark mode */
