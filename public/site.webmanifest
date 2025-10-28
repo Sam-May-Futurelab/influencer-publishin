@@ -1,6 +1,7 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "InkFluence AI - AI-Powered Ebook Creator",
+  "short_name": "InkFluence AI",
+  "description": "Transform your expertise into professional ebooks with AI writing assistance, custom branding, and beautiful PDF/EPUB export",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +16,11 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#9b87b8",
+  "background_color": "#0a0a0b",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "business", "writing"]
 }

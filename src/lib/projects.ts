@@ -42,10 +42,8 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
       
       // If it's a user-uploaded image (large), compress it
       if (size > 100) {
-        console.log(`Compressing uploaded cover image (${size.toFixed(0)}KB)...`);
         const compressed = await compressToLimit(project.coverDesign.coverImageData, 400);
         uploadedCoverData = compressed.dataUrl;
-        console.log(`Compressed to ${compressed.size.toFixed(0)}KB at ${(compressed.quality * 100).toFixed(0)}% quality`);
       } else {
         // Small image (probably generated), keep as-is
         uploadedCoverData = project.coverDesign.coverImageData;

@@ -4,6 +4,7 @@
 const ALLOWED_ORIGINS = [
   'https://inkfluenceai.com',
   'https://www.inkfluenceai.com',
+  'https://inkfluence-ai-one.vercel.app', // Vercel production
   'http://localhost:5173', // Local development
   'http://localhost:4173'  // Local preview
 ];
