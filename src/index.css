@@ -522,6 +522,30 @@ body:has(.dashboard-dark) [data-slot="popover-content"] {
   color: oklch(0.95 0.005 250) !important;
 }
 
+/* Force text color inside portaled elements */
+body:has(.dashboard-dark) [data-radix-dropdown-menu-content] *,
+body:has(.dashboard-dark) [data-radix-popover-content] *,
+body:has(.dashboard-dark) [data-radix-dialog-content] *,
+body:has(.dashboard-dark) [data-slot="dropdown-menu-content"] *,
+body:has(.dashboard-dark) [data-slot="popover-content"] *,
+body:has(.dashboard-dark) [data-slot="dialog-content"] * {
+  color: inherit !important;
+}
+
+/* Specific fix for dialog titles and text */
+body:has(.dashboard-dark) [data-radix-dialog-content] h1,
+body:has(.dashboard-dark) [data-radix-dialog-content] h2,
+body:has(.dashboard-dark) [data-radix-dialog-content] h3,
+body:has(.dashboard-dark) [data-radix-dialog-content] p,
+body:has(.dashboard-dark) [data-radix-dialog-content] span,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h1,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h2,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h3,
+body:has(.dashboard-dark) [data-slot="dialog-content"] p,
+body:has(.dashboard-dark) [data-slot="dialog-content"] span {
+  color: oklch(0.95 0.005 250) !important;
+}
+
 /*
  * Map the CSS variables to Tailwind's theme system
 ```
