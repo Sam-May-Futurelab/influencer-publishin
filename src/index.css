@@ -339,33 +339,39 @@
 /*
  * Dark mode theme - SCOPED to dashboard with .dashboard-dark class
  * Landing pages and marketing pages remain unaffected
+ * Using proper dark neumorphic design principles
  */
 .dashboard-dark {
-  --background: oklch(0.14 0.005 220);
-  --foreground: oklch(0.95 0.008 220);
+  /* Dark neumorphic base - soft dark gray, not pure black */
+  --background: oklch(0.25 0.005 250);
+  --foreground: oklch(0.85 0.008 250);
 
-  --card: oklch(0.16 0.006 220);
-  --card-foreground: oklch(0.95 0.008 220);
-  --popover: oklch(0.16 0.006 220);
-  --popover-foreground: oklch(0.95 0.008 220);
+  /* Cards slightly lighter than background for subtle elevation */
+  --card: oklch(0.27 0.005 250);
+  --card-foreground: oklch(0.85 0.008 250);
+  --popover: oklch(0.27 0.005 250);
+  --popover-foreground: oklch(0.85 0.008 250);
 
-  --primary: oklch(0.65 0.20 280);
-  --primary-foreground: oklch(0.14 0.005 280);
-  --secondary: oklch(0.18 0.006 220);
-  --secondary-foreground: oklch(0.90 0.008 220);
-  --accent: oklch(0.70 0.18 340);
-  --accent-foreground: oklch(0.14 0.005 340);
-  --destructive: oklch(0.65 0.15 20);
-  --destructive-foreground: oklch(0.95 0.005 20);
+  /* Primary color - brighter and more saturated for visibility */
+  --primary: oklch(0.70 0.24 280);
+  --primary-foreground: oklch(0.98 0.005 280);
+  --secondary: oklch(0.30 0.008 250);
+  --secondary-foreground: oklch(0.90 0.008 250);
+  --accent: oklch(0.75 0.20 340);
+  --accent-foreground: oklch(0.98 0.005 340);
+  --destructive: oklch(0.70 0.18 20);
+  --destructive-foreground: oklch(0.98 0.005 20);
 
-  --muted: oklch(0.18 0.006 220);
-  --muted-foreground: oklch(0.60 0.008 220);
-  --border: oklch(0.22 0.008 220);
-  --input: oklch(0.18 0.006 220);
-  --ring: oklch(0.65 0.20 280);
+  /* Muted elements - slightly lighter for better text visibility */
+  --muted: oklch(0.30 0.008 250);
+  --muted-foreground: oklch(0.65 0.010 250);
+  --border: oklch(0.35 0.010 250);
+  --input: oklch(0.28 0.008 250);
+  --ring: oklch(0.70 0.24 280);
 
-  --shadow-light: oklch(0.20 0.006 220);
-  --shadow-dark: oklch(0.08 0.010 220);
+  /* Neumorphic shadows - subtle, close to base colors */
+  --shadow-light: oklch(0.32 0.008 250);
+  --shadow-dark: oklch(0.18 0.012 250);
 
   /* Also update the theme colors that Tailwind uses */
   --color-background: var(--background);
