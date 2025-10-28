@@ -165,7 +165,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                   <DotsThree size={18} className="sm:hidden" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 neomorph-raised border-0">
+              <DropdownMenuContent align="end" className="w-48 bg-card border border-border shadow-lg">
                 <DropdownMenuItem onClick={onBrandCustomize} className="cursor-pointer gap-2 p-3">
                   <Palette size={18} />
                   <span>Brand Style</span>
