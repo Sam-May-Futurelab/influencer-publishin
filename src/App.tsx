@@ -4,6 +4,7 @@ import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
+import { cn } from '@/lib/utils';
 import { incrementPageUsage, syncPageUsage, updateUserProfile } from '@/lib/auth';
 import { getUserProjects, saveProject, deleteProject as deleteProjectFromFirestore } from '@/lib/projects';
 import { ProjectHeader } from '@/components/ProjectHeader';
@@ -723,7 +724,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background font-['Inter']">
+    <div className="min-h-screen font-['Inter']">
       <ScrollToTop />
       <Routes>
         {/* Public Routes */}
@@ -823,7 +824,10 @@ function App() {
         {/* Protected Routes - Dark mode scoped to dashboard only */}
         <Route path="/app/*" element={
           user ? (
-            <div className={actualTheme === 'dark' ? 'dashboard-dark' : ''}>
+            <div className={cn(
+              'min-h-screen bg-background',
+              actualTheme === 'dark' ? 'dashboard-dark' : ''
+            )}>
               <Header
                 logoText="Inkfluence AI"
                 onNavigate={handleNavigation}
