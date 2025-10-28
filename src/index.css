@@ -431,17 +431,25 @@
 }
 
 /* Input fields in dark mode */
-.dashboard-dark input,
+.dashboard-dark input:not([type="checkbox"]):not([type="radio"]),
 .dashboard-dark textarea,
 .dashboard-dark select {
-  background-color: oklch(0.28 0.008 250) !important;
-  color: oklch(0.95 0.005 250) !important;
-  border-color: oklch(0.35 0.010 250) !important;
+  background-color: oklch(0.28 0.008 250);
+  color: oklch(0.95 0.005 250);
+  border-color: oklch(0.35 0.010 250);
 }
 
 .dashboard-dark input::placeholder,
 .dashboard-dark textarea::placeholder {
-  color: oklch(0.65 0.008 250) !important;
+  color: oklch(0.65 0.008 250);
+}
+
+/* Remove focus glow on inputs/textareas in dark mode */
+.dashboard-dark input:focus,
+.dashboard-dark textarea:focus,
+.dashboard-dark select:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 /* Badges and tags - dark background with light text */
@@ -522,28 +530,11 @@ body:has(.dashboard-dark) [data-slot="popover-content"] {
   color: oklch(0.95 0.005 250) !important;
 }
 
-/* Force text color inside portaled elements */
-body:has(.dashboard-dark) [data-radix-dropdown-menu-content] *,
-body:has(.dashboard-dark) [data-radix-popover-content] *,
-body:has(.dashboard-dark) [data-radix-dialog-content] *,
-body:has(.dashboard-dark) [data-slot="dropdown-menu-content"] *,
-body:has(.dashboard-dark) [data-slot="popover-content"] *,
-body:has(.dashboard-dark) [data-slot="dialog-content"] * {
-  color: inherit !important;
-}
-
-/* Specific fix for dialog titles and text */
-body:has(.dashboard-dark) [data-radix-dialog-content] h1,
-body:has(.dashboard-dark) [data-radix-dialog-content] h2,
-body:has(.dashboard-dark) [data-radix-dialog-content] h3,
-body:has(.dashboard-dark) [data-radix-dialog-content] p,
-body:has(.dashboard-dark) [data-radix-dialog-content] span,
-body:has(.dashboard-dark) [data-slot="dialog-content"] h1,
-body:has(.dashboard-dark) [data-slot="dialog-content"] h2,
-body:has(.dashboard-dark) [data-slot="dialog-content"] h3,
-body:has(.dashboard-dark) [data-slot="dialog-content"] p,
-body:has(.dashboard-dark) [data-slot="dialog-content"] span {
-  color: oklch(0.95 0.005 250) !important;
+/* Dialogs should keep their normal light/dark styling - don't force colors */
+body:has(.dashboard-dark) [data-radix-dialog-content],
+body:has(.dashboard-dark) [data-slot="dialog-content"] {
+  background-color: oklch(0.27 0.005 250) !important;
+  border-color: oklch(0.35 0.010 250) !important;
 }
 
 /*

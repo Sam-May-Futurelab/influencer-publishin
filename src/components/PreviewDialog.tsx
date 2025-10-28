@@ -97,17 +97,17 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl w-full h-[90vh] border border-border/50 p-0 gap-0 [&>button]:hidden bg-background shadow-xl">
+      <DialogContent className="max-w-6xl w-full h-[90vh] border border-border/50 p-0 gap-0 [&>button]:hidden !bg-white !text-gray-900 shadow-xl">
         <DialogHeader className="p-4 lg:p-6 border-b border-border/20 relative bg-background">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-primary/10">
               <BookOpen size={20} className="text-primary" />
             </div>
             <div>
-              <DialogTitle className="text-lg lg:text-xl font-bold">
+              <DialogTitle className="text-lg lg:text-xl font-bold !text-gray-900">
                 {project.title} - Preview
               </DialogTitle>
-              <DialogDescription className="text-sm text-muted-foreground">
+              <DialogDescription className="text-sm !text-gray-600">
                 {sortedChapters.length} chapters • {getWordCount().toLocaleString()} words
               </DialogDescription>
             </div>
@@ -125,12 +125,12 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
               onClick={onClose}
               className="h-10 w-10 p-0 rounded-full hover:bg-primary/10 transition-all duration-200"
             >
-              <X size={18} className="text-muted-foreground hover:text-primary transition-colors" />
+              <X size={18} className="!text-gray-600 hover:!text-primary transition-colors" />
             </Button>
           </motion.div>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto p-6 max-h-[calc(90vh-120px)] bg-background">
+        <div className="flex-1 overflow-y-auto p-6 max-h-[calc(90vh-120px)] !bg-gray-50">
           <div className="max-w-3xl mx-auto">
             {/* Title Page - Show custom cover if available, otherwise use default */}
             {coverImageData ? (
@@ -190,14 +190,14 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
               
               {project.description && (
                 <p 
-                  className="text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-8"
+                  className="text-base !text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8"
                   style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
                 >
                   {project.description}
                 </p>
               )}
               
-              <div className="flex justify-center gap-4 mt-8 text-sm font-medium">
+              <div className="flex justify-center gap-4 mt-8 text-sm font-medium !text-gray-700">
                 <span 
                   style={{ 
                     color: project.brandConfig?.primaryColor || '#8B5CF6',
@@ -206,7 +206,7 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
                 >
                   {sortedChapters.length} Chapter{sortedChapters.length !== 1 ? 's' : ''}
                 </span>
-                <span className="text-muted-foreground">•</span>
+                <span className="!text-gray-500">•</span>
                 <span 
                   style={{ 
                     color: project.brandConfig?.primaryColor || '#8B5CF6',
@@ -215,7 +215,7 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
                 >
                   {getWordCount().toLocaleString()} Words
                 </span>
-                <span className="text-muted-foreground">•</span>
+                <span className="!text-gray-500">•</span>
                 <span 
                   style={{ 
                     color: project.brandConfig?.primaryColor || '#8B5CF6',
@@ -236,10 +236,10 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
               className="py-12 mb-12 border-b-2 border-border/20"
               style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
             >
-              <div className="max-w-xl mx-auto space-y-6 text-sm text-muted-foreground">
-                <p className="font-semibold text-base text-foreground">{project.title}</p>
+              <div className="max-w-xl mx-auto space-y-6 text-sm !text-gray-600">
+                <p className="font-semibold text-base !text-gray-900">{project.title}</p>
                 {project.author && (
-                  <p className="text-foreground">by {project.author}</p>
+                  <p className="!text-gray-900">by {project.author}</p>
                 )}
                 
                 <div className="space-y-2">
@@ -296,7 +296,7 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
                           Chapter {index + 1}
                         </span>
                         <span 
-                          className="font-medium text-foreground"
+                          className="font-medium !text-gray-900"
                           style={{ flex: 1 }}
                         >
                           {chapter.title}
