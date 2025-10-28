@@ -22,69 +22,81 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-// Simple in-memory rate limiting (resets on cold starts)
-// For production, use Redis or a database
-const rateLimitStore = new Map();
-
+// Persistent rate limiting using Firestore
+// Survives cold starts and server restarts
 async function checkRateLimit(userId) {
   const now = Date.now();
   const userKey = userId || 'anonymous';
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   
-  // Get or create user's rate limit data
-  if (!rateLimitStore.has(userKey)) {
-    rateLimitStore.set(userKey, { count: 0, resetAt: now + 86400000 }); // 24 hours
-  }
-  
-  const userData = rateLimitStore.get(userKey);
-  
-  // Reset if 24 hours passed
-  if (now > userData.resetAt) {
-    userData.count = 0;
-    userData.resetAt = now + 86400000;
-  }
-  
-  // Check limits based on tier (default to free tier)
-  // Matches pricing page: Free = 3/day, Premium = 50/day
-  const limits = {
-    free: parseInt(process.env.AI_RATE_LIMIT_FREE_TIER) || 3,
-    premium: parseInt(process.env.AI_RATE_LIMIT_PREMIUM_TIER) || 50,
-  };
-  
-  // Check user's actual tier from Firebase
-  let userLimit = limits.free; // Default to free
-  if (userId && userId !== 'anonymous') {
-    try {
-      const userDoc = await db.collection('users').doc(userId).get();
-      if (userDoc.exists) {
-        const userData = userDoc.data();
-        if (userData.isPremium || userData.subscriptionStatus === 'premium') {
-          userLimit = limits.premium;
-        }
-      }
-    } catch (error) {
-      console.error('Error checking user tier:', error);
-      // On error, default to free tier (safe fallback)
+  try {
+    const rateLimitRef = db.collection('rateLimits').doc(userKey);
+    const rateLimitDoc = await rateLimitRef.get();
+    
+    let userData = rateLimitDoc.exists ? rateLimitDoc.data() : null;
+    
+    // Reset if new day or first time
+    if (!userData || userData.date !== today) {
+      userData = {
+        count: 0,
+        date: today,
+        resetAt: new Date(today).getTime() + 86400000 // End of today
+      };
     }
-  }
-  
-  if (userData.count >= userLimit) {
+    
+    // Check limits based on tier (default to free tier)
+    // Matches pricing page: Free = 3/day, Premium = 50/day
+    const limits = {
+      free: parseInt(process.env.AI_RATE_LIMIT_FREE_TIER) || 3,
+      premium: parseInt(process.env.AI_RATE_LIMIT_PREMIUM_TIER) || 50,
+    };
+    
+    // Check user's actual tier from Firebase
+    let userLimit = limits.free; // Default to free
+    if (userId && userId !== 'anonymous') {
+      try {
+        const userDoc = await db.collection('users').doc(userId).get();
+        if (userDoc.exists) {
+          const userDocData = userDoc.data();
+          if (userDocData.isPremium || userDocData.subscriptionStatus === 'premium') {
+            userLimit = limits.premium;
+          }
+        }
+      } catch (error) {
+        console.error('Error checking user tier:', error);
+        // On error, default to free tier (safe fallback)
+      }
+    }
+    
+    if (userData.count >= userLimit) {
+      return {
+        allowed: false,
+        remaining: 0,
+        resetAt: userData.resetAt,
+        limit: userLimit
+      };
+    }
+    
+    // Increment count and save to Firestore
+    userData.count++;
+    await rateLimitRef.set(userData);
+    
     return {
-      allowed: false,
-      remaining: 0,
+      allowed: true,
+      remaining: userLimit - userData.count,
       resetAt: userData.resetAt,
       limit: userLimit
     };
+  } catch (error) {
+    console.error('Rate limit check error:', error);
+    // On error, allow the request (fail open for better UX)
+    return {
+      allowed: true,
+      remaining: 3,
+      resetAt: now + 86400000,
+      limit: 3
+    };
   }
-  
-  userData.count++;
-  rateLimitStore.set(userKey, userData);
-  
-  return {
-    allowed: true,
-    remaining: userLimit - userData.count,
-    resetAt: userData.resetAt,
-    limit: userLimit
-  };
 }
 
 // Format content with proper paragraph breaks
