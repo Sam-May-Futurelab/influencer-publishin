@@ -503,19 +503,38 @@
   color: oklch(0.90 0.01 250) !important;
 }
 
-/* Dialogs and modals in dark mode - simple approach */
+/* Copy dark mode CSS variables to portaled dialog elements */
 body:has(.dashboard-dark) [data-radix-dialog-content],
 body:has(.dashboard-dark) [data-slot="dialog-content"] {
-  background-color: oklch(0.27 0.005 250);
-  border-color: oklch(0.35 0.010 250);
-  box-shadow: none;
-  color: oklch(0.95 0.005 250);
-}
-
-/* Force all text in dialogs to inherit the white color */
-body:has(.dashboard-dark) [data-radix-dialog-content] *:not(.preview-dialog *),
-body:has(.dashboard-dark) [data-slot="dialog-content"] *:not(.preview-dialog *) {
-  color: inherit;
+  --background: oklch(0.25 0.005 250);
+  --foreground: oklch(0.95 0.005 250);
+  --card: oklch(0.27 0.005 250);
+  --card-foreground: oklch(0.95 0.005 250);
+  --popover: oklch(0.27 0.005 250);
+  --popover-foreground: oklch(0.95 0.005 250);
+  --primary: oklch(0.70 0.24 280);
+  --primary-foreground: oklch(0.98 0.005 280);
+  --secondary: oklch(0.30 0.008 250);
+  --secondary-foreground: oklch(0.92 0.008 250);
+  --muted: oklch(0.35 0.008 250);
+  --muted-foreground: oklch(0.75 0.008 250);
+  --accent: oklch(0.75 0.20 340);
+  --accent-foreground: oklch(0.98 0.005 340);
+  --destructive: oklch(0.70 0.18 20);
+  --destructive-foreground: oklch(0.98 0.005 20);
+  --border: oklch(0.35 0.010 250);
+  --input: oklch(0.30 0.008 250);
+  --ring: oklch(0.70 0.24 280);
+  --shadow-light: oklch(0.32 0.008 250);
+  --shadow-dark: oklch(0.18 0.012 250);
+  
+  /* Tailwind color mappings */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
 }
 
 /* TipTap editor text in dark mode */
