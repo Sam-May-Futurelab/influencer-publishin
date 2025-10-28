@@ -26,7 +26,7 @@ export function TestimonialsPage() {
 
   const stats = [
     { icon: Zap, label: 'AI-Powered', value: 'GPT-4' },
-    { icon: BookOpen, label: 'Export Formats', value: 'PDF, EPUB, DOCX' },
+    { icon: BookOpen, label: 'Export Formats', value: 'PDF, EPUB, DOCX', smallText: true },
     { icon: Star, label: 'Average Rating', value: '4.9/5' },
     { icon: Award, label: 'Free to Start', value: '0 Cost' }
   ];
@@ -253,7 +253,7 @@ export function TestimonialsPage() {
                   <Card className="neomorph-flat border-0">
                     <CardContent className="p-6 text-center">
                       <stat.icon className="w-8 h-8 text-primary mx-auto mb-3" />
-                      <div className="text-2xl font-bold mb-1">{stat.value}</div>
+                      <div className={`font-bold mb-1 ${stat.smallText ? 'text-lg' : 'text-2xl'}`}>{stat.value}</div>
                       <div className="text-sm text-muted-foreground">{stat.label}</div>
                     </CardContent>
                   </Card>
