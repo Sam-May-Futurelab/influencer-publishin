@@ -512,6 +512,12 @@ body:has(.dashboard-dark) [data-slot="dialog-content"] {
   color: oklch(0.95 0.005 250) !important;
 }
 
+/* Fix button text in dark mode dialogs */
+body:has(.dashboard-dark) [data-radix-dialog-content] button,
+body:has(.dashboard-dark) [data-slot="dialog-content"] button {
+  color: oklch(0.95 0.005 250) !important;
+}
+
 /* Dialog overlay in dark mode - darker background */
 body:has(.dashboard-dark) [data-radix-dialog-overlay],
 body:has(.dashboard-dark) [data-slot="dialog-overlay"] {

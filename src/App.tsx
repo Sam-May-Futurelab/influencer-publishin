@@ -708,6 +708,9 @@ function App() {
       case 'profile':
         goToProfilePage();
         break;
+      case 'help':
+        navigate('/help');
+        break;
     }
   };
 

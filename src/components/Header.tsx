@@ -23,7 +23,8 @@ import {
   Books,
   SquaresFour,
   UserCircle,
-  BookmarkSimple
+  BookmarkSimple,
+  Question
 } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -201,6 +202,10 @@ export function Header({
                     <DropdownMenuItem onClick={() => onNavigate?.('profile')}>
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile & Settings</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onNavigate?.('help')}>
+                      <Question className="mr-2 h-4 w-4" />
+                      <span>Help Center</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
