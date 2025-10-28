@@ -1111,7 +1111,7 @@ export function CoverDesigner({
                   {STOCK_IMAGES.filter(img => selectedCategory === 'all' || img.category === selectedCategory).map((image) => (
                     <Card
                       key={image.id}
-                      className="cursor-pointer neomorph-flat border-0 overflow-hidden hover:neomorph-raised transition-all hover:scale-[1.02] rounded-lg"
+                      className="cursor-pointer neomorph-flat border-0 overflow-hidden hover:neomorph-raised transition-all hover:scale-[1.02] rounded-lg bg-card"
                       onClick={() => {
                         updateDesign({
                           backgroundType: 'image',
@@ -1121,7 +1121,7 @@ export function CoverDesigner({
                         toast.success(`Applied ${image.name}`);
                       }}
                     >
-                      <div className="relative aspect-[5/8] overflow-hidden rounded-lg">
+                      <div className="relative aspect-[5/8] overflow-hidden rounded-lg bg-card">
                         <img 
                           src={image.url} 
                           alt={image.name}
@@ -1136,9 +1136,9 @@ export function CoverDesigner({
                   ))}
                 </div>
 
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800 font-medium">💡 Pro Tip</p>
-                  <p className="text-xs text-blue-600 mt-1">After selecting a stock image, go to Upload Cover tab to adjust image placement, or use Text tab to customize your title.</p>
+                <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
+                  <p className="text-sm text-primary font-medium">💡 Pro Tip</p>
+                  <p className="text-xs text-muted-foreground mt-1">After selecting a stock image, go to Upload Cover tab to adjust image placement, or use Text tab to customize your title.</p>
                 </div>
               </TabsContent>
 
