@@ -504,47 +504,53 @@
 }
 
 /* Dialogs and modals in dark mode - use :has() to detect if dashboard-dark exists */
-body:has(.dashboard-dark) [role="dialog"],
-body:has(.dashboard-dark) [data-radix-dialog-content],
-body:has(.dashboard-dark) [data-slot="dialog-content"] {
+body:has(.dashboard-dark) [role="dialog"]:not(.preview-dialog),
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog),
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) {
   background-color: oklch(0.27 0.005 250) !important;
   border-color: oklch(0.35 0.010 250) !important;
   color: oklch(0.95 0.005 250) !important;
+  box-shadow: none !important;
 }
 
-/* Fix button text in dark mode dialogs */
-body:has(.dashboard-dark) [data-radix-dialog-content] button,
-body:has(.dashboard-dark) [data-slot="dialog-content"] button {
+/* Fix button text in dark mode dialogs - except preview */
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) button,
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) button {
   color: oklch(0.95 0.005 250) !important;
 }
 
-/* Fix label text in dark mode dialogs */
-body:has(.dashboard-dark) [data-radix-dialog-content] label,
-body:has(.dashboard-dark) [data-slot="dialog-content"] label {
+/* Fix label text in dark mode dialogs - except preview */
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) label,
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) label {
   color: oklch(0.95 0.005 250) !important;
 }
 
-/* Fix tabs text in dark mode dialogs */
-body:has(.dashboard-dark) [data-radix-dialog-content] [role="tab"],
-body:has(.dashboard-dark) [data-slot="dialog-content"] [role="tab"],
-body:has(.dashboard-dark) [data-radix-dialog-content] button[data-state],
-body:has(.dashboard-dark) [data-slot="dialog-content"] button[data-state] {
+/* Fix tabs text in dark mode dialogs - except preview */
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) [role="tab"],
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) [role="tab"],
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) button[data-state],
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) button[data-state] {
   color: oklch(0.95 0.005 250) !important;
 }
 
-/* Fix all text inside dialogs in dark mode */
-body:has(.dashboard-dark) [data-radix-dialog-content] h1,
-body:has(.dashboard-dark) [data-radix-dialog-content] h2,
-body:has(.dashboard-dark) [data-radix-dialog-content] h3,
-body:has(.dashboard-dark) [data-radix-dialog-content] p,
-body:has(.dashboard-dark) [data-radix-dialog-content] span,
-body:has(.dashboard-dark) [data-radix-dialog-content] div,
-body:has(.dashboard-dark) [data-slot="dialog-content"] h1,
-body:has(.dashboard-dark) [data-slot="dialog-content"] h2,
-body:has(.dashboard-dark) [data-slot="dialog-content"] h3,
-body:has(.dashboard-dark) [data-slot="dialog-content"] p,
-body:has(.dashboard-dark) [data-slot="dialog-content"] span,
-body:has(.dashboard-dark) [data-slot="dialog-content"] div {
+/* Fix all text inside dialogs in dark mode - except preview */
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) h1,
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) h2,
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) h3,
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) p,
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) span,
+body:has(.dashboard-dark) [data-radix-dialog-content]:not(.preview-dialog) div:not(.ProseMirror),
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) h1,
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) h2,
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) h3,
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) p,
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) span,
+body:has(.dashboard-dark) [data-slot="dialog-content"]:not(.preview-dialog) div:not(.ProseMirror) {
+  color: oklch(0.95 0.005 250) !important;
+}
+
+/* TipTap editor text in dark mode */
+.dashboard-dark .ProseMirror {
   color: oklch(0.95 0.005 250) !important;
 }
 

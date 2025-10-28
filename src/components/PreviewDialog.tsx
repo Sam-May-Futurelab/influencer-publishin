@@ -97,7 +97,7 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl w-full h-[90vh] border border-border/50 p-0 gap-0 [&>button]:hidden !bg-white !text-gray-900 shadow-xl">
+      <DialogContent className="preview-dialog max-w-6xl w-full h-[90vh] border border-border/50 p-0 gap-0 [&>button]:hidden !bg-white !text-gray-900 shadow-xl">
         <DialogHeader className="p-4 lg:p-6 border-b border-border/20 relative bg-background">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-primary/10">
