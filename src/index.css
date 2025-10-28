@@ -342,6 +342,9 @@
  * Using proper dark neumorphic design principles
  */
 .dashboard-dark {
+  /* Force all text to use proper foreground color */
+  color: oklch(0.95 0.005 250);
+  
   /* Dark neumorphic base - soft dark gray, not pure black */
   --background: oklch(0.25 0.005 250);
   --foreground: oklch(0.95 0.005 250);
@@ -395,6 +398,21 @@
   --color-ring: var(--ring);
   --color-shadow-light: var(--shadow-light);
   --color-shadow-dark: var(--shadow-dark);
+}
+
+/* Force all text elements inside dark mode to be white */
+.dashboard-dark h1,
+.dashboard-dark h2,
+.dashboard-dark h3,
+.dashboard-dark h4,
+.dashboard-dark h5,
+.dashboard-dark h6,
+.dashboard-dark p,
+.dashboard-dark span,
+.dashboard-dark div,
+.dashboard-dark button,
+.dashboard-dark label {
+  color: inherit;
 }
 
 /*
