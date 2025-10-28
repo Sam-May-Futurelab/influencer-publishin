@@ -249,42 +249,77 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
       price: '£0',
       period: 'forever',
       features: [
-        '4 pages per eBook',
-        'Basic templates',
-        'Text export',
-        'Community support'
+        '4 pages per ebook',
+        '3 templates',
+        'PDF export',
+        '3 AI gens/day',
+        '1 AI cover/month',
+        'Email support'
       ],
-      current: !userProfile?.isPremium,
+      current: !userProfile?.isPremium && userProfile?.subscriptionStatus === 'free',
       popular: false
     },
     {
-      id: 'monthly',
+      id: 'creator-monthly',
+      name: 'Creator Monthly',
+      price: '£4.99',
+      period: 'per month',
+      features: [
+        '20 pages per ebook',
+        '10 premium templates',
+        'PDF & EPUB export',
+        '15 AI gens/day',
+        '10 AI covers/month',
+        'Custom watermarks',
+        'Email support'
+      ],
+      current: userProfile?.subscriptionStatus === 'creator' && userProfile?.subscriptionType === 'monthly',
+      popular: false
+    },
+    {
+      id: 'creator-yearly',
+      name: 'Creator Yearly',
+      price: '£49',
+      period: 'per year',
+      originalPrice: '£59.88',
+      savings: 'Save £10.88',
+      features: [
+        'Everything in Creator Monthly',
+        '2 months free',
+        'Annual discount'
+      ],
+      current: userProfile?.subscriptionStatus === 'creator' && userProfile?.subscriptionType === 'yearly',
+      popular: false
+    },
+    {
+      id: 'premium-monthly',
       name: 'Premium Monthly',
       price: '£9.99',
       period: 'per month',
       features: [
         'Unlimited pages',
-        'Premium templates',
-        'Advanced AI assistance',
-        'Multiple export formats',
+        '20+ premium templates',
+        'All export formats (PDF, EPUB, DOCX)',
+        '50 AI gens/day',
+        '50 AI covers/month',
         'Priority support',
-        'Custom branding'
+        'Custom branding',
+        'Writing analytics'
       ],
       current: userProfile?.isPremium && userProfile?.subscriptionType === 'monthly',
       popular: true
     },
     {
-      id: 'yearly',
+      id: 'premium-yearly',
       name: 'Premium Yearly',
-      price: '£99.99',
+      price: '£99',
       period: 'per year',
       originalPrice: '£119.88',
-      savings: 'Save £19.89',
+      savings: 'Save £20.88',
       features: [
-        'Everything in Monthly',
-        '4 months free',
+        'Everything in Premium Monthly',
+        '2 months free',
         'Advanced analytics',
-        'Exclusive templates',
         'Beta features access'
       ],
       current: userProfile?.isPremium && userProfile?.subscriptionType === 'yearly',
@@ -408,19 +443,28 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                   <div className="text-2xl font-bold text-primary">
                     {userProfile?.pagesUsed || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Pages Created</div>
+                  <div className="text-sm text-muted-foreground">Pages Created</div>
                 </div>
                 <div className="text-center p-4 rounded-lg neomorph-flat">
                   <div className="text-2xl font-bold text-green-600">
-                    {userProfile?.isPremium ? '∞' : Math.max(0, 4 - (userProfile?.pagesUsed || 0))}
+                    {userProfile?.isPremium 
+                      ? '∞' 
+                      : userProfile?.subscriptionStatus === 'creator'
+                      ? Math.max(0, 20 - (userProfile?.pagesUsed || 0))
+                      : Math.max(0, 4 - (userProfile?.pagesUsed || 0))
+                    }
                   </div>
-                  <div className="text-sm text-gray-600">Pages Remaining</div>
+                  <div className="text-sm text-muted-foreground">Pages Remaining</div>
                 </div>
                 <div className="text-center p-4 rounded-lg neomorph-flat">
                   <div className="text-2xl font-bold text-blue-600">
-                    {userProfile?.isPremium ? 'Premium' : 'Free'}
+                    {userProfile?.isPremium 
+                      ? 'Premium' 
+                      : userProfile?.subscriptionStatus === 'creator'
+                      ? 'Creator'
+                      : 'Free'}
                   </div>
-                  <div className="text-sm text-gray-600">Plan Status</div>
+                  <div className="text-sm text-muted-foreground">Plan Status</div>
                 </div>
               </div>
             </CardContent>

@@ -44,10 +44,11 @@ async function checkRateLimit(userId) {
       };
     }
     
-    // Check limits based on tier (default to free tier)
-    // Matches pricing page: Free = 3/day, Premium = 50/day
+    // Check limits based on tier
+    // Matches pricing page: Free = 3/day, Creator = 15/day, Premium = 50/day
     const limits = {
       free: parseInt(process.env.AI_RATE_LIMIT_FREE_TIER) || 3,
+      creator: parseInt(process.env.AI_RATE_LIMIT_CREATOR_TIER) || 15,
       premium: parseInt(process.env.AI_RATE_LIMIT_PREMIUM_TIER) || 50,
     };
     
@@ -58,8 +59,11 @@ async function checkRateLimit(userId) {
         const userDoc = await db.collection('users').doc(userId).get();
         if (userDoc.exists) {
           const userDocData = userDoc.data();
+          // Check for premium first, then creator, default to free
           if (userDocData.isPremium || userDocData.subscriptionStatus === 'premium') {
             userLimit = limits.premium;
+          } else if (userDocData.subscriptionStatus === 'creator') {
+            userLimit = limits.creator;
           }
         }
       } catch (error) {

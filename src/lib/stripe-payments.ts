@@ -34,46 +34,82 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     features: [
       '4 pages maximum',
       '3 AI generations per day',
-      'Basic templates',
-      'PDF export',
-      'Community support'
+      '3 basic templates',
+      'PDF export only',
+      '1 AI cover per month'
     ]
   },
   {
-    id: 'monthly',
+    id: 'creator-monthly',
+    name: 'Creator Monthly',
+    description: 'For growing authors',
+    price: 4.99,
+    priceId: import.meta.env.VITE_STRIPE_CREATOR_MONTHLY_PRICE_ID || 'price_creator_monthly_placeholder',
+    interval: 'month',
+    features: [
+      '20 pages maximum',
+      '15 AI generations per day',
+      '10 premium templates',
+      'PDF & EPUB export',
+      '10 AI covers per month',
+      'Custom watermarks',
+      'Email support'
+    ]
+  },
+  {
+    id: 'creator-yearly',
+    name: 'Creator Yearly',
+    description: 'Save 17% with annual billing',
+    price: 49,
+    priceId: import.meta.env.VITE_STRIPE_CREATOR_YEARLY_PRICE_ID || 'price_creator_yearly_placeholder',
+    interval: 'year',
+    features: [
+      '20 pages maximum',
+      '15 AI generations per day',
+      '10 premium templates',
+      'PDF & EPUB export',
+      '10 AI covers per month',
+      'Custom watermarks',
+      'Email support'
+    ]
+  },
+  {
+    id: 'premium-monthly',
     name: 'Premium Monthly',
-    description: 'Full access to all premium features',
+    description: 'Full access to all features',
     price: 9.99,
     priceId: import.meta.env.VITE_STRIPE_MONTHLY_PRICE_ID || 'price_monthly_placeholder',
     interval: 'month',
     features: [
       'Unlimited pages',
       '50 AI generations per day',
-      'All premium templates',
+      '20+ premium templates',
+      'All export formats (PDF, EPUB, DOCX)',
+      '50 AI covers per month',
       'Priority support',
       'Custom branding',
-      'Advanced export options',
-      'Remove watermarks',
-      'Early access to new features'
+      'Writing analytics',
+      'Remove watermarks'
     ],
     popular: true
   },
   {
-    id: 'yearly',
+    id: 'premium-yearly',
     name: 'Premium Yearly',
     description: 'Best value - Save 17%!',
-    price: 99.99,
+    price: 99,
     priceId: import.meta.env.VITE_STRIPE_YEARLY_PRICE_ID || 'price_yearly_placeholder',
     interval: 'year',
     features: [
       'Unlimited pages',
       '50 AI generations per day',
-      'All premium templates',
+      '20+ premium templates',
+      'All export formats (PDF, EPUB, DOCX)',
+      '50 AI covers per month',
       'Priority support',
       'Custom branding',
-      'Advanced export options',
-      'Remove watermarks',
-      'Early access to new features'
+      'Writing analytics',
+      'Remove watermarks'
     ]
   }
 ];

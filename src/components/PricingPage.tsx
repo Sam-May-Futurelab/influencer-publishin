@@ -94,13 +94,14 @@ export function PricingPage() {
       features: [
         { text: '4 pages total', included: true },
         { text: '3 AI generations per day', included: true },
-        { text: 'Basic templates', included: true },
-        { text: 'PDF export', included: true },
+        { text: '3 basic templates', included: true },
+        { text: 'PDF export only', included: true },
         { text: 'Basic cover designer', included: true },
+        { text: '1 AI cover image per month', included: true },
         { text: 'Cloud storage', included: true },
         { text: 'Email support', included: true },
-        { text: 'Unlimited pages', included: false },
         { text: 'EPUB & DOCX export', included: false },
+        { text: 'Custom watermarks', included: false },
         { text: 'Premium templates', included: false },
         { text: 'Priority support', included: false }
       ],
@@ -108,17 +109,41 @@ export function PricingPage() {
       ctaStyle: 'outline'
     },
     {
-      name: 'Premium',
-      tagline: 'For serious authors and creators',
-      price: { monthly: 9.99, yearly: 99 },
+      name: 'Creator',
+      tagline: 'For growing authors',
+      price: { monthly: 4.99, yearly: 49 },
       yearlyDiscount: '17% off',
       popular: true,
+      features: [
+        { text: '20 pages total', included: true },
+        { text: '15 AI generations per day', included: true },
+        { text: '10 premium templates', included: true },
+        { text: 'PDF & EPUB export', included: true },
+        { text: 'Advanced cover designer', included: true },
+        { text: '10 AI cover images per month', included: true },
+        { text: 'Custom watermarks', included: true },
+        { text: 'Cloud storage', included: true },
+        { text: 'Email support', included: true },
+        { text: 'Unlimited pages', included: false },
+        { text: 'DOCX export', included: false },
+        { text: 'Priority support', included: false }
+      ],
+      ctaText: 'Start Creator',
+      ctaStyle: 'primary'
+    },
+    {
+      name: 'Premium',
+      tagline: 'For professional authors',
+      price: { monthly: 9.99, yearly: 99 },
+      yearlyDiscount: '17% off',
+      popular: false,
       features: [
         { text: 'Unlimited pages', included: true },
         { text: '50 AI generations per day', included: true },
         { text: '20+ premium templates', included: true },
         { text: 'All export formats (PDF, EPUB, DOCX)', included: true },
         { text: 'Advanced cover designer', included: true },
+        { text: '50 AI cover images per month', included: true },
         { text: 'Custom branding & watermarks', included: true },
         { text: 'Priority support', included: true },
         { text: 'Writing analytics', included: true },
@@ -179,19 +204,19 @@ export function PricingPage() {
   const faqs = [
     {
       question: 'Can I start with the free plan and upgrade later?',
-      answer: 'Absolutely! You can start with our free plan and upgrade to Premium at any time. Your existing projects and data will be preserved when you upgrade.'
+      answer: 'Absolutely! You can start with our free plan and upgrade to Creator (£4.99/month) or Premium (£9.99/month) at any time. Your existing projects and data will be preserved when you upgrade.'
     },
     {
-      question: 'What happens when I hit the 4-page limit on the free plan?',
-      answer: 'Once you reach 4 pages, you can still export your current work as PDF. To add more pages, you\'ll need to upgrade to Premium or start a new project.'
+      question: 'What happens when I hit the page limit on my plan?',
+      answer: 'Free users get 4 pages, Creator gets 20 pages, and Premium gets unlimited pages. When you reach your limit, you\'ll be prompted to upgrade. You can still view and edit existing content, but won\'t be able to add new pages until you upgrade.'
     },
     {
       question: 'Do you offer refunds?',
-      answer: 'Yes! We offer a 30-day money-back guarantee. If you\'re not satisfied with Premium within 30 days of purchase, contact support for a full refund.'
+      answer: 'Yes! We offer a 30-day money-back guarantee. If you\'re not satisfied with your subscription within 30 days of purchase, contact support for a full refund.'
     },
     {
       question: 'Can I cancel my subscription anytime?',
-      answer: 'Yes, you can cancel your Premium subscription at any time with no penalties. You\'ll retain Premium features until the end of your billing period.'
+      answer: 'Yes, you can cancel your subscription at any time with no penalties. You\'ll retain your plan features until the end of your billing period.'
     },
     {
       question: 'What payment methods do you accept?',
@@ -199,15 +224,15 @@ export function PricingPage() {
     },
     {
       question: 'Is there a discount for yearly billing?',
-      answer: 'Yes! Annual Premium subscriptions are 17% off compared to monthly billing. You\'ll pay £99/year (£8.25/month) instead of £119.88 when billed monthly.'
+      answer: 'Yes! Annual subscriptions are 17% off. Creator is £49/year (£4.08/month) vs £59.88 monthly. Premium is £99/year (£8.25/month) vs £119.88 monthly.'
     },
     {
       question: 'Do you offer educational or non-profit discounts?',
       answer: 'We offer special pricing for students, teachers, and non-profit organizations. Contact support with verification for discount eligibility.'
     },
     {
-      question: 'What\'s included in priority support?',
-      answer: 'Premium users get priority email support with faster response times (typically within 12 hours) and access to advanced troubleshooting resources.'
+      question: 'What\'s the difference between Creator and Premium?',
+      answer: 'Creator (£4.99/month) gives you 20 pages, 15 AI generations/day, and PDF+EPUB export. Premium (£9.99/month) offers unlimited pages, 50 AI generations/day, all export formats (including DOCX), and priority support. Choose Creator if you\'re writing shorter ebooks or are just getting started.'
     }
   ];
 

@@ -72,13 +72,13 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
 
         <div className="p-6 space-y-6">
           {/* Pricing Cards */}
-          <div className="grid md:grid-cols-2 gap-4">
-            {paidPlans.map((plan) => (
+          <div className="grid md:grid-cols-3 gap-4">
+            {paidPlans.map((plan, index) => (
               <motion.div
                 key={plan.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: plan.id === 'monthly' ? 0 : 0.1 }}
+                transition={{ delay: index * 0.1 }}
               >
                 <Card className={`relative neomorph-flat border-0 p-6 ${
                   plan.popular ? 'ring-2 ring-primary' : ''

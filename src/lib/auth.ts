@@ -20,7 +20,7 @@ export interface UserProfile {
   email: string;
   displayName?: string;
   isPremium: boolean;
-  subscriptionStatus: 'free' | 'premium' | 'trial';
+  subscriptionStatus: 'free' | 'creator' | 'premium' | 'trial';
   subscriptionType?: 'monthly' | 'yearly';
   pagesUsed: number;
   maxPages: number;
