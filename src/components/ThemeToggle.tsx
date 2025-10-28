@@ -27,7 +27,7 @@ export function ThemeToggle() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="neomorph-flat border-0">
+      <DropdownMenuContent align="end" className="bg-card border border-border shadow-lg">
         <DropdownMenuItem
           onClick={() => setTheme('light')}
           className="cursor-pointer"
