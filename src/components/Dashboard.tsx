@@ -238,14 +238,14 @@ export function Dashboard({
                   current={progress.daily.current}
                   target={progress.daily.target}
                   period="daily"
-                  icon={<Target className="w-5 h-5 text-blue-600" />}
+                  icon={<Target className="w-5 h-5 text-primary" />}
                 />
                 <GoalProgressCard
                   title="Weekly Goal"
                   current={progress.weekly.current}
                   target={progress.weekly.target}
                   period="weekly"
-                  icon={<Calendar className="w-5 h-5 text-purple-600" />}
+                  icon={<Calendar className="w-5 h-5 text-accent" />}
                 />
               </>
             )}
@@ -253,9 +253,9 @@ export function Dashboard({
             {!goals?.enabled && (
               <Card className="lg:col-span-2">
                 <CardContent className="p-6 text-center">
-                  <Target className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                  <Target className="w-12 h-12 mx-auto mb-3 text-muted-foreground" />
                   <h3 className="font-semibold mb-2">Set Writing Goals</h3>
-                  <p className="text-sm text-gray-600 mb-4">
+                  <p className="text-sm text-muted-foreground mb-4">
                     Track your progress with daily and weekly word count targets
                   </p>
                   <Button size="sm" variant="outline">
@@ -369,7 +369,7 @@ export function Dashboard({
           <CardContent className="p-4 lg:p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 rounded-xl neomorph-inset">
-                <UploadSimple size={20} className="text-blue-600" weight="fill" />
+                <UploadSimple size={20} className="text-primary" weight="fill" />
               </div>
               <h3 className="font-semibold text-sm lg:text-base">Import File</h3>
             </div>

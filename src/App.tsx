@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { useAuth } from '@/hooks/use-auth';
+import { useTheme } from '@/hooks/use-theme';
 import { incrementPageUsage, syncPageUsage, updateUserProfile } from '@/lib/auth';
 import { getUserProjects, saveProject, deleteProject as deleteProjectFromFirestore } from '@/lib/projects';
 import { ProjectHeader } from '@/components/ProjectHeader';
@@ -63,6 +64,7 @@ const defaultBrandConfig: BrandConfig = {
 
 function App() {
   const { user, userProfile, loading: authLoading, refreshProfile } = useAuth();
+  const { actualTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [projects, setProjects] = useState<EbookProject[]>([]);
@@ -818,10 +820,10 @@ function App() {
           </main>
         } />
 
-        {/* Protected Routes */}
+        {/* Protected Routes - Dark mode scoped to dashboard only */}
         <Route path="/app/*" element={
           user ? (
-            <>
+            <div className={actualTheme === 'dark' ? 'dashboard-dark' : ''}>
               <Header
                 logoText="Inkfluence AI"
                 onNavigate={handleNavigation}
@@ -973,7 +975,7 @@ function App() {
                 onNavigateToHelp={() => navigate('/help')}
                 onNavigateToAbout={() => navigate('/about')}
               />
-            </>
+            </div>
           ) : (
             <Navigate to="/?signin=true" replace />
           )

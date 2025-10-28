@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
 import { AuthModal } from '@/components/AuthModal';
 import { UsageTracker } from '@/components/UsageTracker';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface HeaderProps {
   logoUrl?: string;
@@ -156,6 +157,9 @@ export function Header({
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2 lg:gap-3"
           >
+            {/* Theme Toggle */}
+            <ThemeToggle />
+            
             {/* User Profile */}
             {user ? (
               <motion.div 
