@@ -524,6 +524,30 @@ body:has(.dashboard-dark) [data-slot="dialog-content"] label {
   color: oklch(0.95 0.005 250) !important;
 }
 
+/* Fix tabs text in dark mode dialogs */
+body:has(.dashboard-dark) [data-radix-dialog-content] [role="tab"],
+body:has(.dashboard-dark) [data-slot="dialog-content"] [role="tab"],
+body:has(.dashboard-dark) [data-radix-dialog-content] button[data-state],
+body:has(.dashboard-dark) [data-slot="dialog-content"] button[data-state] {
+  color: oklch(0.95 0.005 250) !important;
+}
+
+/* Fix all text inside dialogs in dark mode */
+body:has(.dashboard-dark) [data-radix-dialog-content] h1,
+body:has(.dashboard-dark) [data-radix-dialog-content] h2,
+body:has(.dashboard-dark) [data-radix-dialog-content] h3,
+body:has(.dashboard-dark) [data-radix-dialog-content] p,
+body:has(.dashboard-dark) [data-radix-dialog-content] span,
+body:has(.dashboard-dark) [data-radix-dialog-content] div,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h1,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h2,
+body:has(.dashboard-dark) [data-slot="dialog-content"] h3,
+body:has(.dashboard-dark) [data-slot="dialog-content"] p,
+body:has(.dashboard-dark) [data-slot="dialog-content"] span,
+body:has(.dashboard-dark) [data-slot="dialog-content"] div {
+  color: oklch(0.95 0.005 250) !important;
+}
+
 /* Dialog overlay in dark mode - darker background */
 body:has(.dashboard-dark) [data-radix-dialog-overlay],
 body:has(.dashboard-dark) [data-slot="dialog-overlay"] {
