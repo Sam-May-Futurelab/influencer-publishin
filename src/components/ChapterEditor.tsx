@@ -698,13 +698,12 @@ export function ChapterEditor({
 
                         {pendingContent ? (
                           <div 
-                            className="chapter-content-preview"
+                            className="chapter-content-preview text-foreground"
                             style={{ 
                               fontFamily: brandConfig?.fontFamily || 'Inter, sans-serif',
                               fontSize: '1.15em',
                               lineHeight: '1.9',
                               textAlign: 'justify',
-                              color: '#374151',
                               hyphens: 'auto',
                               wordSpacing: '0.05em'
                             }}
