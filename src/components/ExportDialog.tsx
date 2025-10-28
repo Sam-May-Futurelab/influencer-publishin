@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -69,6 +70,11 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
   const [authorBio, setAuthorBio] = useState<string>('');
   const [authorWebsite, setAuthorWebsite] = useState<string>('');
   
+  // Alert dialog state for empty chapters warning
+  const [showEmptyChaptersAlert, setShowEmptyChaptersAlert] = useState(false);
+  const [emptyChaptersList, setEmptyChaptersList] = useState<string[]>([]);
+  const [pendingExportFormat, setPendingExportFormat] = useState<ExportFormat | null>(null);
+  
   // New export options
   const [includeTOC, setIncludeTOC] = useState<boolean>(true);
   const [includeCopyright, setIncludeCopyright] = useState<boolean>(true);
@@ -124,28 +130,10 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
     });
 
     if (emptyChapters.length > 0) {
-      // Show warning toast and wait for user decision
-      const chapterList = emptyChapters.map(c => c.title).join(', ');
-      toast.warning(
-        `${emptyChapters.length} chapter${emptyChapters.length > 1 ? 's have' : ' has'} less than 50 words and may appear blank or incomplete`,
-        {
-          description: `Empty chapters: ${chapterList}`,
-          duration: 8000,
-          action: {
-            label: 'Export Anyway',
-            onClick: () => {
-              // User clicked to proceed - trigger export
-              performExport(format);
-            }
-          },
-          cancel: {
-            label: 'Cancel',
-            onClick: () => {
-              toast.info('Export cancelled');
-            }
-          }
-        }
-      );
+      // Show warning dialog and wait for user decision
+      setEmptyChaptersList(emptyChapters.map(c => c.title));
+      setPendingExportFormat(format);
+      setShowEmptyChaptersAlert(true);
       return; // Don't continue automatically
     }
 
@@ -195,6 +183,7 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
   };
 
   return (
+    <>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-5xl max-h-[90vh] border-0 shadow-lg p-6 flex flex-col">
         <DialogHeader className="flex-shrink-0">
@@ -375,5 +364,43 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
         </div>
       </DialogContent>
     </Dialog>
+
+    {/* Empty Chapters Warning Alert */}
+    <AlertDialog open={showEmptyChaptersAlert} onOpenChange={setShowEmptyChaptersAlert}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Short Chapters Detected</AlertDialogTitle>
+          <AlertDialogDescription>
+            {emptyChaptersList.length} chapter{emptyChaptersList.length > 1 ? 's have' : ' has'} less than 50 words and may appear blank or incomplete in the exported file.
+            <div className="mt-3 p-3 rounded-lg bg-muted/50 max-h-32 overflow-y-auto">
+              <p className="text-sm font-medium mb-2">Affected chapters:</p>
+              <ul className="text-sm space-y-1">
+                {emptyChaptersList.map((title, index) => (
+                  <li key={index} className="text-muted-foreground">• {title}</li>
+                ))}
+              </ul>
+            </div>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => {
+            setShowEmptyChaptersAlert(false);
+            setPendingExportFormat(null);
+          }}>
+            Cancel Export
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={() => {
+            setShowEmptyChaptersAlert(false);
+            if (pendingExportFormat) {
+              performExport(pendingExportFormat);
+              setPendingExportFormat(null);
+            }
+          }}>
+            Export Anyway
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  </>
   );
 }
