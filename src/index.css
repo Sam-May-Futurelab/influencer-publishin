@@ -415,6 +415,93 @@
   color: inherit;
 }
 
+/* Input fields in dark mode */
+.dashboard-dark input,
+.dashboard-dark textarea,
+.dashboard-dark select {
+  background-color: oklch(0.28 0.008 250) !important;
+  color: oklch(0.95 0.005 250) !important;
+  border-color: oklch(0.35 0.010 250) !important;
+}
+
+.dashboard-dark input::placeholder,
+.dashboard-dark textarea::placeholder {
+  color: oklch(0.65 0.008 250) !important;
+}
+
+/* Badges and tags - dark background with light text */
+.dashboard-dark [class*="badge"],
+.dashboard-dark .badge {
+  background-color: oklch(0.30 0.015 280) !important;
+  color: oklch(0.95 0.005 250) !important;
+}
+
+/* Category tags in snippets - dark mode versions */
+.dashboard-dark .bg-blue-100 {
+  background-color: oklch(0.35 0.08 250) !important;
+}
+.dashboard-dark .text-blue-800 {
+  color: oklch(0.90 0.08 250) !important;
+}
+.dashboard-dark .bg-purple-100 {
+  background-color: oklch(0.35 0.08 300) !important;
+}
+.dashboard-dark .text-purple-800 {
+  color: oklch(0.90 0.08 300) !important;
+}
+.dashboard-dark .bg-green-100 {
+  background-color: oklch(0.35 0.08 150) !important;
+}
+.dashboard-dark .text-green-800 {
+  color: oklch(0.90 0.08 150) !important;
+}
+.dashboard-dark .bg-yellow-100 {
+  background-color: oklch(0.35 0.08 90) !important;
+}
+.dashboard-dark .text-yellow-800 {
+  color: oklch(0.90 0.08 90) !important;
+}
+.dashboard-dark .bg-pink-100 {
+  background-color: oklch(0.35 0.08 350) !important;
+}
+.dashboard-dark .text-pink-800 {
+  color: oklch(0.90 0.08 350) !important;
+}
+.dashboard-dark .bg-indigo-100 {
+  background-color: oklch(0.35 0.08 270) !important;
+}
+.dashboard-dark .text-indigo-800 {
+  color: oklch(0.90 0.08 270) !important;
+}
+.dashboard-dark .bg-gray-100 {
+  background-color: oklch(0.35 0.01 250) !important;
+}
+.dashboard-dark .text-gray-800 {
+  color: oklch(0.90 0.01 250) !important;
+}
+
+/* Dialogs and modals in dark mode */
+.dashboard-dark [role="dialog"],
+.dashboard-dark [data-radix-dialog-content],
+.dashboard-dark [data-slot="dialog-content"] {
+  background-color: oklch(0.27 0.005 250) !important;
+  border-color: oklch(0.35 0.010 250) !important;
+  color: oklch(0.95 0.005 250) !important;
+}
+
+/* Dialog overlay in dark mode - darker background */
+.dashboard-dark [data-radix-dialog-overlay],
+.dashboard-dark [data-slot="dialog-overlay"] {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Dropdown menus in dark mode */
+.dashboard-dark [data-radix-popper-content-wrapper] [role="menu"],
+.dashboard-dark [role="menu"] {
+  background-color: oklch(0.27 0.005 250) !important;
+  border-color: oklch(0.35 0.010 250) !important;
+}
+
 /*
  * Map the CSS variables to Tailwind's theme system
 ```
