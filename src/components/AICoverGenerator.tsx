@@ -41,9 +41,11 @@ interface AICoverGeneratorProps {
   onCoverGenerated?: (imageUrl: string) => void;
   projectTitle?: string;
   onUpgradeClick?: () => void;
+  design?: any;
+  onDesignUpdate?: (updates: any) => void;
 }
 
-export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClick }: AICoverGeneratorProps) {
+export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClick, design, onDesignUpdate }: AICoverGeneratorProps) {
   const { user } = useAuth();
   const [prompt, setPrompt] = useState(projectTitle ? `${projectTitle}` : '');
   const [style, setStyle] = useState('realistic');
@@ -384,8 +386,73 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
                   />
                 </div>
                 <p className="text-xs text-center text-muted-foreground">
-                  Images are hosted temporarily. Download to save permanently.
+                  AI-generated cover • Adjust settings below to customize
                 </p>
+                
+                {/* Image Adjustment Controls */}
+                {design && onDesignUpdate && (
+                  <div className="space-y-4 pt-4 border-t">
+                    <h5 className="text-sm font-semibold">Fine-tune Your Cover</h5>
+                    
+                    {/* Overlay Toggle */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm">Dark Overlay (helps text stand out)</Label>
+                        <button
+                          onClick={() => onDesignUpdate({ overlay: !design.overlay })}
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
+                            design.overlay ? 'bg-gradient-to-r from-primary to-purple-600' : 'bg-gray-300 dark:bg-gray-600'
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform ${
+                              design.overlay ? 'translate-x-6' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {design.overlay && (
+                        <div className="space-y-1">
+                          <Label className="text-xs text-muted-foreground">Overlay Opacity: {design.overlayOpacity}%</Label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="80"
+                            value={design.overlayOpacity}
+                            onChange={(e) => onDesignUpdate({ overlayOpacity: parseInt(e.target.value) })}
+                            className="w-full"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Brightness */}
+                    <div className="space-y-1">
+                      <Label className="text-xs">Brightness: {design.imageBrightness}%</Label>
+                      <input
+                        type="range"
+                        min="50"
+                        max="150"
+                        value={design.imageBrightness}
+                        onChange={(e) => onDesignUpdate({ imageBrightness: parseInt(e.target.value) })}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Contrast */}
+                    <div className="space-y-1">
+                      <Label className="text-xs">Contrast: {design.imageContrast}%</Label>
+                      <input
+                        type="range"
+                        min="50"
+                        max="150"
+                        value={design.imageContrast}
+                        onChange={(e) => onDesignUpdate({ imageContrast: parseInt(e.target.value) })}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </Card>
           </motion.div>

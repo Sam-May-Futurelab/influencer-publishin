@@ -825,6 +825,8 @@ export function CoverDesigner({
               <TabsContent value="ai" className="space-y-6">
                 <AICoverGenerator
                   projectTitle={projectTitle}
+                  design={design}
+                  onDesignUpdate={updateDesign}
                   onUpgradeClick={() => setShowUpgradeModal(true)}
                   onCoverGenerated={(imageUrl) => {
                     updateDesign({
@@ -833,7 +835,7 @@ export function CoverDesigner({
                       overlay: true,
                       overlayOpacity: 40,
                     });
-                    toast.success('AI cover applied! Adjust the text and styling to your liking');
+                    toast.success('AI cover applied! Adjust brightness, contrast, and overlay below');
                   }}
                 />
               </TabsContent>
