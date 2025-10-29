@@ -120,20 +120,41 @@ export default async (req, res) => {
           await testDoc.get();
           console.log('✅ Firebase connection OK');
 
+          // Get subscription details to determine tier
+          let subscriptionStatus = 'premium';
+          let maxPages = -1; // Unlimited for premium
+          
+          if (session.subscription) {
+            const subscription = await stripe.subscriptions.retrieve(session.subscription);
+            const priceId = subscription.items.data[0]?.price.id;
+            
+            // Check if it's Creator tier
+            const creatorMonthlyPriceId = process.env.VITE_STRIPE_CREATOR_MONTHLY_PRICE_ID;
+            const creatorYearlyPriceId = process.env.VITE_STRIPE_CREATOR_YEARLY_PRICE_ID;
+            
+            if (priceId === creatorMonthlyPriceId || priceId === creatorYearlyPriceId) {
+              subscriptionStatus = 'creator';
+              maxPages = 20;
+              console.log('✅ Detected Creator tier subscription');
+            } else {
+              console.log('✅ Detected Premium tier subscription');
+            }
+          }
+
           const updateData = {
-            isPremium: true,
-            subscriptionStatus: 'premium',
+            isPremium: subscriptionStatus === 'premium' || subscriptionStatus === 'creator',
+            subscriptionStatus: subscriptionStatus,
             stripeCustomerId: session.customer,
             stripeSubscriptionId: session.subscription,
             subscriptionStartedAt: admin.firestore.FieldValue.serverTimestamp(),
-            maxPages: -1, // Unlimited for premium
+            maxPages: maxPages,
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
           };
 
           console.log(`Updating user ${userId} with data:`, updateData);
           await db.collection('users').doc(userId).set(updateData, { merge: true });
 
-          console.log(`✅ User ${userId} upgraded to premium successfully`);
+          console.log(`✅ User ${userId} upgraded to ${subscriptionStatus} successfully`);
         } catch (error) {
           console.error(`❌ Failed to upgrade user ${userId}:`, error);
           console.error('Error details:', {
@@ -157,13 +178,28 @@ export default async (req, res) => {
 
         if (userId) {
           const isActive = subscription.status === 'active';
+          const priceId = subscription.items.data[0]?.price.id;
+          
+          // Determine tier based on price ID
+          let subscriptionStatus = 'premium';
+          let maxPages = -1;
+          
+          const creatorMonthlyPriceId = process.env.VITE_STRIPE_CREATOR_MONTHLY_PRICE_ID;
+          const creatorYearlyPriceId = process.env.VITE_STRIPE_CREATOR_YEARLY_PRICE_ID;
+          
+          if (priceId === creatorMonthlyPriceId || priceId === creatorYearlyPriceId) {
+            subscriptionStatus = 'creator';
+            maxPages = 20;
+          }
+          
           await db.collection('users').doc(userId).set({
-            isPremium: isActive,
-            subscriptionStatus: isActive ? 'premium' : subscription.status,
+            isPremium: isActive && (subscriptionStatus === 'premium' || subscriptionStatus === 'creator'),
+            subscriptionStatus: isActive ? subscriptionStatus : 'free',
             stripeSubscriptionId: subscription.id,
+            maxPages: isActive ? maxPages : 4,
           }, { merge: true });
 
-          console.log(`📝 User ${userId} subscription updated: ${subscription.status}`);
+          console.log(`📝 User ${userId} subscription updated: ${subscription.status} (${subscriptionStatus})`);
         }
         break;
       }
