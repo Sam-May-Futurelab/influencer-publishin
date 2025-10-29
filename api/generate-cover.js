@@ -149,15 +149,24 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'No image generated' });
     }
 
+    // Download image and convert to base64 (OpenAI URLs have CORS restrictions)
+    const imageResponse = await fetch(imageUrl);
+    if (!imageResponse.ok) {
+      return res.status(500).json({ error: 'Failed to download generated image' });
+    }
+    
+    const imageBuffer = await imageResponse.arrayBuffer();
+    const base64Image = `data:image/png;base64,${Buffer.from(imageBuffer).toString('base64')}`;
+
     // Increment usage counter
     await userRef.update({
       coverGenerationsUsed: admin.firestore.FieldValue.increment(1),
     });
 
-    // Return success with image URL
+    // Return success with base64 image
     return res.status(200).json({
       success: true,
-      imageUrl,
+      imageUrl: base64Image,
       used: currentUsage + 1,
       limit: tierLimit,
       remaining: tierLimit - (currentUsage + 1),
