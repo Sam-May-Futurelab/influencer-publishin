@@ -991,17 +991,6 @@ export function CoverDesigner({
                     )}
                   </div>
                 )}
-
-                <div className="pt-4 border-t">
-                  <p className="text-sm text-muted-foreground mb-3">Or use the templates and customization tools below →</p>
-                  <Button
-                    variant="outline"
-                    onClick={() => updateDesign({ usePreMadeCover: false })}
-                    className="w-full"
-                  >
-                    Design Custom Cover Instead
-                  </Button>
-                </div>
               </TabsContent>
 
               {/* Stock Images Tab */}
