@@ -679,16 +679,13 @@ export function CoverDesigner({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="!max-w-[1800px] sm:!max-w-[1800px] w-[98vw] max-h-[95vh] flex flex-col p-0 gap-0">
-        <DialogHeader className="p-6 lg:p-8 pb-4 lg:pb-6 border-b">
-          <DialogTitle className="text-2xl lg:text-3xl font-bold flex items-center gap-3">
-            <div className="p-2.5 rounded-xl neomorph-flat">
-              <Palette size={28} className="text-primary" />
+        <DialogHeader className="p-4 lg:p-6 pb-3 lg:pb-4 border-b">
+          <DialogTitle className="text-lg lg:text-xl font-bold flex items-center gap-2">
+            <div className="p-1.5 rounded-lg neomorph-flat">
+              <Palette size={20} className="text-primary" />
             </div>
             Cover Designer
           </DialogTitle>
-          <DialogDescription className="text-base mt-2">
-            Create a stunning cover for your ebook with templates and customization
-          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">
