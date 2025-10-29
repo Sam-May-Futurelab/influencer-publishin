@@ -207,6 +207,7 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
               <div className="flex items-start gap-2.5">
                 <Check size={16} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
                 <span><strong className="text-foreground">Unlimited pages</strong> - No more limits on your creativity</span>
+              </div>
               <div className="flex items-start gap-2.5">
                 <Check size={16} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
                 <span><strong className="text-foreground">50 AI generations/day</strong> - 16x more than free tier</span>
