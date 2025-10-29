@@ -296,17 +296,6 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
           </div>
         </div>
 
-        {/* Tips */}
-        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-          <p className="text-xs font-medium text-blue-900 dark:text-blue-100 mb-1">💡 Tips for best results:</p>
-          <ul className="text-xs text-blue-800 dark:text-blue-200 space-y-0.5 ml-4 list-disc">
-            <li>Describe visuals and mood, not the title (e.g., "mystical forest" not "My Book Title")</li>
-            <li>Keep text toggle OFF for cleaner results - add your title later in the editor</li>
-            <li>Be specific about colors, lighting, and atmosphere</li>
-            <li>Mention key visual elements (landscapes, objects, characters)</li>
-          </ul>
-        </div>
-
         <Button
           onClick={handleGenerate}
           disabled={generating || usage.remaining <= 0 || !prompt.trim()}
@@ -343,6 +332,17 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
             </>
           )}
         </Button>
+
+        {/* Tips */}
+        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+          <p className="text-xs font-medium text-blue-900 dark:text-blue-100 mb-1">💡 Tips for best results:</p>
+          <ul className="text-xs text-blue-800 dark:text-blue-200 space-y-0.5 ml-4 list-disc">
+            <li>Describe visuals and mood, not the title (e.g., "mystical forest" not "My Book Title")</li>
+            <li>Keep text toggle OFF for cleaner results - add your title later in the editor</li>
+            <li>Be specific about colors, lighting, and atmosphere</li>
+            <li>Mention key visual elements (landscapes, objects, characters)</li>
+          </ul>
+        </div>
 
         {usage.remaining === 0 && (
           <p className="text-sm text-center text-muted-foreground">

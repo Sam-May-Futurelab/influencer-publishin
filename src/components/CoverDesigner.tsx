@@ -678,7 +678,7 @@ export function CoverDesigner({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="!max-w-[1800px] sm:!max-w-[1800px] w-[98vw] max-h-[95vh] flex flex-col p-0 gap-0">
+      <DialogContent className="!max-w-[1800px] sm:!max-w-[1800px] w-[98vw] max-h-[95vh] flex flex-col p-0 gap-0" aria-describedby="cover-designer-description">
         <DialogHeader className="p-4 lg:p-6 pb-3 lg:pb-4 border-b">
           <DialogTitle className="text-lg lg:text-xl font-bold flex items-center gap-2">
             <div className="p-1.5 rounded-lg neomorph-flat">
@@ -686,6 +686,9 @@ export function CoverDesigner({
             </div>
             Cover Designer
           </DialogTitle>
+          <DialogDescription id="cover-designer-description" className="sr-only">
+            Design your ebook cover with AI generation, templates, and customization tools
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">

@@ -62,7 +62,8 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
         gradientStart: String(project.coverDesign.gradientStart || '#667eea'),
         gradientEnd: String(project.coverDesign.gradientEnd || '#764ba2'),
         gradientDirection: String(project.coverDesign.gradientDirection || 'to-br'),
-        backgroundImage: project.coverDesign.backgroundImage ? String(project.coverDesign.backgroundImage) : '',
+        // NOTE: backgroundImage is NOT saved - it's either a temporary base64 (AI-generated) 
+        // or will be regenerated from coverImageData during export
         titleFont: String(project.coverDesign.titleFont || 'Inter'),
         titleSize: Number(project.coverDesign.titleSize || 48),
         titleColor: String(project.coverDesign.titleColor || '#ffffff'),
