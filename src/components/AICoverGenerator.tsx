@@ -35,8 +35,9 @@ interface AICoverGeneratorProps {
 
 export function AICoverGenerator({ onCoverGenerated, projectTitle }: AICoverGeneratorProps) {
   const { user } = useAuth();
-  const [prompt, setPrompt] = useState(projectTitle ? `Book cover for: ${projectTitle}` : '');
+  const [prompt, setPrompt] = useState(projectTitle ? `${projectTitle}` : '');
   const [style, setStyle] = useState('realistic');
+  const [includeText, setIncludeText] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [usage, setUsage] = useState({ used: 0, limit: 1, remaining: 1 });
@@ -109,6 +110,7 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle }: AICoverGene
         body: JSON.stringify({
           prompt: prompt.trim(),
           style,
+          includeText,
           userId: user.uid,
         }),
       });
@@ -207,35 +209,79 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle }: AICoverGene
           <Label htmlFor="prompt">Cover Description</Label>
           <Textarea
             id="prompt"
-            placeholder="Describe your book cover... (e.g., 'A mystical forest at twilight with a lone figure walking towards a glowing portal')"
+            placeholder="Describe the imagery and mood... (e.g., 'A mystical forest at twilight with glowing fireflies and ancient trees')"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            rows={4}
-            maxLength={500}
+            rows={3}
+            maxLength={300}
             className="resize-none"
           />
           <p className="text-xs text-muted-foreground">
-            {prompt.length}/500 characters
+            {prompt.length}/300 characters • Describe the visual elements, not the title
           </p>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="style">Art Style</Label>
-          <Select value={style} onValueChange={setStyle}>
-            <SelectTrigger id="style">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {COVER_STYLES.map((s) => (
-                <SelectItem key={s.value} value={s.value}>
-                  <div>
-                    <div className="font-medium">{s.label}</div>
-                    <div className="text-xs text-muted-foreground">{s.description}</div>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="style">Art Style</Label>
+            <Select value={style} onValueChange={setStyle}>
+              <SelectTrigger id="style" className="bg-background">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border">
+                {COVER_STYLES.map((s) => (
+                  <SelectItem key={s.value} value={s.value} className="hover:bg-accent focus:bg-accent">
+                    <div>
+                      <div className="font-medium">{s.label}</div>
+                      <div className="text-xs text-muted-foreground">{s.description}</div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="includeText" className="flex items-center gap-2">
+              Include Title Text
+              <Badge variant="outline" className="text-xs">Beta</Badge>
+            </Label>
+            <div className="flex items-center gap-3 h-10 px-4 rounded-md border border-input bg-background">
+              <span className={`text-sm font-medium ${!includeText ? 'text-foreground' : 'text-muted-foreground'}`}>
+                No Text
+              </span>
+              <button
+                id="includeText"
+                onClick={() => setIncludeText(!includeText)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                  includeText ? 'bg-gradient-to-r from-primary to-purple-600' : 'bg-gray-300 dark:bg-gray-600'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform ${
+                    includeText ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+              <span className={`text-sm font-medium ${includeText ? 'text-foreground' : 'text-muted-foreground'}`}>
+                With Text
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {includeText ? 'AI will attempt to add your title (may not be perfect)' : 'Pure imagery without text (recommended)'}
+            </p>
+          </div>
+        </div>
+
+        {/* Tips */}
+        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+          <p className="text-xs font-medium text-blue-900 dark:text-blue-100 mb-1">💡 Tips for best results:</p>
+          <ul className="text-xs text-blue-800 dark:text-blue-200 space-y-0.5 ml-4 list-disc">
+            <li>Describe visuals and mood, not the title (e.g., "mystical forest" not "My Book Title")</li>
+            <li>Keep text toggle OFF for cleaner results - add your title later in the editor</li>
+            <li>Be specific about colors, lighting, and atmosphere</li>
+            <li>Mention key visual elements (landscapes, objects, characters)</li>
+          </ul>
         </div>
 
         <Button

@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { prompt, style = 'realistic', userId } = req.body;
+    const { prompt, style = 'realistic', includeText = false, userId } = req.body;
 
     if (!prompt || !userId) {
       return res.status(400).json({ error: 'Missing required fields: prompt, userId' });
@@ -104,7 +104,17 @@ export default async function handler(req, res) {
     };
 
     const styleModifier = stylePrompts[style] || stylePrompts.realistic;
-    const fullPrompt = `Book cover design: ${prompt}. Style: ${styleModifier}. Professional book cover layout with clear focal point, suitable for publishing.`;
+    
+    // Important: Emphasize flat cover design, not 3D book
+    let fullPrompt = `Flat book cover design for publishing, designed to be printed on a book cover. ${prompt}. Art style: ${styleModifier}. `;
+    
+    if (includeText) {
+      fullPrompt += 'Include decorative title text integrated into the design. ';
+    } else {
+      fullPrompt += 'Pure imagery with NO text, NO words, NO letters. Focus on visual composition only. ';
+    }
+    
+    fullPrompt += 'Professional cover illustration, suitable for book publishing, viewed straight-on, no 3D perspective, no physical book visible.';
 
     // Call OpenAI DALL-E 3 API
     const response = await fetch('https://api.openai.com/v1/images/generations', {
@@ -117,7 +127,7 @@ export default async function handler(req, res) {
         model: 'dall-e-3',
         prompt: fullPrompt,
         n: 1,
-        size: '1024x1024',
+        size: '1024x1792', // Portrait ratio for book covers
         quality: 'standard',
         response_format: 'url',
       }),
