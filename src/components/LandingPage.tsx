@@ -520,7 +520,7 @@ export function LandingPage() {
           <p className="text-lg text-gray-600">Start free, upgrade when you're ready</p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -537,11 +537,11 @@ export function LandingPage() {
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>5 pages</span>
+                  <span>4 pages</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>10 AI generations/day</span>
+                  <span>3 AI generations/day</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -569,6 +569,52 @@ export function LandingPage() {
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
           >
+            <Card className="p-8 space-y-6 hover:shadow-xl transition-shadow h-full">
+              <div>
+                <h3 className="text-2xl font-bold mb-2">Creator</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold">£4.99</span>
+                  <span className="text-gray-600">/month</span>
+                </div>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <span>20 pages</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <span>15 AI generations/day</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <span>Premium templates</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <span>PDF & EPUB export</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <span>Custom watermarks</span>
+                </li>
+              </ul>
+              <Button 
+                onClick={handleGetStarted}
+                className="w-full bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
+                size="lg"
+              >
+                Upgrade to Creator
+              </Button>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
             <Card className="p-8 space-y-6 border-2 border-[#9b87b8] hover:shadow-xl transition-shadow relative h-full">
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] text-white px-4 py-1 rounded-full text-sm font-medium">
                 Most Popular
@@ -591,11 +637,7 @@ export function LandingPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Premium templates</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Advanced export options</span>
+                  <span>All export formats</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
