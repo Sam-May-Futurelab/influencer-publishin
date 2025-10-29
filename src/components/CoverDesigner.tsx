@@ -893,39 +893,6 @@ export function CoverDesigner({
                 </Button>
 
                 {design.backgroundImage && (
-                  <div className="space-y-4 pt-4 border-t">
-                    <div>
-                      <Label className="text-base font-medium mb-2 block">How do you want to use this image?</Label>
-                      <div className="grid grid-cols-2 gap-3">
-                        <Button
-                          variant={!design.usePreMadeCover ? "default" : "outline"}
-                          className="h-auto py-4 flex flex-col items-start text-left"
-                          onClick={() => updateDesign({ 
-                            usePreMadeCover: false,
-                            backgroundType: 'image'
-                          })}
-                        >
-                          <span className="font-semibold">Background Image</span>
-                          <span className="text-xs opacity-80 mt-1">I'll add text overlay</span>
-                        </Button>
-                        
-                        <Button
-                          variant={design.usePreMadeCover ? "default" : "outline"}
-                          className="h-auto py-4 flex flex-col items-start text-left"
-                          onClick={() => updateDesign({ 
-                            usePreMadeCover: true,
-                            backgroundType: 'image'
-                          })}
-                        >
-                          <span className="font-semibold">Pre-made Cover</span>
-                          <span className="text-xs opacity-80 mt-1">Ready to use</span>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {design.backgroundImage && !design.usePreMadeCover && (
                   <div className="space-y-6 pt-4 border-t">
                     <div className="space-y-3">
                       <Label className="text-base font-medium">Image Fit</Label>
@@ -1022,13 +989,6 @@ export function CoverDesigner({
                         />
                       </div>
                     )}
-                  </div>
-                )}
-
-                {design.usePreMadeCover && design.backgroundImage && (
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="text-sm text-green-800 font-medium">✓ Cover uploaded successfully!</p>
-                    <p className="text-xs text-green-600 mt-1">You can now save this cover or customize it using the other tabs</p>
                   </div>
                 )}
 
