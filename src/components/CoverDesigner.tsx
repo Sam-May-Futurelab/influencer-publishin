@@ -30,6 +30,7 @@ import {
   ArrowsIn,
 } from '@phosphor-icons/react';
 import { toast } from 'sonner';
+import { AICoverGenerator } from './AICoverGenerator';
 
 interface CoverDesign {
   title: string;
@@ -788,7 +789,12 @@ export function CoverDesigner({
             isPreviewExpanded ? 'hidden lg:block' : 'block'
           }`}>
             <Tabs defaultValue="quick" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 mb-6 h-12 gap-2">
+              <TabsList className="grid w-full grid-cols-5 mb-6 h-12 gap-2">
+                <TabsTrigger value="ai" className="gap-2 text-base px-4">
+                  <Sparkle size={16} weight="fill" />
+                  <span className="hidden sm:inline">AI Generator</span>
+                  <span className="sm:hidden">AI</span>
+                </TabsTrigger>
                 <TabsTrigger value="quick" className="gap-2 text-base px-4">
                   <UploadSimple size={16} />
                   <span className="hidden sm:inline">Upload Cover</span>
@@ -809,6 +815,22 @@ export function CoverDesigner({
                   <span>Text</span>
                 </TabsTrigger>
               </TabsList>
+
+              {/* AI Generator Tab */}
+              <TabsContent value="ai" className="space-y-6">
+                <AICoverGenerator
+                  projectTitle={projectTitle}
+                  onCoverGenerated={(imageUrl) => {
+                    updateDesign({
+                      backgroundType: 'image',
+                      backgroundImage: imageUrl,
+                      overlay: true,
+                      overlayOpacity: 40,
+                    });
+                    toast.success('AI cover applied! Adjust the text and styling to your liking');
+                  }}
+                />
+              </TabsContent>
 
               {/* Quick Upload Tab */}
               <TabsContent value="quick" className="space-y-6">
