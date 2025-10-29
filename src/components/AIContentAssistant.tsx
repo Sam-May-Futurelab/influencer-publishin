@@ -303,7 +303,7 @@ export function AIContentAssistant({
             {!usageLoading && (
               <div className="flex items-center gap-1.5">
                 <span className={`text-xs font-medium ${remainingGenerations === 0 ? 'text-red-500' : remainingGenerations <= 1 ? 'text-orange-500' : 'text-muted-foreground'}`}>
-                  {remainingGenerations}/{isPremium ? 50 : 3} left today
+                  {remainingGenerations} left today
                 </span>
                 {!isPremium && (
                   <TooltipProvider>

@@ -138,6 +138,20 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2 flex-shrink-0">
+            {/* AI Cover Generator Button */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                onClick={() => setShowCoverDesigner(true)} 
+                variant="default"
+                size="sm"
+                className="gap-2 h-10 lg:h-12 px-3 lg:px-4 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white border-0"
+              >
+                <Sparkle size={18} weight="fill" />
+                <span className="hidden md:inline">AI Cover</span>
+                <span className="md:hidden">AI</span>
+              </Button>
+            </motion.div>
+
             {/* Cover Design Button */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button 

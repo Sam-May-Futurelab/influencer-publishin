@@ -100,21 +100,21 @@ export default async function handler(req, res) {
       minimalist: 'minimalist design, clean lines, simple composition, modern aesthetic',
       dramatic: 'dramatic lighting, high contrast, moody atmosphere, cinematic',
       watercolor: 'watercolor painting, soft edges, pastel colors, artistic illustration',
-      vintage: 'vintage book cover design, retro aesthetic, aged paper texture',
+      vintage: 'vintage aesthetic, retro design, aged texture',
     };
 
     const styleModifier = stylePrompts[style] || stylePrompts.realistic;
     
-    // Important: Emphasize flat cover design, not 3D book
-    let fullPrompt = `Flat book cover design for publishing, designed to be printed on a book cover. ${prompt}. Art style: ${styleModifier}. `;
+    // Simplified prompt - avoid mentioning "book" to prevent 3D mockups
+    let fullPrompt = `Create a rectangular portrait illustration: ${prompt}. Art style: ${styleModifier}. `;
     
     if (includeText) {
       fullPrompt += 'Include decorative title text integrated into the design. ';
     } else {
-      fullPrompt += 'Pure imagery with NO text, NO words, NO letters. Focus on visual composition only. ';
+      fullPrompt += 'Pure visual artwork with NO text, NO words, NO letters whatsoever. ';
     }
     
-    fullPrompt += 'Professional cover illustration, suitable for book publishing, viewed straight-on, no 3D perspective, no physical book visible.';
+    fullPrompt += 'Flat 2D artwork, front-facing view, suitable for publishing. High quality illustration.';
 
     // Call OpenAI DALL-E 3 API
     const response = await fetch('https://api.openai.com/v1/images/generations', {

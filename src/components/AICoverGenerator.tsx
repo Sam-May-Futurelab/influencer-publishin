@@ -129,20 +129,31 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
         return;
       }
 
-      setGeneratedImage(data.imageUrl);
+      // Convert OpenAI URL to base64 data URL for persistence (OpenAI URLs expire)
+      const imgResponse = await fetch(data.imageUrl);
+      const imgBlob = await imgResponse.blob();
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        const base64Image = reader.result as string;
+        setGeneratedImage(base64Image);
+        
+        if (onCoverGenerated) {
+          onCoverGenerated(base64Image);
+        }
+        
+        toast.success('Cover generated successfully!', {
+          description: `${data.remaining} left this month`,
+        });
+      };
+      
+      reader.readAsDataURL(imgBlob);
+      
       setUsage({
         used: data.used,
         limit: data.limit,
         remaining: data.remaining,
       });
-
-      toast.success('Cover generated successfully!', {
-        description: `${data.remaining} generations remaining this month`,
-      });
-
-      if (onCoverGenerated) {
-        onCoverGenerated(data.imageUrl);
-      }
     } catch (error) {
       console.error('Generation error:', error);
       toast.error('Failed to generate cover. Please try again.');
@@ -199,7 +210,7 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
         <div className="text-right">
           {getTierBadge()}
           <p className="text-sm font-medium mt-1">
-            {usage.remaining} / {usage.limit} left this month
+            {usage.remaining} left this month
           </p>
         </div>
       </div>

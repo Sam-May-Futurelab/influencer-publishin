@@ -752,7 +752,8 @@ export function CoverDesigner({
                       color: design.titleColor,
                       wordBreak: 'break-word',
                       hyphens: 'auto',
-                      maxWidth: '90%'
+                      maxWidth: '90%',
+                      textShadow: '2px 2px 4px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.5)'
                     }}
                   >
                     {design.title}
@@ -764,7 +765,8 @@ export function CoverDesigner({
                       fontSize: `${design.subtitleSize}px`,
                       color: design.subtitleColor,
                       wordBreak: 'break-word',
-                      hyphens: 'auto'
+                      hyphens: 'auto',
+                      textShadow: '1px 1px 3px rgba(0,0,0,0.7), -1px -1px 2px rgba(0,0,0,0.4)'
                     }}
                   >
                     {design.subtitle}
@@ -776,7 +778,8 @@ export function CoverDesigner({
                       fontSize: `${design.authorSize}px`,
                       color: design.authorColor,
                       wordBreak: 'break-word',
-                      maxWidth: '90%'
+                      maxWidth: '90%',
+                      textShadow: '1px 1px 3px rgba(0,0,0,0.7), -1px -1px 2px rgba(0,0,0,0.4)'
                     }}
                   >
                     {design.authorName}
@@ -791,29 +794,29 @@ export function CoverDesigner({
             isPreviewExpanded ? 'hidden lg:block' : 'block'
           }`}>
             <Tabs defaultValue="quick" className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-6 h-12 gap-2">
-                <TabsTrigger value="ai" className="gap-2 text-base px-4">
-                  <Sparkle size={16} weight="fill" />
+              <TabsList className="grid w-full grid-cols-5 mb-6 h-auto gap-1">
+                <TabsTrigger value="ai" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
+                  <Sparkle size={14} weight="fill" />
                   <span className="hidden sm:inline">AI Generator</span>
                   <span className="sm:hidden">AI</span>
                 </TabsTrigger>
-                <TabsTrigger value="quick" className="gap-2 text-base px-4">
-                  <UploadSimple size={16} />
-                  <span className="hidden sm:inline">Upload Cover</span>
-                  <span className="sm:hidden">Upload</span>
+                <TabsTrigger value="quick" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
+                  <UploadSimple size={14} />
+                  <span className="hidden md:inline">Upload</span>
+                  <span className="md:hidden">Upload</span>
                 </TabsTrigger>
-                <TabsTrigger value="stock" className="gap-2 text-base px-4">
-                  <ImageIcon size={16} />
-                  <span className="hidden sm:inline">Stock Images</span>
-                  <span className="sm:hidden">Stock</span>
+                <TabsTrigger value="stock" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
+                  <ImageIcon size={14} />
+                  <span className="hidden md:inline">Stock</span>
+                  <span className="md:hidden">Stock</span>
                 </TabsTrigger>
-                <TabsTrigger value="background" className="gap-2 text-base px-4">
-                  <Palette size={16} />
-                  <span className="hidden sm:inline">Colors/Gradients</span>
-                  <span className="sm:hidden">Colors</span>
+                <TabsTrigger value="background" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
+                  <Palette size={14} />
+                  <span className="hidden lg:inline">Colors</span>
+                  <span className="lg:hidden">Colors</span>
                 </TabsTrigger>
-                <TabsTrigger value="text" className="gap-2 text-base px-4">
-                  <TextT size={16} />
+                <TabsTrigger value="text" className="gap-1 text-xs sm:text-sm px-2 py-2">
+                  <TextT size={14} />
                   <span>Text</span>
                 </TabsTrigger>
               </TabsList>
