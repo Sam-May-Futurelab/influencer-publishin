@@ -73,6 +73,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
   
   // App Settings State
   const [settings, setSettings] = useState<AppSettings>({
@@ -224,7 +225,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     }
   };
 
-  const handleUpgrade = async (planId: 'monthly' | 'yearly' | 'creator-monthly' | 'creator-yearly' | 'premium-monthly' | 'premium-yearly') => {
+  const handleUpgrade = async (tier: 'creator' | 'premium') => {
     if (!canPurchase) {
       if (paymentsLoading) {
         toast.info('Payment system is loading. Please wait...');
@@ -236,6 +237,9 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
       return;
     }
 
+    // Construct the plan ID based on tier and billing interval
+    const planId = `${tier}-${billingInterval}` as 'creator-monthly' | 'creator-yearly' | 'premium-monthly' | 'premium-yearly';
+    
     const success = await purchaseSubscription(planId);
     if (success) {
       // Success message is already shown by the hook
@@ -478,6 +482,33 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
               <p className="text-sm text-gray-600">
                 Choose the plan that best fits your needs
               </p>
+              
+              {/* Billing Interval Toggle */}
+              <div className="flex items-center justify-center gap-4 pt-4">
+                <span className={`text-sm font-medium ${billingInterval === 'monthly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  Monthly
+                </span>
+                <button
+                  onClick={() => setBillingInterval(billingInterval === 'monthly' ? 'yearly' : 'monthly')}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                    billingInterval === 'yearly' ? 'bg-primary' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      billingInterval === 'yearly' ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+                <span className={`text-sm font-medium ${billingInterval === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  Yearly
+                </span>
+                {billingInterval === 'yearly' && (
+                  <Badge variant="secondary" className="ml-2 bg-green-100 text-green-700 border-green-300">
+                    Save 17%
+                  </Badge>
+                )}
+              </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -503,18 +534,29 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                           <h3 className="text-2xl font-bold mb-1">{plan.name}</h3>
                           <p className="text-sm text-muted-foreground mb-4">{plan.tagline}</p>
                           
-                          <div className="flex items-baseline justify-center gap-1 mb-2">
-                            <span className="text-4xl font-bold">{plan.price}</span>
-                            <span className="text-muted-foreground text-sm">/{plan.period}</span>
-                          </div>
-                          
-                          {plan.yearlyPrice && (
-                            <div className="text-sm text-muted-foreground">
-                              or <span className="font-semibold">{plan.yearlyPrice}</span>
-                              <Badge variant="outline" className="ml-2 text-green-600 border-green-600">
-                                {plan.savings}
-                              </Badge>
+                          {plan.id === 'free' ? (
+                            <div className="flex items-baseline justify-center gap-1 mb-2">
+                              <span className="text-4xl font-bold">{plan.price}</span>
+                              <span className="text-muted-foreground text-sm">/{plan.period}</span>
                             </div>
+                          ) : (
+                            <>
+                              <div className="flex items-baseline justify-center gap-1 mb-2">
+                                <span className="text-4xl font-bold">
+                                  {billingInterval === 'monthly' ? plan.price : plan.yearlyPrice?.split('/')[0]}
+                                </span>
+                                <span className="text-muted-foreground text-sm">
+                                  /{billingInterval === 'monthly' ? 'month' : 'year'}
+                                </span>
+                              </div>
+                              {billingInterval === 'yearly' && (
+                                <div className="text-sm text-muted-foreground">
+                                  <Badge variant="outline" className="text-green-600 border-green-600">
+                                    {plan.savings}
+                                  </Badge>
+                                </div>
+                              )}
+                            </>
                           )}
                         </div>
 
@@ -533,9 +575,9 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                           onClick={() => {
                             if (!plan.ctaDisabled) {
                               if (plan.id === 'creator') {
-                                handleUpgrade('creator-monthly'); // Default to monthly, they can choose yearly in Stripe
+                                handleUpgrade('creator');
                               } else if (plan.id === 'premium') {
-                                handleUpgrade('premium-monthly');
+                                handleUpgrade('premium');
                               }
                             }
                           }}
