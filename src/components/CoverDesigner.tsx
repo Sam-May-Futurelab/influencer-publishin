@@ -43,6 +43,7 @@ interface CoverDesign {
   gradientEnd: string;
   gradientDirection: 'to-br' | 'to-tr' | 'to-r' | 'to-b';
   backgroundImage?: string;
+  uploadedCoverImage?: string; // Persisted uploaded/AI cover image
   titleFont: string;
   titleSize: number;
   titleColor: string;
@@ -476,8 +477,9 @@ export function CoverDesigner({
     imageContrast: 100,
     usePreMadeCover: false,
     ...initialDesign,
-    // Don't restore from coverImageData - that's the final export with text baked in
-    // Only use backgroundImage if it was explicitly set (e.g., uploaded or AI-generated in this session)
+    // Restore backgroundImage from uploadedCoverImage if it exists (for uploaded/AI covers)
+    // Don't use coverImageData - that's the final export with text baked in
+    backgroundImage: initialDesign?.uploadedCoverImage || initialDesign?.backgroundImage,
   });
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -624,9 +626,14 @@ export function CoverDesigner({
       drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, canvas.height * 0.85, 'center', canvas.width * 0.8);
 
       const imageData = canvas.toDataURL('image/png');
-      onSave(design, imageData);
+      // Save backgroundImage to uploadedCoverImage for persistence across sessions
+      const designToSave = {
+        ...design,
+        uploadedCoverImage: design.backgroundImage || design.uploadedCoverImage,
+      };
+      onSave(designToSave, imageData);
       toast.success('Cover saved successfully!');
-      onOpenChange(false);
+      // Don't close the dialog - let user continue editing
     } catch (error) {
       console.error('Export failed:', error);
       toast.error('Failed to export cover');

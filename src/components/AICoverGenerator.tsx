@@ -451,6 +451,50 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
                         className="w-full"
                       />
                     </div>
+
+                    {/* Image Fit */}
+                    <div className="space-y-2 pt-2 border-t">
+                      <Label className="text-sm font-semibold">Image Fit</Label>
+                      <Select
+                        value={design.imagePosition || 'cover'}
+                        onValueChange={(value: any) => onDesignUpdate({ imagePosition: value })}
+                      >
+                        <SelectTrigger className="h-10">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="cover">Cover (Fill & crop to fit)</SelectItem>
+                          <SelectItem value="contain">Contain (Fit inside, no crop)</SelectItem>
+                          <SelectItem value="fill">Fill (Stretch to fill)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        {design.imagePosition === 'cover' && '• Fills the cover, cropping edges if needed'}
+                        {design.imagePosition === 'contain' && '• Shows full image, may have empty space'}
+                        {design.imagePosition === 'fill' && '• Stretches to fill, may distort image'}
+                      </p>
+                    </div>
+
+                    {/* Image Alignment */}
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold">Image Alignment</Label>
+                      <Select
+                        value={design.imageAlignment || 'center'}
+                        onValueChange={(value: any) => onDesignUpdate({ imageAlignment: value })}
+                      >
+                        <SelectTrigger className="h-10">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="top">Top</SelectItem>
+                          <SelectItem value="center">Center</SelectItem>
+                          <SelectItem value="bottom">Bottom</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        • Position the image vertically on the cover
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
