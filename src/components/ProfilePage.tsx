@@ -246,84 +246,74 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     {
       id: 'free',
       name: 'Free',
+      tagline: 'Perfect for getting started',
       price: '£0',
       period: 'forever',
       features: [
-        '4 pages per ebook',
-        '3 templates',
-        'PDF export',
-        '3 AI gens/day',
-        '1 AI cover/month',
+        '4 pages total',
+        '3 AI generations per day',
+        '3 basic templates',
+        'PDF export only',
+        'Basic cover designer',
+        '1 AI cover per month',
+        'Cloud storage',
         'Email support'
       ],
       current: !userProfile?.isPremium && userProfile?.subscriptionStatus === 'free',
-      popular: false
+      popular: false,
+      ctaText: 'Current Plan',
+      ctaDisabled: true
     },
     {
-      id: 'creator-monthly',
-      name: 'Creator Monthly',
+      id: 'creator',
+      name: 'Creator',
+      tagline: 'For growing authors',
       price: '£4.99',
       period: 'per month',
+      yearlyPrice: '£49/year',
+      savings: 'Save 17%',
       features: [
-        '20 pages per ebook',
+        '20 pages total',
+        '15 AI generations per day',
         '10 premium templates',
         'PDF & EPUB export',
-        '15 AI gens/day',
-        '10 AI covers/month',
+        'Advanced cover designer',
+        '10 AI covers per month',
         'Custom watermarks',
+        'Cloud storage',
         'Email support'
       ],
-      current: userProfile?.subscriptionStatus === 'creator' && userProfile?.subscriptionType === 'monthly',
-      popular: false
+      current: userProfile?.subscriptionStatus === 'creator',
+      popular: false,
+      ctaText: userProfile?.subscriptionStatus === 'creator' ? 'Current Plan' : 'Upgrade to Creator',
+      ctaDisabled: userProfile?.subscriptionStatus === 'creator'
     },
     {
-      id: 'creator-yearly',
-      name: 'Creator Yearly',
-      price: '£49',
-      period: 'per year',
-      originalPrice: '£59.88',
-      savings: 'Save £10.88',
-      features: [
-        'Everything in Creator Monthly',
-        '2 months free',
-        'Annual discount'
-      ],
-      current: userProfile?.subscriptionStatus === 'creator' && userProfile?.subscriptionType === 'yearly',
-      popular: false
-    },
-    {
-      id: 'premium-monthly',
-      name: 'Premium Monthly',
+      id: 'premium',
+      name: 'Premium',
+      tagline: 'For professional authors',
       price: '£9.99',
       period: 'per month',
+      yearlyPrice: '£99/year',
+      savings: 'Save 17%',
       features: [
         'Unlimited pages',
+        '50 AI generations per day',
         '20+ premium templates',
         'All export formats (PDF, EPUB, DOCX)',
-        '50 AI gens/day',
-        '50 AI covers/month',
+        'Advanced cover designer',
+        '50 AI covers per month',
+        'Custom branding & watermarks',
         'Priority support',
-        'Custom branding',
-        'Writing analytics'
+        'Writing analytics',
+        'Batch operations',
+        'Advanced AI features',
+        'Commercial license'
       ],
-      current: userProfile?.isPremium && userProfile?.subscriptionType === 'monthly',
-      popular: true
-    },
-    {
-      id: 'premium-yearly',
-      name: 'Premium Yearly',
-      price: '£99',
-      period: 'per year',
-      originalPrice: '£119.88',
-      savings: 'Save £20.88',
-      features: [
-        'Everything in Premium Monthly',
-        '2 months free',
-        'Advanced analytics',
-        'Beta features access'
-      ],
-      current: userProfile?.isPremium && userProfile?.subscriptionType === 'yearly',
-      popular: false
+      current: userProfile?.isPremium,
+      popular: true,
+      ctaText: userProfile?.isPremium ? 'Current Plan' : 'Upgrade to Premium',
+      ctaDisabled: userProfile?.isPremium
     }
   ];
 
@@ -508,42 +498,44 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                     )}
                     
                     <Card className={`h-full ${plan.current ? 'ring-2 ring-primary/30' : ''} ${plan.popular ? 'neomorph-raised shadow-xl' : 'neomorph-flat'} border-0`}>
-                      <CardContent className="p-6 text-center">
-                        <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                        
-                        <div className="mb-4">
-                          <div className="flex items-baseline justify-center gap-1">
-                            <span className="text-3xl font-bold">{plan.price}</span>
-                            <span className="text-gray-600 text-sm">/{plan.period}</span>
+                      <CardContent className="p-6">
+                        <div className="text-center mb-6">
+                          <h3 className="text-2xl font-bold mb-1">{plan.name}</h3>
+                          <p className="text-sm text-muted-foreground mb-4">{plan.tagline}</p>
+                          
+                          <div className="flex items-baseline justify-center gap-1 mb-2">
+                            <span className="text-4xl font-bold">{plan.price}</span>
+                            <span className="text-muted-foreground text-sm">/{plan.period}</span>
                           </div>
-                          {plan.originalPrice && (
-                            <div className="text-sm text-gray-500">
-                              <span className="line-through">{plan.originalPrice}</span>
-                              <span className="text-green-600 ml-2">{plan.savings}</span>
+                          
+                          {plan.yearlyPrice && (
+                            <div className="text-sm text-muted-foreground">
+                              or <span className="font-semibold">{plan.yearlyPrice}</span>
+                              <Badge variant="outline" className="ml-2 text-green-600 border-green-600">
+                                {plan.savings}
+                              </Badge>
                             </div>
                           )}
                         </div>
 
-                        <div className="space-y-3 mb-6">
+                        <div className="space-y-2.5 mb-6 text-left">
                           {plan.features.map((feature, idx) => (
-                            <div key={idx} className="flex items-center gap-2 text-sm">
-                              <Check size={16} className="text-green-500 flex-shrink-0" />
-                              <span>{feature}</span>
+                            <div key={idx} className="flex items-start gap-2 text-sm">
+                              <Check size={16} className="text-green-500 flex-shrink-0 mt-0.5" weight="bold" />
+                              <span className="leading-tight">{feature}</span>
                             </div>
                           ))}
                         </div>
 
                         <Button
-                          className={`w-full ${plan.current ? 'bg-gray-100 text-gray-600 cursor-default' : plan.popular ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700' : ''} neomorph-button border-0`}
-                          disabled={plan.current || purchasing}
+                          className={`w-full ${plan.current ? 'bg-muted text-muted-foreground cursor-default' : plan.popular ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white' : 'neomorph-button border-0'}`}
+                          disabled={plan.ctaDisabled || purchasing}
                           onClick={() => {
-                            if (!plan.current) {
-                              if (plan.id === 'monthly') {
-                                handleUpgrade('monthly');
-                              } else if (plan.id === 'yearly') {
-                                handleUpgrade('yearly');
-                              } else {
-                                toast.info('Downgrade feature coming soon!');
+                            if (!plan.ctaDisabled) {
+                              if (plan.id === 'creator') {
+                                handleUpgrade('creator-monthly'); // Default to monthly, they can choose yearly in Stripe
+                              } else if (plan.id === 'premium') {
+                                handleUpgrade('premium-monthly');
                               }
                             }
                           }}
@@ -551,10 +543,8 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                           {plan.current ? (
                             <>
                               <Check size={16} className="mr-2" />
-                              Current Plan
+                              {plan.ctaText}
                             </>
-                          ) : plan.id === 'free' ? (
-                            'Downgrade'
                           ) : purchasing ? (
                             <>
                               <motion.div
