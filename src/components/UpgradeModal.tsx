@@ -95,11 +95,13 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
             <span className={`text-sm font-semibold ${billingInterval === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
               Yearly
             </span>
-            {billingInterval === 'yearly' && (
-              <Badge className="ml-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-sm">
-                Save {savings}%
-              </Badge>
-            )}
+            <div className="ml-2 min-w-[100px]">
+              {billingInterval === 'yearly' && (
+                <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-sm">
+                  Save {savings}%
+                </Badge>
+              )}
+            </div>
           </div>
         </DialogHeader>
 

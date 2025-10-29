@@ -503,11 +503,13 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                 <span className={`text-sm font-medium ${billingInterval === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
                   Yearly
                 </span>
-                {billingInterval === 'yearly' && (
-                  <Badge variant="secondary" className="ml-2 bg-green-100 text-green-700 border-green-300">
-                    Save 17%
-                  </Badge>
-                )}
+                <div className="ml-2 min-w-[80px]">
+                  {billingInterval === 'yearly' && (
+                    <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-300">
+                      Save 17%
+                    </Badge>
+                  )}
+                </div>
               </div>
             </CardHeader>
             <CardContent>
