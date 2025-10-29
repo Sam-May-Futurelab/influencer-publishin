@@ -476,6 +476,8 @@ export function CoverDesigner({
     imageContrast: 100,
     usePreMadeCover: false,
     ...initialDesign,
+    // Restore AI-generated cover from coverImageData if it exists
+    backgroundImage: initialDesign?.coverImageData || initialDesign?.backgroundImage,
   });
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -829,9 +831,11 @@ export function CoverDesigner({
                   onDesignUpdate={updateDesign}
                   onUpgradeClick={() => setShowUpgradeModal(true)}
                   onCoverGenerated={(imageUrl) => {
+                    // Set the AI-generated image as both background and save it
                     updateDesign({
                       backgroundType: 'image',
                       backgroundImage: imageUrl,
+                      coverImageData: imageUrl, // Save the base64 so it persists
                       overlay: true,
                       overlayOpacity: 40,
                     });
