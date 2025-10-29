@@ -129,7 +129,7 @@ export default async function handler(req, res) {
         n: 1,
         size: '1024x1792', // Portrait ratio for book covers
         quality: 'standard',
-        response_format: 'url',
+        response_format: 'b64_json', // Get base64 directly from OpenAI
       }),
     });
 
@@ -143,20 +143,13 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
-    const imageUrl = data.data[0]?.url;
+    const base64Data = data.data[0]?.b64_json;
 
-    if (!imageUrl) {
+    if (!base64Data) {
       return res.status(500).json({ error: 'No image generated' });
     }
 
-    // Download image and convert to base64 (OpenAI URLs have CORS restrictions)
-    const imageResponse = await fetch(imageUrl);
-    if (!imageResponse.ok) {
-      return res.status(500).json({ error: 'Failed to download generated image' });
-    }
-    
-    const imageBuffer = await imageResponse.arrayBuffer();
-    const base64Image = `data:image/png;base64,${Buffer.from(imageBuffer).toString('base64')}`;
+    const base64Image = `data:image/png;base64,${base64Data}`;
 
     // Increment usage counter
     await userRef.update({
