@@ -59,9 +59,9 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto neomorph-flat border-0 p-0">
-        <DialogHeader className="p-8 pb-6 bg-gradient-to-br from-primary/10 via-purple-500/10 to-primary/10 dark:from-primary/20 dark:via-purple-500/20 dark:to-primary/20 sticky top-0 z-10 backdrop-blur-md border-b border-border/50">
-          <div className="flex items-center gap-4 mb-4">
+      <DialogContent className="max-w-[95vw] lg:max-w-7xl max-h-[95vh] overflow-y-auto neomorph-flat border-0 p-0">
+        <DialogHeader className="p-6 pb-4 bg-gradient-to-br from-primary/10 via-purple-500/10 to-primary/10 dark:from-primary/20 dark:via-purple-500/20 dark:to-primary/20 sticky top-0 z-10 backdrop-blur-md border-b border-border/50">
+          <div className="flex items-center gap-4 mb-3">
             <div className="p-3 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg">
               <Crown size={28} className="text-white" weight="fill" />
             </div>
@@ -105,7 +105,7 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
           </div>
         </DialogHeader>
 
-        <div className="p-8 space-y-8">
+        <div className="p-6 space-y-6">
           {/* Pricing Cards */}
           {filteredPlans.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
@@ -113,7 +113,7 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
               <p className="text-sm mt-2">Please try the other billing option.</p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-8">
               {filteredPlans.map((plan, index) => (
                 <motion.div
                   key={plan.id}
@@ -121,7 +121,7 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className={`relative h-full neomorph-raised border-0 p-8 transition-all hover:shadow-2xl ${
+                  <Card className={`relative h-full neomorph-raised border-0 p-6 transition-all hover:shadow-2xl ${
                     plan.popular ? 'ring-2 ring-primary shadow-xl scale-[1.02]' : ''
                   }`}>
                   {plan.popular && (
@@ -131,7 +131,7 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
                     </Badge>
                   )}
 
-                  <div className="text-center mb-6">
+                  <div className="text-center mb-5">
                     <h3 className="text-2xl font-bold mb-2">{plan.name.replace(' Monthly', '').replace(' Yearly', '')}</h3>
                     <p className="text-sm text-muted-foreground mb-6">{plan.description}</p>
                     <div className="flex items-baseline justify-center gap-1 mb-2">
@@ -152,9 +152,9 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
                     )}
                   </div>
 
-                  <ul className="space-y-3.5 mb-8">
+                  <ul className="space-y-2.5 mb-6">
                     {plan.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-sm">
+                      <li key={idx} className="flex items-start gap-2.5 text-sm">
                         <div className="p-1 rounded-full bg-green-100 dark:bg-green-900/30 flex-shrink-0 mt-0.5">
                           <Check size={12} className="text-green-600 dark:text-green-400" weight="bold" />
                         </div>
@@ -196,35 +196,34 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
           )}
 
           {/* Feature Highlights */}
-          <div className="bg-gradient-to-br from-muted/50 to-muted/30 dark:from-muted/30 dark:to-muted/20 rounded-xl p-6 border border-border/50">
-            <h4 className="font-bold text-lg mb-5 flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Sparkle size={20} className="text-primary" weight="fill" />
+          <div className="bg-gradient-to-br from-muted/50 to-muted/30 dark:from-muted/30 dark:to-muted/20 rounded-xl p-5 border border-border/50">
+            <h4 className="font-bold text-base mb-4 flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-primary/10">
+                <Sparkle size={18} className="text-primary" weight="fill" />
               </div>
               What You'll Get
             </h4>
-            <div className="grid sm:grid-cols-2 gap-5 text-sm">
-              <div className="flex items-start gap-3">
-                <Check size={18} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
+            <div className="grid sm:grid-cols-2 gap-4 text-sm">
+              <div className="flex items-start gap-2.5">
+                <Check size={16} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
                 <span><strong className="text-foreground">Unlimited pages</strong> - No more limits on your creativity</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <Check size={18} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
+              <div className="flex items-start gap-2.5">
+                <Check size={16} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
                 <span><strong className="text-foreground">50 AI generations/day</strong> - 16x more than free tier</span>
               </div>
-              <div className="flex items-start gap-3">
-                <Check size={18} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
+              <div className="flex items-start gap-2.5">
+                <Check size={16} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
                 <span><strong className="text-foreground">Custom branding</strong> - Make it truly yours</span>
               </div>
-              <div className="flex items-start gap-3">
-                <Check size={18} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
+              <div className="flex items-start gap-2.5">
+                <Check size={16} className="text-primary flex-shrink-0 mt-0.5" weight="bold" />
                 <span><strong className="text-foreground">Priority support</strong> - Get help when you need it</span>
               </div>
             </div>
           </div>
 
           {/* Money-back guarantee */}
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-sm text-muted-foreground pb-2">
             🔒 Secure payment powered by Stripe • Cancel anytime, no questions asked
           </p>
         </div>
