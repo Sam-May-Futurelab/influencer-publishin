@@ -107,17 +107,23 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
 
         <div className="p-8 space-y-8">
           {/* Pricing Cards */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {filteredPlans.map((plan, index) => (
-              <motion.div
-                key={plan.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className={`relative h-full neomorph-raised border-0 p-8 transition-all hover:shadow-2xl ${
-                  plan.popular ? 'ring-2 ring-primary shadow-xl scale-[1.02]' : ''
-                }`}>
+          {filteredPlans.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <p>No plans available for {billingInterval} billing.</p>
+              <p className="text-sm mt-2">Please try the other billing option.</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+              {filteredPlans.map((plan, index) => (
+                <motion.div
+                  key={plan.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className={`relative h-full neomorph-raised border-0 p-8 transition-all hover:shadow-2xl ${
+                    plan.popular ? 'ring-2 ring-primary shadow-xl scale-[1.02]' : ''
+                  }`}>
                   {plan.popular && (
                     <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-4 py-1.5 shadow-lg">
                       <Sparkle size={14} className="mr-1.5" weight="fill" />
@@ -186,7 +192,8 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
                 </Card>
               </motion.div>
             ))}
-          </div>
+            </div>
+          )}
 
           {/* Feature Highlights */}
           <div className="bg-gradient-to-br from-muted/50 to-muted/30 dark:from-muted/30 dark:to-muted/20 rounded-xl p-6 border border-border/50">

@@ -218,13 +218,13 @@ export class StripePaymentService {
    * Calculate savings for yearly plan
    */
   calculateYearlySavings(): number {
-    const monthly = SUBSCRIPTION_PLANS.find(p => p.id === 'monthly');
-    const yearly = SUBSCRIPTION_PLANS.find(p => p.id === 'yearly');
+    const premiumMonthly = SUBSCRIPTION_PLANS.find(p => p.id === 'premium-monthly');
+    const premiumYearly = SUBSCRIPTION_PLANS.find(p => p.id === 'premium-yearly');
     
-    if (!monthly || !yearly) return 0;
+    if (!premiumMonthly || !premiumYearly) return 0;
     
-    const monthlyCost = monthly.price * 12;
-    const savings = monthlyCost - yearly.price;
+    const monthlyCost = premiumMonthly.price * 12;
+    const savings = monthlyCost - premiumYearly.price;
     const percentage = Math.round((savings / monthlyCost) * 100);
     
     return percentage;
