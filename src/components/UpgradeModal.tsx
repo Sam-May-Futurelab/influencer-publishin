@@ -18,7 +18,7 @@ interface UpgradeModalProps {
 export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
-  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
+  const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('month');
 
   const handleUpgrade = async (priceId: string, planId: string) => {
     if (!user) {
@@ -77,26 +77,26 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
           
           {/* Billing Interval Toggle */}
           <div className="flex items-center justify-center gap-4 pt-4">
-            <span className={`text-sm font-semibold ${billingInterval === 'monthly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+            <span className={`text-sm font-semibold ${billingInterval === 'month' ? 'text-foreground' : 'text-muted-foreground'}`}>
               Monthly
             </span>
             <button
-              onClick={() => setBillingInterval(billingInterval === 'monthly' ? 'yearly' : 'monthly')}
+              onClick={() => setBillingInterval(billingInterval === 'month' ? 'year' : 'month')}
               className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                billingInterval === 'yearly' ? 'bg-gradient-to-r from-primary to-purple-600' : 'bg-gray-300 dark:bg-gray-600'
+                billingInterval === 'year' ? 'bg-gradient-to-r from-primary to-purple-600' : 'bg-gray-300 dark:bg-gray-600'
               }`}
             >
               <span
                 className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                  billingInterval === 'yearly' ? 'translate-x-6' : 'translate-x-1'
+                  billingInterval === 'year' ? 'translate-x-6' : 'translate-x-1'
                 }`}
               />
             </button>
-            <span className={`text-sm font-semibold ${billingInterval === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+            <span className={`text-sm font-semibold ${billingInterval === 'year' ? 'text-foreground' : 'text-muted-foreground'}`}>
               Yearly
             </span>
             <div className="ml-2 min-w-[100px]">
-              {billingInterval === 'yearly' && (
+              {billingInterval === 'year' && (
                 <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-sm">
                   Save {savings}%
                 </Badge>
