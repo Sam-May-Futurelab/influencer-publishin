@@ -664,7 +664,7 @@ export function CoverDesigner({
       
       return {
         backgroundImage: `url(${design.backgroundImage})`,
-        backgroundSize: design.imagePosition,
+        backgroundSize: 'cover', // Always cover for AI-generated images
         backgroundPosition: bgPosition,
         backgroundRepeat: 'no-repeat',
         filter: filterValue,

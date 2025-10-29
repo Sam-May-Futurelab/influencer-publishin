@@ -298,7 +298,10 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
               >
                 <Lightning size={18} />
               </motion.div>
-              Generating...
+              <span className="flex flex-col items-start leading-tight">
+                <span className="text-sm font-semibold">Generating Cover...</span>
+                <span className="text-xs opacity-80">This may take 15-30 seconds</span>
+              </span>
             </>
           ) : (
             <>
