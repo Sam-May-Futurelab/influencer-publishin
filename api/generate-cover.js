@@ -105,16 +105,21 @@ export default async function handler(req, res) {
 
     const styleModifier = stylePrompts[style] || stylePrompts.realistic;
     
-    // Simplified prompt - avoid mentioning "book" to prevent 3D mockups
-    let fullPrompt = `Create a rectangular portrait illustration: ${prompt}. Art style: ${styleModifier}. `;
+    // Enhanced prompt for better ebook cover results
+    let fullPrompt = `Professional ebook cover design, portrait orientation. Main visual: ${prompt}. `;
+    fullPrompt += `Art style: ${styleModifier}. `;
     
     if (includeText) {
-      fullPrompt += 'Include decorative title text integrated into the design. ';
+      fullPrompt += 'Include elegant title text integrated into the design. ';
     } else {
-      fullPrompt += 'Pure visual artwork with NO text, NO words, NO letters whatsoever. ';
+      fullPrompt += 'NO text, NO words, NO letters - pure visual design only. ';
     }
     
-    fullPrompt += 'Flat 2D artwork, front-facing view, suitable for publishing. High quality illustration.';
+    // Key constraints for better ebook covers
+    fullPrompt += 'IMPORTANT: Abstract concepts, symbolic imagery, or scenery preferred. ';
+    fullPrompt += 'Avoid human faces or people unless explicitly mentioned in the description. ';
+    fullPrompt += 'Flat 2D design, NOT a 3D book mockup. Front-facing composition. ';
+    fullPrompt += 'Professional publishing quality, suitable for ebook marketplace.';
 
     // Call OpenAI DALL-E 3 API
     const response = await fetch('https://api.openai.com/v1/images/generations', {

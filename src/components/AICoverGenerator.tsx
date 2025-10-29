@@ -234,7 +234,7 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
           <Label htmlFor="prompt">Cover Description</Label>
           <Textarea
             id="prompt"
-            placeholder="Describe the imagery and mood... (e.g., 'A mystical forest at twilight with glowing fireflies and ancient trees')"
+            placeholder={`Describe the visual concept for your cover... (e.g., "An open book glowing with magical light in a dark library" or "Abstract geometric shapes in gold and navy blue")`}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             rows={3}
@@ -242,8 +242,41 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
             className="resize-none"
           />
           <p className="text-xs text-muted-foreground">
-            {prompt.length}/300 characters • Describe the visual elements, not the title
+            {prompt.length}/300 • Focus on: scenery, objects, symbols, colors, mood. Avoid mentioning people/faces unless essential
           </p>
+          
+          {/* Example Prompts */}
+          {!prompt && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-muted-foreground">Quick examples:</p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setPrompt("Ancient leather-bound book with glowing golden edges on dark wooden table")}
+                  className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+                >
+                  📚 Classic Book
+                </button>
+                <button
+                  onClick={() => setPrompt("Abstract flowing waves in deep blue and gold gradient, modern and elegant")}
+                  className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+                >
+                  🎨 Abstract Art
+                </button>
+                <button
+                  onClick={() => setPrompt("Misty mountain landscape at sunrise with golden light breaking through clouds")}
+                  className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+                >
+                  🏔️ Nature Scene
+                </button>
+                <button
+                  onClick={() => setPrompt("Futuristic digital network with glowing nodes and connections in cyan and purple")}
+                  className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+                >
+                  🚀 Tech/Modern
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
