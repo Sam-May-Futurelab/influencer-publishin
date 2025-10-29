@@ -224,7 +224,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     }
   };
 
-  const handleUpgrade = async (planId: 'monthly' | 'yearly') => {
+  const handleUpgrade = async (planId: 'monthly' | 'yearly' | 'creator-monthly' | 'creator-yearly' | 'premium-monthly' | 'premium-yearly') => {
     if (!canPurchase) {
       if (paymentsLoading) {
         toast.info('Payment system is loading. Please wait...');

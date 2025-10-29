@@ -11,8 +11,14 @@ export interface PaymentState {
 // Stripe price IDs (these should match your Stripe dashboard)
 const STRIPE_PRICES = {
   monthly: import.meta.env.VITE_STRIPE_MONTHLY_PRICE_ID || 'price_1S9qW1Dg7CTY7UgaLvL0Wn8j',
-  yearly: import.meta.env.VITE_STRIPE_YEARLY_PRICE_ID || 'price_1S9qW2Dg7CTY7UgaPBLRw8zK'
+  yearly: import.meta.env.VITE_STRIPE_YEARLY_PRICE_ID || 'price_1S9qW2Dg7CTY7UgaPBLRw8zK',
+  'creator-monthly': import.meta.env.VITE_STRIPE_CREATOR_MONTHLY_PRICE_ID,
+  'creator-yearly': import.meta.env.VITE_STRIPE_CREATOR_YEARLY_PRICE_ID,
+  'premium-monthly': import.meta.env.VITE_STRIPE_MONTHLY_PRICE_ID || 'price_1S9qW1Dg7CTY7UgaLvL0Wn8j',
+  'premium-yearly': import.meta.env.VITE_STRIPE_YEARLY_PRICE_ID || 'price_1S9qW2Dg7CTY7UgaPBLRw8zK'
 };
+
+export type PlanId = 'monthly' | 'yearly' | 'creator-monthly' | 'creator-yearly' | 'premium-monthly' | 'premium-yearly';
 
 export function usePayments() {
   const { user, userProfile, refreshProfile } = useAuth();
@@ -50,13 +56,18 @@ export function usePayments() {
   };
 
   // Purchase a subscription using Stripe Checkout
-  const purchaseSubscription = useCallback(async (planId: 'monthly' | 'yearly'): Promise<boolean> => {
+  const purchaseSubscription = useCallback(async (planId: PlanId): Promise<boolean> => {
     if (!user || !state.initialized) {
       toast.error('Please sign in to upgrade to premium.');
       return false;
     }
 
-    const priceId = planId === 'monthly' ? STRIPE_PRICES.monthly : STRIPE_PRICES.yearly;
+    const priceId = STRIPE_PRICES[planId];
+    
+    if (!priceId) {
+      toast.error(`Invalid plan: ${planId}`);
+      return false;
+    }
 
     setState(prev => ({ ...prev, purchasing: true }));
 
