@@ -802,7 +802,7 @@ export function CoverDesigner({
           <div className={`lg:w-[55%] overflow-y-auto p-6 lg:p-10 ${
             isPreviewExpanded ? 'hidden lg:block' : 'block'
           }`}>
-            <Tabs defaultValue="quick" className="w-full">
+            <Tabs defaultValue="ai" className="w-full">
               <TabsList className="grid w-full grid-cols-5 mb-6 h-auto gap-1">
                 <TabsTrigger value="ai" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
                   <Sparkle size={14} weight="fill" />
