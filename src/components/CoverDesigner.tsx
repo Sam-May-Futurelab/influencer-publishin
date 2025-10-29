@@ -476,8 +476,8 @@ export function CoverDesigner({
     imageContrast: 100,
     usePreMadeCover: false,
     ...initialDesign,
-    // Restore AI-generated cover from coverImageData if it exists
-    backgroundImage: initialDesign?.coverImageData || initialDesign?.backgroundImage,
+    // Don't restore from coverImageData - that's the final export with text baked in
+    // Only use backgroundImage if it was explicitly set (e.g., uploaded or AI-generated in this session)
   });
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -831,15 +831,15 @@ export function CoverDesigner({
                   onDesignUpdate={updateDesign}
                   onUpgradeClick={() => setShowUpgradeModal(true)}
                   onCoverGenerated={(imageUrl) => {
-                    // Set the AI-generated image as both background and save it
+                    // Set the AI-generated image as background only - don't save yet
+                    // User needs to click "Save" button to persist
                     updateDesign({
                       backgroundType: 'image',
                       backgroundImage: imageUrl,
-                      coverImageData: imageUrl, // Save the base64 so it persists
                       overlay: true,
                       overlayOpacity: 40,
                     });
-                    toast.success('AI cover applied! Adjust brightness, contrast, and overlay below');
+                    toast.success('AI cover applied! Click "Save Cover" when ready');
                   }}
                 />
               </TabsContent>
