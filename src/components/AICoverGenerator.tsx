@@ -23,12 +23,12 @@ const LOADING_MESSAGES = [
 ];
 
 const COVER_STYLES = [
-  { value: 'realistic', label: 'Realistic', description: 'Photorealistic, professional photography' },
-  { value: 'artistic', label: 'Artistic', description: 'Expressive painting with vibrant colors' },
-  { value: 'minimalist', label: 'Minimalist', description: 'Clean, modern design' },
-  { value: 'dramatic', label: 'Dramatic', description: 'High contrast, moody atmosphere' },
-  { value: 'watercolor', label: 'Watercolor', description: 'Soft, artistic illustration' },
-  { value: 'vintage', label: 'Vintage', description: 'Retro book cover aesthetic' },
+  { value: 'minimalist', label: 'Minimalist', description: 'Clean, simple, modern design' },
+  { value: 'dramatic', label: 'Dramatic', description: 'Bold contrast, cinematic mood' },
+  { value: 'artistic', label: 'Artistic', description: 'Painterly, expressive colors' },
+  { value: 'realistic', label: 'Realistic', description: 'Photorealistic imagery' },
+  { value: 'watercolor', label: 'Watercolor', description: 'Soft, flowing illustration' },
+  { value: 'vintage', label: 'Vintage', description: 'Classic retro aesthetic' },
 ];
 
 const TIER_LIMITS = {
@@ -48,7 +48,7 @@ interface AICoverGeneratorProps {
 export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClick, design, onDesignUpdate }: AICoverGeneratorProps) {
   const { user } = useAuth();
   const [prompt, setPrompt] = useState(projectTitle ? `${projectTitle}` : '');
-  const [style, setStyle] = useState('realistic');
+  const [style, setStyle] = useState('minimalist');
   const [includeText, setIncludeText] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -251,28 +251,28 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
               <p className="text-xs font-medium text-muted-foreground">Quick examples:</p>
               <div className="flex flex-wrap gap-2">
                 <button
-                  onClick={() => setPrompt("Ancient leather-bound book with glowing golden edges on dark wooden table")}
+                  onClick={() => setPrompt("Golden geometric patterns on deep navy blue background, elegant and modern")}
                   className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-muted/80 transition-colors"
                 >
-                  📚 Classic Book
+                  ✨ Elegant Geometric
                 </button>
                 <button
-                  onClick={() => setPrompt("Abstract flowing waves in deep blue and gold gradient, modern and elegant")}
+                  onClick={() => setPrompt("Flowing watercolor waves in turquoise and coral pink, dreamy atmosphere")}
                   className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-muted/80 transition-colors"
                 >
-                  🎨 Abstract Art
+                  � Watercolor Abstract
                 </button>
                 <button
-                  onClick={() => setPrompt("Misty mountain landscape at sunrise with golden light breaking through clouds")}
+                  onClick={() => setPrompt("Misty forest path with soft morning light filtering through trees")}
                   className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-muted/80 transition-colors"
                 >
-                  🏔️ Nature Scene
+                  � Nature Scene
                 </button>
                 <button
-                  onClick={() => setPrompt("Futuristic digital network with glowing nodes and connections in cyan and purple")}
+                  onClick={() => setPrompt("Digital constellation pattern with glowing stars and nebula in deep space")}
                   className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-muted/80 transition-colors"
                 >
-                  🚀 Tech/Modern
+                  🌌 Cosmic Theme
                 </button>
               </div>
             </div>
@@ -283,12 +283,12 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
           <div className="space-y-2">
             <Label htmlFor="style">Art Style</Label>
             <Select value={style} onValueChange={setStyle}>
-              <SelectTrigger id="style" className="bg-background">
+              <SelectTrigger id="style">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-popover border-border">
+              <SelectContent>
                 {COVER_STYLES.map((s) => (
-                  <SelectItem key={s.value} value={s.value} className="hover:bg-accent focus:bg-accent">
+                  <SelectItem key={s.value} value={s.value}>
                     <div>
                       <div className="font-medium">{s.label}</div>
                       <div className="text-xs text-muted-foreground">{s.description}</div>

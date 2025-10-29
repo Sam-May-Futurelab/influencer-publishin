@@ -105,21 +105,21 @@ export default async function handler(req, res) {
 
     const styleModifier = stylePrompts[style] || stylePrompts.realistic;
     
-    // Enhanced prompt for better ebook cover results
-    let fullPrompt = `Professional ebook cover design, portrait orientation. Main visual: ${prompt}. `;
-    fullPrompt += `Art style: ${styleModifier}. `;
+    // Simplified prompt - avoid mentioning "book" or "cover" to prevent DALL-E from drawing books
+    let fullPrompt = `Create a portrait-oriented illustration: ${prompt}. `;
+    fullPrompt += `Style: ${styleModifier}. `;
     
     if (includeText) {
-      fullPrompt += 'Include elegant title text integrated into the design. ';
+      fullPrompt += 'Include decorative title text in the design. ';
     } else {
-      fullPrompt += 'NO text, NO words, NO letters - pure visual design only. ';
+      fullPrompt += 'Pure visual artwork with NO text, NO words, NO letters whatsoever. ';
     }
     
-    // Key constraints for better ebook covers
-    fullPrompt += 'IMPORTANT: Abstract concepts, symbolic imagery, or scenery preferred. ';
-    fullPrompt += 'Avoid human faces or people unless explicitly mentioned in the description. ';
-    fullPrompt += 'Flat 2D design, NOT a 3D book mockup. Front-facing composition. ';
-    fullPrompt += 'Professional publishing quality, suitable for ebook marketplace.';
+    // Key constraints - be explicit about what NOT to show
+    fullPrompt += 'DO NOT show books, book spines, or 3D objects. ';
+    fullPrompt += 'DO NOT show human faces or people unless specifically requested. ';
+    fullPrompt += 'Create flat 2D artwork perfect as a background image. ';
+    fullPrompt += 'Focus on: scenery, abstract patterns, objects, or symbols. Professional quality.';
 
     // Call OpenAI DALL-E 3 API
     const response = await fetch('https://api.openai.com/v1/images/generations', {
