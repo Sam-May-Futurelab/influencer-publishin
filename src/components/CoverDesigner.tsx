@@ -1658,19 +1658,14 @@ export function CoverDesigner({
         </div>
 
         {/* Footer Actions - Hidden on mobile when preview expanded */}
-        <div className={`p-6 lg:p-8 pt-5 border-t ${
+        <div className={`p-4 lg:p-6 border-t ${
           isPreviewExpanded ? 'hidden lg:block' : 'block'
         }`}>
-          <div className="flex items-center justify-between gap-4 mb-3">
-            <p className="text-xs text-muted-foreground">
-              💡 Cover will be saved to your project and can be exported later
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <Button 
               variant="outline" 
               onClick={() => onOpenChange(false)} 
-              className="h-12 px-6 text-base order-3 sm:order-1"
+              className="h-10 px-4 order-3 sm:order-1"
             >
               Cancel
             </Button>
@@ -1695,16 +1690,16 @@ export function CoverDesigner({
                 });
                 toast.success('Reset to default design');
               }}
-              className="h-12 px-6 text-base order-2"
+              className="h-10 px-4 order-2"
             >
-              Reset Design
+              Reset
             </Button>
             <Button 
               onClick={exportCover} 
-              className="gap-2 h-12 px-8 text-base font-semibold sm:ml-auto order-1 sm:order-3"
+              className="gap-2 h-10 px-6 font-semibold sm:ml-auto order-1 sm:order-3"
             >
-              <Download size={20} />
-              Save to Project
+              <Download size={18} />
+              Save Cover
             </Button>
           </div>
         </div>
