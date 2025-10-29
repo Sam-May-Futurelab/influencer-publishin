@@ -116,18 +116,20 @@ export function UsageTracker({ onUpgradeClick, className = '', forceShow = false
                   </motion.div>
                 </div>
               ) : pagesUsed >= maxPages * 0.7 ? (
-                <div className="flex items-center justify-between p-2 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
-                  <div className="flex items-center gap-2">
-                    <TrendUp size={14} className="text-amber-600" weight="bold" />
-                    <span className="text-xs font-medium text-amber-900">Running low on pages</span>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-br from-amber-500/10 via-orange-500/10 to-amber-500/10 dark:from-amber-500/20 dark:via-orange-500/20 dark:to-amber-500/20 border border-amber-200/50 dark:border-amber-700/50 backdrop-blur-sm">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-1.5 rounded-full bg-amber-100 dark:bg-amber-900/50">
+                      <TrendUp size={14} className="text-amber-600 dark:text-amber-400" weight="bold" />
+                    </div>
+                    <span className="text-xs font-medium text-amber-900 dark:text-amber-100">Running low on pages</span>
                   </div>
                   <Button 
                     variant="ghost"
                     size="sm"
                     onClick={onUpgradeClick}
-                    className="h-7 px-3 gap-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 border-0 text-xs font-medium"
+                    className="h-8 px-4 gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 text-xs font-semibold shadow-sm hover:shadow-md transition-all"
                   >
-                    <Crown size={12} weight="fill" />
+                    <Crown size={14} weight="fill" />
                     Upgrade
                   </Button>
                 </div>
