@@ -121,7 +121,7 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className={`relative h-full neomorph-raised border-0 p-4 transition-all hover:shadow-xl ${
+                  <Card className={`relative h-full neomorph-raised border-0 p-4 transition-all hover:shadow-xl flex flex-col ${
                     plan.popular ? 'ring-2 ring-primary shadow-lg scale-[1.02]' : ''
                   }`}>
                   {plan.popular && (
@@ -147,7 +147,7 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
                     )}
                   </div>
 
-                  <ul className="space-y-1.5 mb-3 text-xs">
+                  <ul className="space-y-1.5 mb-3 text-xs min-h-[140px]">
                     {plan.features.slice(0, 7).map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2">
                         <div className="p-0.5 rounded-full bg-green-100 dark:bg-green-900/30 flex-shrink-0 mt-0.5">
@@ -158,32 +158,34 @@ export function UpgradeModal({ open, onClose, highlightMessage }: UpgradeModalPr
                     ))}
                   </ul>
 
-                  <Button
-                    onClick={() => handleUpgrade(plan.priceId, plan.id)}
-                    disabled={loading !== null}
-                    className={`w-full gap-2 h-10 text-sm font-semibold transition-all ${
-                      plan.popular 
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl' 
-                        : 'bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-md hover:shadow-lg'
-                    }`}
-                  >
-                    {loading === plan.id ? (
-                      <>
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        >
-                          <Lightning size={16} />
-                        </motion.div>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <Crown size={16} weight="fill" />
-                        Upgrade Now
-                      </>
-                    )}
-                  </Button>
+                  <div className="mt-auto">
+                    <Button
+                      onClick={() => handleUpgrade(plan.priceId, plan.id)}
+                      disabled={loading !== null}
+                      className={`w-full gap-2 h-10 text-sm font-semibold transition-all ${
+                        plan.popular 
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl' 
+                          : 'bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-md hover:shadow-lg'
+                      }`}
+                    >
+                      {loading === plan.id ? (
+                        <>
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          >
+                            <Lightning size={16} />
+                          </motion.div>
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <Crown size={16} weight="fill" />
+                          Upgrade Now
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </Card>
               </motion.div>
             ))}

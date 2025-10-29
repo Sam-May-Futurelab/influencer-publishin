@@ -31,6 +31,7 @@ import {
 } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { AICoverGenerator } from './AICoverGenerator';
+import { UpgradeModal } from './UpgradeModal';
 
 interface CoverDesign {
   title: string;
@@ -479,6 +480,7 @@ export function CoverDesigner({
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -820,6 +822,7 @@ export function CoverDesigner({
               <TabsContent value="ai" className="space-y-6">
                 <AICoverGenerator
                   projectTitle={projectTitle}
+                  onUpgradeClick={() => setShowUpgradeModal(true)}
                   onCoverGenerated={(imageUrl) => {
                     updateDesign({
                       backgroundType: 'image',
@@ -1710,6 +1713,13 @@ export function CoverDesigner({
           </div>
         )}
       </DialogContent>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        open={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        highlightMessage="Upgrade to generate more AI covers per month"
+      />
     </Dialog>
   );
 }

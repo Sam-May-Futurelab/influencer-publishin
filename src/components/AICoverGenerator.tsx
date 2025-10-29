@@ -31,9 +31,10 @@ const TIER_LIMITS = {
 interface AICoverGeneratorProps {
   onCoverGenerated?: (imageUrl: string) => void;
   projectTitle?: string;
+  onUpgradeClick?: () => void;
 }
 
-export function AICoverGenerator({ onCoverGenerated, projectTitle }: AICoverGeneratorProps) {
+export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClick }: AICoverGeneratorProps) {
   const { user } = useAuth();
   const [prompt, setPrompt] = useState(projectTitle ? `${projectTitle}` : '');
   const [style, setStyle] = useState('realistic');
@@ -309,7 +310,7 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle }: AICoverGene
 
         {usage.remaining === 0 && (
           <p className="text-sm text-center text-muted-foreground">
-            You've reached your monthly limit. <a href="/pricing" className="text-primary hover:underline">Upgrade for more</a>
+            You've reached your monthly limit. <button onClick={onUpgradeClick} className="text-primary hover:underline font-medium">Upgrade for more</button>
           </p>
         )}
       </Card>
@@ -377,8 +378,8 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle }: AICoverGene
                   <span className="text-muted-foreground">50 covers/month</span>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="mt-3" asChild>
-                <a href="/pricing">View Plans</a>
+              <Button variant="outline" size="sm" className="mt-3" onClick={onUpgradeClick}>
+                View Plans
               </Button>
             </div>
           </div>
