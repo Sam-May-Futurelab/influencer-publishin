@@ -13,6 +13,15 @@ import { toast } from 'sonner';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
+const LOADING_MESSAGES = [
+  "🎨 Mixing colors and creativity...",
+  "✨ Crafting your unique design...",
+  "🖼️ Painting your masterpiece...",
+  "🌟 Adding artistic touches...",
+  "🎭 Perfecting the composition...",
+  "💫 Almost there...",
+];
+
 const COVER_STYLES = [
   { value: 'realistic', label: 'Realistic', description: 'Photorealistic, professional photography' },
   { value: 'artistic', label: 'Artistic', description: 'Expressive painting with vibrant colors' },
@@ -43,6 +52,19 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [usage, setUsage] = useState({ used: 0, limit: 1, remaining: 1 });
   const [subscriptionStatus, setSubscriptionStatus] = useState<'free' | 'creator' | 'premium'>('free');
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+
+  // Cycle through loading messages
+  useEffect(() => {
+    if (generating) {
+      const interval = setInterval(() => {
+        setLoadingMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    } else {
+      setLoadingMessageIndex(0);
+    }
+  }, [generating]);
 
   useEffect(() => {
     if (user) {
@@ -288,21 +310,32 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
         <Button
           onClick={handleGenerate}
           disabled={generating || usage.remaining <= 0 || !prompt.trim()}
-          className="w-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
+          className="w-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 min-h-[60px]"
         >
           {generating ? (
-            <>
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              >
-                <Lightning size={18} />
-              </motion.div>
-              <span className="flex flex-col items-start leading-tight">
+            <div className="flex flex-col items-center gap-2 py-1">
+              <div className="flex items-center gap-2">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                >
+                  <Sparkle size={20} weight="fill" />
+                </motion.div>
                 <span className="text-sm font-semibold">Generating Cover...</span>
-                <span className="text-xs opacity-80">This may take 15-30 seconds</span>
-              </span>
-            </>
+              </div>
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={loadingMessageIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-xs opacity-90"
+                >
+                  {LOADING_MESSAGES[loadingMessageIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
           ) : (
             <>
               <Sparkle size={18} weight="fill" />
