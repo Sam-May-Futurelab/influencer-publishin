@@ -358,7 +358,7 @@ export function TryFreePage() {
                 >
                   <Button
                     size="lg"
-                    onClick={() => navigate('/register')}
+                    onClick={() => setShowAuthModal(true)}
                     className="text-lg h-14 px-10 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-xl hover:shadow-2xl transition-all font-bold"
                   >
                     <Rocket size={24} weight="fill" className="mr-2" />
@@ -367,7 +367,10 @@ export function TryFreePage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    onClick={() => navigate('/login')}
+                    onClick={() => {
+                      setShowAuthModal(true);
+                      // TODO: Set initialMode to 'signin' when AuthModal supports it
+                    }}
                     className="text-lg h-14 px-8 border-2 font-semibold"
                   >
                     Already have an account? Sign In
@@ -427,7 +430,7 @@ export function TryFreePage() {
                     </div>
                     <Button
                       size="lg"
-                      onClick={() => navigate('/register')}
+                      onClick={() => setShowAuthModal(true)}
                       className="w-full text-lg h-14 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg font-bold"
                     >
                       <BookOpen size={22} weight="fill" className="mr-2" />
@@ -447,7 +450,10 @@ export function TryFreePage() {
                       <Button
                         size="lg"
                         variant="outline"
-                        onClick={() => navigate('/login')}
+                        onClick={() => {
+                          setShowAuthModal(true);
+                          // TODO: Set initialMode to 'signin' when AuthModal supports it
+                        }}
                         className="w-full text-lg h-12 border-2"
                       >
                         Sign In to Continue
@@ -455,23 +461,23 @@ export function TryFreePage() {
                     </div>
                   </Card>
 
-                  <Card className="p-6 border-2 border-amber-200 bg-amber-50/50 dark:bg-amber-950/20">
+                  <Card className="p-6 border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-purple-600/5">
                     <div className="space-y-3">
                       <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-amber-500/10">
-                          <Clock size={20} weight="duotone" className="text-amber-600" />
+                        <div className="p-2 rounded-lg bg-primary/10">
+                          <Clock size={20} weight="duotone" className="text-primary" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-lg font-bold text-amber-900 dark:text-amber-100">Free Preview Used Today</h3>
-                          <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                          <h3 className="text-lg font-bold">Free Preview Used Today</h3>
+                          <p className="text-sm text-muted-foreground mt-1">
                             You get 1 free preview per day. Sign up for unlimited AI generations!
                           </p>
                         </div>
                       </div>
                       <Button
                         size="lg"
-                        onClick={() => navigate('/register')}
-                        className="w-full text-lg h-12 bg-amber-600 hover:bg-amber-700 text-white"
+                        onClick={() => setShowAuthModal(true)}
+                        className="w-full text-lg h-12 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
                       >
                         <Rocket size={20} weight="fill" className="mr-2" />
                         Unlock Unlimited Access
