@@ -106,7 +106,11 @@ export function TryFreePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <LandingHeader />
+      <LandingHeader 
+        onGetStarted={() => navigate('/register')}
+        onSignIn={() => navigate('/login')}
+        showNavLinks={true}
+      />
 
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         <AnimatePresence mode="wait">

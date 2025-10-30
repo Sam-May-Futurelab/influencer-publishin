@@ -194,6 +194,73 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* Try Free Preview CTA */}
+      <section className="container mx-auto px-4 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-5xl mx-auto"
+        >
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#9b87b8] via-[#b89ed6] to-[#d4c4e8] p-12 md:p-16 shadow-2xl">
+            {/* Decorative Elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            
+            <div className="relative z-10 text-center space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-semibold">
+                <Zap className="w-4 h-4" />
+                No Sign Up Required
+              </div>
+              
+              <h2 className="text-3xl md:text-5xl font-bold text-white">
+                Try AI Book Writing Now
+              </h2>
+              
+              <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
+                Experience the power of our AI in 30 seconds. Generate a complete chapter 
+                for your book idea - completely free, no email required.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <Button
+                  size="lg"
+                  onClick={() => navigate('/try-free')}
+                  className="bg-white text-[#9b87b8] hover:bg-white/90 text-lg px-10 py-7 shadow-xl hover:shadow-2xl transition-all font-bold"
+                >
+                  <Sparkles className="mr-2 w-6 h-6" />
+                  Try Free Preview
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={handleGetStarted}
+                  className="border-2 border-white text-white hover:bg-white/10 text-lg px-10 py-7 backdrop-blur-sm font-semibold"
+                >
+                  Start Full Trial
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="flex flex-wrap justify-center gap-6 text-white/80 text-sm pt-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5" />
+                  <span>500-750 word chapter</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5" />
+                  <span>30 second generation</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5" />
+                  <span>No credit card needed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
       {/* Feature Sections */}
       <section id="features" className="container mx-auto px-4 py-20">
         <div className="space-y-32">
