@@ -42,7 +42,8 @@ import {
   Target,
   Calendar,
   UploadSimple,
-  FilePlus
+  FilePlus,
+  ArrowRight
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -447,83 +448,94 @@ export function Dashboard({
                   className="group"
                 >
                   <Card 
-                    className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300 cursor-pointer h-full"
+                    className="relative overflow-hidden border hover:border-primary/50 transition-all duration-300 cursor-pointer h-full hover:shadow-lg bg-gradient-to-br from-background to-muted/20"
                     onClick={() => onSelectProject(project)}
                   >
-                    <CardContent className={viewMode === 'grid' ? "p-4 lg:p-6" : "p-4"}>
-                      <div className={viewMode === 'grid' ? "space-y-4" : "flex items-center justify-between"}>
-                        <div className={viewMode === 'grid' ? "space-y-3" : "flex-1 space-y-1"}>
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <div 
-                                className="w-3 h-3 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: project.brandConfig?.primaryColor || '#8B5CF6' }}
-                              />
-                              <h3 className="font-semibold text-sm lg:text-base group-hover:text-primary transition-colors truncate">
-                                {project.title}
-                              </h3>
-                            </div>
-                            <div className="flex items-center gap-1 flex-shrink-0">
+                    {/* Colored accent bar */}
+                    <div 
+                      className="absolute top-0 left-0 right-0 h-1"
+                      style={{ 
+                        background: `linear-gradient(90deg, ${project.brandConfig?.primaryColor || '#8B5CF6'}, ${project.brandConfig?.secondaryColor || '#A78BFA'})` 
+                      }}
+                    />
+                    
+                    <CardContent className="p-5">
+                      <div className="space-y-4">
+                        {/* Header */}
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-lg group-hover:text-primary transition-colors truncate mb-1">
+                              {project.title}
+                            </h3>
+                            {project.description && (
+                              <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                                {project.description}
+                              </p>
+                            )}
+                          </div>
+                          
+                          {/* Action buttons */}
+                          <div className="flex items-center gap-1 flex-shrink-0">
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPreviewProject(project);
+                              }}
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 hover:bg-primary/10 hover:text-primary"
+                              title="Preview"
+                            >
+                              <Eye size={16} />
+                            </Button>
+                            {onDeleteProject && (
                               <Button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setPreviewProject(project);
+                                  setProjectToDelete(project);
                                 }}
                                 variant="ghost"
                                 size="sm"
-                                className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset"
+                                className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                                title="Delete"
                               >
-                                <Eye size={14} />
-                                <span className="hidden sm:inline">Preview</span>
+                                <Trash size={16} />
                               </Button>
-                              {onDeleteProject && (
-                                <Button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setProjectToDelete(project);
-                                  }}
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset text-destructive hover:text-destructive"
-                                >
-                                  <Trash size={14} />
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                          
-                          {project.description && (
-                            <p className="text-xs lg:text-sm text-muted-foreground line-clamp-2">
-                              {project.description}
-                            </p>
-                          )}
-                          
-                          <div className={viewMode === 'grid' 
-                            ? "flex flex-wrap items-center gap-3 text-xs text-muted-foreground" 
-                            : "flex items-center gap-4 text-xs text-muted-foreground"
-                          }>
-                            <div className="flex items-center gap-1">
-                              <FileText size={12} />
-                              <span>{stats.chapters} chapter{stats.chapters !== 1 ? 's' : ''}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <BookOpen size={12} />
-                              <span>{stats.words.toLocaleString()} words</span>
-                            </div>
-                            <span>•</span>
-                            <span>{formatDate(project.updatedAt)}</span>
+                            )}
                           </div>
                         </div>
                         
-                        {viewMode === 'list' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="neomorph-button border-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            Open Project
-                          </Button>
-                        )}
+                        {/* Stats */}
+                        <div className="flex items-center gap-4 text-sm">
+                          <div className="flex items-center gap-1.5 text-muted-foreground">
+                            <div className="p-1.5 rounded-md bg-primary/10">
+                              <FileText size={14} className="text-primary" />
+                            </div>
+                            <span className="font-medium">{stats.chapters}</span>
+                            <span className="text-xs">chapter{stats.chapters !== 1 ? 's' : ''}</span>
+                          </div>
+                          
+                          <div className="flex items-center gap-1.5 text-muted-foreground">
+                            <div className="p-1.5 rounded-md bg-primary/10">
+                              <BookOpen size={14} className="text-primary" />
+                            </div>
+                            <span className="font-medium">{stats.words.toLocaleString()}</span>
+                            <span className="text-xs">words</span>
+                          </div>
+                        </div>
+                        
+                        {/* Footer */}
+                        <div className="flex items-center justify-between pt-3 border-t">
+                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <Clock size={12} />
+                            <span>Updated {formatDate(project.updatedAt)}</span>
+                          </div>
+                          
+                          <div className="flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span>Open</span>
+                            <ArrowRight size={14} />
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

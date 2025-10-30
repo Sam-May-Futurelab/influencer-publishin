@@ -167,6 +167,49 @@ export function TryFreePage() {
               {/* Input Card */}
               <Card className="p-8 md:p-10 neomorph-flat border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20">
                 <div className="space-y-6">
+                  {/* Quick Test Buttons - Development Only */}
+                  {import.meta.env.DEV && (
+                    <div className="p-4 bg-muted/50 rounded-lg border-2 border-dashed border-primary/30">
+                      <p className="text-xs font-semibold text-primary mb-3 uppercase tracking-wide">
+                        🧪 Quick Test (Dev Only)
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          onClick={() => setTitle('The Complete Guide to Starting a Successful Online Business')}
+                          size="sm"
+                          variant="outline"
+                          className="text-xs"
+                        >
+                          Business Guide
+                        </Button>
+                        <Button
+                          onClick={() => setTitle('How to Master Social Media Marketing in 30 Days')}
+                          size="sm"
+                          variant="outline"
+                          className="text-xs"
+                        >
+                          Marketing Book
+                        </Button>
+                        <Button
+                          onClick={() => setTitle('The Ultimate Beginner\'s Guide to Personal Finance')}
+                          size="sm"
+                          variant="outline"
+                          className="text-xs"
+                        >
+                          Finance Guide
+                        </Button>
+                        <Button
+                          onClick={() => setTitle('AI Book Generator Test: Health & Wellness')}
+                          size="sm"
+                          variant="outline"
+                          className="text-xs"
+                        >
+                          Health Book
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="space-y-2">
                     <label className="text-sm font-medium">
                       What's your book about?
