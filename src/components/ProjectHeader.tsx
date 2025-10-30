@@ -64,16 +64,10 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
   };
 
   const handleSaveCover = (design: CoverDesign, imageData: string) => {
-    console.log('💾 Saving cover design:', {
-      title: design.title,
-      subtitle: design.subtitle,
-      authorName: design.authorName,
-      hasImage: !!design.backgroundImage,
-    });
     onProjectUpdate({
       coverDesign: { ...design, coverImageData: imageData },
     });
-    toast.success('Cover saved! Changes will persist after sign out.');
+    toast.success('Cover saved successfully!');
   };
 
   const wordCount = project.chapters.reduce((total, chapter) => {
