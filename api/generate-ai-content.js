@@ -415,15 +415,24 @@ Provide helpful, creative, and engaging content suggestions that match the speci
   } catch (error) {
     console.error('AI Generation Error:', error);
 
+    // Handle OpenAI rate limit errors
+    if (error.status === 429 || error.code === 'rate_limit_exceeded') {
+      return res.status(429).json({
+        error: 'OpenAI rate limit exceeded. Please wait a few minutes and try again.',
+        retryAfter: 60, // seconds
+      });
+    }
+
     // Return user-friendly error
     if (error.code === 'insufficient_quota') {
       return res.status(429).json({
-        error: 'AI service quota exceeded. Please try again later.',
+        error: 'AI service quota exceeded. Please contact support or upgrade your OpenAI API tier.',
       });
     }
 
     return res.status(500).json({
       error: 'Failed to generate AI content. Please try again.',
+      details: error.message
     });
   }
 }

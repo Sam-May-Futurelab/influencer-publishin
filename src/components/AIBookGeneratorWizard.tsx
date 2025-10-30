@@ -256,12 +256,13 @@ Write in a professional, engaging tone appropriate for the target audience.`,
 
             success = true;
 
-            // Add 10 second delay between API calls to avoid OpenAI rate limiting
+            // Add 20 second delay between API calls to respect TPM limits
+            // gpt-4o-mini has 200k TPM limit, but need to spread requests out
             if (i < outline.length - 1) {
-              await new Promise(resolve => setTimeout(resolve, 10000));
+              await new Promise(resolve => setTimeout(resolve, 20000));
             }
 
-            } catch (error) {
+          } catch (error) {
             console.error(`Error generating chapter ${i + 1}:`, error);
             
             // Check if it's a rate limit error
@@ -297,9 +298,9 @@ Write in a professional, engaging tone appropriate for the target audience.`,
           }
         }
 
-        // Delay between chapters (success or failure)
+        // Delay between chapters (success or failure) - 20 seconds to respect TPM limits
         if (i < outline.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 10000));
+          await new Promise(resolve => setTimeout(resolve, 20000));
         }
       }
 
@@ -776,7 +777,7 @@ Write in a professional, engaging tone appropriate for the target audience.`,
 
                       <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
                         <p className="text-sm text-primary">
-                          <strong>⏳ Please wait:</strong> Generating {outline.length} chapters with 10-second delays between each to avoid rate limits. This will take several minutes. Don't close this window.
+                          <strong>⏳ Please wait:</strong> Generating {outline.length} chapters with 20-second delays between each to respect API limits. Total time: ~{Math.ceil(outline.length * 20 / 60)} minutes. Don't close this window.
                         </p>
                       </div>
                     </>
