@@ -7,7 +7,29 @@
 
 ## 🔴 Critical Tests (Must Complete)
 
-### 1. Large Export Test (50+ Chapters)
+### 1. Preview → Signup → Migration Flow
+- [ ] Go to /try-free page (logged out)
+- [ ] Enter book details (title, description, genre)
+- [ ] Click "Generate Preview Chapter"
+- [ ] Wait for chapter to generate successfully
+- [ ] Verify preview displays with proper formatting
+- [ ] Click "Save to My Account - Sign Up Free" CTA
+- [ ] Complete signup process (new account)
+- [ ] Verify redirect to Dashboard
+- [ ] Verify migration modal appears automatically
+- [ ] Click "Save to My Account" in modal
+- [ ] Verify success toast shows
+- [ ] Verify new project appears in projects list
+- [ ] Open the project and verify chapter content preserved
+- [ ] Check that text has proper paragraph formatting (not wall of text)
+- [ ] Test with existing user: sign out, generate preview, sign back in
+- [ ] Verify migration modal appears for returning users too
+
+**Expected**: Seamless preview → account → project flow, no data loss, proper formatting
+
+---
+
+### 2. Large Export Test (50+ Chapters)
 - [ ] Create a new project with 50-60 chapters
 - [ ] Add at least 100 words of content to each chapter
 - [ ] Export to PDF format
