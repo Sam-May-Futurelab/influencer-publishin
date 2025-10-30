@@ -480,6 +480,7 @@ export function SnippetsPage() {
                     <Icon size={24} className="text-primary flex-shrink-0 mt-1" />
                     <div className="flex-1 min-w-0">
                       <DialogTitle className="text-lg mb-2">{previewSnippet.title}</DialogTitle>
+                      <DialogDescription className="sr-only">Preview snippet content</DialogDescription>
                       <Badge className={`${config.color} text-xs`}>
                         {config.label}
                       </Badge>

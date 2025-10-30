@@ -500,9 +500,12 @@ function App() {
           return;
         }
         await saveProject(currentUser.uid, updatedProject);
-      } catch (error) {
-        console.error('❌ Error saving project:', error);
-        toast.error('Failed to save changes. Please try again.');
+      } catch (error: any) {
+        // Only show error toast if it's not a permissions error (which happens on logout)
+        if (!error.message?.includes('permissions')) {
+          console.error('❌ Error saving project:', error);
+          toast.error('Failed to save changes. Please try again.');
+        }
       }
     }, 1000); // Save after 1 second of inactivity
   };
