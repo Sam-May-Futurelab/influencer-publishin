@@ -334,10 +334,23 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
         <Button
           onClick={handleGenerate}
           disabled={generating || usage.remaining <= 0 || !prompt.trim()}
-          className="w-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 min-h-[60px]"
+          className="w-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 min-h-[60px] relative overflow-hidden"
         >
+          {generating && (
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
+              animate={{
+                x: ['-100%', '200%'],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            />
+          )}
           {generating ? (
-            <div className="flex flex-col items-center gap-2 py-1">
+            <div className="flex flex-col items-center gap-2 py-1 relative z-10">
               <div className="flex items-center gap-2">
                 <motion.div
                   animate={{ rotate: 360 }}

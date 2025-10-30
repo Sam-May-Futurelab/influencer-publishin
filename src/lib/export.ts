@@ -172,7 +172,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
   const getCoverStyle = () => {
     // Use custom cover design if available
     if (project.coverDesign?.coverImageData) {
-      return `background: url('${project.coverDesign.coverImageData}') center/cover no-repeat; background-size: cover;`;
+      return `background-image: url('${project.coverDesign.coverImageData}'); background-size: cover; background-position: center; background-repeat: no-repeat;`;
     }
     
     // Fall back to brand cover style
@@ -181,7 +181,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
         return `background: linear-gradient(135deg, ${brand.primaryColor} 0%, ${brand.secondaryColor} 100%);`;
       case 'image':
         return brand.coverImageUrl 
-          ? `background: url('${brand.coverImageUrl}') center/cover no-repeat;` 
+          ? `background-image: url('${brand.coverImageUrl}'); background-size: cover; background-position: center; background-repeat: no-repeat;` 
           : `background: ${brand?.primaryColor || '#8B5CF6'};`;
       case 'minimal':
       default:
