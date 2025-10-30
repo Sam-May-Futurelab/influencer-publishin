@@ -332,37 +332,36 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
           </div>
         </div>
 
-        <Button
-          onClick={handleGenerate}
-          disabled={generating || usage.remaining <= 0 || !prompt.trim()}
-          className="w-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 min-h-[60px] relative overflow-hidden"
-        >
-          {generating ? (
-            <div className="relative z-10 w-full">
-              <AILoading
-                variant="magic"
-                messages={[
-                  "Mixing colors and creativity...",
-                  "Crafting your unique design...",
-                  "Painting your masterpiece...",
-                  "Adding artistic touches...",
-                  "Perfecting the composition...",
-                ]}
-                funFacts={[
-                  "AI analyzes thousands of book covers to create the perfect design",
-                  "Colors and composition are optimized for maximum visual impact",
-                  "Your cover is being designed to stand out in any bookstore"
-                ]}
-                currentOperation="Generating cover"
-              />
-            </div>
-          ) : (
-            <>
-              <Sparkle size={18} weight="fill" />
-              Generate Cover
-            </>
-          )}
-        </Button>
+        {/* Generate Button or Loading State */}
+        {generating ? (
+          <div className="space-y-4">
+            <AILoading
+              variant="magic"
+              messages={[
+                "Mixing colors and creativity...",
+                "Crafting your unique design...",
+                "Painting your masterpiece...",
+                "Adding artistic touches...",
+                "Perfecting the composition...",
+              ]}
+              funFacts={[
+                "AI analyzes thousands of book covers to create the perfect design",
+                "Colors and composition are optimized for maximum visual impact",
+                "Your cover is being designed to stand out in any bookstore"
+              ]}
+              currentOperation="Generating cover"
+            />
+          </div>
+        ) : (
+          <Button
+            onClick={handleGenerate}
+            disabled={usage.remaining <= 0 || !prompt.trim()}
+            className="w-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 min-h-[60px]"
+          >
+            <Sparkle size={18} weight="fill" />
+            Generate Cover
+          </Button>
+        )}
 
         {/* Tips */}
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
