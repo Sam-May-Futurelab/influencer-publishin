@@ -372,11 +372,11 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
           <AlertDialogTitle>Short Chapters Detected</AlertDialogTitle>
           <AlertDialogDescription>
             {emptyChaptersList.length} chapter{emptyChaptersList.length > 1 ? 's have' : ' has'} less than 50 words and may appear blank or incomplete in the exported file.
-            <div className="mt-3 p-3 rounded-lg bg-muted/50 max-h-32 overflow-y-auto">
+            <div className="mt-3 p-3 rounded-lg bg-muted max-h-32 overflow-y-auto">
               <p className="text-sm font-medium mb-2">Affected chapters:</p>
               <ul className="text-sm space-y-1">
                 {emptyChaptersList.map((title, index) => (
-                  <li key={index} className="text-muted-foreground">• {title}</li>
+                  <li key={index}>• {title}</li>
                 ))}
               </ul>
             </div>

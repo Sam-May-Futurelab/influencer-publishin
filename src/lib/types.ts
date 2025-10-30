@@ -27,6 +27,7 @@ export interface CoverDesign {
   gradientEnd: string;
   gradientDirection: 'to-br' | 'to-tr' | 'to-r' | 'to-b';
   backgroundImage?: string;
+  uploadedCoverImage?: string; // Persisted AI/uploaded background image
   titleFont: string;
   titleSize: number;
   titleColor: string;
@@ -43,7 +44,7 @@ export interface CoverDesign {
   imageBrightness?: number;
   imageContrast?: number;
   usePreMadeCover?: boolean;
-  coverImageData?: string; // Base64 image data
+  coverImageData?: string; // Base64 final export with text baked in
 }
 
 export interface EbookProject {

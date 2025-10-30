@@ -37,16 +37,20 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
     
     // Handle uploaded cover images (compress if needed)
     let uploadedCoverData: string | undefined;
-    if (project.coverDesign?.coverImageData) {
-      const size = project.coverDesign.coverImageData.length / 1024; // Rough size in KB
+    
+    // Check both coverImageData (old exports) and uploadedCoverImage (new AI/uploaded backgrounds)
+    const imageToSave = project.coverDesign?.uploadedCoverImage || project.coverDesign?.coverImageData;
+    
+    if (imageToSave) {
+      const size = imageToSave.length / 1024; // Rough size in KB
       
-      // If it's a user-uploaded image (large), compress it
+      // If it's a large image, compress it
       if (size > 100) {
-        const compressed = await compressToLimit(project.coverDesign.coverImageData, 400);
+        const compressed = await compressToLimit(imageToSave, 400);
         uploadedCoverData = compressed.dataUrl;
       } else {
-        // Small image (probably generated), keep as-is
-        uploadedCoverData = project.coverDesign.coverImageData;
+        // Small image, keep as-is
+        uploadedCoverData = imageToSave;
       }
     }
     
