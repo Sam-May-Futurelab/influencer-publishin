@@ -84,12 +84,17 @@ function App() {
   // Debounce timer for auto-save
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const currentProjectRef = useRef<EbookProject | null>(null);
+  const userRef = useRef(user);
   const editorSaveRef = useRef<(() => void) | null>(null);
 
-  // Keep ref in sync with current project
+  // Keep refs in sync with current state
   useEffect(() => {
     currentProjectRef.current = currentProject;
   }, [currentProject]);
+
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
 
   // Writing analytics
   const { recordWritingSession } = useWritingAnalytics(projects);
@@ -488,7 +493,13 @@ function App() {
 
     saveTimeoutRef.current = setTimeout(async () => {
       try {
-        await saveProject(user.uid, updatedProject);
+        // Verify user is still authenticated before saving
+        const currentUser = userRef.current;
+        if (!currentUser) {
+          console.log('⚠️ Skipping save: User no longer authenticated');
+          return;
+        }
+        await saveProject(currentUser.uid, updatedProject);
       } catch (error) {
         console.error('❌ Error saving project:', error);
         toast.error('Failed to save changes. Please try again.');
