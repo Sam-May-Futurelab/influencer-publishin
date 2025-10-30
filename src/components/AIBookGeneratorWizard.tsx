@@ -236,14 +236,21 @@ Write in a professional, engaging tone appropriate for the target audience.`,
             updatedAt: new Date(),
           });
 
-          // Add delay between API calls to avoid rate limiting (2 seconds)
+          // Add 10 second delay between API calls to avoid OpenAI rate limiting
           if (i < outline.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 10000));
           }
 
         } catch (error) {
           console.error(`Error generating chapter ${i + 1}:`, error);
-          toast.error(`Failed to generate chapter ${i + 1}. Continuing...`);
+          
+          // Check if it's a rate limit error
+          const isRateLimitError = error instanceof Error && error.message.includes('429');
+          toast.error(
+            isRateLimitError 
+              ? `Rate limit reached. Please wait a few minutes and try again.`
+              : `Failed to generate chapter ${i + 1}. Continuing...`
+          );
           
           // Add placeholder chapter
           newProject.chapters.push({
@@ -728,9 +735,9 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                         </ul>
                       </div>
 
-                      <div className="bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
-                        <p className="text-sm text-orange-900 dark:text-orange-200">
-                          <strong>⏳ Please wait:</strong> This process can take several minutes. Don't close this window until generation is complete.
+                      <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                        <p className="text-sm text-primary">
+                          <strong>⏳ Please wait:</strong> Generating {outline.length} chapters with 10-second delays between each to avoid rate limits. This will take several minutes. Don't close this window.
                         </p>
                       </div>
                     </>
