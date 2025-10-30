@@ -2,7 +2,17 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Sparkle, ArrowRight, Check, Lightning, BookOpen, Rocket } from '@phosphor-icons/react';
+import { 
+  Sparkle, 
+  ArrowRight, 
+  Check, 
+  Lightning, 
+  BookOpen, 
+  Rocket, 
+  Target,
+  ShieldCheck,
+  Clock
+} from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -86,26 +96,48 @@ export function TryFreePage() {
               className="space-y-8"
             >
               {/* Hero Section */}
-              <div className="text-center space-y-4">
+              <div className="text-center space-y-6">
                 <motion.div
                   initial={{ scale: 0.9 }}
                   animate={{ scale: 1 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/10 to-purple-600/10 border border-primary/20 text-primary text-sm font-semibold"
                 >
                   <Lightning size={18} weight="fill" />
                   Free Preview - No Signup Required
                 </motion.div>
-                <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                  Try AI Book Generation
-                </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  See how our AI can write a chapter for your book in seconds. 
-                  No credit card, no commitment.
-                </p>
+                
+                <div className="space-y-4">
+                  <h1 className="text-4xl md:text-6xl font-bold">
+                    Experience AI Book Writing
+                    <span className="block bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      In Seconds
+                    </span>
+                  </h1>
+                  <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                    Watch our AI craft a complete chapter for your book idea. 
+                    No credit card, no commitment - just pure creativity.
+                  </p>
+                </div>
+
+                {/* Trust Indicators */}
+                <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground pt-4">
+                  <div className="flex items-center gap-2">
+                    <Clock size={18} weight="duotone" className="text-primary" />
+                    <span>30 second generation</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck size={18} weight="duotone" className="text-primary" />
+                    <span>No registration needed</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Target size={18} weight="duotone" className="text-primary" />
+                    <span>500-750 words</span>
+                  </div>
+                </div>
               </div>
 
               {/* Input Card */}
-              <Card className="p-8 neomorph-flat">
+              <Card className="p-8 md:p-10 neomorph-flat border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20">
                 <div className="space-y-6">
                   <div className="space-y-2">
                     <label className="text-sm font-medium">
@@ -165,18 +197,66 @@ export function TryFreePage() {
               </Card>
 
               {/* Features */}
-              <div className="grid md:grid-cols-3 gap-4">
-                {[
-                  { icon: '⚡', title: 'Instant Results', desc: 'See AI-generated content in seconds' },
-                  { icon: '🎯', title: 'High Quality', desc: 'Professional writing that sounds human' },
-                  { icon: '✨', title: 'No Risk', desc: 'Try it free, no credit card needed' },
-                ].map((feature, i) => (
-                  <Card key={i} className="p-6 text-center">
-                    <div className="text-4xl mb-2">{feature.icon}</div>
-                    <h3 className="font-semibold mb-1">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.desc}</p>
+              <div className="grid md:grid-cols-3 gap-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <Card className="p-6 h-full border-2 border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg">
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-primary/20 to-purple-600/20">
+                        <Lightning size={24} weight="duotone" className="text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg mb-2">Instant Results</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Watch AI generate professional content in real-time. Your chapter appears in 30 seconds.
+                        </p>
+                      </div>
+                    </div>
                   </Card>
-                ))}
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <Card className="p-6 h-full border-2 border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg">
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-purple-600/20 to-pink-600/20">
+                        <Target size={24} weight="duotone" className="text-purple-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg mb-2">High Quality</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Professional writing that reads naturally. No robotic text or awkward phrasing.
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <Card className="p-6 h-full border-2 border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg">
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20">
+                        <ShieldCheck size={24} weight="duotone" className="text-green-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg mb-2">Zero Risk</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Try it completely free. No credit card, no email, no strings attached.
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
               </div>
             </motion.div>
           ) : (
@@ -185,56 +265,66 @@ export function TryFreePage() {
               key="output"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
+              className="space-y-8"
             >
               {/* Success Header */}
-              <div className="text-center space-y-3">
+              <div className="text-center space-y-4">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ type: 'spring', duration: 0.5 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 text-green-600 dark:text-green-400"
+                  transition={{ type: 'spring', duration: 0.6, bounce: 0.4 }}
+                  className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-500/30"
                 >
-                  <Check size={20} weight="bold" />
-                  <span className="font-medium">Preview Generated!</span>
+                  <Check size={24} weight="bold" className="text-green-600" />
+                  <span className="font-bold text-lg text-green-600 dark:text-green-400">Chapter Generated Successfully!</span>
                 </motion.div>
-                <h2 className="text-3xl font-bold">{generatedTitle}</h2>
-                <p className="text-muted-foreground">
-                  Here's a sample chapter. Sign up to create your full book!
-                </p>
+                
+                <div className="space-y-3">
+                  <h2 className="text-3xl md:text-4xl font-bold">{generatedTitle}</h2>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Here's your AI-generated first chapter. Love what you see? Sign up to create your complete book.
+                  </p>
+                </div>
               </div>
 
               {/* Generated Content Card */}
-              <Card className="p-8 neomorph-flat">
-                <div className="prose prose-slate dark:prose-invert max-w-none">
-                  <h3 className="text-2xl font-bold mb-4">Chapter 1</h3>
-                  <div className="whitespace-pre-wrap leading-relaxed">
+              <Card className="p-8 md:p-12 neomorph-flat border-2 border-primary/10 bg-gradient-to-br from-background to-muted/10">
+                <div className="prose prose-lg prose-slate dark:prose-invert max-w-none">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <BookOpen size={24} weight="duotone" className="text-primary" />
+                    </div>
+                    <h3 className="text-2xl font-bold m-0">Chapter 1</h3>
+                  </div>
+                  <div className="whitespace-pre-wrap leading-relaxed text-foreground/90">
                     {generatedContent}
                   </div>
                 </div>
                 
                 {/* Watermark */}
-                <div className="mt-8 pt-6 border-t text-center text-sm text-muted-foreground">
-                  <Sparkle size={16} weight="fill" className="inline mr-2" />
-                  Generated with InkfluenceAI
+                <div className="mt-10 pt-6 border-t flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <Sparkle size={18} weight="fill" className="text-primary" />
+                  <span className="font-medium">Powered by InkfluenceAI</span>
                 </div>
               </Card>
 
               {/* CTA Section */}
-              <Card className="p-8 bg-gradient-to-r from-primary/10 to-purple-600/10 border-primary/20">
-                <div className="text-center space-y-4">
-                  <h3 className="text-2xl font-bold">Love it? Create Your Full Book</h3>
-                  <p className="text-muted-foreground max-w-xl mx-auto">
-                    Sign up now to generate complete books with multiple chapters, 
-                    create stunning covers, and export to PDF/EPUB.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+              <Card className="p-8 md:p-12 bg-gradient-to-br from-primary/5 via-purple-600/5 to-pink-600/5 border-2 border-primary/20">
+                <div className="text-center space-y-6">
+                  <div className="space-y-3">
+                    <h3 className="text-2xl md:text-3xl font-bold">Ready to Write Your Complete Book?</h3>
+                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                      Sign up now to unlock unlimited chapters, AI cover design, and professional exports to PDF, EPUB, and DOCX.
+                    </p>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                     <Button
                       size="lg"
                       onClick={() => navigate('/register')}
-                      className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
+                      className="text-lg h-14 px-8 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-xl transition-all"
                     >
-                      <Sparkle size={20} weight="fill" className="mr-2" />
+                      <Rocket size={22} weight="fill" className="mr-2" />
                       Start Free Trial
                     </Button>
                     <Button
@@ -242,25 +332,34 @@ export function TryFreePage() {
                       variant="outline"
                       onClick={() => {
                         setGeneratedContent(null);
+                        setGeneratedTitle('');
                         setTitle('');
                       }}
+                      className="text-lg h-14 px-8 border-2"
                     >
+                      <Sparkle size={22} weight="fill" className="mr-2" />
                       Try Another Preview
                     </Button>
                   </div>
                   
-                  <div className="grid sm:grid-cols-3 gap-4 pt-6 text-sm">
-                    <div className="flex items-center justify-center gap-2">
-                      <BookOpen size={18} className="text-primary" weight="duotone" />
-                      <span>Unlimited books</span>
+                  <div className="grid sm:grid-cols-3 gap-6 pt-8 max-w-2xl mx-auto">
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <div className="p-3 rounded-xl bg-primary/10">
+                        <BookOpen size={24} className="text-primary" weight="duotone" />
+                      </div>
+                      <span className="font-semibold">Unlimited books</span>
                     </div>
-                    <div className="flex items-center justify-center gap-2">
-                      <Sparkle size={18} className="text-primary" weight="duotone" />
-                      <span>AI cover designer</span>
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <div className="p-3 rounded-xl bg-primary/10">
+                        <Sparkle size={24} className="text-primary" weight="duotone" />
+                      </div>
+                      <span className="font-semibold">AI cover designer</span>
                     </div>
-                    <div className="flex items-center justify-center gap-2">
-                      <Rocket size={18} className="text-primary" weight="duotone" />
-                      <span>Export to any format</span>
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <div className="p-3 rounded-xl bg-primary/10">
+                        <Rocket size={24} className="text-primary" weight="duotone" />
+                      </div>
+                      <span className="font-semibold">Export any format</span>
                     </div>
                   </div>
                 </div>
