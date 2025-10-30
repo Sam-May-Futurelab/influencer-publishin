@@ -96,20 +96,20 @@ export function LandingPage() {
             className="text-center space-y-8"
           >
             <div className="inline-block px-4 py-2 bg-[#e2d1f0] rounded-full text-[#5c4470] font-medium">
-              ✨ AI-Powered Book Writing Platform
+              ✨ AI-Powered Full Book Generation
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-              Write and publish your{' '}
+              Generate complete books{' '}
               <span className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] bg-clip-text text-transparent">
-                book faster
+                in minutes
               </span>
               {' '}with AI
             </h1>
             
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              From concept to completed chapters in minutes. AI-powered assistance for outlining, 
-              writing, and publishing your book. Bring your story to life faster than ever before.
+              From a single idea to a fully written book with AI. Generate complete chapter outlines,
+              write entire chapters automatically, and publish professionally. Your book, powered by AI.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -264,7 +264,7 @@ export function LandingPage() {
       {/* Feature Sections */}
       <section id="features" className="container mx-auto px-4 py-20">
         <div className="space-y-32">
-          {/* Feature 1: AI Writing */}
+          {/* Feature 1: AI Book Generator */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -273,28 +273,27 @@ export function LandingPage() {
           >
             <div className="space-y-6">
               <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium">
-                Make it quick
+                ✨ Full AI Generation
               </div>
               <h2 className="text-4xl md:text-5xl font-bold">
-                From idea to chapter in minutes
+                Generate complete books with AI
               </h2>
               <p className="text-lg text-gray-600">
-                No more writer's block—just enter your topic, and let our AI writing assistant 
-                help you create. Start with AI-generated content, refine your message, and watch 
-                your story unfold.
+                Describe your book idea and watch as AI creates a complete outline, then generates 
+                all chapters automatically. From concept to finished manuscript in minutes, not months.
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">AI-powered content generation from keywords</span>
+                  <span className="text-gray-700">AI generates 6-15 chapter outlines instantly</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Intelligent chapter outlines and structure</span>
+                  <span className="text-gray-700">Full chapter content written automatically</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Context-aware content suggestions</span>
+                  <span className="text-gray-700">Professional quality, ready to edit and publish</span>
                 </li>
               </ul>
               <Button 
@@ -302,14 +301,14 @@ export function LandingPage() {
                 size="lg"
                 className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
               >
-                Start Creating
+                Try AI Book Generator
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
             <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-4 overflow-hidden shadow-lg">
               <img 
                 src="/images/idea-to-chapter.jpg" 
-                alt="AI-powered content generation from idea to chapter in minutes"
+                alt="AI-powered full book generation from idea to complete manuscript"
                 className="w-full h-full object-cover rounded-xl"
               />
             </div>

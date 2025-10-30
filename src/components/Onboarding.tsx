@@ -115,9 +115,9 @@ export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAI
                 <span className="text-primary font-bold text-sm">3</span>
               </div>
               <div className="flex-1">
-                <p className="font-semibold text-sm mb-1">AI-Assisted Setup</p>
+                <p className="font-semibold text-sm mb-1">AI Book Generator ✨</p>
                 <p className="text-xs text-muted-foreground">
-                  Describe your topic and let AI generate a complete chapter outline
+                  Let AI create a complete book outline and generate all chapters automatically
                 </p>
               </div>
             </button>

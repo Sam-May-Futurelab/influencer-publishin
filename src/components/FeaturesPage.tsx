@@ -16,6 +16,13 @@ export default function FeaturesPage() {
 
   const coreFeatures = [
     {
+      icon: <Sparkles className="h-8 w-8 text-purple-600" />,
+      title: "AI Book Generator",
+      description: "Generate complete books from a single idea. AI creates chapter outlines and writes all content automatically.",
+      benefits: ["6-15 chapter outlines instantly", "Full chapters generated", "Professional quality", "Minutes not months"],
+      badge: "Premium Feature"
+    },
+    {
       icon: <Brain className="h-8 w-8 text-blue-600" />,
       title: "AI Writing Assistant",
       description: "Advanced GPT-4 powered writing suggestions, content generation, and real-time editing assistance.",
