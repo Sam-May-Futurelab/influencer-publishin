@@ -236,6 +236,11 @@ Write in a professional, engaging tone appropriate for the target audience.`,
             updatedAt: new Date(),
           });
 
+          // Add delay between API calls to avoid rate limiting (2 seconds)
+          if (i < outline.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+
         } catch (error) {
           console.error(`Error generating chapter ${i + 1}:`, error);
           toast.error(`Failed to generate chapter ${i + 1}. Continuing...`);

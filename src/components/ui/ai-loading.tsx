@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { Sparkle, BookOpen, Pen, Lightning, Brain, MagicWand } from '@phosphor-icons/react';
+import { useState, useEffect } from 'react';
 
 interface AILoadingProps {
   progress?: number;
@@ -15,9 +16,9 @@ interface AILoadingProps {
 const variantConfig = {
   book: {
     icon: BookOpen,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
-    accentColor: 'bg-blue-500',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    accentColor: 'bg-primary',
   },
   magic: {
     icon: MagicWand,
@@ -27,9 +28,9 @@ const variantConfig = {
   },
   brain: {
     icon: Brain,
-    color: 'text-pink-500',
-    bgColor: 'bg-pink-500/10',
-    accentColor: 'bg-pink-500',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    accentColor: 'bg-primary',
   },
   default: {
     icon: Sparkle,
@@ -50,6 +51,28 @@ export function AILoading({
 }: AILoadingProps) {
   const config = variantConfig[variant];
   const Icon = config.icon;
+  
+  // Fake progress animation when progress is 0
+  const [fakeProgress, setFakeProgress] = useState(0);
+  
+  useEffect(() => {
+    if (progress === 0) {
+      // Gradually increment fake progress
+      const interval = setInterval(() => {
+        setFakeProgress((prev) => {
+          if (prev >= 90) return 90; // Cap at 90% until real progress comes in
+          return prev + Math.random() * 3; // Random increment 0-3%
+        });
+      }, 500);
+      
+      return () => clearInterval(interval);
+    } else {
+      // Use real progress when available
+      setFakeProgress(progress);
+    }
+  }, [progress]);
+  
+  const displayProgress = Math.round(fakeProgress);
 
   return (
     <div className="space-y-6">
@@ -243,15 +266,15 @@ export function AILoading({
       <div className="space-y-2">
         <div className="flex justify-between text-sm font-medium">
           <span className="text-muted-foreground">Progress</span>
-          <span className={config.color}>{Math.round(progress)}%</span>
+          <span className={config.color}>{displayProgress}%</span>
         </div>
         <div className="relative">
-          <Progress value={progress} className="h-3" />
+          <Progress value={displayProgress} className="h-3" />
           {/* Shimmer effect on progress bar */}
-          {progress < 100 && (
+          {displayProgress < 100 && (
             <motion.div
               className="absolute inset-0 h-3 overflow-hidden rounded-full"
-              style={{ width: `${progress}%` }}
+              style={{ width: `${displayProgress}%` }}
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
@@ -273,7 +296,7 @@ export function AILoading({
       {messages.length > 0 && (
         <div className={`text-center p-4 rounded-lg ${config.bgColor} border border-primary/10`}>
           <p className="text-sm text-muted-foreground italic">
-            💡 {messages[Math.floor((progress / 100) * messages.length) % messages.length]}
+            💡 {messages[Math.floor((displayProgress / 100) * messages.length) % messages.length]}
           </p>
         </div>
       )}
