@@ -53,6 +53,7 @@ import { importFile } from '@/lib/import';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { ProjectSetupDialog } from '@/components/ProjectSetupDialog';
+import { UserProfile } from '@/lib/auth';
 
 interface DashboardProps {
   projects: EbookProject[];
@@ -62,6 +63,7 @@ interface DashboardProps {
   onDeleteProject?: (projectId: string) => void;
   onImportProject?: (project: Partial<EbookProject>) => void;
   onProjectsChanged?: () => Promise<void>;
+  userProfile?: UserProfile | null;
 }
 
 export function Dashboard({ 
@@ -71,7 +73,8 @@ export function Dashboard({
   onShowTemplateGallery,
   onDeleteProject,
   onImportProject,
-  onProjectsChanged
+  onProjectsChanged,
+  userProfile
 }: DashboardProps) {
   const { stats, totalWords, goals, progress } = useWritingAnalytics(projects);
   const { hasPreview, previewData, isMigrating, migrateToAccount, dismissPreview } = usePreviewMigration();
@@ -355,7 +358,7 @@ export function Dashboard({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-6xl mx-auto"
+        className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 max-w-7xl mx-auto"
       >
         {/* Create New Project */}
         <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300">
@@ -429,6 +432,49 @@ export function Dashboard({
               <Rocket size={16} />
               Browse Templates
             </Button>
+          </CardContent>
+        </Card>
+
+        {/* AI Book Generator - NEW */}
+        <Card className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-primary/10 to-purple-500/10 pointer-events-none" />
+          <CardContent className="p-4 lg:p-6 relative">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-purple-600 to-primary shadow-lg">
+                <Sparkle size={20} className="text-white" weight="fill" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-sm lg:text-base">AI Book Generator</h3>
+                <Badge variant="secondary" className="text-[10px] mt-1 bg-gradient-to-r from-purple-500 to-primary text-white border-0">New!</Badge>
+              </div>
+            </div>
+            <p className="text-xs lg:text-sm text-muted-foreground mb-4">
+              Generate a complete ebook (6-15 chapters) with AI in minutes.
+            </p>
+            <Button
+              onClick={() => toast.info('AI Book Generator coming soon!')}
+              className="w-full neomorph-button border-0 text-sm min-h-[40px] bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90 text-white"
+            >
+              <Sparkle size={16} weight="fill" />
+              Generate Full Book
+            </Button>
+            
+            {/* Usage indicator */}
+            {userProfile && (
+              <div className="mt-3 text-xs text-muted-foreground text-center">
+                {userProfile.subscriptionStatus === 'free' && (
+                  <Badge variant="outline" className="text-xs">Premium Feature</Badge>
+                )}
+                {userProfile.subscriptionStatus === 'creator' && (
+                  <>
+                    {userProfile.fullBookGenerationsUsed || 0}/5 books this month
+                  </>
+                )}
+                {userProfile.subscriptionStatus === 'premium' && (
+                  <>Unlimited ✨</>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>

@@ -27,6 +27,9 @@ export interface UserProfile {
   hasCompletedOnboarding: boolean;
   createdAt: any;
   lastLoginAt: any;
+  // AI Book Generation Usage
+  fullBookGenerationsUsed?: number;
+  lastFullBookGenerationReset?: any;
   // Writing Analytics
   writingStats?: {
     totalWords: number;
@@ -313,6 +316,52 @@ export const updateUserPreferences = async (uid: string, preferences: UserProfil
     console.error('Error updating user preferences:', error);
     return false;
   }
+};
+
+// AI Book Generation Usage Tracking
+export const incrementFullBookGeneration = async (uid: string): Promise<void> => {
+  try {
+    const userRef = doc(db, 'users', uid);
+    const userDoc = await getDoc(userRef);
+    const userData = userDoc.data() as UserProfile;
+    
+    await setDoc(userRef, {
+      fullBookGenerationsUsed: (userData.fullBookGenerationsUsed || 0) + 1,
+      lastFullBookGenerationReset: serverTimestamp()
+    }, { merge: true });
+  } catch (error) {
+    console.error('Error incrementing full book generation:', error);
+    throw error;
+  }
+};
+
+export const canGenerateFullBook = (profile: UserProfile | null): boolean => {
+  if (!profile) return false;
+  
+  const { subscriptionStatus, fullBookGenerationsUsed = 0 } = profile;
+  
+  // Free tier: NO full book generations (premium feature only)
+  if (subscriptionStatus === 'free') return false;
+  
+  // Premium tier: Unlimited
+  if (subscriptionStatus === 'premium') return true;
+  
+  // Creator tier: 5 books/month
+  if (subscriptionStatus === 'creator') return fullBookGenerationsUsed < 5;
+  
+  return false;
+};
+
+export const getRemainingFullBooks = (profile: UserProfile | null): number | 'unlimited' => {
+  if (!profile) return 0;
+  
+  const { subscriptionStatus, fullBookGenerationsUsed = 0 } = profile;
+  
+  if (subscriptionStatus === 'free') return 0;
+  if (subscriptionStatus === 'premium') return 'unlimited';
+  if (subscriptionStatus === 'creator') return Math.max(0, 5 - fullBookGenerationsUsed);
+  
+  return 0;
 };
 
 // Delete user account (handles both email/password and Google sign-in)

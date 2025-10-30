@@ -11,7 +11,11 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['coverGenerationsUsed']) 
           || request.resource.data.coverGenerationsUsed is int)
         && (!request.resource.data.keys().hasAny(['lastCoverGenerationReset']) 
-          || request.resource.data.lastCoverGenerationReset is timestamp);
+          || request.resource.data.lastCoverGenerationReset is timestamp)
+        && (!request.resource.data.keys().hasAny(['fullBookGenerationsUsed']) 
+          || request.resource.data.fullBookGenerationsUsed is int)
+        && (!request.resource.data.keys().hasAny(['lastFullBookGenerationReset']) 
+          || request.resource.data.lastFullBookGenerationReset is timestamp);
     }
     
     // User projects - users can only access their own projects

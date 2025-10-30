@@ -890,6 +890,7 @@ function App() {
                           onDeleteProject={deleteProject}
                           onImportProject={importProject}
                           onProjectsChanged={reloadProjects}
+                          userProfile={userProfile}
                         />
                       )}
                     </Suspense>
