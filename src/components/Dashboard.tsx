@@ -61,6 +61,7 @@ interface DashboardProps {
   onShowTemplateGallery: () => void;
   onDeleteProject?: (projectId: string) => void;
   onImportProject?: (project: Partial<EbookProject>) => void;
+  onProjectsChanged?: () => Promise<void>;
 }
 
 export function Dashboard({ 
@@ -69,7 +70,8 @@ export function Dashboard({
   onCreateProject, 
   onShowTemplateGallery,
   onDeleteProject,
-  onImportProject
+  onImportProject,
+  onProjectsChanged
 }: DashboardProps) {
   const { stats, totalWords, goals, progress } = useWritingAnalytics(projects);
   const { hasPreview, previewData, isMigrating, migrateToAccount, dismissPreview } = usePreviewMigration();
@@ -94,7 +96,13 @@ export function Dashboard({
     const migratedProject = await migrateToAccount();
     if (migratedProject) {
       toast.success('Your preview has been added to your projects!');
-      // Optionally navigate to the new project
+      
+      // Reload projects list to include the new migrated project
+      if (onProjectsChanged) {
+        await onProjectsChanged();
+      }
+      
+      // Navigate to the new project
       onSelectProject(migratedProject);
     }
   };

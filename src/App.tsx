@@ -151,6 +151,22 @@ function App() {
     loadProjects();
   }, [user]);
 
+  // Function to reload projects (for use after migration, etc.)
+  const reloadProjects = async () => {
+    if (user) {
+      setProjectsLoading(true);
+      try {
+        const userProjects = await getUserProjects(user.uid);
+        setProjects(userProjects);
+      } catch (error) {
+        console.error('Error loading projects:', error);
+        toast.error('Failed to load your projects');
+      } finally {
+        setProjectsLoading(false);
+      }
+    }
+  };
+
   // Check if user needs onboarding
   useEffect(() => {
     if (user && userProfile && !userProfile.hasCompletedOnboarding) {
@@ -859,6 +875,7 @@ function App() {
                           onShowTemplateGallery={goToTemplatesPage}
                           onDeleteProject={deleteProject}
                           onImportProject={importProject}
+                          onProjectsChanged={reloadProjects}
                         />
                       )}
                     </Suspense>

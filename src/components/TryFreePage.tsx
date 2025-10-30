@@ -362,7 +362,7 @@ export function TryFreePage() {
                     className="text-lg h-14 px-10 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-xl hover:shadow-2xl transition-all font-bold"
                   >
                     <Rocket size={24} weight="fill" className="mr-2" />
-                    Continue Writing - Sign Up Free
+                    Save to My Account - Sign Up Free
                   </Button>
                   <Button
                     size="lg"
