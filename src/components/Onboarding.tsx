@@ -9,161 +9,175 @@ interface OnboardingProps {
   open: boolean;
   onComplete: () => void;
   onSkip: () => void;
+  onShowTemplates?: () => void;
+  onShowAIGenerate?: () => void;
 }
 
-const steps = [
-  {
-    title: "Welcome to Inkfluence AI",
-    description: "AI-powered writing for professional ebooks and content",
-    icon: Sparkle,
-    content: (
-      <div className="space-y-6">
-        <div className="grid gap-4">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <MagicWand size={20} className="text-primary" weight="duotone" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-sm mb-1">AI Content Generation</h4>
-              <p className="text-sm text-muted-foreground">Generate chapters, outlines, and content suggestions instantly</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <BookOpen size={20} className="text-primary" weight="duotone" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-sm mb-1">Organized Writing</h4>
-              <p className="text-sm text-muted-foreground">Chapters, drag-and-drop reordering, and auto-save</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <FileArrowDown size={20} className="text-primary" weight="duotone" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-sm mb-1">Professional Export</h4>
-              <p className="text-sm text-muted-foreground">Export to PDF, EPUB, and DOCX with custom branding</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-muted/50 p-4 rounded-lg border">
-          <p className="text-sm font-medium mb-1">Free Plan Includes:</p>
-          <p className="text-xs text-muted-foreground">4 pages per ebook • 3 AI generations per day • Basic templates</p>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: "Create Your First Project",
-    description: "Three ways to get started",
-    icon: BookOpen,
-    content: (
-      <div className="space-y-4">
-        <div className="space-y-3">
-          <div className="flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/5 transition-colors">
-            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-primary font-bold text-sm">1</span>
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold text-sm mb-1">Use a Template</p>
-              <p className="text-xs text-muted-foreground">
-                Pre-built structures for common ebook types (how-to guides, lead magnets, courses)
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/5 transition-colors">
-            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-primary font-bold text-sm">2</span>
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold text-sm mb-1">Start From Scratch</p>
-              <p className="text-xs text-muted-foreground">
-                Click "New Project" and build your ebook chapter by chapter
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/5 transition-colors">
-            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-primary font-bold text-sm">3</span>
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold text-sm mb-1">AI-Assisted Setup</p>
-              <p className="text-xs text-muted-foreground">
-                Describe your topic and let AI generate a complete chapter outline
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-muted/50 p-3 rounded-lg border text-center">
-          <p className="text-xs text-muted-foreground">
-            💡 Tip: Templates are the fastest way to get started
-          </p>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: "Using AI to Write",
-    description: "Get AI help whenever you need it",
-    icon: MagicWand,
-    content: (
-      <div className="space-y-4">
-        <div className="space-y-3">
-          <div className="flex items-start gap-3 p-3 rounded-lg border bg-card">
-            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-primary font-bold text-sm">1</span>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm">Click the <strong>AI button (✨)</strong> in any chapter</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-3 rounded-lg border bg-card">
-            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-primary font-bold text-sm">2</span>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm">Describe what you need (outline, intro, etc.)</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-3 rounded-lg border bg-card">
-            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-primary font-bold text-sm">3</span>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm">Review and insert AI suggestions with one click</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-muted/50 p-4 rounded-lg border">
-          <p className="text-sm font-medium mb-2">AI Usage Limits:</p>
-          <div className="space-y-1 text-xs text-muted-foreground">
-            <p><strong>Free:</strong> 3 generations per day</p>
-            <p><strong>Premium:</strong> 50 generations per day</p>
-          </div>
-        </div>
-
-        <div className="bg-primary/5 p-3 rounded-lg border border-primary/20">
-          <p className="text-xs text-muted-foreground">
-            💡 <strong>Tip:</strong> Be specific! "Write an intro about choosing dog breeds for families" works better than "write about dogs"
-          </p>
-        </div>
-      </div>
-    )
-  }
-];
-
-export function Onboarding({ open, onComplete, onSkip }: OnboardingProps) {
+export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAIGenerate }: OnboardingProps) {
   const [currentStep, setCurrentStep] = useState(0);
+
+  const handleStepAction = (action: 'templates' | 'ai-generate') => {
+    if (action === 'templates' && onShowTemplates) {
+      onShowTemplates();
+      onComplete(); // Close onboarding after action
+    } else if (action === 'ai-generate' && onShowAIGenerate) {
+      onShowAIGenerate();
+      onComplete(); // Close onboarding after action
+    }
+  };
+
+  // Create steps with action handlers
+  const steps = [
+    {
+      title: "Welcome to Inkfluence AI",
+      description: "AI-powered writing for professional ebooks and content",
+      icon: Sparkle,
+      content: (
+        <div className="space-y-6">
+          <div className="grid gap-4">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <MagicWand size={20} className="text-primary" weight="duotone" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm mb-1">AI Content Generation</h4>
+                <p className="text-sm text-muted-foreground">Generate chapters, outlines, and content suggestions instantly</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <BookOpen size={20} className="text-primary" weight="duotone" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm mb-1">Organized Writing</h4>
+                <p className="text-sm text-muted-foreground">Chapters, drag-and-drop reordering, and auto-save</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <FileArrowDown size={20} className="text-primary" weight="duotone" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm mb-1">Professional Export</h4>
+                <p className="text-sm text-muted-foreground">Export to PDF, EPUB, and DOCX with custom branding</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-muted/50 p-4 rounded-lg border">
+            <p className="text-sm font-medium mb-1">Free Plan Includes:</p>
+            <p className="text-xs text-muted-foreground">4 pages per ebook • 3 AI generations per day • Basic templates</p>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "Create Your First Project",
+      description: "Three ways to get started",
+      icon: BookOpen,
+      content: (
+        <div className="space-y-4">
+          <div className="space-y-3">
+            <button
+              onClick={() => handleStepAction('templates')}
+              className="w-full flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/10 hover:border-primary/30 transition-all cursor-pointer text-left"
+            >
+              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-primary font-bold text-sm">1</span>
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-sm mb-1">Use a Template</p>
+                <p className="text-xs text-muted-foreground">
+                  Pre-built structures for common ebook types (how-to guides, lead magnets, courses)
+                </p>
+              </div>
+            </button>
+
+            <div className="flex items-start gap-4 p-4 rounded-lg border bg-card">
+              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-primary font-bold text-sm">2</span>
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-sm mb-1">Start From Scratch</p>
+                <p className="text-xs text-muted-foreground">
+                  Click "New Project" on the dashboard and build your ebook chapter by chapter
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => handleStepAction('ai-generate')}
+              className="w-full flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/10 hover:border-primary/30 transition-all cursor-pointer text-left"
+            >
+              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-primary font-bold text-sm">3</span>
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-sm mb-1">AI-Assisted Setup</p>
+                <p className="text-xs text-muted-foreground">
+                  Describe your topic and let AI generate a complete chapter outline
+                </p>
+              </div>
+            </button>
+          </div>
+
+          <div className="bg-muted/50 p-3 rounded-lg border text-center">
+            <p className="text-xs text-muted-foreground">
+              💡 Tip: Templates are the fastest way to get started
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "Using AI to Write",
+      description: "Get AI help whenever you need it",
+      icon: MagicWand,
+      content: (
+        <div className="space-y-4">
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 p-3 rounded-lg border bg-card">
+              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-primary font-bold text-sm">1</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm">Click the <strong>AI button (✨)</strong> in any chapter</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 p-3 rounded-lg border bg-card">
+              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-primary font-bold text-sm">2</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm">Describe what you need (outline, intro, etc.)</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 p-3 rounded-lg border bg-card">
+              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-primary font-bold text-sm">3</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm">Review and insert AI suggestions with one click</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-muted/50 p-4 rounded-lg border">
+            <p className="text-sm font-medium mb-2">AI Usage Limits:</p>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <p><strong>Free:</strong> 3 generations per day</p>
+              <p><strong>Creator:</strong> 50 generations per month</p>
+              <p><strong>Pro:</strong> Unlimited generations</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  ];
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
