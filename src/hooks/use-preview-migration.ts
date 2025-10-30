@@ -81,34 +81,58 @@ export function usePreviewMigration() {
     try {
       // Create a new project from the preview data
       const projectId = uuidv4();
+      const now = new Date();
+      
       const newProject: EbookProject = {
         id: projectId,
-        userId: user.uid,
         title: previewData.title,
+        description: '',
+        author: user.displayName || 'Author',
         chapters: [
           {
             id: uuidv4(),
             title: 'Chapter 1',
             content: previewData.chapter1,
             order: 0,
+            createdAt: now,
+            updatedAt: now,
           }
         ],
+        brandConfig: {
+          primaryColor: '#9b87b8',
+          secondaryColor: '#b89ed6',
+          accentColor: '#7a5f96',
+          fontFamily: 'Inter',
+          coverStyle: 'minimal',
+        },
         coverDesign: {
           title: previewData.title,
           subtitle: '',
-          author: user.displayName || 'Author',
-          titleColor: '#000000',
-          subtitleColor: '#666666',
-          authorColor: '#333333',
+          authorName: user.displayName || 'Author',
+          backgroundType: 'solid',
           backgroundColor: '#FFFFFF',
-          backgroundImage: '',
+          gradientStart: '#9b87b8',
+          gradientEnd: '#b89ed6',
+          gradientDirection: 'to-br',
+          titleColor: '#000000',
           titleFont: 'Playfair Display',
-          bodyFont: 'Lora',
-          titleSize: 'text-5xl',
-          layout: 'centered',
+          titleSize: 48,
+          subtitleColor: '#666666',
+          subtitleFont: 'Inter',
+          subtitleSize: 24,
+          authorColor: '#333333',
+          authorFont: 'Inter',
+          authorSize: 18,
+          overlay: false,
+          overlayOpacity: 0.5,
+          imagePosition: 'cover',
+          imageAlignment: 'center',
+          imageBrightness: 100,
+          imageContrast: 100,
+          usePreMadeCover: false,
         },
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: now,
+        updatedAt: now,
       };
 
       // Save to Firestore
