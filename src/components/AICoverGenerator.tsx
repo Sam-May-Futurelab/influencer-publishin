@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { AILoading } from '@/components/ui/ai-loading';
 
 const LOADING_MESSAGES = [
   "🎨 Mixing colors and creativity...",
@@ -336,42 +337,24 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
           disabled={generating || usage.remaining <= 0 || !prompt.trim()}
           className="w-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 min-h-[60px] relative overflow-hidden"
         >
-          {generating && (
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
-              animate={{
-                x: ['-100%', '200%'],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-            />
-          )}
           {generating ? (
-            <div className="flex flex-col items-center gap-2 py-1 relative z-10">
-              <div className="flex items-center gap-2">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                >
-                  <Sparkle size={20} weight="fill" />
-                </motion.div>
-                <span className="text-sm font-semibold">Generating Cover...</span>
-              </div>
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={loadingMessageIndex}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-xs opacity-90"
-                >
-                  {LOADING_MESSAGES[loadingMessageIndex]}
-                </motion.span>
-              </AnimatePresence>
+            <div className="relative z-10 w-full">
+              <AILoading
+                variant="magic"
+                messages={[
+                  "Mixing colors and creativity...",
+                  "Crafting your unique design...",
+                  "Painting your masterpiece...",
+                  "Adding artistic touches...",
+                  "Perfecting the composition...",
+                ]}
+                funFacts={[
+                  "AI analyzes thousands of book covers to create the perfect design",
+                  "Colors and composition are optimized for maximum visual impact",
+                  "Your cover is being designed to stand out in any bookstore"
+                ]}
+                currentOperation="Generating cover"
+              />
             </div>
           ) : (
             <>
@@ -382,9 +365,9 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
         </Button>
 
         {/* Tips */}
-        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-          <p className="text-xs font-medium text-blue-900 dark:text-blue-100 mb-1">💡 Tips for best results:</p>
-          <ul className="text-xs text-blue-800 dark:text-blue-200 space-y-0.5 ml-4 list-disc">
+        <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
+          <p className="text-xs font-medium text-primary mb-1">💡 Tips for best results:</p>
+          <ul className="text-xs text-muted-foreground space-y-0.5 ml-4 list-disc">
             <li>Describe visuals and mood, not the title (e.g., "mystical forest" not "My Book Title")</li>
             <li>Keep text toggle OFF for cleaner results - add your title later in the editor</li>
             <li>Be specific about colors, lighting, and atmosphere</li>
