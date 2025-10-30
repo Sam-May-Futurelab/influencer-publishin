@@ -72,10 +72,11 @@ The chapter should:
 - Introduce the main topic or theme
 - Hook the reader's interest
 - Set a professional, informative tone
-- Be well-structured with proper paragraphs
+- Be well-structured with clear paragraph breaks
+- Use regular hyphens (-) instead of em dashes (—)
 - Not include "Chapter 1" or any headers (we'll add those)
 
-Write naturally and engagingly, as if this is a real published book.`;
+Write naturally and engagingly, as if this is a real published book. Use double line breaks between paragraphs for clear separation.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -88,7 +89,7 @@ Write naturally and engagingly, as if this is a real published book.`;
         messages: [
           {
             role: 'system',
-            content: 'You are an expert book writer who creates engaging, professional content. Write clear, accessible prose that captures readers\' attention.'
+            content: 'You are an expert book writer who creates engaging, professional content. Write clear, accessible prose that captures readers\' attention. Always use regular hyphens (-) not em dashes (—). Separate paragraphs with double line breaks.'
           },
           {
             role: 'user',
@@ -116,14 +117,17 @@ Write naturally and engagingly, as if this is a real published book.`;
       return res.status(500).json({ error: 'No content generated' });
     }
 
+    // Clean up content: replace em dashes with regular hyphens
+    const cleanedContent = content.trim().replace(/—/g, '-');
+
     // Update rate limit
     rateLimitMap.set(ip, now);
 
     // Return success
     return res.status(200).json({
       success: true,
-      content: content.trim(),
-      wordCount: content.trim().split(/\s+/).length,
+      content: cleanedContent,
+      wordCount: cleanedContent.split(/\s+/).length,
       isPreview: true,
     });
 
