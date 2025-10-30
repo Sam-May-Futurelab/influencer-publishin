@@ -59,6 +59,15 @@ async function checkRateLimit(userId) {
         const userDoc = await db.collection('users').doc(userId).get();
         if (userDoc.exists) {
           const userDocData = userDoc.data();
+          
+          // DEBUG: Log user data
+          console.log('User Tier Check:', {
+            userId,
+            isPremium: userDocData.isPremium,
+            subscriptionStatus: userDocData.subscriptionStatus,
+            limits
+          });
+          
           // Check for premium first, then creator, default to free
           if (userDocData.isPremium || userDocData.subscriptionStatus === 'premium') {
             userLimit = limits.premium;
@@ -71,6 +80,8 @@ async function checkRateLimit(userId) {
         // On error, default to free tier (safe fallback)
       }
     }
+    
+    console.log('Final User Limit:', userLimit, 'Current Count:', userData.count);
     
     if (userData.count >= userLimit) {
       return {
@@ -163,8 +174,19 @@ export default async function handler(req, res) {
 
   // Check rate limit BEFORE processing (async now)
   const rateLimit = await checkRateLimit(userId);
+  
+  // DEBUG: Log rate limit info
+  console.log('Rate Limit Check:', {
+    userId: userId || 'anonymous',
+    allowed: rateLimit.allowed,
+    remaining: rateLimit.remaining,
+    limit: rateLimit.limit,
+    resetAt: new Date(rateLimit.resetAt).toLocaleString()
+  });
+  
   if (!rateLimit.allowed) {
     const resetDate = new Date(rateLimit.resetAt).toLocaleTimeString();
+    console.log('RATE LIMIT HIT - Returning 429');
     return res.status(429).json({ 
       error: `AI generation limit reached. You've used ${rateLimit.limit} generations today. Resets at ${resetDate}. Upgrade to Premium for unlimited access.`,
       limit: rateLimit.limit,
