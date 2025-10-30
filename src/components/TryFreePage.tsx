@@ -526,7 +526,12 @@ export function TryFreePage() {
       {/* Auth Modal for Rate Limit */}
       <AuthModal 
         isOpen={showAuthModal} 
+        onOpenChange={setShowAuthModal}
         onClose={() => setShowAuthModal(false)}
+        onAuthSuccess={() => {
+          // Navigate to dashboard after successful authentication
+          navigate('/app/dashboard');
+        }}
         initialMode="register"
         customMessage="You've used your free preview for today! Sign up to create unlimited books with AI."
       />

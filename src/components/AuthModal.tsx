@@ -17,6 +17,7 @@ interface AuthModalProps {
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   onClose?: () => void;
+  onAuthSuccess?: () => void;
   initialMode?: 'signin' | 'signup' | 'register';
   customMessage?: string;
 }
@@ -28,7 +29,8 @@ export function AuthModal({
   customMessage,
   isOpen: externalIsOpen,
   onOpenChange: externalOnOpenChange,
-  onClose
+  onClose,
+  onAuthSuccess
 }: AuthModalProps) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState(initialMode === 'register' ? 'signup' : (initialMode || defaultTab));
@@ -86,6 +88,11 @@ export function AuthModal({
       setIsOpen(false);
       resetForm();
       
+      // Call onAuthSuccess callback if provided
+      if (onAuthSuccess) {
+        onAuthSuccess();
+      }
+      
     } catch (error: any) {
       console.error('Auth error:', error);
       toast.error(error.message || 'Authentication failed');
@@ -103,6 +110,11 @@ export function AuthModal({
       await refreshProfile();
       setIsOpen(false);
       resetForm();
+      
+      // Call onAuthSuccess callback if provided
+      if (onAuthSuccess) {
+        onAuthSuccess();
+      }
       
     } catch (error: any) {
       console.error('Google auth error:', error);
@@ -130,15 +142,17 @@ export function AuthModal({
           <DialogTitle className="text-center text-xl font-semibold">
             Welcome to Your Publishing Platform
           </DialogTitle>
-          {customMessage ? (
-            <div className="mt-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
-              <p className="text-sm text-foreground text-center">{customMessage}</p>
-            </div>
-          ) : (
-            <p id="auth-description" className="text-center text-sm text-muted-foreground mt-2">
-              Create professional eBooks with AI assistance
-            </p>
-          )}
+          <div id="auth-description">
+            {customMessage ? (
+              <div className="mt-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+                <p className="text-sm text-foreground text-center">{customMessage}</p>
+              </div>
+            ) : (
+              <p className="text-center text-sm text-muted-foreground mt-2">
+                Create professional eBooks with AI assistance
+              </p>
+            )}
+          </div>
         </DialogHeader>
         
         <div className="p-6">
