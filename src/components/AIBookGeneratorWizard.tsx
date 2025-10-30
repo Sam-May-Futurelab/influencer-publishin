@@ -77,8 +77,8 @@ export function AIBookGeneratorWizard({
         toast.error('Please enter a book description');
         return;
       }
-      if (bookData.description.length < 50) {
-        toast.error('Please provide a more detailed description (at least 50 characters)');
+      if (bookData.description.length < 20) {
+        toast.error('Please provide a brief description (at least 20 characters)');
         return;
       }
       setStep(2);
@@ -91,9 +91,19 @@ export function AIBookGeneratorWizard({
       }
       setStep(3);
     }
-    else {
-      // Placeholder for other steps
-      toast.info('Next step implementation');
+    // Step 3: Review outline
+    else if (step === 3) {
+      // Validate that all chapters have titles
+      const emptyChapters = outline.filter(ch => !ch.title.trim());
+      if (emptyChapters.length > 0) {
+        toast.error('All chapters must have titles');
+        return;
+      }
+      setStep(4);
+    }
+    // Step 4: Generate book
+    else if (step === 4) {
+      generateBook();
     }
   };
 
@@ -127,6 +137,117 @@ export function AIBookGeneratorWizard({
       toast.error(error instanceof Error ? error.message : 'Failed to generate outline');
     } finally {
       setIsGeneratingOutline(false);
+    }
+  };
+
+  const updateChapter = (order: number, field: 'title' | 'description', value: string) => {
+    setOutline(prev => prev.map(ch => 
+      ch.order === order ? { ...ch, [field]: value } : ch
+    ));
+  };
+
+  const generateBook = async () => {
+    setIsGeneratingBook(true);
+    setGenerationProgress({ current: 0, total: outline.length });
+
+    try {
+      // Create the project first
+      const projectId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const newProject: EbookProject = {
+        id: projectId,
+        title: bookData.title,
+        description: bookData.description,
+        category: bookData.genre || 'general',
+        targetAudience: bookData.targetAudience,
+        author: userProfile.displayName || 'Author',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        chapters: [],
+        brandConfig: {
+          primaryColor: '#9b87b8',
+          secondaryColor: '#b89ed6',
+          accentColor: '#d4c4e8',
+          fontFamily: 'Inter',
+          coverStyle: 'gradient',
+        },
+      };
+
+      // Generate each chapter
+      for (let i = 0; i < outline.length; i++) {
+        const chapterOutline = outline[i];
+        setGenerationProgress({ current: i + 1, total: outline.length });
+
+        try {
+          const response = await fetch('/api/generate-ai-content', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              prompt: `Write a complete chapter for an ebook titled "${bookData.title}".
+
+Chapter ${chapterOutline.order}: ${chapterOutline.title}
+${chapterOutline.description ? `Description: ${chapterOutline.description}` : ''}
+
+Book Context:
+${bookData.description}
+${bookData.targetAudience ? `Target Audience: ${bookData.targetAudience}` : ''}
+${bookData.genre ? `Genre: ${bookData.genre}` : ''}
+
+Write a comprehensive, well-structured chapter (500-750 words) that:
+1. Opens with an engaging introduction
+2. Covers the topic thoroughly with clear explanations
+3. Includes practical examples or actionable insights
+4. Flows naturally and maintains reader engagement
+5. Concludes with a smooth transition to the next chapter
+
+Write in a professional, engaging tone appropriate for the target audience.`,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to generate chapter ${i + 1}`);
+          }
+
+          const data = await response.json();
+          
+          // Add chapter to project
+          newProject.chapters.push({
+            id: `${projectId}-chapter-${i + 1}`,
+            title: chapterOutline.title,
+            content: data.content || '',
+            order: chapterOutline.order,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          });
+
+        } catch (error) {
+          console.error(`Error generating chapter ${i + 1}:`, error);
+          toast.error(`Failed to generate chapter ${i + 1}. Continuing...`);
+          
+          // Add placeholder chapter
+          newProject.chapters.push({
+            id: `${projectId}-chapter-${i + 1}`,
+            title: chapterOutline.title,
+            content: `# ${chapterOutline.title}\n\n_Chapter generation failed. Please edit and add content manually._`,
+            order: chapterOutline.order,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          });
+        }
+      }
+
+      // Update project timestamp
+      newProject.updatedAt = new Date();
+
+      // Complete and pass to parent
+      toast.success(`Book generated! ${newProject.chapters.length} chapters created.`);
+      onComplete(newProject);
+      
+    } catch (error) {
+      console.error('Error generating book:', error);
+      toast.error('Failed to generate book. Please try again.');
+      setIsGeneratingBook(false);
     }
   };
 
@@ -165,17 +286,17 @@ export function AIBookGeneratorWizard({
           </div>
 
           {/* Step Indicators */}
-          <div className="flex items-center justify-between mt-4 px-4">
+          <div className="flex items-center justify-between mt-4 px-2">
             {[1, 2, 3, 4].map((s) => (
               <div key={s} className="flex items-center">
                 <div className={`
-                  w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all
+                  w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-sm font-semibold transition-all
                   ${step > s ? 'bg-primary text-white' : step === s ? 'bg-primary text-white ring-4 ring-primary/20' : 'bg-muted text-muted-foreground'}
                 `}>
-                  {step > s ? <Check size={20} weight="bold" /> : s}
+                  {step > s ? <Check size={16} weight="bold" /> : s}
                 </div>
                 {s < 4 && (
-                  <div className={`w-16 md:w-24 h-1 mx-2 rounded ${step > s ? 'bg-primary' : 'bg-muted'}`} />
+                  <div className={`w-12 sm:w-16 md:w-24 h-1 mx-1 md:mx-2 rounded ${step > s ? 'bg-primary' : 'bg-muted'}`} />
                 )}
               </div>
             ))}
@@ -228,11 +349,14 @@ export function AIBookGeneratorWizard({
                     />
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">
-                        {bookData.description.length < 100 && bookData.description.length > 0 && (
-                          <span className="text-orange-500">At least 100 characters recommended</span>
+                        {bookData.description.length < 20 && bookData.description.length > 0 && (
+                          <span className="text-orange-500">At least 20 characters needed</span>
+                        )}
+                        {bookData.description.length >= 20 && bookData.description.length < 100 && (
+                          <span className="text-green-500">Good! More detail = better AI results</span>
                         )}
                         {bookData.description.length >= 100 && bookData.description.length < 500 && (
-                          <span className="text-green-500">Good length!</span>
+                          <span className="text-green-500">Excellent detail!</span>
                         )}
                         {bookData.description.length >= 500 && (
                           <span className="text-orange-500">Consider keeping it under 500 characters</span>
@@ -446,7 +570,69 @@ export function AIBookGeneratorWizard({
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
-                <p className="text-muted-foreground text-center">Step 3: Review & Edit - Coming next</p>
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">Review & Edit Your Outline</h3>
+                  <p className="text-muted-foreground">Customize chapter titles and descriptions before generating</p>
+                </div>
+
+                <div className="max-w-3xl mx-auto space-y-4">
+                  <div className="flex items-center justify-between bg-muted/50 rounded-lg p-3">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary">{outline.length} Chapters</Badge>
+                      <span className="text-sm text-muted-foreground">Ready to generate</span>
+                    </div>
+                  </div>
+
+                  {/* Editable Chapters */}
+                  <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                    {outline.map((chapter) => (
+                      <motion.div
+                        key={chapter.order}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: chapter.order * 0.03 }}
+                        className="bg-background border rounded-lg p-4 space-y-3"
+                      >
+                        <div className="flex items-start gap-3">
+                          <Badge className="mt-1">{chapter.order}</Badge>
+                          <div className="flex-1 space-y-3">
+                            <div className="space-y-1.5">
+                              <Label htmlFor={`chapter-${chapter.order}-title`} className="text-sm">
+                                Chapter Title
+                              </Label>
+                              <Input
+                                id={`chapter-${chapter.order}-title`}
+                                value={chapter.title}
+                                onChange={(e) => updateChapter(chapter.order, 'title', e.target.value)}
+                                placeholder="Enter chapter title..."
+                                className="font-semibold"
+                              />
+                            </div>
+                            <div className="space-y-1.5">
+                              <Label htmlFor={`chapter-${chapter.order}-desc`} className="text-sm">
+                                Description (Optional)
+                              </Label>
+                              <Textarea
+                                id={`chapter-${chapter.order}-desc`}
+                                value={chapter.description}
+                                onChange={(e) => updateChapter(chapter.order, 'description', e.target.value)}
+                                placeholder="What will this chapter cover..."
+                                rows={2}
+                                className="resize-none text-sm"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <div className="bg-muted/50 rounded-lg p-3 border text-center">
+                    <p className="text-sm text-muted-foreground">
+                      💡 <strong>Tip:</strong> Better chapter details help AI generate more relevant content
+                    </p>
+                  </div>
+                </div>
               </motion.div>
             )}
 
@@ -458,7 +644,112 @@ export function AIBookGeneratorWizard({
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
-                <p className="text-muted-foreground text-center">Step 4: Generate Book - Coming next</p>
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">
+                    {isGeneratingBook ? 'Generating Your Book...' : 'Ready to Generate'}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {isGeneratingBook 
+                      ? `Creating chapter ${generationProgress.current} of ${generationProgress.total}`
+                      : `AI will generate ${outline.length} complete chapters`
+                    }
+                  </p>
+                </div>
+
+                <div className="max-w-2xl mx-auto space-y-6">
+                  {!isGeneratingBook ? (
+                    <>
+                      {/* Book Summary */}
+                      <div className="bg-muted/50 rounded-lg p-6 space-y-4">
+                        <div>
+                          <h4 className="font-semibold text-lg mb-2">{bookData.title}</h4>
+                          <p className="text-sm text-muted-foreground">{bookData.description}</p>
+                        </div>
+                        
+                        <div className="flex gap-2 flex-wrap">
+                          {bookData.genre && <Badge variant="secondary">{bookData.genre}</Badge>}
+                          {bookData.targetAudience && <Badge variant="outline">{bookData.targetAudience}</Badge>}
+                          <Badge className="bg-primary">{outline.length} Chapters</Badge>
+                        </div>
+                      </div>
+
+                      {/* What to Expect */}
+                      <div className="space-y-3">
+                        <h4 className="font-semibold">What happens next:</h4>
+                        <ul className="space-y-2">
+                          <li className="flex items-start gap-2 text-sm">
+                            <span className="text-primary mt-0.5">✓</span>
+                            <span>AI will generate {outline.length} complete chapters (500-750 words each)</span>
+                          </li>
+                          <li className="flex items-start gap-2 text-sm">
+                            <span className="text-primary mt-0.5">✓</span>
+                            <span>Estimated time: {Math.ceil(outline.length * 0.5)} - {Math.ceil(outline.length * 1)} minutes</span>
+                          </li>
+                          <li className="flex items-start gap-2 text-sm">
+                            <span className="text-primary mt-0.5">✓</span>
+                            <span>Your new project will be created automatically</span>
+                          </li>
+                          <li className="flex items-start gap-2 text-sm">
+                            <span className="text-primary mt-0.5">✓</span>
+                            <span>You can edit, export, and customize everything after generation</span>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div className="bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
+                        <p className="text-sm text-orange-900 dark:text-orange-200">
+                          <strong>⏳ Please wait:</strong> This process can take several minutes. Don't close this window until generation is complete.
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Generation Progress */}
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="font-medium">Generating chapters...</span>
+                            <span className="text-muted-foreground">
+                              {generationProgress.current} / {generationProgress.total}
+                            </span>
+                          </div>
+                          <Progress 
+                            value={(generationProgress.current / generationProgress.total) * 100} 
+                            className="h-3"
+                          />
+                        </div>
+
+                        {/* Current Chapter */}
+                        {generationProgress.current > 0 && generationProgress.current <= outline.length && (
+                          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                            <div className="flex items-center gap-2">
+                              <div className="animate-spin">⚡</div>
+                              <span className="font-semibold text-sm">
+                                Chapter {generationProgress.current}: {outline[generationProgress.current - 1]?.title}
+                              </span>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              Writing content...
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Completed Chapters */}
+                        {generationProgress.current > 1 && (
+                          <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                            <p className="text-sm font-medium text-muted-foreground">Completed:</p>
+                            {outline.slice(0, generationProgress.current - 1).map((chapter) => (
+                              <div key={chapter.order} className="flex items-center gap-2 text-sm">
+                                <span className="text-green-500">✓</span>
+                                <span className="text-muted-foreground">Chapter {chapter.order}: {chapter.title}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
