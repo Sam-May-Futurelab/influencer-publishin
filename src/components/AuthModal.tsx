@@ -16,16 +16,22 @@ interface AuthModalProps {
   defaultTab?: 'signin' | 'signup';
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onClose?: () => void;
+  initialMode?: 'signin' | 'signup' | 'register';
+  customMessage?: string;
 }
 
 export function AuthModal({ 
   children, 
-  defaultTab = 'signin', 
+  defaultTab = 'signin',
+  initialMode,
+  customMessage,
   isOpen: externalIsOpen,
-  onOpenChange: externalOnOpenChange 
+  onOpenChange: externalOnOpenChange,
+  onClose
 }: AuthModalProps) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
-  const [currentTab, setCurrentTab] = useState(defaultTab);
+  const [currentTab, setCurrentTab] = useState(initialMode === 'register' ? 'signup' : (initialMode || defaultTab));
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -106,8 +112,15 @@ export function AuthModal({
     }
   };
 
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open && onClose) {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
@@ -117,9 +130,15 @@ export function AuthModal({
           <DialogTitle className="text-center text-xl font-semibold">
             Welcome to Your Publishing Platform
           </DialogTitle>
-          <p id="auth-description" className="text-center text-sm text-muted-foreground mt-2">
-            Create professional eBooks with AI assistance
-          </p>
+          {customMessage ? (
+            <div className="mt-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+              <p className="text-sm text-foreground text-center">{customMessage}</p>
+            </div>
+          ) : (
+            <p id="auth-description" className="text-center text-sm text-muted-foreground mt-2">
+              Create professional eBooks with AI assistance
+            </p>
+          )}
         </DialogHeader>
         
         <div className="p-6">

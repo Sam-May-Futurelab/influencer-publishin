@@ -78,6 +78,13 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
               </button>
               
               <button
+                onClick={() => handleNavigation('/try-free')}
+                className="w-full text-left px-5 py-4 text-[#9b87b8] hover:text-[#7a5f96] hover:bg-[#9b87b8]/10 rounded-xl transition-all duration-200 font-semibold border-2 border-[#9b87b8]/30 hover:border-[#9b87b8]/50"
+              >
+                Try Free
+              </button>
+              
+              <button
                 onClick={() => handleNavigation('/blog')}
                 className="w-full text-left px-5 py-4 text-gray-800 hover:text-[#9b87b8] hover:bg-[#9b87b8]/5 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-[#9b87b8]/20"
               >

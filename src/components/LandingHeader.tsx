@@ -62,6 +62,12 @@ export function LandingHeader({
             >
               Pricing
             </button>
+            <button 
+              onClick={() => navigate('/try-free')}
+              className="text-[#9b87b8] hover:text-[#7a5f96] transition-colors font-semibold"
+            >
+              Try Free
+            </button>
             <DropdownMenu>
               <DropdownMenuTrigger className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium flex items-center gap-1">
                 Resources

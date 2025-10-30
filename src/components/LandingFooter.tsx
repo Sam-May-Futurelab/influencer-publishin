@@ -1,4 +1,5 @@
 import { BookOpen, Twitter, Linkedin, Instagram, Github } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface LandingFooterProps {
   onNavigateToPrivacy?: () => void;
@@ -29,6 +30,8 @@ export function LandingFooter({
   onNavigateToCaseStudies,
   onNavigateToFAQ
 }: LandingFooterProps) {
+  const navigate = useNavigate();
+  
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -68,6 +71,11 @@ export function LandingFooter({
               ) : (
                 <li><a href="#pricing" onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors cursor-pointer">Pricing</a></li>
               )}
+              <li>
+                <button onClick={() => navigate('/try-free')} className="hover:text-white transition-colors font-semibold">
+                  Try Free
+                </button>
+              </li>
             </ul>
           </div>
 

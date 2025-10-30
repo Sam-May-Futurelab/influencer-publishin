@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Sparkle, ArrowRight, Check } from '@phosphor-icons/react';
+import { Sparkle, ArrowRight, Check, Lightning, BookOpen, Rocket } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { LandingHeader } from '@/components/LandingHeader';
+import { LandingFooter } from '@/components/LandingFooter';
+import { AuthModal } from '@/components/AuthModal';
 
 export function TryFreePage() {
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [generating, setGenerating] = useState(false);
@@ -37,9 +41,8 @@ export function TryFreePage() {
 
       if (!response.ok) {
         if (response.status === 429) {
-          toast.error('You\'ve already tried the free preview today', {
-            description: 'Sign up to create unlimited books!',
-          });
+          // Open auth modal instead of toast for rate limit
+          setShowAuthModal(true);
         } else {
           toast.error(data.error || 'Failed to generate preview');
         }
@@ -68,21 +71,10 @@ export function TryFreePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-            <Sparkle size={24} weight="fill" className="text-primary" />
-            <span className="font-bold text-xl">InkfluenceAI</span>
-          </div>
-          <Button variant="outline" onClick={() => navigate('/login')}>
-            Sign In
-          </Button>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background">
+      <LandingHeader />
 
-      <main className="container mx-auto px-4 py-12 max-w-4xl">
+      <main className="container mx-auto px-4 py-16 max-w-4xl">
         <AnimatePresence mode="wait">
           {!generatedContent ? (
             /* Input Form */
@@ -100,7 +92,7 @@ export function TryFreePage() {
                   animate={{ scale: 1 }}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium"
                 >
-                  <Sparkle size={16} weight="fill" />
+                  <Lightning size={18} weight="fill" />
                   Free Preview - No Signup Required
                 </motion.div>
                 <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
@@ -259,15 +251,15 @@ export function TryFreePage() {
                   
                   <div className="grid sm:grid-cols-3 gap-4 pt-6 text-sm">
                     <div className="flex items-center justify-center gap-2">
-                      <Check size={16} className="text-green-500" />
+                      <BookOpen size={18} className="text-primary" weight="duotone" />
                       <span>Unlimited books</span>
                     </div>
                     <div className="flex items-center justify-center gap-2">
-                      <Check size={16} className="text-green-500" />
+                      <Sparkle size={18} className="text-primary" weight="duotone" />
                       <span>AI cover designer</span>
                     </div>
                     <div className="flex items-center justify-center gap-2">
-                      <Check size={16} className="text-green-500" />
+                      <Rocket size={18} className="text-primary" weight="duotone" />
                       <span>Export to any format</span>
                     </div>
                   </div>
@@ -277,6 +269,16 @@ export function TryFreePage() {
           )}
         </AnimatePresence>
       </main>
+
+      <LandingFooter />
+
+      {/* Auth Modal for Rate Limit */}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)}
+        initialMode="register"
+        customMessage="You've used your free preview for today! Sign up to create unlimited books with AI."
+      />
     </div>
   );
 }
