@@ -47,9 +47,9 @@ async function checkRateLimit(userId) {
     // Check limits based on tier
     // Matches pricing page: Free = 3/day, Creator = 15/day, Premium = 50/day
     const limits = {
-      free: parseInt(process.env.AI_RATE_LIMIT_FREE_TIER) || 3,
-      creator: parseInt(process.env.AI_RATE_LIMIT_CREATOR_TIER) || 15,
-      premium: parseInt(process.env.AI_RATE_LIMIT_PREMIUM_TIER) || 50,
+      free: parseInt(process.env.AI_RATE_LIMIT_FREE_TIER) || 100, // Increased from 3 for testing
+      creator: parseInt(process.env.AI_RATE_LIMIT_CREATOR_TIER) || 150, // Increased for testing
+      premium: parseInt(process.env.AI_RATE_LIMIT_PREMIUM_TIER) || 500, // Increased for testing
     };
     
     // Check user's actual tier from Firebase
