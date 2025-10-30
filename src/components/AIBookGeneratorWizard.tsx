@@ -204,6 +204,18 @@ export function AIBookGeneratorWizard({
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
+                userId: userProfile.uid,
+                keywords: [`Chapter ${chapterOutline.order}: ${chapterOutline.title}`],
+                chapterTitle: chapterOutline.title,
+                contentType: 'enhance',
+                genre: bookData.genre || 'general',
+                tone: 'professional',
+                length: 'detailed',
+                format: 'narrative',
+                context: {
+                  bookDescription: bookData.description,
+                  targetAudience: bookData.targetAudience,
+                },
                 prompt: `Write a complete chapter for an ebook titled "${bookData.title}".
 
 Chapter ${chapterOutline.order}: ${chapterOutline.title}
