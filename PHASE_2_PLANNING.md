@@ -30,12 +30,16 @@
 export interface UsageTracking {
   aiGenerations: number;          // Existing - counts per chapter
   coverGenerations: number;        // Existing
-  fullBookGenerations: number;     // NEW - counts complete book generations
-  lastFullBookGenerationReset: Date; // NEW
+  fullBookGenerationsUsed: number;     // NEW - counts complete book generations
+  lastFullBookGenerationReset: Date; // NEW - for monthly reset
 }
 
 // Proposed Limits:
-- Free: 1 AI book/month (resets monthly)
+- Free: 0 full book generations (premium feature only)
+  * Can still use /try-free for single chapter preview
+  * Can still generate individual chapters (3/day limit)
+  * Full book generator requires upgrade
+  
 - Creator: 5 AI books/month (resets monthly)  
 - Pro: Unlimited AI books
 ```
@@ -46,12 +50,17 @@ export interface UsageTracking {
 - **Outline generation**: ~$0.02-0.03 (200-300 tokens)
 - **Total per book**: ~$0.20-0.30
 
-**Monthly costs at scale**:
-- 100 free users (1 book each): $20-30
-- 50 creator users (5 books each): $50-75
-- Total monthly AI cost: ~$70-105 for modest usage
+**Monthly costs at scale** (Free tier = 0 books, premium feature only):
+- 500 free users (0 books each): $0
+- 100 creator users (5 books each): $100-150
+- 20 pro users (10 books each): $40-60
+- Total monthly AI cost: ~$140-210 for 600 book generations
 
-✅ **Cost is reasonable - proceed with limits above**
+✅ **Final Decision: Free tier = 0 full books (premium feature only)**
+- Strong upgrade incentive
+- Free users still get /try-free single chapter preview
+- Free users can manually generate chapters (3/day)
+- Keeps full automation as premium value-add
 
 ---
 
@@ -86,9 +95,7 @@ export interface UsageTracking {
     {userProfile && (
       <div className="mt-3 text-xs text-muted-foreground text-center">
         {userProfile.subscriptionStatus === 'free' && (
-          <>
-            {userProfile.fullBookGenerationsUsed || 0}/1 book this month
-          </>
+          <Badge variant="outline" className="text-xs">Premium Feature</Badge>
         )}
         {userProfile.subscriptionStatus === 'creator' && (
           <>
@@ -177,9 +184,11 @@ export const canGenerateFullBook = (profile: UserProfile): boolean => {
   
   const { subscriptionStatus, fullBookGenerationsUsed = 0 } = profile;
   
+  // Free tier: NO full book generations (premium feature only)
+  if (subscriptionStatus === 'free') return false;
+  
   if (subscriptionStatus === 'pro') return true;
   if (subscriptionStatus === 'creator') return fullBookGenerationsUsed < 5;
-  if (subscriptionStatus === 'free') return fullBookGenerationsUsed < 1;
   
   return false;
 };
