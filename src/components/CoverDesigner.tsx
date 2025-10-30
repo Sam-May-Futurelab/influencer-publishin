@@ -517,6 +517,24 @@ export function CoverDesigner({
     }
   };
 
+  const saveCover = async () => {
+    try {
+      // Save design settings and background image (no text baking)
+      const designToSave = {
+        ...design,
+        uploadedCoverImage: design.backgroundImage || design.uploadedCoverImage,
+      };
+      
+      // Don't pass imageData with text baked in - just pass empty string
+      // The preview will always use live text overlay
+      onSave(designToSave, '');
+      toast.success('Cover design saved!');
+    } catch (error) {
+      console.error('Save failed:', error);
+      toast.error('Failed to save cover');
+    }
+  };
+
   const exportCover = async () => {
     if (!canvasRef.current) return;
 
@@ -626,17 +644,13 @@ export function CoverDesigner({
       drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, canvas.height * 0.85, 'center', canvas.width * 0.8);
 
       const imageData = canvas.toDataURL('image/png');
-      // Save backgroundImage to uploadedCoverImage for persistence across sessions
-      const designToSave = {
-        ...design,
-        uploadedCoverImage: design.backgroundImage || design.uploadedCoverImage,
-      };
-      onSave(designToSave, imageData);
-      toast.success('Cover saved successfully!');
-      // Don't close the dialog - let user continue editing
+      
+      // This is for export/preview - don't save, just return the full image with text
+      return imageData;
     } catch (error) {
       console.error('Export failed:', error);
       toast.error('Failed to export cover');
+      return null;
     }
   };
 
@@ -1644,7 +1658,7 @@ export function CoverDesigner({
               Reset
             </Button>
             <Button 
-              onClick={exportCover} 
+              onClick={saveCover} 
               className="gap-2 h-10 px-6 font-semibold sm:ml-auto order-1 sm:order-3"
             >
               <Download size={18} />
@@ -1664,11 +1678,11 @@ export function CoverDesigner({
               Edit Design
             </Button>
             <Button 
-              onClick={exportCover}
+              onClick={saveCover}
               className="gap-2 h-12 px-8 text-base font-semibold shadow-lg"
             >
-              <Download size={20} />
-              Save to Project
+              <Download size={18} />
+              Save Cover
             </Button>
           </div>
         )}
