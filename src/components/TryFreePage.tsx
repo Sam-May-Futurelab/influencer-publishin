@@ -455,24 +455,26 @@ export function TryFreePage() {
                     </div>
                   </Card>
 
-                  <Card className="p-6 border-2 border-muted hover:border-primary/30 transition-all">
+                  <Card className="p-6 border-2 border-amber-200 bg-amber-50/50 dark:bg-amber-950/20">
                     <div className="space-y-3">
-                      <h3 className="text-xl font-bold">Try Another Topic</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Generate a different chapter with another book idea.
-                      </p>
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-amber-500/10">
+                          <Clock size={20} weight="duotone" className="text-amber-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-amber-900 dark:text-amber-100">Free Preview Used Today</h3>
+                          <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                            You get 1 free preview per day. Sign up for unlimited AI generations!
+                          </p>
+                        </div>
+                      </div>
                       <Button
                         size="lg"
-                        variant="outline"
-                        onClick={() => {
-                          setGeneratedContent(null);
-                          setGeneratedTitle('');
-                          setTitle('');
-                        }}
-                        className="w-full text-lg h-12 border-2"
+                        onClick={() => navigate('/register')}
+                        className="w-full text-lg h-12 bg-amber-600 hover:bg-amber-700 text-white"
                       >
-                        <Sparkle size={20} weight="fill" className="mr-2" />
-                        Generate New Preview
+                        <Rocket size={20} weight="fill" className="mr-2" />
+                        Unlock Unlimited Access
                       </Button>
                     </div>
                   </Card>
