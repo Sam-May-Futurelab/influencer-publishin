@@ -339,15 +339,40 @@ export function TryFreePage() {
                   className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-500/30"
                 >
                   <Check size={24} weight="bold" className="text-green-600" />
-                  <span className="font-bold text-lg text-green-600 dark:text-green-400">Chapter Generated Successfully!</span>
+                  <span className="font-bold text-lg text-green-600 dark:text-green-400">Your Preview is Ready!</span>
                 </motion.div>
                 
                 <div className="space-y-3">
                   <h2 className="text-3xl md:text-4xl font-bold">{generatedTitle}</h2>
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Here's your AI-generated first chapter. Love what you see? Sign up to create your complete book.
+                    This is just the beginning. Sign up free to turn this into a complete book.
                   </p>
                 </div>
+
+                {/* Quick Action CTAs - Above Content */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex flex-col sm:flex-row gap-3 justify-center pt-4"
+                >
+                  <Button
+                    size="lg"
+                    onClick={() => navigate('/register')}
+                    className="text-lg h-14 px-10 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-xl hover:shadow-2xl transition-all font-bold"
+                  >
+                    <Rocket size={24} weight="fill" className="mr-2" />
+                    Continue Writing - Sign Up Free
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={() => navigate('/login')}
+                    className="text-lg h-14 px-8 border-2 font-semibold"
+                  >
+                    Already have an account? Sign In
+                  </Button>
+                </motion.div>
               </div>
 
               {/* Generated Content Card */}
@@ -372,57 +397,113 @@ export function TryFreePage() {
               </Card>
 
               {/* CTA Section */}
-              <Card className="p-8 md:p-12 bg-gradient-to-br from-primary/5 via-purple-600/5 to-pink-600/5 border-2 border-primary/20">
-                <div className="text-center space-y-6">
-                  <div className="space-y-3">
-                    <h3 className="text-2xl md:text-3xl font-bold">Ready to Write Your Complete Book?</h3>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                      Sign up now to unlock unlimited chapters, AI cover design, and professional exports to PDF, EPUB, and DOCX.
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Primary CTA - Continue with this book */}
+                <Card className="p-8 bg-gradient-to-br from-primary/10 via-purple-600/10 to-pink-600/10 border-2 border-primary/30 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
+                  <div className="relative space-y-4">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold">
+                      <Lightning size={14} weight="fill" />
+                      RECOMMENDED
+                    </div>
+                    <h3 className="text-2xl font-bold">Save & Continue This Book</h3>
+                    <p className="text-muted-foreground">
+                      Sign up free to save your preview and continue writing. Add more chapters, 
+                      design a cover, and export your complete book.
                     </p>
-                  </div>
-                  
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                    <div className="space-y-2 pt-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Check size={18} weight="bold" className="text-green-600" />
+                        <span>Keep this chapter in your library</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Check size={18} weight="bold" className="text-green-600" />
+                        <span>Add unlimited additional chapters</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Check size={18} weight="bold" className="text-green-600" />
+                        <span>AI cover designer & export tools</span>
+                      </div>
+                    </div>
                     <Button
                       size="lg"
                       onClick={() => navigate('/register')}
-                      className="text-lg h-14 px-8 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-xl transition-all"
+                      className="w-full text-lg h-14 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg font-bold"
                     >
-                      <Rocket size={22} weight="fill" className="mr-2" />
-                      Start Free Trial
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      onClick={() => {
-                        setGeneratedContent(null);
-                        setGeneratedTitle('');
-                        setTitle('');
-                      }}
-                      className="text-lg h-14 px-8 border-2"
-                    >
-                      <Sparkle size={22} weight="fill" className="mr-2" />
-                      Try Another Preview
+                      <BookOpen size={22} weight="fill" className="mr-2" />
+                      Sign Up & Save This Book
                     </Button>
                   </div>
-                  
-                  <div className="grid sm:grid-cols-3 gap-6 pt-8 max-w-2xl mx-auto">
-                    <div className="flex flex-col items-center gap-2 text-center">
-                      <div className="p-3 rounded-xl bg-primary/10">
+                </Card>
+
+                {/* Secondary Options */}
+                <div className="space-y-6">
+                  <Card className="p-6 border-2 border-muted hover:border-primary/30 transition-all">
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-bold">Already Have an Account?</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Sign in to add this preview to your existing library.
+                      </p>
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        onClick={() => navigate('/login')}
+                        className="w-full text-lg h-12 border-2"
+                      >
+                        Sign In to Continue
+                      </Button>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6 border-2 border-muted hover:border-primary/30 transition-all">
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-bold">Try Another Topic</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Generate a different chapter with another book idea.
+                      </p>
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        onClick={() => {
+                          setGeneratedContent(null);
+                          setGeneratedTitle('');
+                          setTitle('');
+                        }}
+                        className="w-full text-lg h-12 border-2"
+                      >
+                        <Sparkle size={20} weight="fill" className="mr-2" />
+                        Generate New Preview
+                      </Button>
+                    </div>
+                  </Card>
+                </div>
+              </div>
+
+              {/* Value Props */}
+              <Card className="p-8 bg-muted/30 border-0">
+                <div className="text-center space-y-6">
+                  <h3 className="text-2xl font-bold">What You'll Get with a Free Account</h3>
+                  <div className="grid sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                    <div className="space-y-2">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto">
                         <BookOpen size={24} className="text-primary" weight="duotone" />
                       </div>
-                      <span className="font-semibold">Unlimited books</span>
+                      <h4 className="font-bold">5 Pages Free</h4>
+                      <p className="text-sm text-muted-foreground">Create multiple short books or one longer project</p>
                     </div>
-                    <div className="flex flex-col items-center gap-2 text-center">
-                      <div className="p-3 rounded-xl bg-primary/10">
+                    <div className="space-y-2">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto">
                         <Sparkle size={24} className="text-primary" weight="duotone" />
                       </div>
-                      <span className="font-semibold">AI cover designer</span>
+                      <h4 className="font-bold">AI Tools</h4>
+                      <p className="text-sm text-muted-foreground">3 AI generations/day plus 1 AI cover per month</p>
                     </div>
-                    <div className="flex flex-col items-center gap-2 text-center">
-                      <div className="p-3 rounded-xl bg-primary/10">
+                    <div className="space-y-2">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto">
                         <Rocket size={24} className="text-primary" weight="duotone" />
                       </div>
-                      <span className="font-semibold">Export any format</span>
+                      <h4 className="font-bold">Export Ready</h4>
+                      <p className="text-sm text-muted-foreground">Download your book as PDF anytime</p>
                     </div>
                   </div>
                 </div>
