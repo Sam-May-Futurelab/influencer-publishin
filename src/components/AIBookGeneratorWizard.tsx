@@ -311,7 +311,7 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                   {step > s ? <Check size={18} weight="bold" /> : s}
                 </div>
                 {s < 4 && (
-                  <div className={`w-20 md:w-28 lg:w-32 h-1 mx-2 rounded ${step > s ? 'bg-primary' : 'bg-muted'}`} />
+                  <div className={`w-12 md:w-16 lg:w-20 h-1 mx-2 rounded ${step > s ? 'bg-primary' : 'bg-muted'}`} />
                 )}
               </div>
             ))}
@@ -459,61 +459,73 @@ Write in a professional, engaging tone appropriate for the target audience.`,
 
                 {outline.length === 0 ? (
                   <div className="max-w-2xl mx-auto space-y-6">
-                    {/* Book Summary */}
-                    <div className="bg-muted/50 rounded-lg p-6 space-y-3">
-                      <h4 className="font-semibold text-lg">{bookData.title}</h4>
-                      <p className="text-muted-foreground text-sm">{bookData.description}</p>
-                      {bookData.genre && (
-                        <div className="flex gap-2 flex-wrap">
-                          <Badge variant="secondary">{bookData.genre}</Badge>
-                          {bookData.targetAudience && (
-                            <Badge variant="outline">{bookData.targetAudience}</Badge>
+                    {isGeneratingOutline ? (
+                      <AILoading
+                        variant="brain"
+                        messages={[
+                          "Analyzing your book concept...",
+                          "Structuring chapters and sections...",
+                          "Creating engaging chapter titles...",
+                          "Organizing content flow...",
+                          "Finalizing your outline..."
+                        ]}
+                        funFacts={[
+                          "Our AI reads thousands of books to learn structure patterns",
+                          "Chapter organization can make or break reader engagement",
+                          "A good outline saves hours during the writing process"
+                        ]}
+                        currentOperation="Generating outline"
+                      />
+                    ) : (
+                      <>
+                        {/* Book Summary */}
+                        <div className="bg-muted/50 rounded-lg p-6 space-y-3">
+                          <h4 className="font-semibold text-lg">{bookData.title}</h4>
+                          <p className="text-muted-foreground text-sm">{bookData.description}</p>
+                          {bookData.genre && (
+                            <div className="flex gap-2 flex-wrap">
+                              <Badge variant="secondary">{bookData.genre}</Badge>
+                              {bookData.targetAudience && (
+                                <Badge variant="outline">{bookData.targetAudience}</Badge>
+                              )}
+                            </div>
                           )}
                         </div>
-                      )}
-                    </div>
 
-                    {/* Number of Chapters Slider */}
-                    <div className="space-y-3">
-                      <Label>Number of Chapters</Label>
-                      <div className="flex items-center gap-4">
-                        <input
-                          type="range"
-                          min="6"
-                          max="15"
-                          value={numChapters}
-                          onChange={(e) => setNumChapters(parseInt(e.target.value))}
-                          className="flex-1 h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                        {/* Number of Chapters Slider */}
+                        <div className="space-y-3">
+                          <Label>Number of Chapters</Label>
+                          <div className="flex items-center gap-4">
+                            <input
+                              type="range"
+                              min="6"
+                              max="15"
+                              value={numChapters}
+                              onChange={(e) => setNumChapters(parseInt(e.target.value))}
+                              className="flex-1 h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                              disabled={isGeneratingOutline}
+                            />
+                            <Badge variant="secondary" className="text-base font-semibold min-w-[3rem] justify-center">
+                              {numChapters}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            Adjust the number of chapters before generating
+                          </p>
+                        </div>
+
+                        {/* Generate Button */}
+                        <Button
+                          onClick={generateOutline}
                           disabled={isGeneratingOutline}
-                        />
-                        <Badge variant="secondary" className="text-base font-semibold min-w-[3rem] justify-center">
-                          {numChapters}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Adjust the number of chapters before generating
-                      </p>
-                    </div>
-
-                    {/* Generate Button */}
-                    <Button
-                      onClick={generateOutline}
-                      disabled={isGeneratingOutline}
-                      size="lg"
-                      className="w-full bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90"
-                    >
-                      {isGeneratingOutline ? (
-                        <>
-                          <span className="animate-spin mr-2">⚡</span>
-                          Generating Outline...
-                        </>
-                      ) : (
-                        <>
+                          size="lg"
+                          className="w-full bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90"
+                        >
                           <Sparkle size={20} weight="fill" className="mr-2" />
                           Generate {numChapters}-Chapter Outline
-                        </>
-                      )}
-                    </Button>
+                        </Button>
+                      </>
+                    )}
                   </div>
                 ) : (
                   <div className="max-w-3xl mx-auto space-y-6">
@@ -780,14 +792,17 @@ Write in a professional, engaging tone appropriate for the target audience.`,
           </Button>
 
           <div className="flex gap-3">
-            <Button
-              onClick={handleContinue}
-              disabled={isGeneratingOutline || isGeneratingBook}
-              className="bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90"
-            >
-              {step === 4 ? 'Generate Book' : 'Continue'}
-              <ArrowRight size={16} />
-            </Button>
+            {/* Only show Continue button if outline exists (Step 2) or for other steps */}
+            {(step !== 2 || outline.length > 0) && (
+              <Button
+                onClick={handleContinue}
+                disabled={isGeneratingOutline || isGeneratingBook}
+                className="bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90"
+              >
+                {step === 4 ? 'Generate Book' : 'Continue'}
+                <ArrowRight size={16} />
+              </Button>
+            )}
           </div>
         </div>
       </DialogContent>

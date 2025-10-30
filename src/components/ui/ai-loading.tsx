@@ -3,11 +3,13 @@ import { Progress } from '@/components/ui/progress';
 import { Sparkle, BookOpen, Pen, Lightning, Brain, MagicWand } from '@phosphor-icons/react';
 
 interface AILoadingProps {
-  progress: number;
+  progress?: number;
   currentMessage?: string;
   messages?: string[];
   messageDelay?: number;
   variant?: 'book' | 'magic' | 'brain' | 'default';
+  currentOperation?: string;
+  funFacts?: string[];
 }
 
 const variantConfig = {
@@ -38,11 +40,13 @@ const variantConfig = {
 };
 
 export function AILoading({
-  progress,
+  progress = 0,
   currentMessage,
   messages = [],
   messageDelay = 2000,
   variant = 'default',
+  currentOperation,
+  funFacts = [],
 }: AILoadingProps) {
   const config = variantConfig[variant];
   const Icon = config.icon;
