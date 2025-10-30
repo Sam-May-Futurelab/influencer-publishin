@@ -53,6 +53,7 @@ import { importFile } from '@/lib/import';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { ProjectSetupDialog } from '@/components/ProjectSetupDialog';
+import { AIBookGeneratorWizard } from '@/components/AIBookGeneratorWizard';
 import { UserProfile } from '@/lib/auth';
 
 interface DashboardProps {
@@ -93,6 +94,9 @@ export function Dashboard({
   // Project setup dialog state
   const [showSetupDialog, setShowSetupDialog] = useState(false);
   const [pendingProjectTitle, setPendingProjectTitle] = useState('');
+  
+  // AI Book Generator state
+  const [showBookGenerator, setShowBookGenerator] = useState(false);
   
   // Handle preview migration
   const handleMigratePreview = async () => {
@@ -452,7 +456,7 @@ export function Dashboard({
               Generate a complete ebook (6-15 chapters) with AI in minutes.
             </p>
             <Button
-              onClick={() => toast.info('AI Book Generator coming soon!')}
+              onClick={() => setShowBookGenerator(true)}
               className="w-full neomorph-button border-0 text-sm min-h-[40px] bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90 text-white"
             >
               <Sparkle size={16} weight="fill" />
@@ -868,6 +872,19 @@ export function Dashboard({
         onComplete={handleSetupComplete}
         onSkip={handleSetupSkip}
       />
+
+      {/* AI Book Generator Wizard */}
+      {userProfile && (
+        <AIBookGeneratorWizard
+          open={showBookGenerator}
+          onClose={() => setShowBookGenerator(false)}
+          onComplete={(project) => {
+            setShowBookGenerator(false);
+            onSelectProject(project);
+          }}
+          userProfile={userProfile}
+        />
+      )}
     </div>
   );
 }
