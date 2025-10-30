@@ -20,6 +20,7 @@ import { PreviewDialog } from '@/components/PreviewDialog';
 import { CoverDesigner } from '@/components/CoverDesigner';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
+import { toast } from 'sonner';
 
 interface ProjectHeaderProps {
   project: EbookProject;
@@ -63,9 +64,16 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
   };
 
   const handleSaveCover = (design: CoverDesign, imageData: string) => {
+    console.log('💾 Saving cover design:', {
+      title: design.title,
+      subtitle: design.subtitle,
+      authorName: design.authorName,
+      hasImage: !!design.backgroundImage,
+    });
     onProjectUpdate({
       coverDesign: { ...design, coverImageData: imageData },
     });
+    toast.success('Cover saved! Changes will persist after sign out.');
   };
 
   const wordCount = project.chapters.reduce((total, chapter) => {
