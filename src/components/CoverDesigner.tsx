@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -486,6 +486,21 @@ export function CoverDesigner({
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previousOpenRef = useRef(open);
+
+  // Auto-save when dialog closes
+  useEffect(() => {
+    // If dialog is closing (was open, now closed)
+    if (previousOpenRef.current && !open) {
+      // Auto-save the current design
+      const designToSave = {
+        ...design,
+        uploadedCoverImage: design.backgroundImage || design.uploadedCoverImage,
+      };
+      onSave(designToSave, '');
+    }
+    previousOpenRef.current = open;
+  }, [open]);
 
   const updateDesign = (updates: Partial<CoverDesign>) => {
     setDesign((prev) => ({ ...prev, ...updates }));
@@ -528,6 +543,7 @@ export function CoverDesigner({
       // The preview will always use live text overlay
       onSave(designToSave, '');
       toast.success('Cover design saved!');
+      onOpenChange(false); // Close the dialog after saving
     } catch (error) {
       console.error('Save failed:', error);
       toast.error('Failed to save cover');
