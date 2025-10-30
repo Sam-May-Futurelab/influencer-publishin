@@ -12,6 +12,7 @@ import { UserProfile } from '@/lib/auth';
 import { EbookProject } from '@/lib/types';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AILoading, useLoadingMessages } from '@/components/ui/ai-loading';
 
 interface AIBookGeneratorWizardProps {
   open: boolean;
@@ -51,6 +52,20 @@ export function AIBookGeneratorWizard({
   const [isGeneratingOutline, setIsGeneratingOutline] = useState(false);
   const [isGeneratingBook, setIsGeneratingBook] = useState(false);
   const [generationProgress, setGenerationProgress] = useState({ current: 0, total: 0 });
+
+  // Loading messages for book generation
+  const loadingMessages = [
+    'Analyzing your book structure...',
+    'Crafting engaging introductions...',
+    'Writing comprehensive content...',
+    'Adding practical examples...',
+    'Polishing the narrative flow...',
+    'Creating smooth transitions...',
+    'Ensuring consistency...',
+    'Almost there...',
+  ];
+
+  const currentLoadingMessage = useLoadingMessages(loadingMessages, 3000);
 
   const handleClose = () => {
     if (isGeneratingOutline || isGeneratingBook) {
@@ -262,7 +277,7 @@ Write in a professional, engaging tone appropriate for the target audience.`,
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0 gap-0">
+      <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col p-0 gap-0">
         <DialogHeader className="p-6 pb-4 border-b">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-xl bg-gradient-to-br from-purple-600 to-primary shadow-lg">
@@ -286,17 +301,17 @@ Write in a professional, engaging tone appropriate for the target audience.`,
           </div>
 
           {/* Step Indicators */}
-          <div className="flex items-center justify-between mt-4 px-2">
+          <div className="flex items-center justify-between mt-4 px-4">
             {[1, 2, 3, 4].map((s) => (
               <div key={s} className="flex items-center">
                 <div className={`
-                  w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-sm font-semibold transition-all
+                  w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all
                   ${step > s ? 'bg-primary text-white' : step === s ? 'bg-primary text-white ring-4 ring-primary/20' : 'bg-muted text-muted-foreground'}
                 `}>
-                  {step > s ? <Check size={16} weight="bold" /> : s}
+                  {step > s ? <Check size={18} weight="bold" /> : s}
                 </div>
                 {s < 4 && (
-                  <div className={`w-12 sm:w-16 md:w-24 h-1 mx-1 md:mx-2 rounded ${step > s ? 'bg-primary' : 'bg-muted'}`} />
+                  <div className={`w-20 md:w-28 lg:w-32 h-1 mx-2 rounded ${step > s ? 'bg-primary' : 'bg-muted'}`} />
                 )}
               </div>
             ))}
@@ -704,40 +719,34 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                     </>
                   ) : (
                     <>
-                      {/* Generation Progress */}
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="font-medium">Generating chapters...</span>
-                            <span className="text-muted-foreground">
-                              {generationProgress.current} / {generationProgress.total}
-                            </span>
-                          </div>
-                          <Progress 
-                            value={(generationProgress.current / generationProgress.total) * 100} 
-                            className="h-3"
-                          />
+                      {/* Generation Progress with New AILoading Component */}
+                      <AILoading
+                        progress={(generationProgress.current / generationProgress.total) * 100}
+                        currentMessage={currentLoadingMessage}
+                        variant="book"
+                        messages={[
+                          'AI is trained on millions of books and articles',
+                          'Each chapter takes about 30-60 seconds to generate',
+                          'You can edit everything after generation completes',
+                          'Your book will be automatically saved',
+                        ]}
+                      />
+
+                      {/* Current Chapter Being Generated */}
+                      {generationProgress.current > 0 && generationProgress.current <= outline.length && (
+                        <div className="mt-6 p-4 bg-muted/50 rounded-lg border">
+                          <p className="text-sm font-medium mb-2">Currently generating:</p>
+                          <p className="text-lg font-semibold text-primary">
+                            Chapter {generationProgress.current}: {outline[generationProgress.current - 1]?.title}
+                          </p>
                         </div>
+                      )}
 
-                        {/* Current Chapter */}
-                        {generationProgress.current > 0 && generationProgress.current <= outline.length && (
-                          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                            <div className="flex items-center gap-2">
-                              <div className="animate-spin">⚡</div>
-                              <span className="font-semibold text-sm">
-                                Chapter {generationProgress.current}: {outline[generationProgress.current - 1]?.title}
-                              </span>
-                            </div>
-                            <p className="text-sm text-muted-foreground">
-                              Writing content...
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Completed Chapters */}
-                        {generationProgress.current > 1 && (
-                          <div className="space-y-2 max-h-[300px] overflow-y-auto">
-                            <p className="text-sm font-medium text-muted-foreground">Completed:</p>
+                      {/* Completed Chapters List */}
+                      {generationProgress.current > 1 && (
+                        <div className="mt-6 space-y-2">
+                          <p className="text-sm font-medium text-muted-foreground">Completed chapters:</p>
+                          <div className="space-y-1 max-h-[150px] overflow-y-auto">
                             {outline.slice(0, generationProgress.current - 1).map((chapter) => (
                               <div key={chapter.order} className="flex items-center gap-2 text-sm">
                                 <span className="text-green-500">✓</span>
@@ -745,8 +754,8 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                               </div>
                             ))}
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
