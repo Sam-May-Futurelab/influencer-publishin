@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
+import { usePreviewMigration } from '@/hooks/use-preview-migration';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -71,6 +72,8 @@ export function Dashboard({
   onImportProject
 }: DashboardProps) {
   const { stats, totalWords, goals, progress } = useWritingAnalytics(projects);
+  const { hasPreview, previewData, isMigrating, migrateToAccount, dismissPreview } = usePreviewMigration();
+  
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -85,6 +88,17 @@ export function Dashboard({
   // Project setup dialog state
   const [showSetupDialog, setShowSetupDialog] = useState(false);
   const [pendingProjectTitle, setPendingProjectTitle] = useState('');
+  
+  // Handle preview migration
+  const handleMigratePreview = async () => {
+    const migratedProject = await migrateToAccount();
+    if (migratedProject) {
+      toast.success('Your preview has been added to your projects!');
+      // Optionally navigate to the new project
+      onSelectProject(migratedProject);
+    }
+  };
+
 
   const filteredProjects = projects.filter(project =>
     project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -749,6 +763,49 @@ export function Dashboard({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Preview Migration Dialog */}
+      <AlertDialog open={hasPreview} onOpenChange={(open) => !open && dismissPreview()}>
+        <AlertDialogContent className="bg-background">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Sparkle className="w-5 h-5 text-primary" weight="fill" />
+              Welcome back! Continue your book?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              <p>
+                You have a preview book titled <strong className="text-foreground">"{previewData?.title}"</strong> that you 
+                created earlier. Would you like to add it to your projects and continue writing?
+              </p>
+              <p className="text-xs text-muted-foreground">
+                You'll be able to add more chapters, customize the cover, and export your book.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={dismissPreview} disabled={isMigrating}>
+              No, discard it
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleMigratePreview}
+              disabled={isMigrating}
+              className="gap-2"
+            >
+              {isMigrating ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Adding...
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="w-4 h-4" weight="bold" />
+                  Yes, continue writing
+                </>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Project Setup Dialog */}
       <ProjectSetupDialog

@@ -43,6 +43,7 @@ const ContactPage = lazy(() => import('@/components/ContactPage').then(module =>
 const TestimonialsPage = lazy(() => import('@/components/TestimonialsPage'));
 const CaseStudiesPage = lazy(() => import('@/components/CaseStudiesPage'));
 const FAQPage = lazy(() => import('@/components/FAQPage'));
+const TryFreePage = lazy(() => import('@/components/TryFreePage').then(module => ({ default: module.TryFreePage })));
 
 // Lazy load heavy components
 const ChapterEditor = lazy(() => import('@/components/ChapterEditor').then(module => ({ default: module.ChapterEditor })));
@@ -732,6 +733,13 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={!user ? <LandingPage /> : <Navigate to="/app/dashboard" replace />} />
+        <Route path="/try-free" element={
+          <main className="p-0">
+            <Suspense fallback={<PageLoading />}>
+              <TryFreePage />
+            </Suspense>
+          </main>
+        } />
         <Route path="/privacy" element={
           <main className="p-0">
             <Suspense fallback={<PageLoading />}>

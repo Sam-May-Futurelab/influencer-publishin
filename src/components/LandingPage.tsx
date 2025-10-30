@@ -124,15 +124,16 @@ export function LandingPage() {
               <Button 
                 size="lg"
                 variant="outline"
-                className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8] hover:text-[#7a5f96] text-lg px-8 py-6"
+                onClick={() => navigate('/try-free')}
+                className="border-2 border-[#9b87b8] text-[#7a5f96] hover:bg-[#f0e8f8] hover:text-[#7a5f96] text-lg px-8 py-6 gap-2"
               >
-                <Play className="mr-2 w-5 h-5" />
-                Watch Demo
+                <Zap className="w-5 h-5" />
+                Try Free - No Signup
               </Button>
             </div>
             
             <p className="text-sm text-gray-500">
-              No credit card required • Free 5 pages • Upgrade anytime
+              Generate a sample chapter instantly • No credit card • No email required
             </p>
           </motion.div>
 
