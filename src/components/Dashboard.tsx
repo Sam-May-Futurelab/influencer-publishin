@@ -245,105 +245,10 @@ export function Dashboard({
 
   return (
     <div className="space-y-6 lg:space-y-8">
-      {/* Enhanced Analytics - Show if user has projects */}
-      {projects.length > 0 && (
-        <>
-          {/* Streak and Goals Row */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 lg:grid-cols-3 gap-4"
-          >
-            <WritingStreakCard
-              currentStreak={stats.currentStreak}
-              longestStreak={stats.longestStreak}
-              lastWriteDate={stats.lastWritingDate || undefined}
-            />
-            
-            {goals?.enabled && (
-              <>
-                <GoalProgressCard
-                  title="Daily Goal"
-                  current={progress.daily.current}
-                  target={progress.daily.target}
-                  period="daily"
-                  icon={<Target className="w-5 h-5 text-primary" />}
-                />
-                <GoalProgressCard
-                  title="Weekly Goal"
-                  current={progress.weekly.current}
-                  target={progress.weekly.target}
-                  period="weekly"
-                  icon={<Calendar className="w-5 h-5 text-accent" />}
-                />
-              </>
-            )}
-
-            {!goals?.enabled && (
-              <Card className="lg:col-span-2">
-                <CardContent className="p-6 text-center">
-                  <Target className="w-12 h-12 mx-auto mb-3 text-muted-foreground" />
-                  <h3 className="font-semibold mb-2">Set Writing Goals</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Track your progress with daily and weekly word count targets
-                  </p>
-                  <Button size="sm" variant="outline">
-                    Enable Goals
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-          </motion.div>
-
-          {/* Quick Stats Row */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4"
-          >
-            <Card className="neomorph-flat border-0">
-              <CardContent className="p-4 text-center">
-                <Pencil size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
-                <p className="text-2xl font-bold">{totalWords.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">Total Words</p>
-              </CardContent>
-            </Card>
-
-            <Card className="neomorph-flat border-0">
-              <CardContent className="p-4 text-center">
-                <BookOpen size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
-                <p className="text-2xl font-bold">{projects.length}</p>
-                <p className="text-xs text-muted-foreground">Projects</p>
-              </CardContent>
-            </Card>
-
-            <Card className="neomorph-flat border-0">
-              <CardContent className="p-4 text-center">
-                <FileText size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
-                <p className="text-2xl font-bold">
-                  {projects.reduce((sum, p) => sum + p.chapters.length, 0)}
-                </p>
-                <p className="text-xs text-muted-foreground">Chapters</p>
-              </CardContent>
-            </Card>
-
-            <Card className="neomorph-flat border-0">
-              <CardContent className="p-4 text-center">
-                <Clock size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
-                <p className="text-2xl font-bold">{stats.totalWordsThisWeek.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">Words This Week</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </>
-      )}
-
       {/* Welcome Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: projects.length > 0 ? 0.1 : 0 }}
         className="text-center space-y-3"
       >
         <h1 className="text-2xl lg:text-4xl font-bold">
@@ -634,6 +539,101 @@ export function Dashboard({
             </div>
           )}
         </motion.div>
+      )}
+
+      {/* Enhanced Analytics - Show if user has projects */}
+      {projects.length > 0 && (
+        <>
+          {/* Quick Stats Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+          >
+            <Card className="neomorph-flat border-0">
+              <CardContent className="p-4 text-center">
+                <Pencil size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
+                <p className="text-2xl font-bold">{totalWords.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">Total Words</p>
+              </CardContent>
+            </Card>
+
+            <Card className="neomorph-flat border-0">
+              <CardContent className="p-4 text-center">
+                <BookOpen size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
+                <p className="text-2xl font-bold">{projects.length}</p>
+                <p className="text-xs text-muted-foreground">Projects</p>
+              </CardContent>
+            </Card>
+
+            <Card className="neomorph-flat border-0">
+              <CardContent className="p-4 text-center">
+                <FileText size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
+                <p className="text-2xl font-bold">
+                  {projects.reduce((sum, p) => sum + p.chapters.length, 0)}
+                </p>
+                <p className="text-xs text-muted-foreground">Chapters</p>
+              </CardContent>
+            </Card>
+
+            <Card className="neomorph-flat border-0">
+              <CardContent className="p-4 text-center">
+                <Clock size={20} className="mx-auto mb-2 text-primary" weight="duotone" />
+                <p className="text-2xl font-bold">{stats.totalWordsThisWeek.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">Words This Week</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Streak and Goals Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-4"
+          >
+            <WritingStreakCard
+              currentStreak={stats.currentStreak}
+              longestStreak={stats.longestStreak}
+              lastWriteDate={stats.lastWritingDate || undefined}
+            />
+            
+            {goals?.enabled && (
+              <>
+                <GoalProgressCard
+                  title="Daily Goal"
+                  current={progress.daily.current}
+                  target={progress.daily.target}
+                  period="daily"
+                  icon={<Target className="w-5 h-5 text-primary" />}
+                />
+                <GoalProgressCard
+                  title="Weekly Goal"
+                  current={progress.weekly.current}
+                  target={progress.weekly.target}
+                  period="weekly"
+                  icon={<Calendar className="w-5 h-5 text-accent" />}
+                />
+              </>
+            )}
+
+            {!goals?.enabled && (
+              <Card className="lg:col-span-2">
+                <CardContent className="p-6 text-center">
+                  <Target className="w-12 h-12 mx-auto mb-3 text-muted-foreground" />
+                  <h3 className="font-semibold mb-2">Set Writing Goals</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Track your progress with daily and weekly word count targets
+                  </p>
+                  <Button size="sm" variant="outline">
+                    Enable Goals
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </motion.div>
+        </>
       )}
 
       {projects.length === 0 && (
