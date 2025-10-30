@@ -192,14 +192,19 @@ export function AIBookGeneratorWizard({
         const chapterOutline = outline[i];
         setGenerationProgress({ current: i + 1, total: outline.length });
 
-        try {
-          const response = await fetch('/api/generate-ai-content', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              prompt: `Write a complete chapter for an ebook titled "${bookData.title}".
+        let retries = 0;
+        const maxRetries = 3;
+        let success = false;
+
+        while (retries < maxRetries && !success) {
+          try {
+            const response = await fetch('/api/generate-ai-content', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                prompt: `Write a complete chapter for an ebook titled "${bookData.title}".
 
 Chapter ${chapterOutline.order}: ${chapterOutline.title}
 ${chapterOutline.description ? `Description: ${chapterOutline.description}` : ''}
@@ -217,50 +222,84 @@ Write a comprehensive, well-structured chapter (500-750 words) that:
 5. Concludes with a smooth transition to the next chapter
 
 Write in a professional, engaging tone appropriate for the target audience.`,
-            }),
-          });
+              }),
+            });
 
-          if (!response.ok) {
-            throw new Error(`Failed to generate chapter ${i + 1}`);
+            if (response.status === 429) {
+              // Rate limit hit - wait longer and retry
+              retries++;
+              if (retries < maxRetries) {
+                const waitTime = 20000 * retries; // 20s, 40s, 60s
+                toast.info(`Rate limit hit. Waiting ${waitTime / 1000}s before retry ${retries}/${maxRetries}...`);
+                await new Promise(resolve => setTimeout(resolve, waitTime));
+                continue;
+              } else {
+                throw new Error(`Rate limit exceeded after ${maxRetries} retries`);
+              }
+            }
+
+            if (!response.ok) {
+              throw new Error(`Failed to generate chapter ${i + 1}`);
+            }
+
+            const data = await response.json();
+            
+            // Add chapter to project
+            newProject.chapters.push({
+              id: `${projectId}-chapter-${i + 1}`,
+              title: chapterOutline.title,
+              content: data.content || '',
+              order: chapterOutline.order,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
+
+            success = true;
+
+            // Add 10 second delay between API calls to avoid OpenAI rate limiting
+            if (i < outline.length - 1) {
+              await new Promise(resolve => setTimeout(resolve, 10000));
+            }
+
+            } catch (error) {
+            console.error(`Error generating chapter ${i + 1}:`, error);
+            
+            // Check if it's a rate limit error
+            const isRateLimitError = error instanceof Error && error.message.includes('429');
+            
+            if (isRateLimitError && retries < maxRetries) {
+              // Will retry on next loop iteration
+              const waitTime = 20000 * retries;
+              toast.info(`Rate limit error. Waiting ${waitTime / 1000}s before retry...`);
+              await new Promise(resolve => setTimeout(resolve, waitTime));
+              retries++;
+              continue;
+            }
+            
+            // Final failure after retries
+            toast.error(
+              isRateLimitError 
+                ? `Rate limit reached. Please wait a few minutes and try again.`
+                : `Failed to generate chapter ${i + 1}. Continuing...`
+            );
+            
+            // Add placeholder chapter
+            newProject.chapters.push({
+              id: `${projectId}-chapter-${i + 1}`,
+              title: chapterOutline.title,
+              content: `# ${chapterOutline.title}\n\n_Chapter generation failed. Please edit and add content manually._`,
+              order: chapterOutline.order,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
+            
+            break; // Exit retry loop
           }
+        }
 
-          const data = await response.json();
-          
-          // Add chapter to project
-          newProject.chapters.push({
-            id: `${projectId}-chapter-${i + 1}`,
-            title: chapterOutline.title,
-            content: data.content || '',
-            order: chapterOutline.order,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-
-          // Add 10 second delay between API calls to avoid OpenAI rate limiting
-          if (i < outline.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 10000));
-          }
-
-        } catch (error) {
-          console.error(`Error generating chapter ${i + 1}:`, error);
-          
-          // Check if it's a rate limit error
-          const isRateLimitError = error instanceof Error && error.message.includes('429');
-          toast.error(
-            isRateLimitError 
-              ? `Rate limit reached. Please wait a few minutes and try again.`
-              : `Failed to generate chapter ${i + 1}. Continuing...`
-          );
-          
-          // Add placeholder chapter
-          newProject.chapters.push({
-            id: `${projectId}-chapter-${i + 1}`,
-            title: chapterOutline.title,
-            content: `# ${chapterOutline.title}\n\n_Chapter generation failed. Please edit and add content manually._`,
-            order: chapterOutline.order,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
+        // Delay between chapters (success or failure)
+        if (i < outline.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 10000));
         }
       }
 
