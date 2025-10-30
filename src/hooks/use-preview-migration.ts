@@ -17,6 +17,24 @@ interface MigrationState {
   error: string | null;
 }
 
+// Helper to convert plain text with newlines to HTML paragraphs
+const convertTextToHTML = (text: string): string => {
+  // Split by double newlines (paragraph breaks) or single newlines
+  const paragraphs = text
+    .split(/\n\n+/) // Split on double+ newlines first
+    .map(para => para.trim())
+    .filter(para => para.length > 0);
+  
+  // Wrap each paragraph in <p> tags
+  return paragraphs
+    .map(para => {
+      // Handle single newlines within paragraphs as <br> tags
+      const content = para.replace(/\n/g, '<br>');
+      return `<p>${content}</p>`;
+    })
+    .join('');
+};
+
 export function usePreviewMigration() {
   const { user } = useAuth();
   const [state, setState] = useState<MigrationState>({
@@ -83,6 +101,9 @@ export function usePreviewMigration() {
       const projectId = uuidv4();
       const now = new Date();
       
+      // Convert plain text content to HTML for the editor
+      const htmlContent = convertTextToHTML(previewData.chapter1);
+      
       const newProject: EbookProject = {
         id: projectId,
         title: previewData.title,
@@ -92,7 +113,7 @@ export function usePreviewMigration() {
           {
             id: uuidv4(),
             title: 'Chapter 1',
-            content: previewData.chapter1,
+            content: htmlContent,
             order: 0,
             createdAt: now,
             updatedAt: now,
