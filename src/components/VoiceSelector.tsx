@@ -17,6 +17,16 @@ const voices: { id: Voice; name: string; description: string; gender: string }[]
   { id: 'shimmer', name: 'Shimmer', description: 'Bright, energetic female voice', gender: 'Female' },
 ];
 
+// OpenAI's official voice sample URLs (free to use)
+const voiceSampleUrls: Record<Voice, string> = {
+  alloy: 'https://cdn.openai.com/API/docs/audio/alloy.wav',
+  echo: 'https://cdn.openai.com/API/docs/audio/echo.wav',
+  fable: 'https://cdn.openai.com/API/docs/audio/fable.wav',
+  onyx: 'https://cdn.openai.com/API/docs/audio/onyx.wav',
+  nova: 'https://cdn.openai.com/API/docs/audio/nova.wav',
+  shimmer: 'https://cdn.openai.com/API/docs/audio/shimmer.wav',
+};
+
 export function VoiceSelector({ selectedVoice, onSelectVoice }: VoiceSelectorProps) {
   const [playingVoice, setPlayingVoice] = useState<Voice | null>(null);
   const [audioElements] = useState<Map<Voice, HTMLAudioElement>>(new Map());
@@ -40,7 +50,7 @@ export function VoiceSelector({ selectedVoice, onSelectVoice }: VoiceSelectorPro
     // Get or create audio element for this voice
     let audio = audioElements.get(voice);
     if (!audio) {
-      audio = new Audio(`/voice-samples/${voice}.mp3`);
+      audio = new Audio(voiceSampleUrls[voice]);
       audio.onended = () => setPlayingVoice(null);
       audioElements.set(voice, audio);
     }

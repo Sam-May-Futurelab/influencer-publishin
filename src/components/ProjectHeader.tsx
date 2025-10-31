@@ -382,14 +382,14 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
 
       {/* Audiobook Dialog */}
       <Dialog open={showAudiobookDialog} onOpenChange={setShowAudiobookDialog}>
-        <DialogContent className="neomorph-raised border-0 max-w-4xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="neomorph-raised border-0 !max-w-6xl w-[95vw] max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="pb-4">
             <DialogTitle className="text-2xl flex items-center gap-2">
               <SpeakerHigh size={28} className="text-primary" weight="fill" />
               Generate Audiobook
             </DialogTitle>
-            <DialogDescription>
-              Convert your ebook to audiobook using AI voice synthesis
+            <DialogDescription className="text-base">
+              Convert your ebook chapters to audio files using AI voice synthesis
             </DialogDescription>
           </DialogHeader>
           <AudiobookTab project={project} />

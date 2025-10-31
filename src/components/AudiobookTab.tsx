@@ -134,79 +134,61 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
 
   return (
     <div className="space-y-6">
-      {/* Info Card */}
-      <Card className="neomorph-flat border-0">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl">
-            <SpeakerHigh size={24} className="text-primary" weight="fill" />
-            Generate Audiobook
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-start gap-3 p-4 bg-primary/5 rounded-lg border border-primary/20">
-            <Info size={20} className="text-primary flex-shrink-0 mt-0.5" />
-            <div className="text-sm space-y-1">
-              <p className="font-medium text-foreground">Convert your ebook to audiobook</p>
-              <p className="text-muted-foreground">
-                Choose a voice, select quality, and generate MP3 files for each chapter. You can play them in your browser or download them to your device.
-              </p>
-            </div>
+      {/* Stats Row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="p-3 neomorph-inset rounded-lg">
+          <div className="text-xs text-muted-foreground mb-1">Chapters</div>
+          <div className="text-lg font-bold text-foreground">{project.chapters.length}</div>
+        </div>
+        <div className="p-3 neomorph-inset rounded-lg">
+          <div className="text-xs text-muted-foreground mb-1">Characters</div>
+          <div className="text-lg font-bold text-foreground">{totalCharacters.toLocaleString()}</div>
+        </div>
+        <div className="p-3 neomorph-inset rounded-lg">
+          <div className="text-xs text-muted-foreground mb-1">Est. Cost</div>
+          <div className="text-lg font-bold text-foreground">${estimatedCost.toFixed(2)}</div>
+        </div>
+        <div className="p-3 neomorph-inset rounded-lg">
+          <div className="text-xs text-muted-foreground mb-1">Remaining</div>
+          <div className="text-lg font-bold text-foreground">
+            {characterLimit === 0 ? '0' : charactersRemaining.toLocaleString()}
           </div>
+        </div>
+      </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="p-3 neomorph-inset rounded-lg">
-              <div className="text-xs text-muted-foreground mb-1">Chapters</div>
-              <div className="text-lg font-bold text-foreground">{project.chapters.length}</div>
-            </div>
-            <div className="p-3 neomorph-inset rounded-lg">
-              <div className="text-xs text-muted-foreground mb-1">Characters</div>
-              <div className="text-lg font-bold text-foreground">{totalCharacters.toLocaleString()}</div>
-            </div>
-            <div className="p-3 neomorph-inset rounded-lg">
-              <div className="text-xs text-muted-foreground mb-1">Est. Cost</div>
-              <div className="text-lg font-bold text-foreground">${estimatedCost.toFixed(2)}</div>
-            </div>
-            <div className="p-3 neomorph-inset rounded-lg">
-              <div className="text-xs text-muted-foreground mb-1">Remaining</div>
-              <div className="text-lg font-bold text-foreground">
-                {characterLimit === 0 ? '0' : charactersRemaining.toLocaleString()}
-              </div>
-            </div>
-          </div>
+      {/* Tier limit warning */}
+      {subscriptionStatus === 'free' && (
+        <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg">
+          <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
+            Audiobooks are a premium feature. Upgrade to Creator or Premium to generate audiobooks.
+          </p>
+        </div>
+      )}
 
-          {/* Tier limit warning */}
-          {subscriptionStatus === 'free' && (
-            <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg">
-              <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
-                Audiobooks are a premium feature. Upgrade to Creator or Premium to generate audiobooks.
-              </p>
-            </div>
-          )}
-
-          {subscriptionStatus !== 'free' && totalCharacters > charactersRemaining && (
-            <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg">
-              <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
-                This book requires {totalCharacters.toLocaleString()} characters but you only have {charactersRemaining.toLocaleString()} remaining this month.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {subscriptionStatus !== 'free' && totalCharacters > charactersRemaining && (
+        <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg">
+          <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
+            This book requires {totalCharacters.toLocaleString()} characters but you only have {charactersRemaining.toLocaleString()} remaining this month.
+          </p>
+        </div>
+      )}
 
       {/* Voice Selection */}
       {subscriptionStatus !== 'free' && (
-        <Card className="neomorph-flat border-0">
-          <CardHeader>
-            <CardTitle className="text-lg">Choose Voice & Quality</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <VoiceSelector
-              selectedVoice={selectedVoice}
-              onSelectVoice={setSelectedVoice}
-            />
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Left: Voice Selection */}
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-semibold mb-3 block">Choose a Voice</label>
+              <VoiceSelector
+                selectedVoice={selectedVoice}
+                onSelectVoice={setSelectedVoice}
+              />
+            </div>
+          </div>
 
-            {/* Quality Selection */}
+          {/* Right: Quality & Generate */}
+          <div className="space-y-4">
             <div>
               <label className="text-sm font-semibold mb-3 block">Audio Quality</label>
               <div className="grid grid-cols-2 gap-3">
@@ -219,8 +201,8 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
                   }`}
                 >
                   <div className="font-semibold mb-1">Standard</div>
-                  <div className="text-sm text-muted-foreground">$0.015 per 1K chars</div>
-                  <Badge variant="secondary" className="mt-2">Recommended</Badge>
+                  <div className="text-xs text-muted-foreground">$0.015 / 1K chars</div>
+                  <Badge variant="secondary" className="mt-2 text-xs">Recommended</Badge>
                 </button>
                 <button
                   onClick={() => setSelectedQuality('hd')}
@@ -231,24 +213,31 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
                   }`}
                 >
                   <div className="font-semibold mb-1">HD</div>
-                  <div className="text-sm text-muted-foreground">$0.030 per 1K chars</div>
-                  <Badge variant="secondary" className="mt-2">Premium</Badge>
+                  <div className="text-xs text-muted-foreground">$0.030 / 1K chars</div>
+                  <Badge variant="secondary" className="mt-2 text-xs">Premium</Badge>
                 </button>
               </div>
             </div>
 
             {/* Generate Button */}
-            <Button
-              onClick={handleGenerate}
-              disabled={!canGenerate() || isGenerating}
-              className="w-full h-12 gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground"
-              size="lg"
-            >
-              <Sparkle size={20} weight="fill" />
-              {isGenerating ? 'Generating...' : 'Generate Audiobook'}
-            </Button>
-          </CardContent>
-        </Card>
+            <div className="pt-4">
+              <Button
+                onClick={handleGenerate}
+                disabled={!canGenerate() || isGenerating}
+                className="w-full h-14 gap-2 text-base bg-gradient-to-r from-primary to-accent text-primary-foreground"
+                size="lg"
+              >
+                <Sparkle size={20} weight="fill" />
+                {isGenerating ? 'Generating...' : `Generate Audiobook ($${estimatedCost.toFixed(2)})`}
+              </Button>
+              {canGenerate() && !isGenerating && (
+                <p className="text-xs text-muted-foreground text-center mt-2">
+                  Will use {totalCharacters.toLocaleString()} of {charactersRemaining.toLocaleString()} available characters
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Generation Progress */}
