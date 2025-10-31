@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { VoiceSelector } from '@/components/VoiceSelector';
 import { AudioPlayer } from '@/components/AudioPlayer';
+import { AILoading } from '@/components/AILoading';
 import { SpeakerHigh, Download, Sparkle, Info } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
@@ -222,18 +223,29 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
 
             {/* Generate Button */}
             <div className="pt-4">
-              <Button
-                onClick={handleGenerate}
-                disabled={!canGenerate() || isGenerating}
-                className="w-full h-14 gap-2 text-base bg-gradient-to-r from-primary to-accent text-primary-foreground"
-                size="lg"
-              >
-                <Sparkle size={20} weight="fill" />
-                {isGenerating ? 'Generating...' : 'Generate Audiobook'}
-              </Button>
+              {isGenerating ? (
+                <div className="w-full h-14 flex items-center justify-center">
+                  <AILoading />
+                </div>
+              ) : (
+                <Button
+                  onClick={handleGenerate}
+                  disabled={!canGenerate()}
+                  className="w-full h-14 gap-2 text-base bg-gradient-to-r from-primary to-accent text-primary-foreground"
+                  size="lg"
+                >
+                  <Sparkle size={20} weight="fill" />
+                  Generate Audiobook
+                </Button>
+              )}
               {canGenerate() && !isGenerating && (
                 <p className="text-xs text-muted-foreground text-center mt-2">
                   Will use {totalChapters} of {chaptersRemaining} available chapters
+                </p>
+              )}
+              {isGenerating && (
+                <p className="text-xs text-muted-foreground text-center mt-2">
+                  Generating {currentGeneratingChapter}... ({Math.round(generationProgress)}%)
                 </p>
               )}
             </div>

@@ -2,14 +2,6 @@
 // Handles: content, outline, cover, audiobook
 import OpenAI from 'openai';
 import admin from 'firebase-admin';
-import ffmpeg from 'fluent-ffmpeg';
-import ffmpegStatic from 'ffmpeg-static';
-import { createWriteStream, mkdtempSync, rmSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
-
-// Set ffmpeg path
-ffmpeg.setFfmpegPath(ffmpegStatic);
 import { setCorsHeaders, handleCorsPreFlight } from './_cors.js';
 
 // Initialize OpenAI
@@ -199,52 +191,6 @@ function splitIntoChunks(text, maxChars = 4000) {
   }
   
   return chunks;
-}
-
-// Concatenate audio files using ffmpeg
-async function concatenateAudioFiles(audioBuffers, chapterTitle) {
-  return new Promise((resolve, reject) => {
-    // Create temp directory
-    const tempDir = mkdtempSync(join(tmpdir(), 'audiobook-'));
-    const inputFiles = [];
-    const outputFile = join(tempDir, 'output.mp3');
-    
-    try {
-      // Write all audio buffers to temp files
-      audioBuffers.forEach((buffer, index) => {
-        const filePath = join(tempDir, `chunk-${index}.mp3`);
-        const writeStream = createWriteStream(filePath);
-        writeStream.write(buffer);
-        writeStream.end();
-        inputFiles.push(filePath);
-      });
-      
-      // Create ffmpeg command
-      const command = ffmpeg();
-      
-      // Add all input files
-      inputFiles.forEach(file => command.input(file));
-      
-      // Concatenate and output
-      command
-        .on('error', (err) => {
-          rmSync(tempDir, { recursive: true, force: true });
-          reject(new Error(`FFmpeg error: ${err.message}`));
-        })
-        .on('end', () => {
-          // Read the output file
-          import('fs').then(({ readFileSync }) => {
-            const outputBuffer = readFileSync(outputFile);
-            rmSync(tempDir, { recursive: true, force: true });
-            resolve(outputBuffer);
-          }).catch(reject);
-        })
-        .mergeToFile(outputFile, tempDir);
-    } catch (error) {
-      rmSync(tempDir, { recursive: true, force: true });
-      reject(error);
-    }
-  });
 }
 
 // Format content with paragraph breaks
@@ -573,7 +519,7 @@ async function handleAudiobookGeneration(req, res) {
 
       return res.status(200).send(buffer);
     } else {
-      // Multiple chunks - need to concatenate
+      // Multiple chunks - concatenate buffers directly (fast, no FFmpeg)
       console.log(`[Audiobook] Chapter "${chapterTitle}" is ${cleanText.length} chars, splitting into chunks...`);
       
       const chunks = splitIntoChunks(cleanText);
@@ -596,9 +542,9 @@ async function handleAudiobookGeneration(req, res) {
         audioBuffers.push(buffer);
       }
       
-      // Concatenate all audio chunks
-      console.log(`[Audiobook] Concatenating ${audioBuffers.length} audio chunks...`);
-      const finalBuffer = await concatenateAudioFiles(audioBuffers, chapterTitle);
+      // Simple concatenation - just combine the buffers
+      console.log(`[Audiobook] Concatenating ${audioBuffers.length} audio buffers...`);
+      const finalBuffer = Buffer.concat(audioBuffers);
       console.log(`[Audiobook] Concatenation complete, final size: ${finalBuffer.length} bytes`);
 
       res.setHeader('Content-Type', 'audio/mpeg');
