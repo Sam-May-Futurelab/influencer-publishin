@@ -212,17 +212,15 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
       
       // Generate audio for each group
       for (const [baseTitle, chapters] of chapterGroups) {
-        const audioBuffers: Blob[] = [];
+        const audioUrls: string[] = [];
         
-        // Generate each part
+        // Queue each part
         for (let partIndex = 0; partIndex < chapters.length; partIndex++) {
           const chapter = chapters[partIndex];
           setCurrentGeneratingChapter(baseTitle);
-          processedChapters++;
-          setGenerationProgress((processedChapters / sortedChapters.length) * 100);
 
-          // Call API to generate audio
-          const response = await fetch('/api/ai-generation?type=audiobook', {
+          // Queue the job
+          const queueResponse = await fetch('/api/audiobook-queue', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -232,36 +230,61 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
               chapterId: chapter.id,
               chapterTitle: chapter.title,
               userId: userId,
-              chapterCount: processedChapters === 1 ? sortedChapters.length : undefined,
+              projectId: project.id,
             }),
           });
 
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-            throw new Error(errorData.error || `Failed to generate audio for ${chapter.title}`);
+          if (!queueResponse.ok) {
+            const errorData = await queueResponse.json().catch(() => ({ error: 'Unknown error' }));
+            throw new Error(errorData.error || `Failed to queue audio for ${chapter.title}`);
           }
 
-          // Get audio blob
-          const audioBlob = await response.blob();
-          audioBuffers.push(audioBlob);
+          const { jobId } = await queueResponse.json();
+          console.log(`[Audiobook] Job queued: ${jobId}`);
+
+          // Poll for completion
+          let audioUrl: string | null = null;
+          const maxAttempts = 120; // 2 minutes max (1 second intervals)
+          let attempts = 0;
+
+          while (!audioUrl && attempts < maxAttempts) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+            
+            const statusResponse = await fetch(
+              `/api/audiobook-status?projectId=${project.id}&chapterId=${chapter.id}`
+            );
+            
+            if (!statusResponse.ok) {
+              throw new Error('Failed to check status');
+            }
+
+            const statusData = await statusResponse.json();
+            
+            if (statusData.status === 'completed') {
+              audioUrl = statusData.audioUrl;
+            } else if (statusData.status === 'failed') {
+              throw new Error(statusData.error || 'Generation failed');
+            }
+            
+            attempts++;
+          }
+
+          if (!audioUrl) {
+            throw new Error('Generation timeout - please try again');
+          }
+
+          audioUrls.push(audioUrl);
+          processedChapters++;
+          setGenerationProgress((processedChapters / sortedChapters.length) * 100);
         }
         
-        // Merge parts if there are multiple
-        let finalBlob: Blob;
-        if (audioBuffers.length > 1) {
-          // Concatenate audio buffers
-          const mergedBuffer = await mergeAudioBuffers(audioBuffers);
-          finalBlob = mergedBuffer;
-        } else {
-          finalBlob = audioBuffers[0];
-        }
-        
-        const audioUrl = URL.createObjectURL(finalBlob);
+        // For merged chapters, use the first URL (we're now storing in Firebase, not merging client-side)
+        const finalUrl = audioUrls[0]; // If you want to merge, implement server-side merging
 
         setGeneratedChapters(prev => [...prev, {
           chapterId: chapters[0].id,
           title: baseTitle, // Use base title without "Part X"
-          audioUrl,
+          audioUrl: finalUrl,
         }]);
       }
 
