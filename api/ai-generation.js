@@ -159,7 +159,7 @@ async function checkAudiobookLimit(userId, chapterCount) {
       lastAudiobookChaptersReset: currentMonth,
     });
 
-    return { allowed: true, charactersUsed: charactersUsed + characterCount, limit };
+    return { allowed: true, chaptersUsed: chaptersUsed + chapterCount, limit };
   } catch (error) {
     console.error('Error checking audiobook limit:', error);
     return { allowed: false, error: 'Failed to check usage limits' };
