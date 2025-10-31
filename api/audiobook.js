@@ -3,7 +3,7 @@
 import { Inngest } from 'inngest';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import Cors from 'cors';
+import { setCorsHeaders, handleCorsPreFlight } from './_cors.js';
 
 // Initialize Inngest client
 const inngest = new Inngest({ 
@@ -26,29 +26,12 @@ if (getApps().length === 0) {
   }
 }
 
-const cors = Cors({
-  methods: ['POST', 'GET', 'HEAD', 'OPTIONS'],
-  origin: true,
-  credentials: true,
-});
-
-function runMiddleware(req, res, fn) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-      return resolve(result);
-    });
-  });
-}
-
 export default async function handler(req, res) {
-  await runMiddleware(req, res, cors);
-
+  // Handle CORS
+  setCorsHeaders(req, res);
+  
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return handleCorsPreFlight(req, res);
   }
 
   const { action } = req.query; // 'queue' or 'status'
