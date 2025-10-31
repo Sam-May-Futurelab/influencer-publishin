@@ -1,4 +1,4 @@
-import { serve } from 'inngest/vercel';
+import { serve } from 'inngest/next';
 import { Inngest } from 'inngest';
 import OpenAI from 'openai';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
