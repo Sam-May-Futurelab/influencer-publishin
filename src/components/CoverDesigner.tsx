@@ -1347,15 +1347,13 @@ export function CoverDesigner({
             <div className="w-full flex justify-center items-start py-4">
               {/* GRADIENT PREVIEW */}
               {design.backgroundType === 'gradient' && (
-                <>
-                  {console.log('✅ RENDERING GRADIENT:', design.gradientDirection, design.gradientStart, design.gradientEnd)}
-                  <div
-                    ref={canvasRef}
-                    className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm [background:var(--cover-bg)]"
-                    style={{
-                      '--cover-bg': `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
-                    } as React.CSSProperties}
-                  >
+                <div
+                  ref={canvasRef}
+                  className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
+                  style={{
+                    background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
+                  }}
+                >
                   <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
                     <h1
                       className="font-bold leading-tight mb-4 break-words px-2"
@@ -1392,7 +1390,6 @@ export function CoverDesigner({
                     </p>
                   </div>
                 </div>
-                </>
               )}
 
               {/* SOLID COLOR PREVIEW */}
