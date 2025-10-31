@@ -1382,37 +1382,37 @@ export function CoverDesigner({
                           <Label className="text-sm font-semibold text-primary">✨ Premium Collection</Label>
                           <div className="grid grid-cols-3 gap-3">
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #667eea, #764ba2)' }}
                               title="Purple Dream"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#f857a6', gradientEnd: '#ff5858', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#f857a6', gradientEnd: '#ff5858', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #f857a6, #ff5858)' }}
                               title="Sunset Bliss"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#00c6ff', gradientEnd: '#0072ff', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#00c6ff', gradientEnd: '#0072ff', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #00c6ff, #0072ff)' }}
                               title="Ocean Blue"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#f093fb', gradientEnd: '#f5576c', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#f093fb', gradientEnd: '#f5576c', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #f093fb, #f5576c)' }}
                               title="Pink Lemonade"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#4facfe', gradientEnd: '#00f2fe', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#4facfe', gradientEnd: '#00f2fe', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #4facfe, #00f2fe)' }}
                               title="Fresh Air"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#43e97b', gradientEnd: '#38f9d7', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#43e97b', gradientEnd: '#38f9d7', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #43e97b, #38f9d7)' }}
                               title="Mint Fresh"
@@ -1425,37 +1425,37 @@ export function CoverDesigner({
                           <Label className="text-sm font-semibold text-orange-600 dark:text-orange-400">🔥 Warm & Energetic</Label>
                           <div className="grid grid-cols-3 gap-3">
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#fa709a', gradientEnd: '#fee140', gradientDirection: 'to-b' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#fa709a', gradientEnd: '#fee140', gradientDirection: 'to-b' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom, #fa709a, #fee140)' }}
                               title="Summer Warmth"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#ff6a00', gradientEnd: '#ee0979', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#ff6a00', gradientEnd: '#ee0979', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #ff6a00, #ee0979)' }}
                               title="Burning Fire"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#f83600', gradientEnd: '#f9d423', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#f83600', gradientEnd: '#f9d423', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #f83600, #f9d423)' }}
                               title="Fiery Sunset"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#eb3349', gradientEnd: '#f45c43', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#eb3349', gradientEnd: '#f45c43', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #eb3349, #f45c43)' }}
                               title="Cherry Red"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#ff9966', gradientEnd: '#ff5e62', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#ff9966', gradientEnd: '#ff5e62', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #ff9966, #ff5e62)' }}
                               title="Peach Flame"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#fc4a1a', gradientEnd: '#f7b733', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#fc4a1a', gradientEnd: '#f7b733', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #fc4a1a, #f7b733)' }}
                               title="Golden Hour"
@@ -1468,37 +1468,37 @@ export function CoverDesigner({
                           <Label className="text-sm font-semibold text-blue-600 dark:text-blue-400">❄️ Cool & Calm</Label>
                           <div className="grid grid-cols-3 gap-3">
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#30cfd0', gradientEnd: '#330867', gradientDirection: 'to-b' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#30cfd0', gradientEnd: '#330867', gradientDirection: 'to-b' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom, #30cfd0, #330867)' }}
                               title="Deep Ocean"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#a8edea', gradientEnd: '#fed6e3', gradientDirection: 'to-b' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#a8edea', gradientEnd: '#fed6e3', gradientDirection: 'to-b' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom, #a8edea, #fed6e3)' }}
                               title="Pastel Dream"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#89f7fe', gradientEnd: '#66a6ff', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#89f7fe', gradientEnd: '#66a6ff', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #89f7fe, #66a6ff)' }}
                               title="Sky Blue"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#06beb6', gradientEnd: '#48b1bf', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#06beb6', gradientEnd: '#48b1bf', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #06beb6, #48b1bf)' }}
                               title="Teal Breeze"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#16a085', gradientEnd: '#f4d03f', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#16a085', gradientEnd: '#f4d03f', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #16a085, #f4d03f)' }}
                               title="Tropical"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#2193b0', gradientEnd: '#6dd5ed', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#2193b0', gradientEnd: '#6dd5ed', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #2193b0, #6dd5ed)' }}
                               title="Crystal Water"
@@ -1511,37 +1511,37 @@ export function CoverDesigner({
                           <Label className="text-sm font-semibold text-purple-600 dark:text-purple-400">🌙 Dark & Elegant</Label>
                           <div className="grid grid-cols-3 gap-3">
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#141e30', gradientEnd: '#243b55', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#141e30', gradientEnd: '#243b55', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #141e30, #243b55)' }}
                               title="Midnight"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#000000', gradientEnd: '#434343', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#000000', gradientEnd: '#434343', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #000000, #434343)' }}
                               title="Carbon"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#4b6cb7', gradientEnd: '#182848', gradientDirection: 'to-b' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#4b6cb7', gradientEnd: '#182848', gradientDirection: 'to-b' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom, #4b6cb7, #182848)' }}
                               title="Navy Night"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#2c3e50', gradientEnd: '#4ca1af', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#2c3e50', gradientEnd: '#4ca1af', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #2c3e50, #4ca1af)' }}
                               title="Steel Blue"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#2c3e50', gradientEnd: '#fd746c', gradientDirection: 'to-r' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#2c3e50', gradientEnd: '#fd746c', gradientDirection: 'to-r' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to right, #2c3e50, #fd746c)' }}
                               title="Dark Coral"
                             />
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, gradientStart: '#232526', gradientEnd: '#414345', gradientDirection: 'to-br' })}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#232526', gradientEnd: '#414345', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #232526, #414345)' }}
                               title="Graphite"
@@ -1792,13 +1792,21 @@ export function CoverDesigner({
                 </Card>
 
                 {/* Title Section */}
+                <Collapsible defaultOpen={true}>
                 <Card className="p-5 border-2">
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-purple-600"></div>
-                      <Label className="text-base font-bold">Title</Label>
-                    </div>
+                    <CollapsibleTrigger className="w-full">
+                      <div className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-purple-600"></div>
+                          <Label className="text-base font-bold cursor-pointer">Title Settings</Label>
+                        </div>
+                        <CaretDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                      </div>
+                    </CollapsibleTrigger>
                     
+                    <CollapsibleContent>
+                    <div className="space-y-4 pt-2">
                     <div className="space-y-2">
                       <Label className="text-sm text-muted-foreground">Text</Label>
                       <Input
@@ -1893,12 +1901,28 @@ export function CoverDesigner({
                         <span>Bottom (90%)</span>
                       </div>
                     </div>
+                    </div>
+                    </CollapsibleContent>
                   </div>
                 </Card>
+                </Collapsible>
 
                 {/* Subtitle Section */}
+                <Collapsible defaultOpen={true}>
                 <Card className="p-5 border-2">
                   <div className="space-y-4">
+                    <CollapsibleTrigger className="w-full">
+                      <div className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-blue-600"></div>
+                          <Label className="text-base font-bold cursor-pointer">Subtitle Settings</Label>
+                        </div>
+                        <CaretDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                      </div>
+                    </CollapsibleTrigger>
+                    
+                    <CollapsibleContent>
+                    <div className="space-y-4 pt-2">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-blue-600"></div>
                       <Label className="text-base font-bold">Subtitle</Label>
@@ -1998,12 +2022,28 @@ export function CoverDesigner({
                         <span>Bottom (90%)</span>
                       </div>
                     </div>
+                    </div>
+                    </CollapsibleContent>
                   </div>
                 </Card>
+                </Collapsible>
 
                 {/* Author Section */}
+                <Collapsible defaultOpen={true}>
                 <Card className="p-5 border-2">
                   <div className="space-y-4">
+                    <CollapsibleTrigger className="w-full">
+                      <div className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-600"></div>
+                          <Label className="text-base font-bold cursor-pointer">Author Settings</Label>
+                        </div>
+                        <CaretDown className="h-5 w-5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                      </div>
+                    </CollapsibleTrigger>
+                    
+                    <CollapsibleContent>
+                    <div className="space-y-4 pt-2">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-green-600"></div>
                       <Label className="text-base font-bold">Author Name</Label>
@@ -2103,8 +2143,11 @@ export function CoverDesigner({
                         <span>Bottom (90%)</span>
                       </div>
                     </div>
+                    </div>
+                    </CollapsibleContent>
                   </div>
                 </Card>
+                </Collapsible>
 
                 {/* Text Shadow Controls */}
                 <Collapsible defaultOpen={false}>
