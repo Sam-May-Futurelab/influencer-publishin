@@ -71,7 +71,7 @@ const generateAudiobook = inngest.createFunction(
   },
   { event: 'audiobook/generate.requested' },
   async ({ event, step }) => {
-    const { userId, projectId, chapterId, chapterTitle, text, voice, quality = 'standard' } = event.data;
+    const { userId, projectId, projectTitle, chapterId, chapterTitle, text, voice, quality = 'standard' } = event.data;
 
     console.log(`[Inngest] Starting audiobook generation for chapter: ${chapterTitle}`);
 
@@ -122,6 +122,7 @@ const generateAudiobook = inngest.createFunction(
         chapterId,
         chapterTitle,
         projectId,
+        projectTitle,
         userId,
         completedAt: new Date().toISOString(),
       });

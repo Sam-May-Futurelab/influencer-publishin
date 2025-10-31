@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,11 +19,17 @@ import {
   Copy,
   Export,
   Eye,
-  Star
+  Star,
+  SpeakerHigh,
+  Download
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { PreviewDialog } from '@/components/PreviewDialog';
+import { AudioPlayer } from '@/components/AudioPlayer';
+import { useAuth } from '@/hooks/use-auth';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 interface ProjectsPageProps {
   projects: EbookProject[];
@@ -57,6 +63,41 @@ export function ProjectsPage({
   const [projectToRename, setProjectToRename] = useState<EbookProject | null>(null);
   const [projectToDelete, setProjectToDelete] = useState<EbookProject | null>(null);
   const [renameTitle, setRenameTitle] = useState('');
+  const [audiobooks, setAudiobooks] = useState<any[]>([]);
+  const [loadingAudiobooks, setLoadingAudiobooks] = useState(true);
+  const { user } = useAuth();
+
+  // Load audiobooks
+  useEffect(() => {
+    const loadAudiobooks = async () => {
+      if (!user?.uid) {
+        setLoadingAudiobooks(false);
+        return;
+      }
+
+      try {
+        const audiobooksRef = collection(db, 'audiobooks');
+        const q = query(
+          audiobooksRef,
+          where('userId', '==', user.uid)
+        );
+        
+        const snapshot = await getDocs(q);
+        const loadedAudiobooks = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        setAudiobooks(loadedAudiobooks);
+      } catch (error) {
+        console.error('Failed to load audiobooks:', error);
+      } finally {
+        setLoadingAudiobooks(false);
+      }
+    };
+
+    loadAudiobooks();
+  }, [user?.uid]);
 
   const filteredAndSortedProjects = projects
     .filter(project => {
@@ -240,6 +281,59 @@ export function ProjectsPage({
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Audiobooks Section */}
+      {!loadingAudiobooks && audiobooks.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <Card className="neomorph-flat border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <SpeakerHigh size={20} className="text-primary" />
+                  <h2 className="text-lg font-semibold">Your Audiobooks</h2>
+                </div>
+                <Badge variant="secondary">{audiobooks.length}</Badge>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {audiobooks.slice(0, 6).map((audiobook: any) => (
+                  <div key={audiobook.id} className="p-4 neomorph-inset rounded-lg">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm truncate">{audiobook.chapterTitle}</h3>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {audiobook.projectTitle || 'Unknown Project'}
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 w-8 p-0"
+                        asChild
+                      >
+                        <a href={audiobook.audioUrl} download={`${audiobook.chapterTitle}.mp3`}>
+                          <Download size={16} />
+                        </a>
+                      </Button>
+                    </div>
+                    <AudioPlayer src={audiobook.audioUrl} />
+                  </div>
+                ))}
+              </div>
+              {audiobooks.length > 6 && (
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    +{audiobooks.length - 6} more audiobook{audiobooks.length - 6 !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Projects Grid/List */}
       {filteredAndSortedProjects.length > 0 ? (

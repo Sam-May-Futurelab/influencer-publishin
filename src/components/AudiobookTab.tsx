@@ -267,6 +267,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
               chapterTitle: chapter.title,
               userId: userId,
               projectId: project.id,
+              projectTitle: project.title,
             }),
           });
 
