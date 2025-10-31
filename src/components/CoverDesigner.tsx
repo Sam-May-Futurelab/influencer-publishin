@@ -834,7 +834,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'wellness-11',
     name: 'Natural Wellness',
-    url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1540206395-68808572332f?w=800&h=1280&fit=crop',
     category: 'wellness',
   },
   {
