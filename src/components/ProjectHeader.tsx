@@ -126,31 +126,32 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
         </div>
 
         {/* Bottom Row: Stats (mobile) + Action Buttons */}
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           {/* Stats Badge - mobile only */}
           <Badge 
             variant="secondary" 
-            className="lg:hidden neomorph-flat border-0 px-3 py-1.5 text-xs font-medium"
+            className="lg:hidden neomorph-flat border-0 px-3 py-1.5 text-xs font-medium w-fit"
           >
             {project.chapters.length} {project.chapters.length === 1 ? 'Chapter' : 'Chapters'} • {wordCount.toLocaleString()} words
           </Badge>
 
-          {/* Spacer to push buttons to the right on mobile */}
-          <div className="flex-1 lg:hidden"></div>
+          {/* Spacer to push buttons to the right on desktop */}
+          <div className="hidden lg:flex lg:flex-1"></div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Action Buttons - Responsive Grid on Mobile, Flex on Desktop */}
+          <div className="grid grid-cols-3 gap-2 lg:flex lg:items-center lg:gap-2">
             {/* AI Cover Generator Button */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button 
                 onClick={() => setShowCoverDesigner(true)} 
                 variant="default"
                 size="sm"
-                className="gap-2 h-10 lg:h-12 px-3 lg:px-4 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white border-0"
+                className="gap-1.5 lg:gap-2 h-10 lg:h-12 px-2 lg:px-4 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white border-0 w-full lg:w-auto"
               >
-                <Sparkle size={18} weight="fill" />
+                <Sparkle size={16} className="lg:hidden" weight="fill" />
+                <Sparkle size={18} className="hidden lg:block" weight="fill" />
                 <span className="hidden md:inline">AI Cover</span>
-                <span className="md:hidden">AI</span>
+                <span className="md:hidden text-xs">AI</span>
               </Button>
             </motion.div>
 
@@ -160,11 +161,12 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                 onClick={() => setShowCoverDesigner(true)} 
                 variant="outline"
                 size="sm"
-                className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
+                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto"
               >
-                <ImageIcon size={18} />
+                <ImageIcon size={16} className="lg:hidden" />
+                <ImageIcon size={18} className="hidden lg:block" />
                 <span className="hidden sm:inline">Cover Design</span>
-                <span className="sm:hidden">Cover</span>
+                <span className="sm:hidden text-xs">Cover</span>
               </Button>
             </motion.div>
 
@@ -174,11 +176,12 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
+                  className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto"
                 >
-                  <Gear size={18} />
+                  <Gear size={16} className="lg:hidden" />
+                  <Gear size={18} className="hidden lg:block" />
                   <span className="hidden sm:inline">Customize</span>
-                  <DotsThree size={18} className="sm:hidden" />
+                  <DotsThree size={16} className="sm:hidden lg:hidden" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 bg-card border border-border shadow-lg">
@@ -199,22 +202,24 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                 onClick={() => setShowPreviewDialog(true)} 
                 variant="outline"
                 size="sm"
-                className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-4"
+                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto"
               >
-                <Eye size={18} />
+                <Eye size={16} className="lg:hidden" />
+                <Eye size={18} className="hidden lg:block" />
                 <span className="hidden sm:inline">Preview</span>
-                <span className="sm:hidden">View</span>
+                <span className="sm:hidden text-xs">View</span>
               </Button>
             </motion.div>
 
             {/* Export Button - Primary Action */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="col-span-2 lg:col-span-1">
               <Button 
                 onClick={() => setShowExportDialog(true)} 
-                className="gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground"
+                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-3 lg:px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground w-full lg:w-auto"
               >
-                <DownloadSimple size={18} weight="bold" />
-                <span>Export</span>
+                <DownloadSimple size={16} className="lg:hidden" weight="bold" />
+                <DownloadSimple size={18} className="hidden lg:block" weight="bold" />
+                <span className="text-xs lg:text-sm">Export</span>
               </Button>
             </motion.div>
           </div>

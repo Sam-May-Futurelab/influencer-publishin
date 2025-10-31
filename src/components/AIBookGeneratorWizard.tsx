@@ -301,6 +301,12 @@ Write in a professional, engaging tone appropriate for the target audience.`,
 
             success = true;
 
+            // Check if user requested to stop before adding delay
+            if (shouldStopGeneration.current) {
+              toast.info(`Generation stopped. Saved ${completedChapters.length + 1} completed chapters.`);
+              break;
+            }
+
             // Add 20 second delay between API calls to respect TPM limits
             // gpt-4o-mini has 200k TPM limit, but need to spread requests out
             if (i < outline.length - 1) {
