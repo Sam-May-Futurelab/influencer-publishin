@@ -39,6 +39,7 @@ import {
 } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { UpgradeModal } from './UpgradeModal';
+import { useAuth } from '@/hooks/use-auth';
 
 interface CoverDesign {
   title: string;
@@ -216,8 +217,17 @@ const COVER_TEMPLATES = [
   },
 ];
 
+// Stock image interface
+interface StockImage {
+  id: string;
+  name: string;
+  url: string;
+  category: string;
+  premium?: boolean; // Premium images require paid plan
+}
+
 // Stock background images - focused on ebook demographics: fitness, wellness, business, crypto, food
-const STOCK_IMAGES = [
+const STOCK_IMAGES: StockImage[] = [
   // Fitness & Health
   {
     id: 'fitness-1',
@@ -247,13 +257,13 @@ const STOCK_IMAGES = [
     id: 'fitness-5',
     name: 'Athletic Performance',
     url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=1280&fit=crop',
-    category: 'fitness',
+    category: 'fitness', premium: true,
   },
   {
     id: 'fitness-6',
     name: 'Boxing Training',
     url: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&h=1280&fit=crop',
-    category: 'fitness',
+    category: 'fitness', premium: true,
   },
   
   // Food & Cooking
@@ -261,13 +271,13 @@ const STOCK_IMAGES = [
     id: 'food-1',
     name: 'Healthy Bowl',
     url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=1280&fit=crop',
-    category: 'food',
+    category: 'food', premium: true,
   },
   {
     id: 'food-2',
     name: 'Fresh Ingredients',
     url: 'https://images.unsplash.com/photo-1506368249639-73a05d6f6488?w=800&h=1280&fit=crop',
-    category: 'food',
+    category: 'food', premium: true,
   },
   {
     id: 'food-3',
@@ -279,13 +289,13 @@ const STOCK_IMAGES = [
     id: 'food-4',
     name: 'Gourmet Dish',
     url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=1280&fit=crop',
-    category: 'food',
+    category: 'food', premium: true,
   },
   {
     id: 'food-5',
     name: 'Smoothie Bowl',
     url: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&h=1280&fit=crop',
-    category: 'food',
+    category: 'food', premium: true,
   },
   {
     id: 'food-6',
@@ -299,13 +309,13 @@ const STOCK_IMAGES = [
     id: 'wellness-1',
     name: 'Meditation',
     url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1280&fit=crop',
-    category: 'wellness',
+    category: 'wellness', premium: true,
   },
   {
     id: 'wellness-2',
     name: 'Spa Wellness',
     url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=1280&fit=crop',
-    category: 'wellness',
+    category: 'wellness', premium: true,
   },
   {
     id: 'wellness-3',
@@ -317,7 +327,7 @@ const STOCK_IMAGES = [
     id: 'wellness-4',
     name: 'Self Care',
     url: 'https://images.unsplash.com/photo-1552693673-1bf958298935?w=800&h=1280&fit=crop',
-    category: 'wellness',
+    category: 'wellness', premium: true,
   },
   {
     id: 'wellness-5',
@@ -337,19 +347,19 @@ const STOCK_IMAGES = [
     id: 'business-1',
     name: 'Stock Market',
     url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=1280&fit=crop',
-    category: 'business',
+    category: 'business', premium: true,
   },
   {
     id: 'business-2',
     name: 'Financial Growth',
     url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=1280&fit=crop',
-    category: 'business',
+    category: 'business', premium: true,
   },
   {
     id: 'business-3',
     name: 'Entrepreneur',
     url: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&h=1280&fit=crop',
-    category: 'business',
+    category: 'business', premium: true,
   },
   {
     id: 'business-4',
@@ -361,13 +371,13 @@ const STOCK_IMAGES = [
     id: 'business-5',
     name: 'Success Mindset',
     url: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=1280&fit=crop',
-    category: 'business',
+    category: 'business', premium: true,
   },
   {
     id: 'business-6',
     name: 'Corporate Success',
     url: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=800&h=1280&fit=crop',
-    category: 'business',
+    category: 'business', premium: true,
   },
   
   // Crypto & Tech
@@ -375,25 +385,25 @@ const STOCK_IMAGES = [
     id: 'crypto-1',
     name: 'Blockchain Network',
     url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=1280&fit=crop',
-    category: 'crypto',
+    category: 'crypto', premium: true,
   },
   {
     id: 'crypto-2',
     name: 'Digital Currency',
     url: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=800&h=1280&fit=crop',
-    category: 'crypto',
+    category: 'crypto', premium: true,
   },
   {
     id: 'crypto-3',
     name: 'Cryptocurrency',
     url: 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=800&h=1280&fit=crop',
-    category: 'crypto',
+    category: 'crypto', premium: true,
   },
   {
     id: 'crypto-4',
     name: 'Tech Innovation',
     url: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=1280&fit=crop',
-    category: 'crypto',
+    category: 'crypto', premium: true,
   },
   {
     id: 'crypto-5',
@@ -439,19 +449,19 @@ const STOCK_IMAGES = [
     id: 'marketing-1',
     name: 'Social Media',
     url: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=1280&fit=crop',
-    category: 'marketing',
+    category: 'marketing', premium: true,
   },
   {
     id: 'marketing-2',
     name: 'Content Creation',
     url: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&h=1280&fit=crop',
-    category: 'marketing',
+    category: 'marketing', premium: true,
   },
   {
     id: 'marketing-3',
     name: 'Brand Building',
     url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=1280&fit=crop',
-    category: 'marketing',
+    category: 'marketing', premium: true,
   },
   {
     id: 'marketing-4',
@@ -465,19 +475,19 @@ const STOCK_IMAGES = [
     id: 'abstract-1',
     name: 'Vibrant Energy',
     url: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=800&h=1280&fit=crop',
-    category: 'abstract',
+    category: 'abstract', premium: true,
   },
   {
     id: 'abstract-2',
     name: 'Cosmic Purple',
     url: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&h=1280&fit=crop',
-    category: 'abstract',
+    category: 'abstract', premium: true,
   },
   {
     id: 'abstract-3',
     name: 'Fluid Colors',
     url: 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?w=800&h=1280&fit=crop',
-    category: 'abstract',
+    category: 'abstract', premium: true,
   },
   {
     id: 'abstract-4',
@@ -489,7 +499,7 @@ const STOCK_IMAGES = [
     id: 'abstract-5',
     name: 'Neon Glow',
     url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&h=1280&fit=crop',
-    category: 'abstract',
+    category: 'abstract', premium: true,
   },
   
   // Minimal & Professional
@@ -497,19 +507,19 @@ const STOCK_IMAGES = [
     id: 'minimal-1',
     name: 'Clean Minimal',
     url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=1280&fit=crop',
-    category: 'minimal',
+    category: 'minimal', premium: true,
   },
   {
     id: 'minimal-2',
     name: 'Soft Elegance',
     url: 'https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=800&h=1280&fit=crop',
-    category: 'minimal',
+    category: 'minimal', premium: true,
   },
   {
     id: 'minimal-3',
     name: 'Professional White',
     url: 'https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=800&h=1280&fit=crop',
-    category: 'minimal',
+    category: 'minimal', premium: true,
   },
   {
     id: 'minimal-4',
@@ -523,19 +533,289 @@ const STOCK_IMAGES = [
     id: 'luxury-1',
     name: 'Gold Elegance',
     url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1280&fit=crop',
-    category: 'luxury',
+    category: 'luxury', premium: true,
   },
   {
     id: 'luxury-2',
     name: 'Dark Premium',
     url: 'https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800&h=1280&fit=crop',
-    category: 'luxury',
+    category: 'luxury', premium: true,
   },
   {
     id: 'luxury-3',
     name: 'Sophisticated',
     url: 'https://images.unsplash.com/photo-1535350356005-fd52b3b524fb?w=800&h=1280&fit=crop',
-    category: 'luxury',
+    category: 'luxury', premium: true,
+  },
+  {
+    id: 'luxury-4',
+    name: 'Black & Gold',
+    url: 'https://images.unsplash.com/photo-1620287341056-49a2f1ab2fdc?w=800&h=1280&fit=crop',
+    category: 'luxury', premium: true,
+  },
+  {
+    id: 'luxury-5',
+    name: 'Diamond Texture',
+    url: 'https://images.unsplash.com/photo-1539632346654-dd4c3cffad8c?w=800&h=1280&fit=crop',
+    category: 'luxury', premium: true,
+  },
+  
+  // More Fitness
+  {
+    id: 'fitness-8',
+    name: 'Crossfit Power',
+    url: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&h=1280&fit=crop',
+    category: 'fitness', premium: true,
+  },
+  {
+    id: 'fitness-9',
+    name: 'Boxing Training',
+    url: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&h=1280&fit=crop',
+    category: 'fitness', premium: true,
+  },
+  {
+    id: 'fitness-10',
+    name: 'Outdoor Cardio',
+    url: 'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=800&h=1280&fit=crop',
+    category: 'fitness', premium: true,
+  },
+  {
+    id: 'fitness-11',
+    name: 'Pilates Studio',
+    url: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&h=1280&fit=crop',
+    category: 'fitness', premium: true,
+  },
+  {
+    id: 'fitness-12',
+    name: 'Athlete Victory',
+    url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=1280&fit=crop',
+    category: 'fitness', premium: true,
+  },
+  
+  // More Food
+  {
+    id: 'food-8',
+    name: 'Dessert Artistry',
+    url: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800&h=1280&fit=crop',
+    category: 'food', premium: true,
+  },
+  {
+    id: 'food-9',
+    name: 'Coffee Culture',
+    url: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=800&h=1280&fit=crop',
+    category: 'food', premium: true,
+  },
+  {
+    id: 'food-10',
+    name: 'Smoothie Bowl',
+    url: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&h=1280&fit=crop',
+    category: 'food',
+  },
+  {
+    id: 'food-11',
+    name: 'Culinary Art',
+    url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=1280&fit=crop',
+    category: 'food', premium: true,
+  },
+  {
+    id: 'food-12',
+    name: 'Farm Fresh',
+    url: 'https://images.unsplash.com/photo-1464454709131-ffd692591ee5?w=800&h=1280&fit=crop',
+    category: 'food', premium: true,
+  },
+  
+  // More Wellness
+  {
+    id: 'wellness-8',
+    name: 'Mindfulness',
+    url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1280&fit=crop',
+    category: 'wellness', premium: true,
+  },
+  {
+    id: 'wellness-9',
+    name: 'Aromatherapy',
+    url: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&h=1280&fit=crop',
+    category: 'wellness', premium: true,
+  },
+  {
+    id: 'wellness-10',
+    name: 'Crystal Healing',
+    url: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=800&h=1280&fit=crop',
+    category: 'wellness', premium: true,
+  },
+  {
+    id: 'wellness-11',
+    name: 'Zen Garden',
+    url: 'https://images.unsplash.com/photo-1547470557-bb86092baa2a?w=800&h=1280&fit=crop',
+    category: 'wellness', premium: true,
+  },
+  {
+    id: 'wellness-12',
+    name: 'Herbal Medicine',
+    url: 'https://images.unsplash.com/photo-1582576163441-4d96e234ed3a?w=800&h=1280&fit=crop',
+    category: 'wellness', premium: true,
+  },
+  
+  // More Business
+  {
+    id: 'business-8',
+    name: 'Executive Office',
+    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=1280&fit=crop',
+    category: 'business', premium: true,
+  },
+  {
+    id: 'business-9',
+    name: 'Global Network',
+    url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=1280&fit=crop',
+    category: 'business', premium: true,
+  },
+  {
+    id: 'business-10',
+    name: 'Corporate Success',
+    url: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&h=1280&fit=crop',
+    category: 'business', premium: true,
+  },
+  {
+    id: 'business-11',
+    name: 'Innovation Hub',
+    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1280&fit=crop',
+    category: 'business', premium: true,
+  },
+  {
+    id: 'business-12',
+    name: 'Leadership',
+    url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=1280&fit=crop',
+    category: 'business', premium: true,
+  },
+  
+  // More Crypto
+  {
+    id: 'crypto-5',
+    name: 'Mining Rig',
+    url: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&h=1280&fit=crop',
+    category: 'crypto',
+  },
+  {
+    id: 'crypto-6',
+    name: 'Crypto Exchange',
+    url: 'https://images.unsplash.com/photo-1621504450181-5d356f61d307?w=800&h=1280&fit=crop',
+    category: 'crypto', premium: true,
+  },
+  {
+    id: 'crypto-7',
+    name: 'Token Economy',
+    url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=1280&fit=crop',
+    category: 'crypto', premium: true,
+  },
+  {
+    id: 'crypto-8',
+    name: 'NFT Art',
+    url: 'https://images.unsplash.com/photo-1645767830779-7c992e2bc80f?w=800&h=1280&fit=crop',
+    category: 'crypto', premium: true,
+  },
+  
+  // More Development
+  {
+    id: 'dev-7',
+    name: 'GitHub Flow',
+    url: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&h=1280&fit=crop',
+    category: 'development', premium: true,
+  },
+  {
+    id: 'dev-8',
+    name: 'Terminal Code',
+    url: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=800&h=1280&fit=crop',
+    category: 'development', premium: true,
+  },
+  {
+    id: 'dev-9',
+    name: 'Dev Setup',
+    url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=1280&fit=crop',
+    category: 'development', premium: true,
+  },
+  {
+    id: 'dev-10',
+    name: 'Cloud Computing',
+    url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=1280&fit=crop',
+    category: 'development', premium: true,
+  },
+  
+  // More Marketing
+  {
+    id: 'marketing-5',
+    name: 'Content Creation',
+    url: 'https://images.unsplash.com/photo-1432888622747-4eb9a8b2c01b?w=800&h=1280&fit=crop',
+    category: 'marketing', premium: true,
+  },
+  {
+    id: 'marketing-6',
+    name: 'Brand Identity',
+    url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=1280&fit=crop',
+    category: 'marketing', premium: true,
+  },
+  {
+    id: 'marketing-7',
+    name: 'Influencer Studio',
+    url: 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?w=800&h=1280&fit=crop',
+    category: 'marketing', premium: true,
+  },
+  {
+    id: 'marketing-8',
+    name: 'Campaign Launch',
+    url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=1280&fit=crop',
+    category: 'marketing',
+  },
+  
+  // More Abstract
+  {
+    id: 'abstract-5',
+    name: 'Geometric Flow',
+    url: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=1280&fit=crop',
+    category: 'abstract', premium: true,
+  },
+  {
+    id: 'abstract-6',
+    name: 'Light Waves',
+    url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=1280&fit=crop',
+    category: 'abstract', premium: true,
+  },
+  {
+    id: 'abstract-7',
+    name: 'Neon Dreams',
+    url: 'https://images.unsplash.com/photo-1614850523060-8da1d56ae167?w=800&h=1280&fit=crop',
+    category: 'abstract', premium: true,
+  },
+  {
+    id: 'abstract-8',
+    name: 'Digital Art',
+    url: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&h=1280&fit=crop',
+    category: 'abstract', premium: true,
+  },
+  
+  // More Minimal
+  {
+    id: 'minimal-5',
+    name: 'Soft Gradient',
+    url: 'https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=800&h=1280&fit=crop',
+    category: 'minimal', premium: true,
+  },
+  {
+    id: 'minimal-6',
+    name: 'Clean Space',
+    url: 'https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?w=800&h=1280&fit=crop',
+    category: 'minimal',
+  },
+  {
+    id: 'minimal-7',
+    name: 'Simple Beauty',
+    url: 'https://images.unsplash.com/photo-1557672199-6e8e8c9e8a3f?w=800&h=1280&fit=crop',
+    category: 'minimal', premium: true,
+  },
+  {
+    id: 'minimal-8',
+    name: 'Monochrome',
+    url: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=800&h=1280&fit=crop',
+    category: 'minimal', premium: true,
   },
 ];
 
@@ -608,6 +888,7 @@ export function CoverDesigner({
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user, userProfile } = useAuth();
 
   const updateDesign = (updates: Partial<CoverDesign>) => {
     setDesign((prev) => ({ ...prev, ...updates }));
@@ -1324,6 +1605,13 @@ export function CoverDesigner({
                       key={image.id}
                       className="cursor-pointer neomorph-flat border-0 overflow-hidden hover:neomorph-raised transition-all hover:scale-[1.02] rounded-lg bg-card"
                       onClick={() => {
+                        // Check if user needs to upgrade for premium images
+                        if (image.premium && !userProfile?.isPremium) {
+                          setShowUpgradeModal(true);
+                          toast.error('This premium image requires an upgrade');
+                          return;
+                        }
+                        
                         updateDesign({
                           backgroundType: 'image',
                           backgroundImage: image.url,
@@ -1338,6 +1626,12 @@ export function CoverDesigner({
                           alt={image.name}
                           className="w-full h-full object-cover rounded-lg"
                         />
+                        {image.premium && (
+                          <div className="absolute top-2 right-2 bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-lg">
+                            <Sparkle size={12} weight="fill" />
+                            PREMIUM
+                          </div>
+                        )}
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
                           <p className="text-white text-sm font-medium">{image.name}</p>
                           <p className="text-white/70 text-xs capitalize">{image.category.replace('-', ' ')}</p>
