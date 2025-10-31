@@ -452,6 +452,17 @@ export function CoverDesigner({
   onSave,
   initialDesign,
 }: CoverDesignerProps) {
+  // Helper to check if an image URL is usable (not an expired OpenAI URL)
+  const isUsableImageUrl = (url: string | undefined): boolean => {
+    if (!url) return false;
+    // Data URLs are always usable
+    if (url.startsWith('data:')) return true;
+    // OpenAI blob URLs will cause CORS issues, treat as unusable
+    if (url.includes('oaidalleapiprodscus.blob.core.windows.net')) return false;
+    // Other URLs (Unsplash, uploaded images) are fine
+    return true;
+  };
+
   const [design, setDesign] = useState<CoverDesign>({
     title: initialDesign?.title || projectTitle || 'Your Book Title',
     subtitle: initialDesign?.subtitle || 'A compelling subtitle that draws readers in',
@@ -477,8 +488,15 @@ export function CoverDesigner({
     imageBrightness: initialDesign?.imageBrightness ?? 100,
     imageContrast: initialDesign?.imageContrast ?? 100,
     usePreMadeCover: initialDesign?.usePreMadeCover ?? false,
-    backgroundImage: initialDesign?.uploadedCoverImage || initialDesign?.backgroundImage,
-    uploadedCoverImage: initialDesign?.uploadedCoverImage,
+    // Only use background image if it's a usable URL (not expired OpenAI URL)
+    backgroundImage: isUsableImageUrl(initialDesign?.uploadedCoverImage) 
+      ? initialDesign?.uploadedCoverImage 
+      : isUsableImageUrl(initialDesign?.backgroundImage)
+        ? initialDesign?.backgroundImage
+        : undefined,
+    uploadedCoverImage: isUsableImageUrl(initialDesign?.uploadedCoverImage) 
+      ? initialDesign?.uploadedCoverImage 
+      : undefined,
   });
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
