@@ -7,7 +7,7 @@ import { SEO, createOrganizationSchema, createSoftwareApplicationSchema } from '
 import { 
   BookOpen, Sparkles, FileText, Download, Palette, TrendingUp, 
   Zap, Users, Award, Play, CheckCircle2, ArrowRight,
-  Twitter, Linkedin, Instagram, Github, Mail, Star, Mic
+  Twitter, Linkedin, Instagram, Github, Mail, Star, Mic, Pause
 } from 'lucide-react';
 import { 
   Accordion,
@@ -26,6 +26,18 @@ export function LandingPage() {
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [playingVoice, setPlayingVoice] = useState<string | null>(null);
+  const [audioElements] = useState<Map<string, HTMLAudioElement>>(new Map());
+
+  // Voice sample URLs from OpenAI
+  const voiceSampleUrls: Record<string, string> = {
+    Nova: 'https://cdn.openai.com/API/docs/audio/nova.wav',
+    Shimmer: 'https://cdn.openai.com/API/docs/audio/shimmer.wav',
+    Echo: 'https://cdn.openai.com/API/docs/audio/echo.wav',
+    Fable: 'https://cdn.openai.com/API/docs/audio/fable.wav',
+    Onyx: 'https://cdn.openai.com/API/docs/audio/onyx.wav',
+    Sage: 'https://cdn.openai.com/API/docs/audio/sage.wav',
+  };
   
   // Check if signin param is in URL
   useEffect(() => {
@@ -51,6 +63,35 @@ export function LandingPage() {
     // Remove signin param from URL
     searchParams.delete('signin');
     setSearchParams(searchParams);
+  };
+
+  const handlePlayVoice = (voice: string) => {
+    // Stop any currently playing audio
+    if (playingVoice) {
+      const currentAudio = audioElements.get(playingVoice);
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+    }
+
+    // If clicking the same voice that's playing, just stop it
+    if (playingVoice === voice) {
+      setPlayingVoice(null);
+      return;
+    }
+
+    // Get or create audio element for this voice
+    let audio = audioElements.get(voice);
+    if (!audio) {
+      audio = new Audio(voiceSampleUrls[voice]);
+      audio.onended = () => setPlayingVoice(null);
+      audioElements.set(voice, audio);
+    }
+
+    // Play the preview
+    audio.play();
+    setPlayingVoice(voice);
   };
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -697,8 +738,17 @@ export function LandingPage() {
                 
                 <div className="grid grid-cols-3 gap-3">
                   {['Nova', 'Shimmer', 'Echo', 'Fable', 'Onyx', 'Sage'].map((voice) => (
-                    <button key={voice} className="px-3 py-2 rounded-lg border-2 border-[#e2d1f0] hover:border-[#9b87b8] hover:bg-[#f0e8f8] text-sm font-medium transition-all">
-                      {voice}
+                    <button 
+                      key={voice} 
+                      onClick={() => handlePlayVoice(voice)}
+                      className="px-3 py-2 rounded-lg border-2 border-[#e2d1f0] hover:border-[#9b87b8] hover:bg-[#f0e8f8] text-sm font-medium transition-all flex items-center justify-center gap-2 relative"
+                    >
+                      {playingVoice === voice ? (
+                        <Pause className="w-4 h-4 text-[#9b87b8]" />
+                      ) : (
+                        <Play className="w-4 h-4 text-[#9b87b8]" />
+                      )}
+                      <span>{voice}</span>
                     </button>
                   ))}
                 </div>
