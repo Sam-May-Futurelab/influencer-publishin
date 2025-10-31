@@ -118,6 +118,7 @@ export function AIContentAssistant({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          userId: user?.uid, // Include userId for proper rate limiting
           keywords: keywords.split(',').map(k => k.trim()),
           chapterTitle,
           contentType: 'chapter', // Generate full chapter, not snippets

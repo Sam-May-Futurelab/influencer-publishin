@@ -147,6 +147,7 @@ export function AIBookGeneratorWizard({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          userId: userProfile.uid, // Include userId for rate limiting
           title: bookData.title,
           description: bookData.description,
           genre: bookData.genre,
