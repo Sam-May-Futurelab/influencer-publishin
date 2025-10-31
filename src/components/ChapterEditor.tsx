@@ -751,7 +751,11 @@ export function ChapterEditor({
                                 text-decoration: underline;
                               }
                             `}</style>
-                            <div dangerouslySetInnerHTML={{ __html: pendingContent }} />
+                            <div dangerouslySetInnerHTML={{ 
+                              __html: pendingContent.includes('<p>') || pendingContent.includes('<div>') 
+                                ? pendingContent 
+                                : pendingContent.split('\n\n').map(para => `<p>${para.trim()}</p>`).join('')
+                            }} />
                           </div>
                         ) : (
                           <div className="text-center py-12 text-muted-foreground">

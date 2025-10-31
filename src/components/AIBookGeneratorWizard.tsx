@@ -384,48 +384,48 @@ Write in a professional, engaging tone appropriate for the target audience.`,
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="!max-w-6xl w-[95vw] max-h-[90vh] flex flex-col p-0 gap-0">
-        <DialogHeader className="p-8 pb-6 border-b bg-gradient-to-br from-background to-muted/20">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-purple-600 via-primary to-purple-600 shadow-xl">
-              <Sparkle size={28} className="text-white" weight="fill" />
+        <DialogHeader className="p-5 pb-4 border-b bg-gradient-to-br from-background to-muted/20">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-purple-600 via-primary to-purple-600 shadow-xl">
+              <Sparkle size={22} className="text-white" weight="fill" />
             </div>
             <div className="flex-1">
-              <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-primary bg-clip-text text-transparent">
+              <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-primary bg-clip-text text-transparent">
                 AI Book Generator
               </DialogTitle>
-              <DialogDescription className="text-base">
+              <DialogDescription className="text-sm">
                 Create a complete {numChapters}-chapter ebook with AI assistance
               </DialogDescription>
             </div>
           </div>
 
           {/* Progress Bar */}
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm font-medium">
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-medium">
               <span className="text-foreground">Step {step} of 4: {stepTitles[step]}</span>
               <span className="text-primary">{Math.round(progressPercent)}% Complete</span>
             </div>
             <div className="relative">
-              <Progress value={progressPercent} className="h-3" />
+              <Progress value={progressPercent} className="h-2" />
             </div>
           </div>
 
           {/* Step Indicators */}
-          <div className="flex items-center justify-between mt-6 px-2">
+          <div className="flex items-center justify-between mt-3">
             {[1, 2, 3, 4].map((s) => (
-              <div key={s} className="flex items-center">
+              <div key={s} className="flex items-center flex-1">
                 <motion.div 
                   className={`
-                    w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold transition-all shadow-lg
-                    ${step > s ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white' : step === s ? 'bg-gradient-to-br from-purple-600 to-primary text-white ring-4 ring-primary/30' : 'bg-muted text-muted-foreground'}
+                    w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all shadow-md flex-shrink-0
+                    ${step > s ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white' : step === s ? 'bg-gradient-to-br from-purple-600 to-primary text-white ring-3 ring-primary/30' : 'bg-muted text-muted-foreground'}
                   `}
                   animate={step === s ? { scale: [1, 1.05, 1] } : {}}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  {step > s ? <Check size={20} weight="bold" /> : s}
+                  {step > s ? <Check size={16} weight="bold" /> : s}
                 </motion.div>
                 {s < 4 && (
-                  <div className={`w-16 md:w-20 lg:w-24 h-1.5 mx-2 rounded-full transition-all ${step > s ? 'bg-gradient-to-r from-green-500 to-emerald-600' : 'bg-muted'}`} />
+                  <div className={`flex-1 h-1 mx-2 rounded-full transition-all ${step > s ? 'bg-gradient-to-r from-green-500 to-emerald-600' : 'bg-muted'}`} />
                 )}
               </div>
             ))}
@@ -433,7 +433,7 @@ Write in a professional, engaging tone appropriate for the target audience.`,
         </DialogHeader>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-8 bg-gradient-to-b from-transparent to-muted/10">
+        <div className="flex-1 overflow-y-auto p-5 bg-gradient-to-b from-transparent to-muted/10">
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div
@@ -441,16 +441,16 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
+                className="space-y-6"
               >
-                <div className="text-center mb-10">
-                  <h3 className="text-2xl font-bold mb-3">Let's start with the basics</h3>
-                  <p className="text-muted-foreground text-lg">Tell us about the book you want to create</p>
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold mb-2">Let's start with the basics</h3>
+                  <p className="text-muted-foreground text-base">Tell us about the book you want to create</p>
                 </div>
 
-                <div className="max-w-3xl mx-auto space-y-8">
+                <div className="max-w-3xl mx-auto space-y-5">
                   {/* Title */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label htmlFor="title" className="text-base font-semibold">
                       Book Title <span className="text-destructive">*</span>
                     </Label>
@@ -459,12 +459,12 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                       placeholder="e.g., The Complete Guide to Social Media Marketing"
                       value={bookData.title}
                       onChange={(e) => setBookData({ ...bookData, title: e.target.value })}
-                      className="text-lg h-12"
+                      className="text-lg h-11"
                     />
                   </div>
 
                   {/* Description */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label htmlFor="description" className="text-base font-semibold">
                       Book Description <span className="text-destructive">*</span>
                     </Label>
@@ -473,8 +473,8 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                       placeholder="Describe what your book will cover, who it's for, and what readers will learn..."
                       value={bookData.description}
                       onChange={(e) => setBookData({ ...bookData, description: e.target.value })}
-                      rows={6}
-                      className="resize-none text-base"
+                      rows={4}
+                      className="resize-none"
                     />
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">
@@ -498,10 +498,10 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                   </div>
 
                   {/* Genre */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label htmlFor="genre" className="text-base font-semibold">Genre (Optional)</Label>
                     <Select value={bookData.genre} onValueChange={(value) => setBookData({ ...bookData, genre: value })}>
-                      <SelectTrigger id="genre" className="h-12">
+                      <SelectTrigger id="genre" className="h-11">
                         <SelectValue placeholder="Select a genre..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -521,14 +521,14 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                   </div>
 
                   {/* Target Audience */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label htmlFor="targetAudience" className="text-base font-semibold">Target Audience (Optional)</Label>
                     <Input
                       id="targetAudience"
                       placeholder="e.g., Small business owners, Beginners, Professionals..."
                       value={bookData.targetAudience}
                       onChange={(e) => setBookData({ ...bookData, targetAudience: e.target.value })}
-                      className="h-12"
+                      className="h-11"
                     />
                     <p className="text-sm text-muted-foreground flex items-start gap-2">
                       <span className="text-primary">💡</span>
@@ -547,13 +547,13 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
-                <div className="text-center mb-8">
+                <div className="text-center mb-6">
                   <h3 className="text-xl font-semibold mb-2">Generate Your Book Outline</h3>
                   <p className="text-muted-foreground">AI will create a structured chapter outline for your book</p>
                 </div>
 
                 {outline.length === 0 ? (
-                  <div className="max-w-2xl mx-auto space-y-6">
+                  <div className="max-w-2xl mx-auto space-y-5">
                     {isGeneratingOutline ? (
                       <AILoading
                         variant="brain"
@@ -574,8 +574,8 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                     ) : (
                       <>
                         {/* Book Summary */}
-                        <div className="bg-muted/50 rounded-lg p-6 space-y-3">
-                          <h4 className="font-semibold text-lg">{bookData.title}</h4>
+                        <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                          <h4 className="font-semibold text-base">{bookData.title}</h4>
                           <p className="text-muted-foreground text-sm">{bookData.description}</p>
                           {bookData.genre && (
                             <div className="flex gap-2 flex-wrap">
@@ -588,20 +588,20 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                         </div>
 
                         {/* Number of Chapters Slider - Enhanced */}
-                        <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-purple-500/5 border border-primary/10">
+                        <div className="space-y-3 p-5 rounded-xl bg-gradient-to-br from-primary/5 to-purple-500/5 border border-primary/10">
                           <div className="flex items-center justify-between">
                             <Label className="text-base font-semibold">Number of Chapters</Label>
                             <motion.div
                               key={numChapters}
                               initial={{ scale: 1.2 }}
                               animate={{ scale: 1 }}
-                              className="px-4 py-2 rounded-full bg-primary text-primary-foreground font-bold text-lg shadow-lg"
+                              className="px-3 py-1.5 rounded-full bg-primary text-primary-foreground font-bold text-base shadow-lg"
                             >
                               {numChapters}
                             </motion.div>
                           </div>
                           
-                          <div className="relative pt-2 pb-3">
+                          <div className="relative pt-1 pb-2">
                             {/* Custom slider with gradient track */}
                             <div className="relative">
                               <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-3 bg-gradient-to-r from-muted via-primary/20 to-muted rounded-full" />
@@ -879,7 +879,7 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                             size="lg"
                             onClick={handleStopGeneration}
                             disabled={shouldStopGeneration.current}
-                            className="border-2 border-orange-500/50 text-orange-600 hover:bg-orange-500/10 hover:border-orange-500 dark:text-orange-400 px-6"
+                            className="border-2 border-orange-500/50 text-orange-600 hover:bg-orange-500/10 hover:border-orange-500 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 px-6"
                           >
                             <StopCircle size={20} weight="fill" className="mr-2" />
                             {shouldStopGeneration.current ? 'Stopping...' : 'Stop Generation'}
@@ -1032,7 +1032,7 @@ Write in a professional, engaging tone appropriate for the target audience.`,
         </div>
 
         {/* Footer with Navigation */}
-        <div className="border-t bg-gradient-to-br from-background to-muted/20 p-8 flex items-center justify-between">
+        <div className="border-t bg-gradient-to-br from-background to-muted/20 p-6 flex items-center justify-between">
           <Button
             variant="outline"
             onClick={step === 1 ? handleClose : handleBack}
