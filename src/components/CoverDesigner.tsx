@@ -441,6 +441,218 @@ const STOCK_IMAGES = [
     url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=1280&fit=crop',
     category: 'tech',
   },
+  
+  // Additional Abstract
+  {
+    id: 'abstract-5',
+    name: 'Neon Waves',
+    url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&h=1280&fit=crop',
+    category: 'abstract',
+  },
+  {
+    id: 'abstract-6',
+    name: 'Gradient Mesh',
+    url: 'https://images.unsplash.com/photo-1557672184-c42f12bc083d?w=800&h=1280&fit=crop',
+    category: 'abstract',
+  },
+  {
+    id: 'abstract-7',
+    name: 'Liquid Colors',
+    url: 'https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=800&h=1280&fit=crop',
+    category: 'abstract',
+  },
+  {
+    id: 'abstract-8',
+    name: 'Digital Aurora',
+    url: 'https://images.unsplash.com/photo-1558470598-a5dda9640f68?w=800&h=1280&fit=crop',
+    category: 'abstract',
+  },
+  
+  // Additional Nature
+  {
+    id: 'nature-6',
+    name: 'Sunset Sky',
+    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
+    id: 'nature-7',
+    name: 'Misty Mountains',
+    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
+    id: 'nature-8',
+    name: 'Tropical Beach',
+    url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
+    id: 'nature-9',
+    name: 'Aurora Borealis',
+    url: 'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  {
+    id: 'nature-10',
+    name: 'Lavender Field',
+    url: 'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=800&h=1280&fit=crop',
+    category: 'nature',
+  },
+  
+  // Additional Artistic
+  {
+    id: 'artistic-4',
+    name: 'Abstract Painting',
+    url: 'https://images.unsplash.com/photo-1549887534-1541e9326642?w=800&h=1280&fit=crop',
+    category: 'artistic',
+  },
+  {
+    id: 'artistic-5',
+    name: 'Oil Paint Texture',
+    url: 'https://images.unsplash.com/photo-1533158326339-7f3cf2404354?w=800&h=1280&fit=crop',
+    category: 'artistic',
+  },
+  {
+    id: 'artistic-6',
+    name: 'Color Splash',
+    url: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=1280&fit=crop',
+    category: 'artistic',
+  },
+  
+  // Additional Business
+  {
+    id: 'business-5',
+    name: 'Corporate Meeting',
+    url: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-6',
+    name: 'Financial Charts',
+    url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-7',
+    name: 'Modern Desk',
+    url: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  
+  // Additional Minimal
+  {
+    id: 'minimal-5',
+    name: 'Soft Beige',
+    url: 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=800&h=1280&fit=crop',
+    category: 'minimal',
+  },
+  {
+    id: 'minimal-6',
+    name: 'Clean White',
+    url: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800&h=1280&fit=crop',
+    category: 'minimal',
+  },
+  {
+    id: 'minimal-7',
+    name: 'Soft Pink',
+    url: 'https://images.unsplash.com/photo-1506260408121-e353d10b87c7?w=800&h=1280&fit=crop',
+    category: 'minimal',
+  },
+  
+  // Additional Textures
+  {
+    id: 'texture-5',
+    name: 'Wood Grain',
+    url: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  {
+    id: 'texture-6',
+    name: 'Fabric Texture',
+    url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  {
+    id: 'texture-7',
+    name: 'Stone Surface',
+    url: 'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  {
+    id: 'texture-8',
+    name: 'Metal Texture',
+    url: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&h=1280&fit=crop',
+    category: 'texture',
+  },
+  
+  // Additional Urban
+  {
+    id: 'urban-5',
+    name: 'City Street',
+    url: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&h=1280&fit=crop',
+    category: 'urban',
+  },
+  {
+    id: 'urban-6',
+    name: 'Subway Station',
+    url: 'https://images.unsplash.com/photo-1496568816309-51d7c20e3b21?w=800&h=1280&fit=crop',
+    category: 'urban',
+  },
+  {
+    id: 'urban-7',
+    name: 'Industrial',
+    url: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=800&h=1280&fit=crop',
+    category: 'urban',
+  },
+  
+  // Additional Book-Themed
+  {
+    id: 'book-4',
+    name: 'Reading Corner',
+    url: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&h=1280&fit=crop',
+    category: 'book-themed',
+  },
+  {
+    id: 'book-5',
+    name: 'Open Book',
+    url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=1280&fit=crop',
+    category: 'book-themed',
+  },
+  {
+    id: 'book-6',
+    name: 'Antique Books',
+    url: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&h=1280&fit=crop',
+    category: 'book-themed',
+  },
+  
+  // Additional Vintage
+  {
+    id: 'vintage-4',
+    name: 'Old Map',
+    url: 'https://images.unsplash.com/photo-1526243741027-444d633d7365?w=800&h=1280&fit=crop',
+    category: 'vintage',
+  },
+  {
+    id: 'vintage-5',
+    name: 'Sepia Tone',
+    url: 'https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=800&h=1280&fit=crop',
+    category: 'vintage',
+  },
+  
+  // Additional Tech
+  {
+    id: 'tech-4',
+    name: 'Neural Network',
+    url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=1280&fit=crop',
+    category: 'tech',
+  },
+  {
+    id: 'tech-5',
+    name: 'Server Room',
+    url: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=800&h=1280&fit=crop',
+    category: 'tech',
+  },
 ];
 
 export function CoverDesigner({
@@ -905,17 +1117,17 @@ export function CoverDesigner({
           <div className={`lg:w-[55%] overflow-y-auto p-6 lg:p-10 ${
             isPreviewExpanded ? 'hidden lg:block' : 'block'
           }`}>
-            <Tabs defaultValue="quick" className="w-full">
+            <Tabs defaultValue="stock" className="w-full">
               <TabsList className="grid w-full grid-cols-4 mb-6 h-auto gap-1">
-                <TabsTrigger value="quick" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
-                  <UploadSimple size={14} />
-                  <span className="hidden md:inline">Upload</span>
-                  <span className="md:hidden">Upload</span>
-                </TabsTrigger>
                 <TabsTrigger value="stock" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
                   <ImageIcon size={14} />
                   <span className="hidden md:inline">Stock</span>
                   <span className="md:hidden">Stock</span>
+                </TabsTrigger>
+                <TabsTrigger value="quick" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
+                  <UploadSimple size={14} />
+                  <span className="hidden md:inline">Upload</span>
+                  <span className="md:hidden">Upload</span>
                 </TabsTrigger>
                 <TabsTrigger value="background" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
                   <Palette size={14} />

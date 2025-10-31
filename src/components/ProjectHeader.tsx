@@ -143,21 +143,6 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
 
           {/* Action Buttons - Responsive Grid on Mobile, Flex on Desktop */}
           <div className="grid grid-cols-3 gap-2 lg:flex lg:items-center lg:gap-2">
-            {/* AI Cover Generator Button */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button 
-                onClick={() => setShowCoverDesigner(true)} 
-                variant="default"
-                size="sm"
-                className="gap-1.5 lg:gap-2 h-10 lg:h-12 px-2 lg:px-4 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white border-0 w-full lg:w-auto"
-              >
-                <Sparkle size={16} className="lg:hidden" weight="fill" />
-                <Sparkle size={18} className="hidden lg:block" weight="fill" />
-                <span className="hidden md:inline">AI Cover</span>
-                <span className="md:hidden text-xs">AI</span>
-              </Button>
-            </motion.div>
-
             {/* Cover Design Button */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button 

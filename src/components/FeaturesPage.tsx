@@ -319,6 +319,105 @@ export default function FeaturesPage() {
           </div>
         </div>
 
+        {/* Coming Soon Features */}
+        <div className="mt-20 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 md:p-12">
+          <div className="text-center mb-8">
+            <Badge variant="secondary" className="mb-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
+              Coming Soon
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+              Exciting Features in Development
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              We're constantly improving. Here's what's on our roadmap for the next few months.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="p-6 border-2 border-purple-200 bg-white/50 backdrop-blur">
+              <CardHeader className="p-0 pb-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg">
+                    <Sparkles className="h-6 w-6 text-white" />
+                  </div>
+                  <Badge variant="outline" className="text-xs">Q1 2026</Badge>
+                </div>
+                <CardTitle className="text-lg">AI Cover Generator</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <p className="text-sm text-muted-foreground mb-3">
+                  Generate stunning custom book covers with AI image generation. Choose from multiple art styles and create professional covers in seconds.
+                </p>
+                <ul className="text-xs text-muted-foreground space-y-1">
+                  <li>• DALL-E powered imagery</li>
+                  <li>• 6+ artistic styles</li>
+                  <li>• Custom prompts</li>
+                  <li>• Instant generation</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 border-2 border-blue-200 bg-white/50 backdrop-blur">
+              <CardHeader className="p-0 pb-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg">
+                    <Users className="h-6 w-6 text-white" />
+                  </div>
+                  <Badge variant="outline" className="text-xs">Q2 2026</Badge>
+                </div>
+                <CardTitle className="text-lg">Team Collaboration</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <p className="text-sm text-muted-foreground mb-3">
+                  Collaborate with co-authors and editors in real-time. Share projects, leave comments, and work together seamlessly.
+                </p>
+                <ul className="text-xs text-muted-foreground space-y-1">
+                  <li>• Multi-user editing</li>
+                  <li>• Comment threads</li>
+                  <li>• Role-based permissions</li>
+                  <li>• Activity tracking</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 border-2 border-green-200 bg-white/50 backdrop-blur">
+              <CardHeader className="p-0 pb-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg">
+                    <TrendingUp className="h-6 w-6 text-white" />
+                  </div>
+                  <Badge variant="outline" className="text-xs">Q2 2026</Badge>
+                </div>
+                <CardTitle className="text-lg">Advanced Analytics</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <p className="text-sm text-muted-foreground mb-3">
+                  Track reader engagement, download stats, and conversion metrics for your published ebooks.
+                </p>
+                <ul className="text-xs text-muted-foreground space-y-1">
+                  <li>• Reader analytics</li>
+                  <li>• Conversion tracking</li>
+                  <li>• Heatmaps</li>
+                  <li>• Export reports</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-8">
+            <p className="text-sm text-muted-foreground mb-4">
+              Have a feature request? We'd love to hear from you!
+            </p>
+            <Button 
+              onClick={() => navigate('/contact')}
+              variant="outline"
+              className="border-2 border-purple-300 text-purple-700 hover:bg-purple-50"
+            >
+              Submit Feature Request
+            </Button>
+          </div>
+        </div>
+
         {/* Testimonials Section */}
         <div className="mt-20">
           <div className="text-center mb-12">
