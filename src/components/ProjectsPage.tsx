@@ -100,11 +100,13 @@ export function ProjectsPage({
   };
 
   const handleBulkDelete = async () => {
+    if (!user?.uid) return;
+    
     try {
-      // Delete selected projects
+      // Delete selected projects (use correct path with userId)
       await Promise.all(
         selectedProjects.map(projectId => 
-          deleteDoc(doc(db, 'projects', projectId))
+          deleteDoc(doc(db, 'users', user.uid, 'projects', projectId))
         )
       );
 
@@ -282,15 +284,21 @@ export function ProjectsPage({
               setSelectedProjects([]);
               setSelectedAudiobooks([]);
             }}
-            className="gap-2"
+            className="gap-2 neomorph-flat border-0 hover:neomorph-inset"
           >
-            <input
-              type="checkbox"
-              checked={bulkDeleteMode}
-              onChange={() => {}}
-              className="w-4 h-4"
-            />
-            <span className="text-xs">Select Multiple</span>
+            <div className={cn(
+              "w-4 h-4 rounded border-2 flex items-center justify-center transition-colors",
+              bulkDeleteMode 
+                ? "bg-primary border-primary" 
+                : "border-muted-foreground/30"
+            )}>
+              {bulkDeleteMode && (
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M10 3L4.5 8.5L2 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+            </div>
+            <span>Select Multiple</span>
           </Button>
 
           {/* Bulk Delete Button - Show when items selected */}
@@ -306,7 +314,7 @@ export function ProjectsPage({
               className="gap-2"
             >
               <Trash size={14} />
-              <span className="text-xs">
+              <span>
                 Delete ({selectedProjects.length + selectedAudiobooks.length})
               </span>
             </Button>
@@ -427,17 +435,36 @@ export function ProjectsPage({
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {audiobooks.slice(0, 6).map((audiobook: any) => (
-                  <div key={audiobook.id} className="p-4 neomorph-inset rounded-lg space-y-3">
+                  <div 
+                    key={audiobook.id} 
+                    className={cn(
+                      "p-4 neomorph-inset rounded-lg space-y-3 transition-all",
+                      bulkDeleteMode && "cursor-pointer hover:ring-2 hover:ring-primary/50",
+                      bulkDeleteMode && selectedAudiobooks.includes(audiobook.id) && "ring-2 ring-primary"
+                    )}
+                    onClick={() => {
+                      if (bulkDeleteMode) {
+                        toggleAudiobookSelection(audiobook.id);
+                      }
+                    }}
+                  >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0 flex items-start gap-2">
                         {bulkDeleteMode && (
-                          <input
-                            type="checkbox"
-                            checked={selectedAudiobooks.includes(audiobook.id)}
-                            onChange={() => toggleAudiobookSelection(audiobook.id)}
-                            className="h-4 w-4 rounded border-gray-300 cursor-pointer mt-0.5"
-                            onClick={(e) => e.stopPropagation()}
-                          />
+                          <div 
+                            className={cn(
+                              "w-5 h-5 rounded border-2 flex items-center justify-center transition-colors flex-shrink-0 mt-0.5",
+                              selectedAudiobooks.includes(audiobook.id)
+                                ? "bg-primary border-primary" 
+                                : "border-muted-foreground/30"
+                            )}
+                          >
+                            {selectedAudiobooks.includes(audiobook.id) && (
+                              <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                                <path d="M10 3L4.5 8.5L2 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            )}
+                          </div>
                         )}
                         <div className="flex-1 min-w-0">
                           <h3 className="font-medium text-sm truncate" title={audiobook.chapterTitle}>
@@ -457,6 +484,7 @@ export function ProjectsPage({
                           variant="ghost"
                           className="h-7 w-7 p-0"
                           asChild
+                          onClick={(e) => e.stopPropagation()}
                         >
                           <a href={audiobook.audioUrl} download={`${audiobook.chapterTitle}.mp3`} title="Download">
                             <Download size={14} />
@@ -466,7 +494,8 @@ export function ProjectsPage({
                           size="sm"
                           variant="ghost"
                           className="h-7 w-7 p-0"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setAudiobookToDelete(audiobook);
                             setShowDeleteAudiobookDialog(true);
                           }}
@@ -516,7 +545,16 @@ export function ProjectsPage({
                 className="group"
               >
                 <Card 
-                  className="neomorph-flat border-0 hover:neomorph-raised transition-all duration-300 h-full"
+                  className={cn(
+                    "neomorph-flat border-0 hover:neomorph-raised transition-all duration-300 h-full",
+                    bulkDeleteMode && "cursor-pointer",
+                    bulkDeleteMode && selectedProjects.includes(project.id) && "ring-2 ring-primary"
+                  )}
+                  onClick={() => {
+                    if (bulkDeleteMode) {
+                      toggleProjectSelection(project.id);
+                    }
+                  }}
                 >
                   <CardContent className={viewMode === 'grid' ? "p-4 lg:p-6" : "p-4"}>
                     <div className={viewMode === 'grid' ? "space-y-4" : "flex items-center justify-between"}>
@@ -524,13 +562,20 @@ export function ProjectsPage({
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-3 flex-1 min-w-0">
                             {bulkDeleteMode && (
-                              <input
-                                type="checkbox"
-                                checked={selectedProjects.includes(project.id)}
-                                onChange={() => toggleProjectSelection(project.id)}
-                                className="h-4 w-4 rounded border-gray-300 cursor-pointer"
-                                onClick={(e) => e.stopPropagation()}
-                              />
+                              <div 
+                                className={cn(
+                                  "w-5 h-5 rounded border-2 flex items-center justify-center transition-colors flex-shrink-0",
+                                  selectedProjects.includes(project.id)
+                                    ? "bg-primary border-primary" 
+                                    : "border-muted-foreground/30"
+                                )}
+                              >
+                                {selectedProjects.includes(project.id) && (
+                                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                                    <path d="M10 3L4.5 8.5L2 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                )}
+                              </div>
                             )}
                             <div 
                               className="w-3 h-3 rounded-full flex-shrink-0"
@@ -538,7 +583,12 @@ export function ProjectsPage({
                             />
                             <h3 
                               className="font-semibold text-sm lg:text-base group-hover:text-primary transition-colors cursor-pointer truncate"
-                              onClick={() => onSelectProject(project)}
+                              onClick={(e) => {
+                                if (!bulkDeleteMode) {
+                                  onSelectProject(project);
+                                }
+                                e.stopPropagation();
+                              }}
                             >
                               {project.title}
                             </h3>
@@ -567,7 +617,10 @@ export function ProjectsPage({
                             )}
                           </div>
                           <Button
-                            onClick={() => setPreviewProject(project)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPreviewProject(project);
+                            }}
                             variant="ghost"
                             size="sm"
                             className="h-8 gap-1.5 text-xs neomorph-flat border-0 hover:neomorph-inset flex-shrink-0"
@@ -608,7 +661,12 @@ export function ProjectsPage({
                         : "flex items-center gap-2"
                       }>
                         <Button
-                          onClick={() => onSelectProject(project)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!bulkDeleteMode) {
+                              onSelectProject(project);
+                            }
+                          }}
                           variant="outline"
                           size="sm"
                           className={viewMode === 'grid' 
@@ -626,7 +684,10 @@ export function ProjectsPage({
                         }>
                           {onDuplicateProject && (
                             <Button
-                              onClick={() => onDuplicateProject(project)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDuplicateProject(project);
+                              }}
                               variant="ghost"
                               size="sm"
                               className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -635,7 +696,8 @@ export function ProjectsPage({
                             </Button>
                           )}
                           <Button
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               setProjectToRename(project);
                               setRenameTitle(project.title);
                               setShowRenameDialog(true);
@@ -648,7 +710,8 @@ export function ProjectsPage({
                           </Button>
                           {onDeleteProject && (
                             <Button
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setProjectToDelete(project);
                                 setShowDeleteDialog(true);
                               }}
