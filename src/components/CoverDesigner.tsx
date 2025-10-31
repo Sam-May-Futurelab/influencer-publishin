@@ -1345,81 +1345,149 @@ export function CoverDesigner({
               </button>
             </div>
             <div className="w-full flex justify-center items-start py-4">
-              <div
-                ref={canvasRef}
-                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
-                style={{
-                  ...(design.backgroundType === 'gradient' && {
+              {/* GRADIENT PREVIEW */}
+              {design.backgroundType === 'gradient' && (
+                <div
+                  ref={canvasRef}
+                  className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
+                  style={{
                     backgroundImage: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
-                  }),
-                  ...(design.backgroundType === 'solid' && {
-                    backgroundColor: design.backgroundColor
-                  }),
-                  ...(design.backgroundType === 'image' && design.backgroundImage && {
+                  }}
+                >
+                  <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
+                    <h1
+                      className="font-bold leading-tight mb-4 break-words px-2"
+                      style={{
+                        fontFamily: design.titleFont,
+                        fontSize: `${design.titleSize}px`,
+                        color: design.titleColor,
+                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
+                      }}
+                    >
+                      {design.title}
+                    </h1>
+                    <p
+                      className="mb-auto max-w-md break-words px-2"
+                      style={{
+                        fontFamily: design.subtitleFont,
+                        fontSize: `${design.subtitleSize}px`,
+                        color: design.subtitleColor,
+                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
+                      }}
+                    >
+                      {design.subtitle}
+                    </p>
+                    <p
+                      className="mt-auto mb-8 tracking-wider font-medium break-words px-2"
+                      style={{
+                        fontFamily: design.authorFont,
+                        fontSize: `${design.authorSize}px`,
+                        color: design.authorColor,
+                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
+                      }}
+                    >
+                      {design.authorName}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* SOLID COLOR PREVIEW */}
+              {design.backgroundType === 'solid' && (
+                <div
+                  ref={canvasRef}
+                  className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
+                  style={{ backgroundColor: design.backgroundColor }}
+                >
+                  <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
+                    <h1
+                      className="font-bold leading-tight mb-4 break-words px-2"
+                      style={{
+                        fontFamily: design.titleFont,
+                        fontSize: `${design.titleSize}px`,
+                        color: design.titleColor,
+                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
+                      }}
+                    >
+                      {design.title}
+                    </h1>
+                    <p
+                      className="mb-auto max-w-md break-words px-2"
+                      style={{
+                        fontFamily: design.subtitleFont,
+                        fontSize: `${design.subtitleSize}px`,
+                        color: design.subtitleColor,
+                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
+                      }}
+                    >
+                      {design.subtitle}
+                    </p>
+                    <p
+                      className="mt-auto mb-8 tracking-wider font-medium break-words px-2"
+                      style={{
+                        fontFamily: design.authorFont,
+                        fontSize: `${design.authorSize}px`,
+                        color: design.authorColor,
+                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
+                      }}
+                    >
+                      {design.authorName}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* IMAGE PREVIEW */}
+              {design.backgroundType === 'image' && (
+                <div
+                  ref={canvasRef}
+                  className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
+                  style={{
                     backgroundImage: `url(${design.backgroundImage})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
-                  })
-                }}
-              >
-                {/* Overlay */}
-                {design.backgroundType === 'image' && design.overlay && (
-                  <div
-                    className="absolute inset-0"
-                    style={{ backgroundColor: `rgba(0, 0, 0, ${design.overlayOpacity / 100})` }}
-                  />
-                )}
-
-                {/* Text Content - Always show so users can add text to custom covers */}
-                <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
-                  <h1
-                    className="font-bold leading-tight mb-4 break-words px-2"
-                    style={{
-                      fontFamily: design.titleFont,
-                      fontSize: `${design.titleSize}px`,
-                      color: design.titleColor,
-                      wordBreak: 'break-word',
-                      hyphens: 'auto',
-                      maxWidth: '90%',
-                      textShadow: design.textShadowEnabled 
-                        ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` 
-                        : 'none'
-                    }}
-                  >
-                    {design.title}
-                  </h1>
-                  <p
-                    className="mb-auto max-w-md break-words px-2"
-                    style={{
-                      fontFamily: design.subtitleFont,
-                      fontSize: `${design.subtitleSize}px`,
-                      color: design.subtitleColor,
-                      wordBreak: 'break-word',
-                      hyphens: 'auto',
-                      textShadow: design.textShadowEnabled 
-                        ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` 
-                        : 'none'
-                    }}
-                  >
-                    {design.subtitle}
-                  </p>
-                  <p
-                    className="mt-auto mb-8 tracking-wider font-medium break-words px-2"
-                    style={{
-                      fontFamily: design.authorFont,
-                      fontSize: `${design.authorSize}px`,
-                      color: design.authorColor,
-                      wordBreak: 'break-word',
-                      maxWidth: '90%',
-                      textShadow: design.textShadowEnabled 
-                        ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` 
-                        : 'none'
-                    }}
-                  >
-                    {design.authorName}
-                  </p>
+                  }}
+                >
+                  {design.overlay && (
+                    <div className="absolute inset-0" style={{ backgroundColor: `rgba(0, 0, 0, ${design.overlayOpacity / 100})` }} />
+                  )}
+                  <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
+                    <h1
+                      className="font-bold leading-tight mb-4 break-words px-2"
+                      style={{
+                        fontFamily: design.titleFont,
+                        fontSize: `${design.titleSize}px`,
+                        color: design.titleColor,
+                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
+                      }}
+                    >
+                      {design.title}
+                    </h1>
+                    <p
+                      className="mb-auto max-w-md break-words px-2"
+                      style={{
+                        fontFamily: design.subtitleFont,
+                        fontSize: `${design.subtitleSize}px`,
+                        color: design.subtitleColor,
+                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
+                      }}
+                    >
+                      {design.subtitle}
+                    </p>
+                    <p
+                      className="mt-auto mb-8 tracking-wider font-medium break-words px-2"
+                      style={{
+                        fontFamily: design.authorFont,
+                        fontSize: `${design.authorSize}px`,
+                        color: design.authorColor,
+                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
+                      }}
+                    >
+                      {design.authorName}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
