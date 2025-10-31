@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Sparkle, ArrowLeft, ArrowRight, Check, CaretDown } from '@phosphor-icons/react';
+import { Sparkle, ArrowLeft, ArrowRight, Check, CaretDown, StopCircle } from '@phosphor-icons/react';
 import { UserProfile } from '@/lib/auth';
 import { EbookProject } from '@/lib/types';
 import { toast } from 'sonner';
@@ -55,6 +56,8 @@ export function AIBookGeneratorWizard({
   const [generationProgress, setGenerationProgress] = useState({ current: 0, total: 0 });
   const [completedChapters, setCompletedChapters] = useState<Array<{ title: string; content: string; order: number }>>([]);
   const [expandedChapterId, setExpandedChapterId] = useState<number | null>(null);
+  const [showStopDialog, setShowStopDialog] = useState(false);
+  const shouldStopGeneration = useRef(false);
 
   // Loading messages for book generation
   const loadingMessages = [
@@ -82,6 +85,16 @@ export function AIBookGeneratorWizard({
     if (step > 1) {
       setStep((step - 1) as 1 | 2 | 3 | 4);
     }
+  };
+
+  const handleStopGeneration = () => {
+    setShowStopDialog(true);
+  };
+
+  const confirmStopGeneration = () => {
+    shouldStopGeneration.current = true;
+    setShowStopDialog(false);
+    toast.info('Stopping generation after current chapter...');
   };
 
   const handleContinue = () => {
@@ -168,6 +181,7 @@ export function AIBookGeneratorWizard({
     setIsGeneratingBook(true);
     setGenerationProgress({ current: 0, total: outline.length });
     setCompletedChapters([]); // Reset completed chapters
+    shouldStopGeneration.current = false; // Reset stop flag
 
     try {
       // Create the project first
@@ -193,6 +207,12 @@ export function AIBookGeneratorWizard({
 
       // Generate each chapter
       for (let i = 0; i < outline.length; i++) {
+        // Check if user requested to stop
+        if (shouldStopGeneration.current) {
+          toast.info(`Generation stopped. Saved ${completedChapters.length} completed chapters.`);
+          break;
+        }
+
         const chapterOutline = outline[i];
         setGenerationProgress({ current: i + 1, total: outline.length });
 
@@ -332,9 +352,18 @@ Write in a professional, engaging tone appropriate for the target audience.`,
       // Update project timestamp
       newProject.updatedAt = new Date();
 
-      // Complete and pass to parent
-      toast.success(`Book generated! ${newProject.chapters.length} chapters created.`);
-      onComplete(newProject);
+      // Only show success if we have chapters (either completed all or stopped early)
+      if (newProject.chapters.length > 0) {
+        const wasStoppedEarly = shouldStopGeneration.current;
+        toast.success(
+          wasStoppedEarly 
+            ? `Book saved with ${newProject.chapters.length} chapters. You can add more later!`
+            : `Book generated! ${newProject.chapters.length} chapters created.`
+        );
+        onComplete(newProject);
+      } else {
+        toast.error('No chapters were generated successfully.');
+      }
       
     } catch (error) {
       console.error('Error generating book:', error);
@@ -866,7 +895,7 @@ Write in a professional, engaging tone appropriate for the target audience.`,
 
                       <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
                         <p className="text-sm text-primary">
-                          <strong>⏳ Please wait:</strong> Generating {outline.length} chapters with 20-second delays between each to respect API limits. Total time: ~{Math.ceil(outline.length * 20 / 60)} minutes. Don't close this window.
+                          <strong>⏳ Please wait:</strong> Generating {outline.length} chapters with 20-second delays between each to respect API limits. Total time: ~{Math.ceil(outline.length * 20 / 60)} minutes. You can stop generation early and save what's been created.
                         </p>
                       </div>
                     </>
@@ -881,10 +910,35 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                           messages={[
                             'AI is trained on millions of books and articles',
                             'Each chapter takes about 30-60 seconds to generate',
-                            'You can edit everything after generation completes',
+                            'You can stop generation early if satisfied',
                             'Your book will be automatically saved',
                           ]}
                         />
+                        
+                        {/* Stop Generation Button */}
+                        <motion.div
+                          className="mt-6 flex justify-center"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 2 }}
+                        >
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={handleStopGeneration}
+                            disabled={shouldStopGeneration.current}
+                            className="border-2 border-orange-500/50 text-orange-600 hover:bg-orange-500/10 hover:border-orange-500 dark:text-orange-400 px-6"
+                          >
+                            <StopCircle size={20} weight="fill" className="mr-2" />
+                            {shouldStopGeneration.current ? 'Stopping...' : 'Stop Generation'}
+                          </Button>
+                        </motion.div>
+                        
+                        {completedChapters.length > 0 && (
+                          <p className="text-center text-sm text-muted-foreground mt-3">
+                            {completedChapters.length} {completedChapters.length === 1 ? 'chapter' : 'chapters'} completed so far
+                          </p>
+                        )}
                         
                         {/* Enhanced Status Card */}
                         <motion.div 
@@ -1058,6 +1112,52 @@ Write in a professional, engaging tone appropriate for the target audience.`,
           </div>
         </div>
       </DialogContent>
+
+      {/* Stop Generation Confirmation Dialog */}
+      <AlertDialog open={showStopDialog} onOpenChange={setShowStopDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <StopCircle size={24} weight="fill" className="text-orange-500" />
+              Stop Book Generation?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3 pt-2">
+              <p>
+                You currently have <strong className="text-foreground">{completedChapters.length} completed chapters</strong> out of {outline.length} total.
+              </p>
+              <p>
+                If you stop now:
+              </p>
+              <ul className="space-y-2 ml-4">
+                <li className="flex items-start gap-2 text-sm">
+                  <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                  <span>Your book will be saved with {completedChapters.length} {completedChapters.length === 1 ? 'chapter' : 'chapters'}</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                  <span>You can edit and add more chapters later</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <span className="text-orange-600 dark:text-orange-400 mt-0.5">⚠</span>
+                  <span>The remaining {outline.length - completedChapters.length} chapters won't be generated</span>
+                </li>
+              </ul>
+              <p className="text-sm text-muted-foreground pt-2">
+                You can always generate more content manually from your project dashboard.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continue Generating</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmStopGeneration}
+              className="bg-orange-600 hover:bg-orange-700 text-white"
+            >
+              Stop & Save Progress
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   );
 }
