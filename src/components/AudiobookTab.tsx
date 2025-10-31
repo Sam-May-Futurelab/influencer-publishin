@@ -103,7 +103,8 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to generate audio for ${chapter.title}`);
+          const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+          throw new Error(errorData.error || `Failed to generate audio for ${chapter.title}`);
         }
 
         // Get audio blob

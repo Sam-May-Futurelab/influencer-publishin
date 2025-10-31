@@ -111,6 +111,17 @@ async function checkAudiobookLimit(userId, chapterCount) {
     const userData = userDoc.data();
     const subscriptionStatus = userData.subscriptionStatus || 'free';
     
+    console.log('[Audiobook Limit Check]', {
+      userId,
+      subscriptionStatus,
+      chapterCount,
+      userData: { 
+        isPremium: userData.isPremium,
+        subscriptionStatus: userData.subscriptionStatus,
+        audiobookChaptersUsed: userData.audiobookChaptersUsed 
+      }
+    });
+    
     if (subscriptionStatus === 'free') {
       return { 
         allowed: false, 
