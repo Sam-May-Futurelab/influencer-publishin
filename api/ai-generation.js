@@ -462,12 +462,29 @@ async function handleAudiobookGeneration(req, res) {
   }
 
   try {
+    // Strip HTML tags and clean the text
+    const cleanText = text
+      .replace(/<[^>]*>/g, '') // Remove HTML tags
+      .replace(/&nbsp;/g, ' ') // Replace &nbsp; with space
+      .replace(/&amp;/g, '&') // Replace &amp; with &
+      .replace(/&lt;/g, '<') // Replace &lt; with <
+      .replace(/&gt;/g, '>') // Replace &gt; with >
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim();
+
+    // OpenAI TTS has a 4096 character limit
+    if (cleanText.length > 4096) {
+      return res.status(400).json({ 
+        error: `Chapter is too long (${cleanText.length} characters). Maximum is 4,096 characters. Please split this chapter into smaller sections.` 
+      });
+    }
+
     const model = selectedQuality === 'hd' ? 'tts-1-hd' : 'tts-1';
     
     const mp3 = await openai.audio.speech.create({
       model: model,
       voice: voice,
-      input: text,
+      input: cleanText,
       response_format: 'mp3',
     });
 
