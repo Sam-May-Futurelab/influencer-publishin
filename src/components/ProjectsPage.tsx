@@ -68,6 +68,10 @@ export function ProjectsPage({
   const [loadingAudiobooks, setLoadingAudiobooks] = useState(true);
   const [audiobookToDelete, setAudiobookToDelete] = useState<any | null>(null);
   const [showDeleteAudiobookDialog, setShowDeleteAudiobookDialog] = useState(false);
+  const [showMergeDialog, setShowMergeDialog] = useState(false);
+  const [selectedProjectForMerge, setSelectedProjectForMerge] = useState<string | null>(null);
+  const [selectedChapters, setSelectedChapters] = useState<string[]>([]);
+  const [isMerging, setIsMerging] = useState(false);
   const { user } = useAuth();
 
   // Load audiobooks with project titles
@@ -305,7 +309,20 @@ export function ProjectsPage({
                   <SpeakerHigh size={20} className="text-primary" />
                   <h2 className="text-lg font-semibold">Your Audiobooks</h2>
                 </div>
-                <Badge variant="secondary">{audiobooks.length}</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">{audiobooks.length}</Badge>
+                  {audiobooks.length > 1 && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-2"
+                      onClick={() => setShowMergeDialog(true)}
+                    >
+                      <SpeakerHigh size={14} />
+                      Merge Chapters
+                    </Button>
+                  )}
+                </div>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {audiobooks.slice(0, 6).map((audiobook: any) => (
@@ -793,6 +810,142 @@ export function ProjectsPage({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Merge Audiobooks Dialog */}
+      <Dialog open={showMergeDialog} onOpenChange={setShowMergeDialog}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <SpeakerHigh size={20} className="text-primary" />
+              Merge Audiobook Chapters
+            </DialogTitle>
+            <DialogDescription>
+              Select chapters to combine into a single audiobook file. Premium feature.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {audiobooks.length > 0 && (
+              <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                {audiobooks.map((audiobook: any) => (
+                  <label
+                    key={audiobook.id}
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedChapters.includes(audiobook.chapterId)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedChapters(prev => [...prev, audiobook.chapterId]);
+                          if (!selectedProjectForMerge) {
+                            setSelectedProjectForMerge(audiobook.projectId);
+                          }
+                        } else {
+                          setSelectedChapters(prev => prev.filter(id => id !== audiobook.chapterId));
+                        }
+                      }}
+                      disabled={!!(selectedProjectForMerge && audiobook.projectId !== selectedProjectForMerge)}
+                      className="rounded"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{audiobook.chapterTitle}</p>
+                      <p className="text-xs text-muted-foreground truncate">{audiobook.projectTitle}</p>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {(audiobook.audioSize / (1024 * 1024)).toFixed(1)} MB
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+            <div className="flex items-center justify-between pt-4 border-t">
+              <p className="text-sm text-muted-foreground">
+                {selectedChapters.length} chapter{selectedChapters.length !== 1 ? 's' : ''} selected
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowMergeDialog(false);
+                    setSelectedChapters([]);
+                    setSelectedProjectForMerge(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={async () => {
+                    if (selectedChapters.length < 2) {
+                      toast.error('Select at least 2 chapters to merge');
+                      return;
+                    }
+
+                    setIsMerging(true);
+                    try {
+                      const response = await fetch('/api/merge-audiobooks', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          userId: user?.uid,
+                          projectId: selectedProjectForMerge,
+                          chapterIds: selectedChapters,
+                          title: 'Merged Audiobook'
+                        })
+                      });
+
+                      if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || 'Failed to merge');
+                      }
+
+                      const data = await response.json();
+                      toast.success('Audiobook chapters merged successfully!');
+                      
+                      // Reload audiobooks
+                      const audiobooksRef = collection(db, 'audiobooks');
+                      const q = query(audiobooksRef, where('userId', '==', user?.uid));
+                      const snapshot = await getDocs(q);
+                      const loadedAudiobooks = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        const project = projects.find(p => p.id === data.projectId);
+                        return {
+                          id: doc.id,
+                          ...data,
+                          projectTitle: data.projectTitle || project?.title || 'Unknown Project'
+                        };
+                      });
+                      setAudiobooks(loadedAudiobooks);
+                      
+                      setShowMergeDialog(false);
+                      setSelectedChapters([]);
+                      setSelectedProjectForMerge(null);
+                    } catch (error: any) {
+                      console.error('Failed to merge audiobooks:', error);
+                      toast.error(error.message || 'Failed to merge audiobooks');
+                    } finally {
+                      setIsMerging(false);
+                    }
+                  }}
+                  disabled={selectedChapters.length < 2 || isMerging}
+                  className="gap-2"
+                >
+                  {isMerging ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                      Merging...
+                    </>
+                  ) : (
+                    <>
+                      <SpeakerHigh size={16} />
+                      Merge Chapters
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

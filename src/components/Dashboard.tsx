@@ -7,6 +7,9 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { usePreviewMigration } from '@/hooks/use-preview-migration';
+import { useAuth } from '@/hooks/use-auth';
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,11 +46,14 @@ import {
   Calendar,
   UploadSimple,
   FilePlus,
-  ArrowRight
+  ArrowRight,
+  SpeakerHigh,
+  Download
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PreviewDialog } from '@/components/PreviewDialog';
+import { AudioPlayer } from '@/components/AudioPlayer';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { WritingStreakCard, GoalProgressCard, ProjectCompletionCard } from '@/components/AnalyticsCards';
 import { importFile } from '@/lib/import';
@@ -80,6 +86,7 @@ export function Dashboard({
 }: DashboardProps) {
   const { stats, totalWords, goals, progress } = useWritingAnalytics(projects);
   const { hasPreview, previewData, isMigrating, migrateToAccount, dismissPreview } = usePreviewMigration();
+  const { user } = useAuth();
   
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,12 +99,55 @@ export function Dashboard({
   const [splitOnH2, setSplitOnH2] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Audiobooks state
+  const [audiobooks, setAudiobooks] = useState<any[]>([]);
+  const [loadingAudiobooks, setLoadingAudiobooks] = useState(true);
+  const [audiobookToDelete, setAudiobookToDelete] = useState<any | null>(null);
+  const [showDeleteAudiobookDialog, setShowDeleteAudiobookDialog] = useState(false);
+  
   // Project setup dialog state
   const [showSetupDialog, setShowSetupDialog] = useState(false);
   const [pendingProjectTitle, setPendingProjectTitle] = useState('');
   
   // AI Book Generator state
   const [showBookGenerator, setShowBookGenerator] = useState(false);
+  
+  // Load audiobooks
+  useEffect(() => {
+    const loadAudiobooks = async () => {
+      if (!user?.uid) {
+        setLoadingAudiobooks(false);
+        return;
+      }
+
+      try {
+        const audiobooksRef = collection(db, 'audiobooks');
+        const q = query(
+          audiobooksRef,
+          where('userId', '==', user.uid)
+        );
+        
+        const snapshot = await getDocs(q);
+        const loadedAudiobooks = snapshot.docs.map(doc => {
+          const data = doc.data();
+          const project = projects.find(p => p.id === data.projectId);
+          return {
+            id: doc.id,
+            ...data,
+            projectTitle: data.projectTitle || project?.title || 'Unknown Project'
+          };
+        });
+
+        setAudiobooks(loadedAudiobooks);
+      } catch (error) {
+        console.error('Failed to load audiobooks:', error);
+      } finally {
+        setLoadingAudiobooks(false);
+      }
+    };
+
+    loadAudiobooks();
+  }, [user?.uid, projects]);
   
   // Handle preview migration
   const handleMigratePreview = async () => {
@@ -388,6 +438,78 @@ export function Dashboard({
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Audiobooks Section */}
+      {!loadingAudiobooks && audiobooks.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+        >
+          <Card className="neomorph-flat border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <SpeakerHigh size={20} className="text-primary" />
+                  <h2 className="text-lg font-semibold">Your Audiobooks</h2>
+                </div>
+                <Badge variant="secondary">{audiobooks.length}</Badge>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {audiobooks.slice(0, 3).map((audiobook: any) => (
+                  <div key={audiobook.id} className="p-4 neomorph-inset rounded-lg space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm truncate" title={audiobook.chapterTitle}>
+                          {audiobook.chapterTitle}
+                        </h3>
+                        <p className="text-xs text-muted-foreground truncate" title={audiobook.projectTitle}>
+                          {audiobook.projectTitle}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {(audiobook.audioSize / (1024 * 1024)).toFixed(1)} MB
+                        </p>
+                      </div>
+                      <div className="flex gap-1 flex-shrink-0">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 w-7 p-0"
+                          asChild
+                        >
+                          <a href={audiobook.audioUrl} download={`${audiobook.chapterTitle}.mp3`} title="Download">
+                            <Download size={14} />
+                          </a>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 w-7 p-0"
+                          onClick={() => {
+                            setAudiobookToDelete(audiobook);
+                            setShowDeleteAudiobookDialog(true);
+                          }}
+                          title="Delete"
+                        >
+                          <Trash size={14} className="text-destructive" />
+                        </Button>
+                      </div>
+                    </div>
+                    <AudioPlayer src={audiobook.audioUrl} />
+                  </div>
+                ))}
+              </div>
+              {audiobooks.length > 3 && (
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    +{audiobooks.length - 3} more audiobook{audiobooks.length - 3 !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Projects Section */}
       {projects.length > 0 && (
@@ -897,6 +1019,49 @@ export function Dashboard({
           userProfile={userProfile}
         />
       )}
+
+      {/* Delete Audiobook Dialog */}
+      <AlertDialog open={showDeleteAudiobookDialog} onOpenChange={setShowDeleteAudiobookDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Audiobook?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{audiobookToDelete?.chapterTitle}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel 
+              onClick={() => {
+                setShowDeleteAudiobookDialog(false);
+                setAudiobookToDelete(null);
+              }}
+              className="neomorph-button border-0"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                if (audiobookToDelete) {
+                  try {
+                    await deleteDoc(doc(db, 'audiobooks', audiobookToDelete.id));
+                    setAudiobooks(prev => prev.filter(a => a.id !== audiobookToDelete.id));
+                    toast.success('Audiobook deleted successfully');
+                  } catch (error) {
+                    console.error('Failed to delete audiobook:', error);
+                    toast.error('Failed to delete audiobook');
+                  }
+                  setShowDeleteAudiobookDialog(false);
+                  setAudiobookToDelete(null);
+                }
+              }}
+              className="neomorph-button border-0 bg-destructive hover:bg-destructive/90 text-white gap-2"
+            >
+              <Trash size={16} />
+              Delete Audiobook
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
