@@ -652,7 +652,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'wellness-14',
     name: 'Herbal Medicine',
-    url: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&h=1280&fit=crop',
     category: 'wellness', premium: true,
   },
   
@@ -666,7 +666,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'business-9',
     name: 'Global Network',
-    url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=800&h=1280&fit=crop',
     category: 'business', premium: true,
   },
   {
@@ -822,7 +822,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'fitness-15',
     name: 'Morning Run',
-    url: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800&h=1280&fit=crop',
     category: 'fitness',
   },
   {
@@ -888,7 +888,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'marketing-10',
     name: 'Social Strategy',
-    url: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1611926653670-e579e5ae5333?w=800&h=1280&fit=crop',
     category: 'marketing',
   },
 ];
@@ -1347,13 +1347,15 @@ export function CoverDesigner({
             <div className="w-full flex justify-center items-start py-4">
               {/* GRADIENT PREVIEW */}
               {design.backgroundType === 'gradient' && (
-                <div
-                  ref={canvasRef}
-                  className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
-                  style={{
-                    backgroundImage: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
-                  }}
-                >
+                <>
+                  {console.log('✅ RENDERING GRADIENT:', design.gradientDirection, design.gradientStart, design.gradientEnd)}
+                  <div
+                    ref={canvasRef}
+                    className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
+                    style={{
+                      backgroundImage: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
+                    }}
+                  >
                   <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
                     <h1
                       className="font-bold leading-tight mb-4 break-words px-2"
@@ -1390,6 +1392,7 @@ export function CoverDesigner({
                     </p>
                   </div>
                 </div>
+                </>
               )}
 
               {/* SOLID COLOR PREVIEW */}
