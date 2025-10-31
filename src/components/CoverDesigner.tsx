@@ -564,7 +564,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'fitness-8',
     name: 'Crossfit Power',
-    url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800&h=1280&fit=crop',
     category: 'fitness', premium: true,
   },
   {
@@ -628,7 +628,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'wellness-8',
     name: 'Mindfulness',
-    url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1499728603263-13726abce5fd?w=800&h=1280&fit=crop',
     category: 'wellness', premium: true,
   },
   {
@@ -672,13 +672,13 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'business-10',
     name: 'Corporate Success',
-    url: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=1280&fit=crop',
     category: 'business', premium: true,
   },
   {
     id: 'business-11',
     name: 'Innovation Hub',
-    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=800&h=1280&fit=crop',
     category: 'business', premium: true,
   },
   {
@@ -762,7 +762,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'marketing-8',
     name: 'Campaign Launch',
-    url: 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=1280&fit=crop',
     category: 'marketing',
   },
   
@@ -770,7 +770,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'abstract-6',
     name: 'Geometric Flow',
-    url: 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=1280&fit=crop',
     category: 'abstract', premium: true,
   },
   {
@@ -852,7 +852,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'food-14',
     name: 'Cooking Joy',
-    url: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=800&h=1280&fit=crop',
     category: 'food',
   },
   {
@@ -864,7 +864,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'business-16',
     name: 'Office Workspace',
-    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=1280&fit=crop',
     category: 'business',
   },
   {
@@ -876,13 +876,13 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'abstract-11',
     name: 'Color Burst',
-    url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1522441815192-d9f04eb0615c?w=800&h=1280&fit=crop',
     category: 'abstract',
   },
   {
     id: 'minimal-10',
     name: 'Clean Lines',
-    url: 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1280&fit=crop',
     category: 'minimal',
   },
   {
