@@ -164,7 +164,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                 onClick={() => setShowCoverDesigner(true)} 
                 variant="outline"
                 size="sm"
-                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto"
+                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto hover:text-foreground"
               >
                 <ImageIcon size={16} className="lg:hidden" />
                 <ImageIcon size={18} className="hidden lg:block" />
@@ -179,7 +179,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto"
+                  className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto hover:text-foreground"
                 >
                   <Gear size={16} className="lg:hidden" />
                   <Gear size={18} className="hidden lg:block" />
@@ -205,7 +205,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                 onClick={() => setShowPreviewDialog(true)} 
                 variant="outline"
                 size="sm"
-                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto"
+                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto hover:text-foreground"
               >
                 <Eye size={16} className="lg:hidden" />
                 <Eye size={18} className="hidden lg:block" />
@@ -220,7 +220,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
                 onClick={() => setShowAudiobookDialog(true)} 
                 variant="outline"
                 size="sm"
-                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto"
+                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto hover:text-foreground"
               >
                 <SpeakerHigh size={16} className="lg:hidden" weight="fill" />
                 <SpeakerHigh size={18} className="hidden lg:block" weight="fill" />

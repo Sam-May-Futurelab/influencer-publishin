@@ -626,7 +626,7 @@ export function LandingPage() {
             viewport={{ once: true }}
             className="grid md:grid-cols-2 gap-12 items-center"
           >
-            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-4 overflow-hidden shadow-lg">
+            <div className="bg-gradient-to-br from-[#f0e8f8] to-[#e2d1f0] rounded-2xl p-4 overflow-hidden shadow-lg order-2 md:order-2">
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
@@ -640,7 +640,7 @@ export function LandingPage() {
                 </div>
               </div>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 order-1 md:order-1">
               <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium">
                 Speak your mind
               </div>

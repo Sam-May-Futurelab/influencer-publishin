@@ -11,10 +11,7 @@ import {
   Rocket, 
   Target,
   ShieldCheck,
-  Clock,
-  Brain,
-  PenNib,
-  MagicWand
+  Clock
 } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -22,14 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { LandingHeader } from '@/components/LandingHeader';
 import { LandingFooter } from '@/components/LandingFooter';
 import { AuthModal } from '@/components/AuthModal';
-
-const LOADING_MESSAGES = [
-  { text: 'Analyzing your book idea...', icon: Brain },
-  { text: 'Crafting the perfect opening...', icon: PenNib },
-  { text: 'Generating engaging content...', icon: MagicWand },
-  { text: 'Polishing your chapter...', icon: Sparkle },
-  { text: 'Almost ready...', icon: Rocket },
-];
+import { AILoading } from '@/components/AILoading';
 
 export function TryFreePage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -38,18 +28,6 @@ export function TryFreePage() {
   const [generating, setGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
   const [generatedTitle, setGeneratedTitle] = useState<string>('');
-  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
-
-  // Cycle through loading messages
-  useEffect(() => {
-    if (!generating) return;
-    
-    const interval = setInterval(() => {
-      setLoadingMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
-    }, 2000); // Change message every 2 seconds
-
-    return () => clearInterval(interval);
-  }, [generating]);
 
   const handleGenerate = async () => {
     if (!title.trim()) {
@@ -58,7 +36,6 @@ export function TryFreePage() {
     }
 
     setGenerating(true);
-    setLoadingMessageIndex(0); // Reset to first message
 
     try {
       const response = await fetch('/api/preview-chapter', {
@@ -233,72 +210,21 @@ export function TryFreePage() {
                     disabled={generating || !title.trim()}
                     className="w-full h-16 text-lg bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 relative overflow-hidden"
                   >
-                    {generating && (
-                      <>
-                        {/* Shimmer effect */}
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0"
-                          animate={{
-                            x: ['-100%', '200%'],
-                          }}
-                          transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: 'linear',
-                          }}
-                        />
-                        {/* Pulse background */}
-                        <motion.div
-                          className="absolute inset-0 bg-white/10"
-                          animate={{
-                            opacity: [0.1, 0.3, 0.1],
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                          }}
-                        />
-                      </>
-                    )}
-                    {generating ? (
-                      <AnimatePresence mode="wait">
-                        <motion.div
-                          key={loadingMessageIndex}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.3 }}
-                          className="flex items-center gap-3 relative z-10"
-                        >
-                          <motion.div
-                            animate={{ 
-                              rotate: 360,
-                              scale: [1, 1.2, 1]
-                            }}
-                            transition={{ 
-                              rotate: { duration: 2, repeat: Infinity, ease: 'linear' },
-                              scale: { duration: 1, repeat: Infinity, ease: 'easeInOut' }
-                            }}
-                          >
-                            {(() => {
-                              const Icon = LOADING_MESSAGES[loadingMessageIndex].icon;
-                              return <Icon size={24} weight="fill" />;
-                            })()}
-                          </motion.div>
-                          <span className="font-semibold">
-                            {LOADING_MESSAGES[loadingMessageIndex].text}
-                          </span>
-                        </motion.div>
-                      </AnimatePresence>
-                    ) : (
+                    {!generating ? (
                       <div className="flex items-center gap-2">
                         <Lightning size={22} weight="fill" />
                         Generate Free Preview
                         <ArrowRight size={22} weight="bold" />
                       </div>
-                    )}
+                    ) : null}
                   </Button>
+
+                  {/* Show AILoading below button when generating */}
+                  {generating && (
+                    <div className="mt-8">
+                      <AILoading />
+                    </div>
+                  )}
                 </div>
               </Card>
 
@@ -414,7 +340,7 @@ export function TryFreePage() {
                       setShowAuthModal(true);
                       // TODO: Set initialMode to 'signin' when AuthModal supports it
                     }}
-                    className="text-lg h-14 px-8 border-2 font-semibold"
+                    className="text-lg h-14 px-8 border-2 font-semibold hover:bg-primary/10 hover:text-foreground"
                   >
                     Already have an account? Sign In
                   </Button>
@@ -497,7 +423,7 @@ export function TryFreePage() {
                           setShowAuthModal(true);
                           // TODO: Set initialMode to 'signin' when AuthModal supports it
                         }}
-                        className="w-full text-lg h-12 border-2"
+                        className="w-full text-lg h-12 border-2 hover:bg-primary/10 hover:text-foreground"
                       >
                         Sign In to Continue
                       </Button>

@@ -186,7 +186,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
       
       toast.success('Audio version created!', {
         id: 'create-audio',
-        description: `Project split into ${audioProject.chapters.length} chapters`
+        description: `Split into ${audioProject.chapters.length} chapters - find it in My Books`
       });
       
       // Reload projects to ensure new project is in state
@@ -194,8 +194,8 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
         await onProjectsChanged();
       }
       
-      // Navigate to the new audio project
-      navigate(`/app/project/${audioProject.id}`);
+      // Navigate to projects page so user can see and select the new audio project
+      navigate('/app/projects');
     } catch (error) {
       console.error('Failed to create audio version:', error);
       toast.error('Failed to create audio version', {
