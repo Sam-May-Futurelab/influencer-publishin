@@ -1,5 +1,5 @@
-// GDPR Data Export Endpoint
-// Allows users to download all their personal data in JSON format
+// GDPR User Data Management Endpoint
+// Handles both data export and deletion
 import admin from 'firebase-admin';
 import { setCorsHeaders, handleCorsPreFlight } from './_cors.js';
 
@@ -15,6 +15,7 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
+const auth = admin.auth();
 
 export default async function handler(req, res) {
   // Handle CORS
@@ -25,17 +26,27 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const { action } = req.query; // 'export' or 'delete'
+
+  if (action === 'export') {
+    return handleExport(req, res);
+  } else if (action === 'delete') {
+    return handleDelete(req, res);
+  } else {
+    return res.status(400).json({ error: 'Invalid action. Use ?action=export or ?action=delete' });
+  }
+}
+
+async function handleExport(req, res) {
   try {
     const { userId } = req.body;
 
-    // Validation
     if (!userId) {
       return res.status(400).json({ error: 'User ID is required' });
     }
 
     console.log(`📦 Starting data export for user: ${userId}`);
 
-    // Collect all user data
     const exportData = {
       exportDate: new Date().toISOString(),
       userId: userId,
@@ -47,7 +58,6 @@ export default async function handler(req, res) {
     if (userDoc.exists) {
       exportData.data.profile = {
         ...userDoc.data(),
-        // Convert timestamps to readable format
         createdAt: userDoc.data().createdAt?.toDate?.()?.toISOString() || null,
         updatedAt: userDoc.data().updatedAt?.toDate?.()?.toISOString() || null,
         lastLoginAt: userDoc.data().lastLoginAt?.toDate?.()?.toISOString() || null,
@@ -89,11 +99,9 @@ export default async function handler(req, res) {
         };
       }
     } catch (error) {
-      console.log('⚠️ No usage data found');
       exportData.data.usage = null;
     }
 
-    // Add summary
     exportData.summary = {
       totalProjects: exportData.data.projects.length,
       totalSnippets: exportData.data.snippets.length,
@@ -101,10 +109,7 @@ export default async function handler(req, res) {
     };
 
     console.log(`✅ Data export completed for user: ${userId}`);
-    console.log(`   - Projects: ${exportData.summary.totalProjects}`);
-    console.log(`   - Snippets: ${exportData.summary.totalSnippets}`);
 
-    // Return as downloadable JSON
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Content-Disposition', `attachment; filename="inkfluenceai-data-export-${userId}-${Date.now()}.json"`);
     
@@ -113,7 +118,74 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('❌ Data export error:', error);
     return res.status(500).json({ 
-      error: 'Failed to export user data. Please contact support.',
+      error: 'Failed to export user data',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+}
+
+async function handleDelete(req, res) {
+  try {
+    const { userId, confirmationText } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    if (confirmationText !== 'DELETE MY DATA') {
+      return res.status(400).json({ 
+        error: 'Please type "DELETE MY DATA" to confirm deletion' 
+      });
+    }
+
+    console.log(`🗑️ Starting data deletion for user: ${userId}`);
+
+    // Delete user's projects
+    const projectsSnapshot = await db.collection('users').doc(userId).collection('projects').get();
+    const projectDeletePromises = projectsSnapshot.docs.map(doc => doc.ref.delete());
+    await Promise.all(projectDeletePromises);
+
+    // Delete user's snippets
+    const snippetsSnapshot = await db.collection('snippets').where('userId', '==', userId).get();
+    const snippetDeletePromises = snippetsSnapshot.docs.map(doc => doc.ref.delete());
+    await Promise.all(snippetDeletePromises);
+
+    // Delete usage tracking data
+    try {
+      await db.collection('usage').doc(userId).delete();
+    } catch (error) {
+      // Ignore if doesn't exist
+    }
+
+    // Delete user profile
+    await db.collection('users').doc(userId).delete();
+
+    // Log the deletion for compliance
+    await db.collection('deletion_logs').add({
+      userId,
+      deletedAt: admin.firestore.FieldValue.serverTimestamp(),
+      deletedData: {
+        projects: projectsSnapshot.size,
+        snippets: snippetsSnapshot.size,
+        userProfile: true,
+      }
+    });
+
+    console.log(`✅ Data deletion completed for user: ${userId}`);
+
+    return res.status(200).json({ 
+      success: true,
+      message: 'All your data has been permanently deleted',
+      deletedData: {
+        projects: projectsSnapshot.size,
+        snippets: snippetsSnapshot.size,
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Data deletion error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to delete user data',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }

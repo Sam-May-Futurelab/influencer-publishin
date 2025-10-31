@@ -94,105 +94,6 @@ async function checkRateLimit(userId) {
   }
 }
 
-// Check audiobook chapter limits
-async function checkAudiobookLimit(userId, chapterCount) {
-  if (!userId) {
-    return { allowed: false, error: 'Authentication required' };
-  }
-
-  try {
-    const userRef = db.collection('users').doc(userId);
-    const userDoc = await userRef.get();
-    
-    if (!userDoc.exists) {
-      return { allowed: false, error: 'User not found' };
-    }
-
-    const userData = userDoc.data();
-    const subscriptionStatus = userData.subscriptionStatus || 'free';
-    
-    console.log('[Audiobook Limit Check]', {
-      userId,
-      subscriptionStatus,
-      chapterCount,
-      userData: { 
-        isPremium: userData.isPremium,
-        subscriptionStatus: userData.subscriptionStatus,
-        audiobookChaptersUsed: userData.audiobookChaptersUsed 
-      }
-    });
-    
-    if (subscriptionStatus === 'free') {
-      return { 
-        allowed: false, 
-        error: 'Audiobooks are available on Creator and Premium plans.' 
-      };
-    }
-
-    const chapterLimits = {
-      creator: 25,
-      premium: 50,
-    };
-
-    const limit = chapterLimits[subscriptionStatus];
-    if (!limit) {
-      return { allowed: false, error: 'Invalid subscription status' };
-    }
-
-    const now = new Date();
-    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-    const lastReset = userData.lastAudiobookChaptersReset;
-    const needsReset = !lastReset || !lastReset.startsWith(currentMonth);
-
-    let chaptersUsed = needsReset ? 0 : (userData.audiobookChaptersUsed || 0);
-    const chaptersRemaining = limit - chaptersUsed;
-
-    if (chapterCount > chaptersRemaining) {
-      return {
-        allowed: false,
-        error: `Not enough chapter allowance. You need ${chapterCount} chapters but only have ${chaptersRemaining} remaining this month.`
-      };
-    }
-
-    await userRef.update({
-      audiobookChaptersUsed: needsReset ? chapterCount : chaptersUsed + chapterCount,
-      lastAudiobookChaptersReset: currentMonth,
-    });
-
-    return { allowed: true, chaptersUsed: chaptersUsed + chapterCount, limit };
-  } catch (error) {
-    console.error('Error checking audiobook limit:', error);
-    return { allowed: false, error: 'Failed to check usage limits' };
-  }
-}
-
-// Split text into chunks at sentence boundaries (max 4000 chars to be safe)
-function splitIntoChunks(text, maxChars = 4000) {
-  const chunks = [];
-  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-  
-  let currentChunk = '';
-  
-  for (const sentence of sentences) {
-    const trimmedSentence = sentence.trim();
-    
-    // If adding this sentence would exceed limit, save current chunk and start new one
-    if (currentChunk.length + trimmedSentence.length > maxChars && currentChunk.length > 0) {
-      chunks.push(currentChunk.trim());
-      currentChunk = trimmedSentence;
-    } else {
-      currentChunk += (currentChunk ? ' ' : '') + trimmedSentence;
-    }
-  }
-  
-  // Add the last chunk
-  if (currentChunk.trim().length > 0) {
-    chunks.push(currentChunk.trim());
-  }
-  
-  return chunks;
-}
-
 // Format content with paragraph breaks
 function formatWithParagraphBreaks(text) {
   if (text.includes('\n\n')) {
@@ -231,7 +132,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { type } = req.query; // content, outline, cover, audiobook
+  const { type } = req.query; // content, outline, cover
 
   try {
     // Route to appropriate handler
@@ -242,10 +143,8 @@ export default async function handler(req, res) {
         return await handleOutlineGeneration(req, res);
       case 'cover':
         return await handleCoverGeneration(req, res);
-      case 'audiobook':
-        return await handleAudiobookGeneration(req, res);
       default:
-        return res.status(400).json({ error: 'Invalid type. Must be: content, outline, cover, or audiobook' });
+        return res.status(400).json({ error: 'Invalid type. Must be: content, outline, or cover. For audiobooks, use /api/audiobook-queue' });
     }
   } catch (error) {
     console.error('AI Generation error:', error);
@@ -453,139 +352,5 @@ async function handleCoverGeneration(req, res) {
   } catch (error) {
     console.error('Cover generation error:', error);
     return res.status(500).json({ error: 'Failed to generate cover' });
-  }
-}
-
-// Handler for audiobook generation
-async function handleAudiobookGeneration(req, res) {
-  const { text, voice, quality, chapterId, chapterTitle, userId, chapterCount } = req.body;
-
-  if (!text || !voice) {
-    return res.status(400).json({ 
-      error: 'Missing required fields: text and voice are required' 
-    });
-  }
-
-  const validVoices = ['alloy', 'ash', 'coral', 'echo', 'fable', 'nova', 'onyx', 'sage', 'shimmer'];
-  if (!validVoices.includes(voice)) {
-    return res.status(400).json({ 
-      error: `Invalid voice. Must be one of: ${validVoices.join(', ')}` 
-    });
-  }
-
-  const selectedQuality = quality || 'standard';
-  if (!['standard', 'hd'].includes(selectedQuality)) {
-    return res.status(400).json({ 
-      error: 'Invalid quality. Must be "standard" or "hd"' 
-    });
-  }
-
-  // Use chapterCount for limit checking (only check on first chapter)
-  if (chapterCount) {
-    const limitCheck = await checkAudiobookLimit(userId, chapterCount);
-    if (!limitCheck.allowed) {
-      return res.status(403).json({ error: limitCheck.error });
-    }
-  }
-
-  try {
-    console.log('[Audiobook] ===== STARTING GENERATION =====');
-    console.log('[Audiobook] Chapter:', chapterTitle);
-    console.log('[Audiobook] Text length (raw):', text?.length || 0);
-    console.log('[Audiobook] Voice:', voice);
-    console.log('[Audiobook] Quality:', selectedQuality);
-    
-    // Strip HTML tags and clean the text
-    const cleanText = text
-      .replace(/<[^>]*>/g, '') // Remove HTML tags
-      .replace(/&nbsp;/g, ' ') // Replace &nbsp; with space
-      .replace(/&amp;/g, '&') // Replace &amp; with &
-      .replace(/&lt;/g, '<') // Replace &lt; with <
-      .replace(/&gt;/g, '>') // Replace &gt; with >
-      .replace(/\s+/g, ' ') // Normalize whitespace
-      .trim();
-
-    console.log('[Audiobook] Text length (cleaned):', cleanText.length);
-    
-    if (!cleanText) {
-      console.error('[Audiobook] ERROR: Empty text after cleaning!');
-      return res.status(400).json({ error: 'Chapter content is empty' });
-    }
-
-    const model = selectedQuality === 'hd' ? 'tts-1-hd' : 'tts-1';
-    console.log('[Audiobook] Model:', model);
-    
-    // Check if we need to split into chunks
-    if (cleanText.length <= 4000) {
-      console.log('[Audiobook] Single chunk generation (under 4000 chars)');
-      // Single chunk - simple case
-      console.log('[Audiobook] Calling OpenAI TTS API...');
-      const mp3 = await openai.audio.speech.create({
-        model: model,
-        voice: voice,
-        input: cleanText,
-        response_format: 'mp3',
-      });
-      console.log('[Audiobook] OpenAI API call successful');
-
-      const buffer = Buffer.from(await mp3.arrayBuffer());
-      console.log('[Audiobook] Buffer created, size:', buffer.length);
-
-      res.setHeader('Content-Type', 'audio/mpeg');
-      res.setHeader('Content-Disposition', `attachment; filename="${chapterTitle || chapterId || 'chapter'}.mp3"`);
-      res.setHeader('Content-Length', buffer.length);
-
-      return res.status(200).send(buffer);
-    } else {
-      // Multiple chunks - concatenate buffers directly (fast, no FFmpeg)
-      console.log(`[Audiobook] Chapter "${chapterTitle}" is ${cleanText.length} chars, splitting into chunks...`);
-      
-      const chunks = splitIntoChunks(cleanText);
-      console.log(`[Audiobook] Split into ${chunks.length} chunks`);
-      
-      const audioBuffers = [];
-      
-      // Generate audio for each chunk
-      for (let i = 0; i < chunks.length; i++) {
-        console.log(`[Audiobook] Generating chunk ${i + 1}/${chunks.length} (${chunks[i].length} chars)`);
-        console.log(`[Audiobook] Calling OpenAI TTS API for chunk ${i + 1}...`);
-        
-        const mp3 = await openai.audio.speech.create({
-          model: model,
-          voice: voice,
-          input: chunks[i],
-          response_format: 'mp3',
-        });
-        
-        console.log(`[Audiobook] Chunk ${i + 1} API call successful`);
-        const buffer = Buffer.from(await mp3.arrayBuffer());
-        console.log(`[Audiobook] Chunk ${i + 1} buffer created, size:`, buffer.length);
-        audioBuffers.push(buffer);
-      }
-      
-      // Simple concatenation - just combine the buffers
-      console.log(`[Audiobook] Concatenating ${audioBuffers.length} audio buffers...`);
-      const finalBuffer = Buffer.concat(audioBuffers);
-      console.log(`[Audiobook] Concatenation complete, final size: ${finalBuffer.length} bytes`);
-
-      res.setHeader('Content-Type', 'audio/mpeg');
-      res.setHeader('Content-Disposition', `attachment; filename="${chapterTitle || chapterId || 'chapter'}.mp3"`);
-      res.setHeader('Content-Length', finalBuffer.length);
-
-      return res.status(200).send(finalBuffer);
-    }
-
-  } catch (error) {
-    console.error('Audiobook generation error:', error);
-
-    if (error.response?.status === 429) {
-      return res.status(429).json({ 
-        error: 'Rate limit exceeded. Please try again in a moment.' 
-      });
-    }
-
-    return res.status(500).json({ 
-      error: 'Failed to generate audiobook. Please try again.' 
-    });
   }
 }
