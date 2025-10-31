@@ -35,24 +35,28 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
   try {
     const projectRef = doc(db, 'users', userId, 'projects', project.id);
     
-    // Handle uploaded cover images (compress if needed)
-    let uploadedCoverData: string | undefined;
-    
-    // Check both coverImageData (old exports) and uploadedCoverImage (new AI/uploaded backgrounds)
-    const imageToSave = project.coverDesign?.uploadedCoverImage || project.coverDesign?.coverImageData;
-    
-    if (imageToSave) {
-      const size = imageToSave.length / 1024; // Rough size in KB
-      
-      // If it's a large image, compress it
-      if (size > 100) {
-        const compressed = await compressToLimit(imageToSave, 400);
-        uploadedCoverData = compressed.dataUrl;
-      } else {
-        // Small image, keep as-is
-        uploadedCoverData = imageToSave;
+    const prepareImageForStorage = async (source?: string): Promise<string | undefined> => {
+      if (!source) return undefined;
+      // Only attempt compression for data URLs to avoid CORS issues with remote images
+      if (!source.startsWith('data:')) {
+        return source;
       }
-    }
+
+      try {
+        if (!isWithinSizeLimit(source)) {
+          const compressed = await compressToLimit(source, 400);
+          return compressed.dataUrl;
+        }
+        return source;
+      } catch (error) {
+        console.warn('Failed to compress cover image, storing original data URL.', error);
+        return source;
+      }
+    };
+
+    // Handle uploaded/background image data and the rendered cover with text separately
+    const uploadedCoverData = await prepareImageForStorage(project.coverDesign?.uploadedCoverImage);
+    const coverImageData = await prepareImageForStorage(project.coverDesign?.coverImageData);
     
     // Prepare coverDesign - store design parameters and compressed uploaded image (if any)
     let coverDesignData: any = null;
@@ -77,15 +81,30 @@ export const saveProject = async (userId: string, project: EbookProject): Promis
         authorFont: String(project.coverDesign.authorFont || 'Inter'),
         authorSize: Number(project.coverDesign.authorSize || 18),
         authorColor: String(project.coverDesign.authorColor || '#ffffff'),
+        titlePosition: Number(project.coverDesign.titlePosition ?? 40),
+        subtitlePosition: Number(project.coverDesign.subtitlePosition ?? 50),
+        authorPosition: Number(project.coverDesign.authorPosition ?? 80),
+        textShadowEnabled: Boolean(project.coverDesign.textShadowEnabled ?? false),
+        shadowBlur: Number(project.coverDesign.shadowBlur ?? 8),
+        shadowOffsetX: Number(project.coverDesign.shadowOffsetX ?? 2),
+        shadowOffsetY: Number(project.coverDesign.shadowOffsetY ?? 2),
+        shadowColor: String(project.coverDesign.shadowColor || 'rgba(0, 0, 0, 0.8)'),
         overlay: Boolean(project.coverDesign.overlay),
-        overlayOpacity: Number(project.coverDesign.overlayOpacity || 40),
+        overlayOpacity: Number(project.coverDesign.overlayOpacity ?? 40),
         imagePosition: String(project.coverDesign.imagePosition || 'cover'),
-        imageBrightness: Number(project.coverDesign.imageBrightness || 100),
-        imageContrast: Number(project.coverDesign.imageContrast || 100),
+        imageAlignment: String(project.coverDesign.imageAlignment || 'center'),
+        imageBrightness: Number(project.coverDesign.imageBrightness ?? 100),
+        imageContrast: Number(project.coverDesign.imageContrast ?? 100),
         usePreMadeCover: Boolean(project.coverDesign.usePreMadeCover),
-        // Store compressed uploaded cover image if user uploaded one
-        uploadedCoverImage: uploadedCoverData || '',
       };
+
+      if (uploadedCoverData) {
+        coverDesignData.uploadedCoverImage = uploadedCoverData;
+      }
+
+      if (coverImageData) {
+        coverDesignData.coverImageData = coverImageData;
+      }
     }
     
     // Convert Date objects to timestamps for Firestore
@@ -139,7 +158,8 @@ export const getUserProjects = async (userId: string): Promise<EbookProject[]> =
         // Restore uploaded cover image to coverImageData if it exists
         coverDesign: data.coverDesign ? {
           ...data.coverDesign,
-          coverImageData: data.coverDesign.uploadedCoverImage || undefined
+          uploadedCoverImage: data.coverDesign.uploadedCoverImage || undefined,
+          coverImageData: data.coverDesign.coverImageData || data.coverDesign.uploadedCoverImage || undefined
         } : undefined,
         chapters: data.chapters?.map((chapter: any) => ({
           ...chapter,
@@ -183,7 +203,8 @@ export const getProject = async (userId: string, projectId: string): Promise<Ebo
         // Restore uploaded cover image to coverImageData if it exists
         coverDesign: data.coverDesign ? {
           ...data.coverDesign,
-          coverImageData: data.coverDesign.uploadedCoverImage || undefined
+          uploadedCoverImage: data.coverDesign.uploadedCoverImage || undefined,
+          coverImageData: data.coverDesign.coverImageData || data.coverDesign.uploadedCoverImage || undefined
         } : undefined,
         chapters: data.chapters?.map((chapter: any) => ({
           ...chapter,
