@@ -62,6 +62,22 @@ export function ChapterEditor({
   const isPremium = userProfile?.isPremium || false;
   const { usage, incrementUsage, loading: usageLoading } = useUsageTracking(user?.uid || null, isPremium);
   
+  // Helper function to convert plain text with \n\n to HTML paragraphs
+  const convertTextToHtml = (text: string): string => {
+    // If already contains HTML tags, return as-is
+    if (text.includes('<p>') || text.includes('<div>') || text.includes('<br')) {
+      return text;
+    }
+    // Split by double line breaks and wrap in <p> tags
+    const paragraphs = text
+      .split('\n\n')
+      .map(para => para.trim())
+      .filter(para => para.length > 0)
+      .map(para => `<p>${para.replace(/\n/g, ' ')}</p>`)
+      .join('');
+    return paragraphs || text;
+  };
+  
   const [inputMode, setInputMode] = useState<InputMode>('text');
   const [editingTitle, setEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState('');
@@ -196,7 +212,10 @@ export function ChapterEditor({
         ? `${currentContent.trim()}\n\n${trimmedContent}`
         : trimmedContent;
       
-      setPendingContent(newContent);
+      // Convert to HTML if needed
+      const htmlContent = convertTextToHtml(newContent);
+      setPendingContent(htmlContent);
+      pendingContentRef.current = htmlContent;
       markAsChanged();
       toast.success('✨ AI magic added to your chapter!', {
         description: 'Your new content is ready to edit and customize.',
@@ -300,8 +319,9 @@ export function ChapterEditor({
   // Initialize pending content when current chapter changes
   useEffect(() => {
     if (currentChapter) {
-      setPendingContent(currentChapter.content);
-      pendingContentRef.current = currentChapter.content; // Update ref
+      const htmlContent = convertTextToHtml(currentChapter.content);
+      setPendingContent(htmlContent);
+      pendingContentRef.current = htmlContent; // Update ref
       markAsSaved(); // Reset state for new chapter
     }
   }, [currentChapter?.id]); // Only run when chapter ID changes
@@ -752,9 +772,20 @@ export function ChapterEditor({
                               }
                             `}</style>
                             <div dangerouslySetInnerHTML={{ 
-                              __html: pendingContent.includes('<p>') || pendingContent.includes('<div>') 
-                                ? pendingContent 
-                                : pendingContent.split('\n\n').map(para => `<p>${para.trim()}</p>`).join('')
+                              __html: (() => {
+                                // If already HTML, return as-is
+                                if (pendingContent.includes('<p>') || pendingContent.includes('<div>')) {
+                                  return pendingContent;
+                                }
+                                // Split by double line breaks and wrap in <p> tags
+                                const paragraphs = pendingContent
+                                  .split('\n\n')
+                                  .map(para => para.trim())
+                                  .filter(para => para.length > 0)
+                                  .map(para => `<p>${para.replace(/\n/g, ' ')}</p>`)
+                                  .join('');
+                                return paragraphs || pendingContent;
+                              })()
                             }} />
                           </div>
                         ) : (

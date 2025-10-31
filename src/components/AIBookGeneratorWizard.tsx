@@ -497,44 +497,48 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                     </div>
                   </div>
 
-                  {/* Genre */}
-                  <div className="space-y-2">
-                    <Label htmlFor="genre" className="text-base font-semibold">Genre (Optional)</Label>
-                    <Select value={bookData.genre} onValueChange={(value) => setBookData({ ...bookData, genre: value })}>
-                      <SelectTrigger id="genre" className="h-11">
-                        <SelectValue placeholder="Select a genre..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="business">Business & Entrepreneurship</SelectItem>
-                        <SelectItem value="marketing">Marketing & Sales</SelectItem>
-                        <SelectItem value="self-help">Self-Help & Personal Development</SelectItem>
-                        <SelectItem value="health">Health & Wellness</SelectItem>
-                        <SelectItem value="finance">Finance & Investing</SelectItem>
-                        <SelectItem value="technology">Technology & Programming</SelectItem>
-                        <SelectItem value="creative">Creative & Arts</SelectItem>
-                        <SelectItem value="education">Education & Teaching</SelectItem>
-                        <SelectItem value="lifestyle">Lifestyle & Hobbies</SelectItem>
-                        <SelectItem value="fiction">Fiction</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  {/* Genre & Target Audience - Side by Side */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Genre */}
+                    <div className="space-y-2">
+                      <Label htmlFor="genre" className="text-base font-semibold">Genre (Optional)</Label>
+                      <Select value={bookData.genre} onValueChange={(value) => setBookData({ ...bookData, genre: value })}>
+                        <SelectTrigger id="genre" className="h-11">
+                          <SelectValue placeholder="Select a genre..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="business">Business & Entrepreneurship</SelectItem>
+                          <SelectItem value="marketing">Marketing & Sales</SelectItem>
+                          <SelectItem value="self-help">Self-Help & Personal Development</SelectItem>
+                          <SelectItem value="health">Health & Wellness</SelectItem>
+                          <SelectItem value="finance">Finance & Investing</SelectItem>
+                          <SelectItem value="technology">Technology & Programming</SelectItem>
+                          <SelectItem value="creative">Creative & Arts</SelectItem>
+                          <SelectItem value="education">Education & Teaching</SelectItem>
+                          <SelectItem value="lifestyle">Lifestyle & Hobbies</SelectItem>
+                          <SelectItem value="fiction">Fiction</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                  {/* Target Audience */}
-                  <div className="space-y-2">
-                    <Label htmlFor="targetAudience" className="text-base font-semibold">Target Audience (Optional)</Label>
-                    <Input
-                      id="targetAudience"
-                      placeholder="e.g., Small business owners, Beginners, Professionals..."
-                      value={bookData.targetAudience}
-                      onChange={(e) => setBookData({ ...bookData, targetAudience: e.target.value })}
-                      className="h-11"
-                    />
-                    <p className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-primary">💡</span>
-                      <span>Who is this book for? This helps tailor the content and tone.</span>
-                    </p>
+                    {/* Target Audience */}
+                    <div className="space-y-2">
+                      <Label htmlFor="targetAudience" className="text-base font-semibold">Target Audience (Optional)</Label>
+                      <Input
+                        id="targetAudience"
+                        placeholder="e.g., Business owners, Beginners..."
+                        value={bookData.targetAudience}
+                        onChange={(e) => setBookData({ ...bookData, targetAudience: e.target.value })}
+                        className="h-11"
+                      />
+                    </div>
                   </div>
+                  
+                  <p className="text-sm text-muted-foreground flex items-start gap-2 -mt-2">
+                    <span className="text-primary">💡</span>
+                    <span>Genre and audience help tailor the content and tone to your readers.</span>
+                  </p>
                 </div>
               </motion.div>
             )}
