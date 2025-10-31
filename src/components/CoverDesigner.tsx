@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import {
   Select,
@@ -452,7 +453,7 @@ const STOCK_IMAGES = [
   {
     id: 'abstract-6',
     name: 'Gradient Mesh',
-    url: 'https://images.unsplash.com/photo-1557672184-c42f12bc083d?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1280&fit=crop',
     category: 'abstract',
   },
   {
@@ -504,7 +505,7 @@ const STOCK_IMAGES = [
   {
     id: 'artistic-4',
     name: 'Abstract Painting',
-    url: 'https://images.unsplash.com/photo-1549887534-1541e9326642?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&h=1280&fit=crop',
     category: 'artistic',
   },
   {
@@ -1622,274 +1623,375 @@ export function CoverDesigner({
 
               {/* Text Tab */}
               <TabsContent value="text" className="space-y-6">
-                {/* Title */}
-                <div className="space-y-3">
-                  <Label className="text-base font-semibold">Title</Label>
-                  <Input
-                    value={design.title}
-                    onChange={(e) => updateDesign({ title: e.target.value })}
-                    placeholder="Your Book Title"
-                    className="h-12 text-base"
-                  />
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">Font</Label>
-                      <Select
-                        value={design.titleFont}
-                        onValueChange={(value) => updateDesign({ titleFont: value })}
-                      >
-                        <SelectTrigger className="h-11 text-sm">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {FONTS.map((font) => (
-                            <SelectItem key={font.value} value={font.value} className="text-sm py-2.5">
-                              {font.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-lg font-bold">Text Content & Styling</Label>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Customize your title, subtitle, and author text with live preview
+                  </p>
+                </div>
+
+                {/* Title Section */}
+                <Card className="p-5 bg-gradient-to-br from-purple-50/50 to-white border-2 border-purple-100">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-purple-600"></div>
+                      <Label className="text-base font-bold text-purple-900">Title</Label>
                     </div>
+                    
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">Size: {design.titleSize}px</Label>
+                      <Label className="text-sm text-muted-foreground">Text</Label>
+                      <Input
+                        value={design.title}
+                        onChange={(e) => updateDesign({ title: e.target.value })}
+                        placeholder="Your Book Title"
+                        className="h-12 text-base font-semibold border-2"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-sm text-muted-foreground">Font</Label>
+                        <Select
+                          value={design.titleFont}
+                          onValueChange={(value) => updateDesign({ titleFont: value })}
+                        >
+                          <SelectTrigger className="h-12 text-base border-2">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[300px]">
+                            {FONTS.map((font) => (
+                              <SelectItem 
+                                key={font.value} 
+                                value={font.value} 
+                                className="text-base py-3 cursor-pointer hover:bg-accent"
+                                style={{ fontFamily: font.value }}
+                              >
+                                <span style={{ fontFamily: font.value, fontSize: '16px' }}>
+                                  {font.label}
+                                </span>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-sm text-muted-foreground">Color</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            type="color"
+                            value={design.titleColor}
+                            onChange={(e) => updateDesign({ titleColor: e.target.value })}
+                            className="w-16 h-12 cursor-pointer border-2"
+                          />
+                          <Input
+                            type="text"
+                            value={design.titleColor}
+                            onChange={(e) => updateDesign({ titleColor: e.target.value })}
+                            className="flex-1 h-12 text-sm border-2 font-mono"
+                            placeholder="#ffffff"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm text-muted-foreground">Size</Label>
+                        <Badge variant="secondary" className="text-xs">{design.titleSize}px</Badge>
+                      </div>
                       <Slider
                         value={[design.titleSize]}
                         onValueChange={([value]) => updateDesign({ titleSize: value })}
                         min={24}
                         max={80}
                         step={2}
-                        className="py-2"
+                        className="py-3"
                       />
+                      <div className="flex justify-between text-xs text-muted-foreground pt-1">
+                        <span>Small (24px)</span>
+                        <span>Large (80px)</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Color</Label>
-                    <div className="flex gap-3">
-                      <Input
-                        type="color"
-                        value={design.titleColor}
-                        onChange={(e) => updateDesign({ titleColor: e.target.value })}
-                        className="w-24 h-11 cursor-pointer"
-                      />
-                      <Input
-                        type="text"
-                        value={design.titleColor}
-                        onChange={(e) => updateDesign({ titleColor: e.target.value })}
-                        className="flex-1 h-11 text-sm"
-                      />
-                    </div>
-                  </div>
-                </div>
+                </Card>
 
-                {/* Subtitle */}
-                <div className="space-y-3">
-                  <Label className="text-base font-semibold">Subtitle</Label>
-                  <Input
-                    value={design.subtitle}
-                    onChange={(e) => updateDesign({ subtitle: e.target.value })}
-                    placeholder="Compelling subtitle"
-                    className="h-12 text-base"
-                  />
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">Font</Label>
-                      <Select
-                        value={design.subtitleFont}
-                        onValueChange={(value) => updateDesign({ subtitleFont: value })}
-                      >
-                        <SelectTrigger className="h-11 text-sm">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {FONTS.map((font) => (
-                            <SelectItem key={font.value} value={font.value} className="text-sm py-2.5">
-                              {font.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                {/* Subtitle Section */}
+                <Card className="p-5 bg-gradient-to-br from-blue-50/50 to-white border-2 border-blue-100">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-600"></div>
+                      <Label className="text-base font-bold text-blue-900">Subtitle</Label>
                     </div>
+                    
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">Size: {design.subtitleSize}px</Label>
+                      <Label className="text-sm text-muted-foreground">Text</Label>
+                      <Input
+                        value={design.subtitle}
+                        onChange={(e) => updateDesign({ subtitle: e.target.value })}
+                        placeholder="A compelling subtitle"
+                        className="h-12 text-base border-2"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-sm text-muted-foreground">Font</Label>
+                        <Select
+                          value={design.subtitleFont}
+                          onValueChange={(value) => updateDesign({ subtitleFont: value })}
+                        >
+                          <SelectTrigger className="h-12 text-base border-2">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[300px]">
+                            {FONTS.map((font) => (
+                              <SelectItem 
+                                key={font.value} 
+                                value={font.value} 
+                                className="text-base py-3 cursor-pointer hover:bg-accent"
+                                style={{ fontFamily: font.value }}
+                              >
+                                <span style={{ fontFamily: font.value, fontSize: '16px' }}>
+                                  {font.label}
+                                </span>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-sm text-muted-foreground">Color</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            type="color"
+                            value={design.subtitleColor}
+                            onChange={(e) => updateDesign({ subtitleColor: e.target.value })}
+                            className="w-16 h-12 cursor-pointer border-2"
+                          />
+                          <Input
+                            type="text"
+                            value={design.subtitleColor}
+                            onChange={(e) => updateDesign({ subtitleColor: e.target.value })}
+                            className="flex-1 h-12 text-sm border-2 font-mono"
+                            placeholder="#e0e7ff"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm text-muted-foreground">Size</Label>
+                        <Badge variant="secondary" className="text-xs">{design.subtitleSize}px</Badge>
+                      </div>
                       <Slider
                         value={[design.subtitleSize]}
                         onValueChange={([value]) => updateDesign({ subtitleSize: value })}
                         min={14}
                         max={40}
                         step={2}
-                        className="py-2"
+                        className="py-3"
                       />
+                      <div className="flex justify-between text-xs text-muted-foreground pt-1">
+                        <span>Small (14px)</span>
+                        <span>Large (40px)</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Color</Label>
-                    <div className="flex gap-3">
-                      <Input
-                        type="color"
-                        value={design.subtitleColor}
-                        onChange={(e) => updateDesign({ subtitleColor: e.target.value })}
-                        className="w-24 h-11 cursor-pointer"
-                      />
-                      <Input
-                        type="text"
-                        value={design.subtitleColor}
-                        onChange={(e) => updateDesign({ subtitleColor: e.target.value })}
-                        className="flex-1 h-11 text-sm"
-                      />
-                    </div>
-                  </div>
-                </div>
+                </Card>
 
-                {/* Author */}
-                <div className="space-y-3">
-                  <Label className="text-base font-semibold">Author</Label>
-                  <Input
-                    value={design.authorName}
-                    onChange={(e) => updateDesign({ authorName: e.target.value })}
-                    placeholder="Author Name"
-                    className="h-12 text-base"
-                  />
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">Font</Label>
-                      <Select
-                        value={design.authorFont}
-                        onValueChange={(value) => updateDesign({ authorFont: value })}
-                      >
-                        <SelectTrigger className="h-11 text-sm">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {FONTS.map((font) => (
-                            <SelectItem key={font.value} value={font.value} className="text-sm py-2.5">
-                              {font.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                {/* Author Section */}
+                <Card className="p-5 bg-gradient-to-br from-green-50/50 to-white border-2 border-green-100">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-600"></div>
+                      <Label className="text-base font-bold text-green-900">Author Name</Label>
                     </div>
+                    
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">Size: {design.authorSize}px</Label>
+                      <Label className="text-sm text-muted-foreground">Text</Label>
+                      <Input
+                        value={design.authorName}
+                        onChange={(e) => updateDesign({ authorName: e.target.value })}
+                        placeholder="Author Name"
+                        className="h-12 text-base border-2"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-sm text-muted-foreground">Font</Label>
+                        <Select
+                          value={design.authorFont}
+                          onValueChange={(value) => updateDesign({ authorFont: value })}
+                        >
+                          <SelectTrigger className="h-12 text-base border-2">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[300px]">
+                            {FONTS.map((font) => (
+                              <SelectItem 
+                                key={font.value} 
+                                value={font.value} 
+                                className="text-base py-3 cursor-pointer hover:bg-accent"
+                                style={{ fontFamily: font.value }}
+                              >
+                                <span style={{ fontFamily: font.value, fontSize: '16px' }}>
+                                  {font.label}
+                                </span>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-sm text-muted-foreground">Color</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            type="color"
+                            value={design.authorColor}
+                            onChange={(e) => updateDesign({ authorColor: e.target.value })}
+                            className="w-16 h-12 cursor-pointer border-2"
+                          />
+                          <Input
+                            type="text"
+                            value={design.authorColor}
+                            onChange={(e) => updateDesign({ authorColor: e.target.value })}
+                            className="flex-1 h-12 text-sm border-2 font-mono"
+                            placeholder="#f0f9ff"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm text-muted-foreground">Size</Label>
+                        <Badge variant="secondary" className="text-xs">{design.authorSize}px</Badge>
+                      </div>
                       <Slider
                         value={[design.authorSize]}
                         onValueChange={([value]) => updateDesign({ authorSize: value })}
                         min={12}
                         max={32}
                         step={2}
-                        className="py-2"
+                        className="py-3"
                       />
+                      <div className="flex justify-between text-xs text-muted-foreground pt-1">
+                        <span>Small (12px)</span>
+                        <span>Large (32px)</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Color</Label>
-                    <div className="flex gap-3">
-                      <Input
-                        type="color"
-                        value={design.authorColor}
-                        onChange={(e) => updateDesign({ authorColor: e.target.value })}
-                        className="w-24 h-11 cursor-pointer"
-                      />
-                      <Input
-                        type="text"
-                        value={design.authorColor}
-                        onChange={(e) => updateDesign({ authorColor: e.target.value })}
-                        className="flex-1 h-11 text-sm"
-                      />
-                    </div>
-                  </div>
-                </div>
+                </Card>
 
                 {/* Quick Color Palettes */}
-                <div className="space-y-3 pt-4 border-t">
-                  <Label className="text-base font-medium">Quick Color Palettes</Label>
-                  <p className="text-xs text-muted-foreground">Apply coordinated colors to title, subtitle, and author</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      onClick={() => updateDesign({ 
-                        titleColor: '#ffffff', 
-                        subtitleColor: '#e0e0e0', 
-                        authorColor: '#ffffff' 
-                      })}
-                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
-                    >
-                      <div className="flex gap-1">
-                        <div className="w-6 h-6 rounded-full bg-white border border-gray-300" />
-                        <div className="w-6 h-6 rounded-full bg-gray-200 border border-gray-300" />
-                      </div>
-                      <span className="text-sm font-medium">Classic White</span>
-                    </button>
-                    <button
-                      onClick={() => updateDesign({ 
-                        titleColor: '#000000', 
-                        subtitleColor: '#333333', 
-                        authorColor: '#000000' 
-                      })}
-                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
-                    >
-                      <div className="flex gap-1">
-                        <div className="w-6 h-6 rounded-full bg-black border border-gray-300" />
-                        <div className="w-6 h-6 rounded-full bg-gray-700 border border-gray-300" />
-                      </div>
-                      <span className="text-sm font-medium">Bold Black</span>
-                    </button>
-                    <button
-                      onClick={() => updateDesign({ 
-                        titleColor: '#ffd700', 
-                        subtitleColor: '#fff8dc', 
-                        authorColor: '#ffd700' 
-                      })}
-                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
-                    >
-                      <div className="flex gap-1">
-                        <div className="w-6 h-6 rounded-full bg-yellow-400 border border-gray-300" />
-                        <div className="w-6 h-6 rounded-full bg-yellow-100 border border-gray-300" />
-                      </div>
-                      <span className="text-sm font-medium">Elegant Gold</span>
-                    </button>
-                    <button
-                      onClick={() => updateDesign({ 
-                        titleColor: '#e91e63', 
-                        subtitleColor: '#fce4ec', 
-                        authorColor: '#c2185b' 
-                      })}
-                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
-                    >
-                      <div className="flex gap-1">
-                        <div className="w-6 h-6 rounded-full bg-pink-600 border border-gray-300" />
-                        <div className="w-6 h-6 rounded-full bg-pink-100 border border-gray-300" />
-                      </div>
-                      <span className="text-sm font-medium">Vibrant Pink</span>
-                    </button>
-                    <button
-                      onClick={() => updateDesign({ 
-                        titleColor: '#2196f3', 
-                        subtitleColor: '#e3f2fd', 
-                        authorColor: '#1976d2' 
-                      })}
-                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
-                    >
-                      <div className="flex gap-1">
-                        <div className="w-6 h-6 rounded-full bg-blue-500 border border-gray-300" />
-                        <div className="w-6 h-6 rounded-full bg-blue-100 border border-gray-300" />
-                      </div>
-                      <span className="text-sm font-medium">Ocean Blue</span>
-                    </button>
-                    <button
-                      onClick={() => updateDesign({ 
-                        titleColor: '#8b5cf6', 
-                        subtitleColor: '#ede9fe', 
-                        authorColor: '#7c3aed' 
-                      })}
-                      className="h-14 rounded-lg border-2 border-border hover:border-primary transition-colors flex items-center gap-3 px-4"
-                    >
-                      <div className="flex gap-1">
-                        <div className="w-6 h-6 rounded-full bg-violet-500 border border-gray-300" />
-                        <div className="w-6 h-6 rounded-full bg-violet-100 border border-gray-300" />
-                      </div>
-                      <span className="text-sm font-medium">Royal Purple</span>
-                    </button>
+                <Card className="p-5 bg-gradient-to-br from-orange-50/50 to-white border-2 border-orange-100">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-orange-600"></div>
+                      <Label className="text-base font-bold text-orange-900">Quick Color Themes</Label>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Apply professional color combinations instantly</p>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => updateDesign({ 
+                          titleColor: '#ffffff', 
+                          subtitleColor: '#e0e0e0', 
+                          authorColor: '#ffffff' 
+                        })}
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                      >
+                        <div className="flex gap-1.5">
+                          <div className="w-7 h-7 rounded-lg bg-white border-2 border-gray-300 shadow-sm" />
+                          <div className="w-7 h-7 rounded-lg bg-gray-200 border-2 border-gray-300 shadow-sm" />
+                        </div>
+                        <span className="text-sm font-semibold group-hover:text-primary transition-colors">Classic White</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => updateDesign({ 
+                          titleColor: '#000000', 
+                          subtitleColor: '#333333', 
+                          authorColor: '#000000' 
+                        })}
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                      >
+                        <div className="flex gap-1.5">
+                          <div className="w-7 h-7 rounded-lg bg-black border-2 border-gray-300 shadow-sm" />
+                          <div className="w-7 h-7 rounded-lg bg-gray-700 border-2 border-gray-300 shadow-sm" />
+                        </div>
+                        <span className="text-sm font-semibold group-hover:text-primary transition-colors">Bold Black</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => updateDesign({ 
+                          titleColor: '#ffd700', 
+                          subtitleColor: '#fff8dc', 
+                          authorColor: '#ffd700' 
+                        })}
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                      >
+                        <div className="flex gap-1.5">
+                          <div className="w-7 h-7 rounded-lg bg-yellow-400 border-2 border-gray-300 shadow-sm" />
+                          <div className="w-7 h-7 rounded-lg bg-yellow-100 border-2 border-gray-300 shadow-sm" />
+                        </div>
+                        <span className="text-sm font-semibold group-hover:text-primary transition-colors">Elegant Gold</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => updateDesign({ 
+                          titleColor: '#e91e63', 
+                          subtitleColor: '#fce4ec', 
+                          authorColor: '#c2185b' 
+                        })}
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                      >
+                        <div className="flex gap-1.5">
+                          <div className="w-7 h-7 rounded-lg bg-pink-600 border-2 border-gray-300 shadow-sm" />
+                          <div className="w-7 h-7 rounded-lg bg-pink-100 border-2 border-gray-300 shadow-sm" />
+                        </div>
+                        <span className="text-sm font-semibold group-hover:text-primary transition-colors">Vibrant Pink</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => updateDesign({ 
+                          titleColor: '#2196f3', 
+                          subtitleColor: '#e3f2fd', 
+                          authorColor: '#1976d2' 
+                        })}
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                      >
+                        <div className="flex gap-1.5">
+                          <div className="w-7 h-7 rounded-lg bg-blue-500 border-2 border-gray-300 shadow-sm" />
+                          <div className="w-7 h-7 rounded-lg bg-blue-100 border-2 border-gray-300 shadow-sm" />
+                        </div>
+                        <span className="text-sm font-semibold group-hover:text-primary transition-colors">Ocean Blue</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => updateDesign({ 
+                          titleColor: '#8b5cf6', 
+                          subtitleColor: '#ede9fe', 
+                          authorColor: '#7c3aed' 
+                        })}
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                      >
+                        <div className="flex gap-1.5">
+                          <div className="w-7 h-7 rounded-lg bg-violet-500 border-2 border-gray-300 shadow-sm" />
+                          <div className="w-7 h-7 rounded-lg bg-violet-100 border-2 border-gray-300 shadow-sm" />
+                        </div>
+                        <span className="text-sm font-semibold group-hover:text-primary transition-colors">Royal Purple</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Card>
               </TabsContent>
             </Tabs>
           </div>
