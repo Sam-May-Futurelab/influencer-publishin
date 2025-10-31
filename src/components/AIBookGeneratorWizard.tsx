@@ -383,7 +383,7 @@ Write in a professional, engaging tone appropriate for the target audience.`,
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] flex flex-col p-0 gap-0">
+      <DialogContent className="!max-w-6xl w-[95vw] max-h-[90vh] flex flex-col p-0 gap-0">
         <DialogHeader className="p-8 pb-6 border-b bg-gradient-to-br from-background to-muted/20">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 rounded-2xl bg-gradient-to-br from-purple-600 via-primary to-purple-600 shadow-xl">
@@ -534,54 +534,6 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                       <span className="text-primary">💡</span>
                       <span>Who is this book for? This helps tailor the content and tone.</span>
                     </p>
-                  </div>
-
-                  {/* Number of Chapters - Enhanced Slider */}
-                  <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-purple-500/5 border border-primary/10">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-base font-semibold">Number of Chapters</Label>
-                      <motion.div
-                        key={numChapters}
-                        initial={{ scale: 1.2 }}
-                        animate={{ scale: 1 }}
-                        className="px-4 py-2 rounded-full bg-primary text-primary-foreground font-bold text-lg shadow-lg"
-                      >
-                        {numChapters}
-                      </motion.div>
-                    </div>
-                    
-                    <div className="relative pt-2 pb-3">
-                      {/* Custom slider with gradient track */}
-                      <div className="relative">
-                        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-3 bg-gradient-to-r from-muted via-primary/20 to-muted rounded-full" />
-                        <div 
-                          className="absolute top-1/2 -translate-y-1/2 left-0 h-3 bg-gradient-to-r from-primary to-purple-500 rounded-full transition-all duration-300"
-                          style={{ width: `${((numChapters - 6) / (15 - 6)) * 100}%` }}
-                        />
-                        <input
-                          type="range"
-                          min="6"
-                          max="15"
-                          value={numChapters}
-                          onChange={(e) => setNumChapters(parseInt(e.target.value))}
-                          className="relative w-full h-3 bg-transparent appearance-none cursor-pointer z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:hover:scale-110"
-                        />
-                      </div>
-                      
-                      {/* Range markers */}
-                      <div className="flex justify-between mt-3 px-1">
-                        <span className="text-xs text-muted-foreground font-medium">6</span>
-                        <span className="text-xs text-muted-foreground font-medium">10</span>
-                        <span className="text-xs text-muted-foreground font-medium">15</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-2 text-sm">
-                      <span className="text-primary mt-0.5">💡</span>
-                      <span className="text-muted-foreground">
-                        <strong className="text-foreground">Recommended:</strong> 8-12 chapters for most ebooks. Longer books work better for comprehensive guides.
-                      </span>
-                    </div>
                   </div>
                 </div>
               </motion.div>
