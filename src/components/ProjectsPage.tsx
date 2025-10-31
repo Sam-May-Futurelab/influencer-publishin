@@ -31,6 +31,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface ProjectsPageProps {
   projects: EbookProject[];
@@ -835,7 +836,7 @@ export function ProjectsPage({
                     acc[projectId].push(audiobook);
                     return acc;
                   }, {} as Record<string, any[]>)
-                ).map(([projectId, projectAudiobooks]) => (
+                ).map(([projectId, projectAudiobooks]: [string, any[]]) => (
                   <div key={projectId} className="space-y-2">
                     <div className="flex items-center justify-between px-3 py-2 bg-muted/50 rounded-lg">
                       <div>
