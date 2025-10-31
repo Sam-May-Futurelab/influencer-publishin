@@ -646,13 +646,13 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'wellness-11',
     name: 'Zen Garden',
-    url: 'https://images.unsplash.com/photo-1547470557-bb86092baa2a?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&h=1280&fit=crop',
     category: 'wellness', premium: true,
   },
   {
     id: 'wellness-12',
     name: 'Herbal Medicine',
-    url: 'https://images.unsplash.com/photo-1582576163441-4d96e234ed3a?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=800&h=1280&fit=crop',
     category: 'wellness', premium: true,
   },
   
@@ -710,7 +710,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'crypto-8',
     name: 'NFT Art',
-    url: 'https://images.unsplash.com/photo-1645767830779-7c992e2bc80f?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=800&h=1280&fit=crop',
     category: 'crypto', premium: true,
   },
   
@@ -744,7 +744,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'marketing-5',
     name: 'Content Creation',
-    url: 'https://images.unsplash.com/photo-1432888622747-4eb9a8b2c01b?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=1280&fit=crop',
     category: 'marketing', premium: true,
   },
   {
@@ -808,7 +808,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'minimal-7',
     name: 'Simple Beauty',
-    url: 'https://images.unsplash.com/photo-1557672199-6e8e8c9e8a3f?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800&h=1280&fit=crop',
     category: 'minimal', premium: true,
   },
   {
@@ -1520,6 +1520,14 @@ export function CoverDesigner({
                       All ({STOCK_IMAGES.length})
                     </Button>
                     <Button
+                      variant={selectedCategory === 'premium' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('premium')}
+                      className="text-xs bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 hover:from-yellow-600 hover:via-orange-600 hover:to-pink-600 text-white border-0"
+                    >
+                      ✨ Premium ({STOCK_IMAGES.filter(img => img.premium).length})
+                    </Button>
+                    <Button
                       variant={selectedCategory === 'fitness' ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setSelectedCategory('fitness')}
@@ -1603,7 +1611,11 @@ export function CoverDesigner({
                 </div>
                 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
-                  {STOCK_IMAGES.filter(img => selectedCategory === 'all' || img.category === selectedCategory).map((image) => (
+                  {STOCK_IMAGES.filter(img => {
+                    if (selectedCategory === 'all') return true;
+                    if (selectedCategory === 'premium') return img.premium;
+                    return img.category === selectedCategory;
+                  }).map((image) => (
                     <Card
                       key={image.id}
                       className="cursor-pointer neomorph-flat border-0 overflow-hidden hover:neomorph-raised transition-all hover:scale-[1.02] rounded-lg bg-card"
