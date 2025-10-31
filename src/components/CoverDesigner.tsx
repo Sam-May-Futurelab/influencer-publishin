@@ -888,7 +888,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'marketing-10',
     name: 'Social Strategy',
-    url: 'https://images.unsplash.com/photo-1611926653670-e579e5ae5333?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=1280&fit=crop',
     category: 'marketing',
   },
 ];
@@ -1351,10 +1351,10 @@ export function CoverDesigner({
                   {console.log('✅ RENDERING GRADIENT:', design.gradientDirection, design.gradientStart, design.gradientEnd)}
                   <div
                     ref={canvasRef}
-                    className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
+                    className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm [background:var(--cover-bg)]"
                     style={{
-                      background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
-                    }}
+                      '--cover-bg': `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
+                    } as React.CSSProperties}
                   >
                   <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
                     <h1
