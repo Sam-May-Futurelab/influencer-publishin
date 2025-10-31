@@ -5,10 +5,11 @@ import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 
-// Initialize Inngest client
+// Initialize Inngest client with proper configuration
 const inngest = new Inngest({ 
   id: 'inkfluence-ai',
-  name: 'Inkfluence AI'
+  name: 'Inkfluence AI',
+  eventKey: process.env.INNGEST_EVENT_KEY, // Required for production
 });
 
 // Initialize Firebase Admin
@@ -148,10 +149,12 @@ const generateAudiobook = inngest.createFunction(
   }
 );
 
-// Serve the Inngest API endpoint
+// Serve the Inngest API endpoint with signing key
 export default serve({
   client: inngest,
   functions: [
     generateAudiobook,
   ],
+  signingKey: process.env.INNGEST_SIGNING_KEY, // Required for production to verify requests
+  servePath: '/api/inngest', // Explicitly set the path
 });

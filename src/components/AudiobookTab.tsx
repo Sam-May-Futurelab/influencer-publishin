@@ -285,7 +285,11 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
           let attempts = 0;
 
           while (!audioUrl && attempts < maxAttempts) {
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds between polls
+            
+            // Update progress estimate (not accurate, just for UX)
+            const estimatedProgress = ((processedChapters + (attempts / maxAttempts)) / sortedChapters.length) * 100;
+            setGenerationProgress(Math.min(estimatedProgress, 99)); // Cap at 99% until complete
             
             const statusResponse = await fetch(
               `/api/audiobook?action=status&projectId=${project.id}&chapterId=${chapter.id}`
