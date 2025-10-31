@@ -1163,14 +1163,26 @@ export function CoverDesigner({
   };
 
   const getBackgroundStyle = (): React.CSSProperties => {
+    console.log('🎨 getBackgroundStyle called:', {
+      backgroundType: design.backgroundType,
+      gradientDirection: design.gradientDirection,
+      gradientStart: design.gradientStart,
+      gradientEnd: design.gradientEnd,
+      backgroundImage: design.backgroundImage?.substring(0, 50),
+      usePreMadeCover: design.usePreMadeCover
+    });
+    
     // Check gradient first before any image checks
     if (design.backgroundType === 'gradient') {
-      return {
+      const gradientStyle = {
         background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`,
       } as React.CSSProperties;
+      console.log('✅ Returning gradient style:', gradientStyle);
+      return gradientStyle;
     }
     
     if (design.usePreMadeCover && design.backgroundImage) {
+      console.log('📸 Returning pre-made cover style');
       return {
         backgroundImage: `url(${design.backgroundImage})`,
         backgroundSize: 'cover',
@@ -1528,6 +1540,14 @@ export function CoverDesigner({
                       ✨ Premium ({STOCK_IMAGES.filter(img => img.premium).length})
                     </Button>
                     <Button
+                      variant={selectedCategory === 'free' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('free')}
+                      className="text-xs"
+                    >
+                      🆓 Free ({STOCK_IMAGES.filter(img => !img.premium).length})
+                    </Button>
+                    <Button
                       variant={selectedCategory === 'fitness' ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setSelectedCategory('fitness')}
@@ -1614,6 +1634,7 @@ export function CoverDesigner({
                   {STOCK_IMAGES.filter(img => {
                     if (selectedCategory === 'all') return true;
                     if (selectedCategory === 'premium') return img.premium;
+                    if (selectedCategory === 'free') return !img.premium;
                     return img.category === selectedCategory;
                   }).map((image) => (
                     <Card
@@ -1691,7 +1712,18 @@ export function CoverDesigner({
                           <Label className="text-sm font-semibold text-primary">✨ Premium Collection</Label>
                           <div className="grid grid-cols-3 gap-3">
                             <button
-                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' })}
+                              onClick={() => {
+                                console.log('🔵 Gradient button clicked: Purple Dream');
+                                console.log('📝 Updating design with:', { 
+                                  backgroundType: 'gradient', 
+                                  backgroundImage: undefined, 
+                                  usePreMadeCover: false, 
+                                  gradientStart: '#667eea', 
+                                  gradientEnd: '#764ba2', 
+                                  gradientDirection: 'to-br' 
+                                });
+                                updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' });
+                              }}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #667eea, #764ba2)' }}
                               title="Purple Dream"
