@@ -141,7 +141,7 @@ export function AIBookGeneratorWizard({
   const generateOutline = async () => {
     setIsGeneratingOutline(true);
     try {
-      const response = await fetch('/api/generate-book-outline', {
+      const response = await fetch('/api/ai-generation?type=outline', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ export function AIBookGeneratorWizard({
 
         while (retries < maxRetries && !success) {
           try {
-            const response = await fetch('/api/generate-ai-content', {
+            const response = await fetch('/api/ai-generation?type=content', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

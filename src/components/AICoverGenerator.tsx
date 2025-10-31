@@ -128,7 +128,7 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
     setGenerating(true);
 
     try {
-      const response = await fetch('/api/generate-cover', {
+      const response = await fetch('/api/ai-generation?type=cover', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

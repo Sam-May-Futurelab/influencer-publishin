@@ -27,15 +27,15 @@ export interface AIContentOptions {
   };
 }
 
-// Get the API endpoint based on environment
-const getApiEndpoint = () => {
-  // In production (Vercel), use /api route
+// Get API endpoint based on environment
+function getApiEndpoint(): string {
+  // In production (Vercel), use relative path
   if (import.meta.env.PROD) {
-    return '/api/generate-ai-content';
+    return '/api/ai-generation?type=content';
   }
-  // In development, use Vercel dev server or fallback
-  return import.meta.env.VITE_API_ENDPOINT || 'http://localhost:3000/api/generate-ai-content';
-};
+  // In development, use local server
+  return import.meta.env.VITE_API_ENDPOINT || 'http://localhost:3000/api/ai-generation?type=content';
+}
 
 /**
  * Generate AI content suggestions via secure serverless function

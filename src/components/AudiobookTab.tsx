@@ -90,7 +90,7 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
         setGenerationProgress(((i + 1) / sortedChapters.length) * 100);
 
         // Call API to generate audio
-        const response = await fetch('/api/generate-audiobook', {
+        const response = await fetch('/api/ai-generation?type=audiobook', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
