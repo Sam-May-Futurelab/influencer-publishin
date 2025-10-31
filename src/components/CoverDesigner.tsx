@@ -464,9 +464,10 @@ export function CoverDesigner({
   };
 
   const [design, setDesign] = useState<CoverDesign>({
-    title: initialDesign?.title || projectTitle || 'Your Book Title',
-    subtitle: initialDesign?.subtitle || 'A compelling subtitle that draws readers in',
-    authorName: initialDesign?.authorName || authorName || 'Author Name',
+    // Use saved design values, only fallback to project/defaults if not present
+    title: initialDesign?.title !== undefined ? initialDesign.title : (projectTitle || 'Your Book Title'),
+    subtitle: initialDesign?.subtitle !== undefined ? initialDesign.subtitle : 'A compelling subtitle that draws readers in',
+    authorName: initialDesign?.authorName !== undefined ? initialDesign.authorName : (authorName || 'Author Name'),
     backgroundType: initialDesign?.backgroundType || 'gradient',
     backgroundColor: initialDesign?.backgroundColor || '#8B5CF6',
     gradientStart: initialDesign?.gradientStart || '#1e3a8a',
