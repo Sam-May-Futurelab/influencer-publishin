@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +13,8 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
 import { createAudioVersionProject } from '@/lib/projects';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 interface AudiobookTabProps {
   project: EbookProject;
@@ -67,6 +69,40 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
   const isPremium = userProfile?.isPremium || false;
   const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
   const userId = user?.uid;
+
+  // Load existing audiobooks from Firestore on mount
+  useEffect(() => {
+    const loadExistingAudiobooks = async () => {
+      if (!project.id || !userId) return;
+
+      try {
+        const audiobooksRef = collection(db, 'audiobooks');
+        const q = query(
+          audiobooksRef,
+          where('projectId', '==', project.id),
+          where('userId', '==', userId)
+        );
+        
+        const snapshot = await getDocs(q);
+        const existingAudiobooks: GeneratedChapter[] = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            chapterId: data.chapterId,
+            title: data.chapterTitle,
+            audioUrl: data.audioUrl,
+          };
+        });
+
+        if (existingAudiobooks.length > 0) {
+          setGeneratedChapters(existingAudiobooks);
+        }
+      } catch (error) {
+        console.error('Failed to load existing audiobooks:', error);
+      }
+    };
+
+    loadExistingAudiobooks();
+  }, [project.id, userId]);
 
   // Calculate total characters
   const totalCharacters = project.chapters.reduce((sum, chapter) => {
