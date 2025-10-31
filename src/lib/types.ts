@@ -59,6 +59,8 @@ export interface EbookProject {
   coverDesign?: CoverDesign;
   customWatermark?: string; // Project-specific watermark (overrides global settings)
   isFavorite?: boolean; // Star/favorite projects to keep them at the top
+  isAudioVersion?: boolean; // Flag for audiobook-ready projects with split chapters
+  originalProjectId?: string; // Reference to original project if this is an audio version
   createdAt: Date;
   updatedAt: Date;
 }

@@ -236,3 +236,83 @@ export const updateProject = async (userId: string, projectId: string, updates: 
     throw new Error('Failed to update project');
   }
 };
+
+// Split text into chunks at sentence boundaries (max 4000 chars per chunk)
+const splitIntoChunks = (text: string, maxChars: number = 4000): string[] => {
+  if (text.length <= maxChars) return [text];
+  
+  const chunks: string[] = [];
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+  let currentChunk = '';
+  
+  for (const sentence of sentences) {
+    if ((currentChunk + sentence).length <= maxChars) {
+      currentChunk += sentence;
+    } else {
+      if (currentChunk) chunks.push(currentChunk.trim());
+      currentChunk = sentence;
+    }
+  }
+  
+  if (currentChunk) chunks.push(currentChunk.trim());
+  return chunks;
+};
+
+// Create an audio-ready version of a project with split chapters
+export const createAudioVersionProject = async (
+  userId: string, 
+  originalProject: EbookProject
+): Promise<EbookProject> => {
+  const BUFFER = 200; // Allow 200 chars buffer for minor edits
+  const MAX_CHARS = 4000 + BUFFER;
+  
+  // Split chapters that are too long
+  const splitChapters = originalProject.chapters.flatMap(chapter => {
+    const cleanContent = chapter.content
+      ?.replace(/<[^>]*>/g, ' ') // Remove HTML
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim() || '';
+    
+    // If chapter is within limit (with buffer), keep as-is
+    if (cleanContent.length <= MAX_CHARS) {
+      return [chapter];
+    }
+    
+    // Split into chunks
+    const chunks = splitIntoChunks(cleanContent, 4000);
+    
+    // Create new chapters for each chunk
+    return chunks.map((chunk, index) => ({
+      ...chapter,
+      id: `${chapter.id}-part-${index + 1}`,
+      title: `${chapter.title} (Part ${index + 1})`,
+      content: chunk,
+      order: chapter.order + (index * 0.01) // Maintain order with decimals
+    }));
+  });
+  
+  // Create new project
+  const audioProject: EbookProject = {
+    ...originalProject,
+    id: `${originalProject.id}-audio-${Date.now()}`,
+    title: `${originalProject.title} (Audiobook)`,
+    description: `Audio-ready version of "${originalProject.title}" with optimized chapter lengths for audiobook generation.`,
+    chapters: splitChapters,
+    isAudioVersion: true,
+    originalProjectId: originalProject.id,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+  
+  // Save to Firebase
+  await saveProject(userId, audioProject);
+  
+  return audioProject;
+};
+

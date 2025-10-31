@@ -1,15 +1,18 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { VoiceSelector } from '@/components/VoiceSelector';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { AILoading } from '@/components/AILoading';
+import { AudiobookSplitDialog } from '@/components/AudiobookSplitDialog';
 import { SpeakerHigh, Download, Sparkle, Info } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
+import { createAudioVersionProject } from '@/lib/projects';
 
 interface AudiobookTabProps {
   project: EbookProject;
@@ -25,14 +28,40 @@ interface GeneratedChapter {
   duration?: number;
 }
 
+// Helper to merge multiple audio blobs into one
+async function mergeAudioBuffers(blobs: Blob[]): Promise<Blob> {
+  // Convert blobs to array buffers
+  const buffers = await Promise.all(
+    blobs.map(blob => blob.arrayBuffer())
+  );
+  
+  // Calculate total size
+  const totalSize = buffers.reduce((sum, buffer) => sum + buffer.byteLength, 0);
+  
+  // Create merged buffer
+  const mergedBuffer = new Uint8Array(totalSize);
+  let offset = 0;
+  
+  for (const buffer of buffers) {
+    mergedBuffer.set(new Uint8Array(buffer), offset);
+    offset += buffer.byteLength;
+  }
+  
+  // Return as blob
+  return new Blob([mergedBuffer], { type: 'audio/mpeg' });
+}
+
 export function AudiobookTab({ project }: AudiobookTabProps) {
   const { userProfile, user } = useAuth();
+  const navigate = useNavigate();
   const [selectedVoice, setSelectedVoice] = useState<Voice>('nova');
   const [selectedQuality, setSelectedQuality] = useState<Quality>('standard');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
   const [generatedChapters, setGeneratedChapters] = useState<GeneratedChapter[]>([]);
   const [currentGeneratingChapter, setCurrentGeneratingChapter] = useState<string>('');
+  const [showSplitDialog, setShowSplitDialog] = useState(false);
+  const [isCreatingAudioVersion, setIsCreatingAudioVersion] = useState(false);
 
   const isPremium = userProfile?.isPremium || false;
   const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
@@ -56,13 +85,93 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
   const chaptersUsed = userProfile?.audiobookChaptersUsed || 0;
   const chaptersRemaining = chapterLimit - chaptersUsed;
 
+  // Check if any chapters need splitting (with 200 char buffer)
+  const BUFFER = 200;
+  const MAX_CHARS = 4000 + BUFFER;
+  
+  const needsSplitting = project.chapters.some(chapter => {
+    const cleanContent = chapter.content
+      ?.replace(/<[^>]*>/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim() || '';
+    return cleanContent.length > MAX_CHARS;
+  });
+
+  // Calculate estimated chapter count after splitting
+  const estimateChapterCount = () => {
+    let count = 0;
+    project.chapters.forEach(chapter => {
+      const cleanContent = chapter.content
+        ?.replace(/<[^>]*>/g, ' ')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/\s+/g, ' ')
+        .trim() || '';
+      
+      if (cleanContent.length <= MAX_CHARS) {
+        count += 1;
+      } else {
+        // Rough estimate: divide by 4000 and round up
+        count += Math.ceil(cleanContent.length / 4000);
+      }
+    });
+    return count;
+  };
+
+  const estimatedChapterCount = estimateChapterCount();
+
   const canGenerate = () => {
     if (subscriptionStatus === 'free') return false;
     if (totalChapters > chaptersRemaining) return false;
     return true;
   };
 
+  const handleCreateAudioVersion = async () => {
+    if (!userId) return;
+    
+    setIsCreatingAudioVersion(true);
+    setShowSplitDialog(false);
+    
+    try {
+      toast.loading('Creating audio-ready version...', { id: 'create-audio' });
+      
+      const audioProject = await createAudioVersionProject(userId, project);
+      
+      toast.success('Audio version created!', {
+        id: 'create-audio',
+        description: `Project split into ${audioProject.chapters.length} chapters`
+      });
+      
+      // Navigate to the new audio project
+      navigate(`/dashboard/project/${audioProject.id}`);
+    } catch (error) {
+      console.error('Failed to create audio version:', error);
+      toast.error('Failed to create audio version', {
+        id: 'create-audio',
+        description: error instanceof Error ? error.message : 'Please try again'
+      });
+    } finally {
+      setIsCreatingAudioVersion(false);
+    }
+  };
+
   const handleGenerate = async () => {
+    // Check if we need to split chapters first
+    if (needsSplitting && !project.isAudioVersion) {
+      setShowSplitDialog(true);
+      return;
+    }
+
     if (!canGenerate()) {
       if (subscriptionStatus === 'free') {
         toast.error('Audiobooks are a premium feature', {
@@ -83,38 +192,69 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
     try {
       const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
       
-      for (let i = 0; i < sortedChapters.length; i++) {
-        const chapter = sortedChapters[i];
-        setCurrentGeneratingChapter(chapter.title);
-        setGenerationProgress(((i + 1) / sortedChapters.length) * 100);
+      // Group chapters by their base title (without "Part X")
+      const chapterGroups: Map<string, typeof sortedChapters> = new Map();
+      sortedChapters.forEach(chapter => {
+        // Extract base title (remove "(Part X)" suffix)
+        const baseTitle = chapter.title.replace(/\s*\(Part\s+\d+\)\s*$/, '');
+        const group = chapterGroups.get(baseTitle) || [];
+        group.push(chapter);
+        chapterGroups.set(baseTitle, group);
+      });
+      
+      let processedChapters = 0;
+      
+      // Generate audio for each group
+      for (const [baseTitle, chapters] of chapterGroups) {
+        const audioBuffers: Blob[] = [];
+        
+        // Generate each part
+        for (let partIndex = 0; partIndex < chapters.length; partIndex++) {
+          const chapter = chapters[partIndex];
+          setCurrentGeneratingChapter(baseTitle);
+          processedChapters++;
+          setGenerationProgress((processedChapters / sortedChapters.length) * 100);
 
-        // Call API to generate audio (only pass chapterCount on first chapter for limit check)
-        const response = await fetch('/api/ai-generation?type=audiobook', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            text: chapter.content,
-            voice: selectedVoice,
-            quality: selectedQuality,
-            chapterId: chapter.id,
-            chapterTitle: chapter.title,
-            userId: userId,
-            chapterCount: i === 0 ? sortedChapters.length : undefined,
-          }),
-        });
+          // Call API to generate audio
+          const response = await fetch('/api/ai-generation?type=audiobook', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              text: chapter.content,
+              voice: selectedVoice,
+              quality: selectedQuality,
+              chapterId: chapter.id,
+              chapterTitle: chapter.title,
+              userId: userId,
+              chapterCount: processedChapters === 1 ? sortedChapters.length : undefined,
+            }),
+          });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-          throw new Error(errorData.error || `Failed to generate audio for ${chapter.title}`);
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+            throw new Error(errorData.error || `Failed to generate audio for ${chapter.title}`);
+          }
+
+          // Get audio blob
+          const audioBlob = await response.blob();
+          audioBuffers.push(audioBlob);
         }
-
-        // Get audio blob
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Merge parts if there are multiple
+        let finalBlob: Blob;
+        if (audioBuffers.length > 1) {
+          // Concatenate audio buffers
+          const mergedBuffer = await mergeAudioBuffers(audioBuffers);
+          finalBlob = mergedBuffer;
+        } else {
+          finalBlob = audioBuffers[0];
+        }
+        
+        const audioUrl = URL.createObjectURL(finalBlob);
 
         setGeneratedChapters(prev => [...prev, {
-          chapterId: chapter.id,
-          title: chapter.title,
+          chapterId: chapters[0].id,
+          title: baseTitle, // Use base title without "Part X"
           audioUrl,
         }]);
       }
@@ -225,13 +365,16 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
 
             {/* Generate Button / Loading */}
             <div className="pt-4 space-y-2">
-              {isGenerating ? (
+              {isGenerating || isCreatingAudioVersion ? (
                 <>
                   <div className="w-full p-4 rounded-lg border-2 border-primary/50 bg-primary/5 flex items-center justify-center">
                     <AILoading />
                   </div>
                   <p className="text-xs text-muted-foreground text-center">
-                    Generating {currentGeneratingChapter}... ({Math.round(generationProgress)}%)
+                    {isCreatingAudioVersion 
+                      ? 'Creating audio-ready version...' 
+                      : `Generating ${currentGeneratingChapter}... (${Math.round(generationProgress)}%)`
+                    }
                   </p>
                 </>
               ) : (
@@ -256,6 +399,16 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
           </div>
         </div>
       )}
+
+      {/* Split Dialog */}
+      <AudiobookSplitDialog
+        open={showSplitDialog}
+        onOpenChange={setShowSplitDialog}
+        onConfirm={handleCreateAudioVersion}
+        originalChapterCount={totalChapters}
+        newChapterCount={estimatedChapterCount}
+        projectTitle={project.title}
+      />
 
       {/* Generation Progress */}
       {isGenerating && (

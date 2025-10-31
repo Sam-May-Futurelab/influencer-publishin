@@ -282,6 +282,11 @@ export function ProjectsPage({
                             >
                               {project.title}
                             </h3>
+                            {project.isAudioVersion && (
+                              <Badge variant="secondary" className="text-xs gap-1 flex-shrink-0">
+                                🎵 Audiobook
+                              </Badge>
+                            )}
                             {onToggleFavorite && (
                               <Button
                                 onClick={(e) => {
