@@ -196,11 +196,12 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setSelectedQuality('standard')}
+                  disabled={isGenerating}
                   className={`p-4 rounded-lg border-2 transition-all ${
                     selectedQuality === 'standard'
                       ? 'border-primary bg-primary/5'
                       : 'border-border hover:border-primary/50'
-                  }`}
+                  } ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <div className="font-semibold mb-1">Standard</div>
                   <div className="text-xs text-muted-foreground">Good quality</div>
@@ -208,11 +209,12 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
                 </button>
                 <button
                   onClick={() => setSelectedQuality('hd')}
+                  disabled={isGenerating}
                   className={`p-4 rounded-lg border-2 transition-all ${
                     selectedQuality === 'hd'
                       ? 'border-primary bg-primary/5'
                       : 'border-border hover:border-primary/50'
-                  }`}
+                  } ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <div className="font-semibold mb-1">HD</div>
                   <div className="text-xs text-muted-foreground">Best quality</div>
@@ -221,32 +223,34 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
               </div>
             </div>
 
-            {/* Generate Button */}
-            <div className="pt-4">
+            {/* Generate Button / Loading */}
+            <div className="pt-4 space-y-2">
               {isGenerating ? (
-                <div className="w-full h-14 flex items-center justify-center">
-                  <AILoading />
-                </div>
+                <>
+                  <div className="w-full p-4 rounded-lg border-2 border-primary/50 bg-primary/5 flex items-center justify-center">
+                    <AILoading />
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center">
+                    Generating {currentGeneratingChapter}... ({Math.round(generationProgress)}%)
+                  </p>
+                </>
               ) : (
-                <Button
-                  onClick={handleGenerate}
-                  disabled={!canGenerate()}
-                  className="w-full h-14 gap-2 text-base bg-gradient-to-r from-primary to-accent text-primary-foreground"
-                  size="lg"
-                >
-                  <Sparkle size={20} weight="fill" />
-                  Generate Audiobook
-                </Button>
-              )}
-              {canGenerate() && !isGenerating && (
-                <p className="text-xs text-muted-foreground text-center mt-2">
-                  Will use {totalChapters} of {chaptersRemaining} available chapters
-                </p>
-              )}
-              {isGenerating && (
-                <p className="text-xs text-muted-foreground text-center mt-2">
-                  Generating {currentGeneratingChapter}... ({Math.round(generationProgress)}%)
-                </p>
+                <>
+                  <Button
+                    onClick={handleGenerate}
+                    disabled={!canGenerate()}
+                    className="w-full h-14 gap-2 text-base bg-gradient-to-r from-primary to-accent text-primary-foreground"
+                    size="lg"
+                  >
+                    <Sparkle size={20} weight="fill" />
+                    Generate Audiobook
+                  </Button>
+                  {canGenerate() && (
+                    <p className="text-xs text-muted-foreground text-center">
+                      Will use {totalChapters} of {chaptersRemaining} available chapters
+                    </p>
+                  )}
+                </>
               )}
             </div>
           </div>
