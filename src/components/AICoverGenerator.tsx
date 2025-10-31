@@ -165,22 +165,9 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
         description: `${data.remaining} left this month`,
       });
 
+      // Image URL is already a data URL from the server, no conversion needed
       if (onCoverGenerated) {
-        // Convert to data URL to avoid CORS issues
-        try {
-          const response = await fetch(data.imageUrl);
-          const blob = await response.blob();
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const dataUrl = reader.result as string;
-            onCoverGenerated(dataUrl);
-          };
-          reader.readAsDataURL(blob);
-        } catch (error) {
-          console.error('Failed to convert image:', error);
-          // Fallback to original URL
-          onCoverGenerated(data.imageUrl);
-        }
+        onCoverGenerated(data.imageUrl);
       }
     } catch (error) {
       console.error('Generation error:', error);

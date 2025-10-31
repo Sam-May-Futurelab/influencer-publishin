@@ -347,7 +347,20 @@ async function handleCoverGeneration(req, res) {
       throw new Error('No image generated');
     }
 
-    return res.status(200).json({ imageUrl });
+    // Download the image and convert to data URL to avoid CORS issues
+    try {
+      const imageResponse = await fetch(imageUrl);
+      const arrayBuffer = await imageResponse.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const base64 = buffer.toString('base64');
+      const dataUrl = `data:image/png;base64,${base64}`;
+      
+      return res.status(200).json({ imageUrl: dataUrl });
+    } catch (fetchError) {
+      console.error('Failed to download image, returning URL:', fetchError);
+      // Fallback to original URL if download fails
+      return res.status(200).json({ imageUrl });
+    }
 
   } catch (error) {
     console.error('Cover generation error:', error);
