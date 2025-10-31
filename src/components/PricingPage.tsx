@@ -69,7 +69,7 @@ export function PricingPage() {
       ogDescription.setAttribute('property', 'og:description');
       document.head.appendChild(ogDescription);
     }
-    ogDescription.setAttribute('content', 'Start free or choose Premium for unlimited ebook creation with AI-powered writing, professional covers, and multi-format publishing.');
+    ogDescription.setAttribute('content', 'Start free or choose Premium for unlimited ebook creation with AI-powered writing, professional cover designer, and multi-format publishing.');
 
     // Canonical URL
     let canonical = document.querySelector('link[rel="canonical"]');
@@ -97,7 +97,6 @@ export function PricingPage() {
         { text: '3 basic templates', included: true },
         { text: 'PDF export only', included: true },
         { text: 'Basic cover designer', included: true },
-        { text: '1 AI cover image per month', included: true },
         { text: 'Cloud storage', included: true },
         { text: 'Email support', included: true },
         { text: 'Audiobook generation', included: false },
@@ -121,7 +120,6 @@ export function PricingPage() {
         { text: '10 premium templates', included: true },
         { text: 'PDF & EPUB export', included: true },
         { text: 'Advanced cover designer', included: true },
-        { text: '10 AI cover images per month', included: true },
         { text: 'Custom watermarks', included: true },
         { text: 'Cloud storage', included: true },
         { text: 'Email support', included: true },
@@ -146,7 +144,6 @@ export function PricingPage() {
         { text: '20+ premium templates', included: true },
         { text: 'All export formats (PDF, EPUB, DOCX)', included: true },
         { text: 'Advanced cover designer', included: true },
-        { text: '50 AI cover images per month', included: true },
         { text: 'Custom branding & watermarks', included: true },
         { text: 'Priority support', included: true },
         { text: '50 audiobook chapters/month', included: true },

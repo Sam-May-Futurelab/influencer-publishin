@@ -30,7 +30,6 @@ import {
   ArrowsIn,
 } from '@phosphor-icons/react';
 import { toast } from 'sonner';
-import { AICoverGenerator } from './AICoverGenerator';
 import { UpgradeModal } from './UpgradeModal';
 
 interface CoverDesign {
@@ -906,13 +905,8 @@ export function CoverDesigner({
           <div className={`lg:w-[55%] overflow-y-auto p-6 lg:p-10 ${
             isPreviewExpanded ? 'hidden lg:block' : 'block'
           }`}>
-            <Tabs defaultValue="ai" className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-6 h-auto gap-1">
-                <TabsTrigger value="ai" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
-                  <Sparkle size={14} weight="fill" />
-                  <span className="hidden sm:inline">AI Generator</span>
-                  <span className="sm:hidden">AI</span>
-                </TabsTrigger>
+            <Tabs defaultValue="quick" className="w-full">
+              <TabsList className="grid w-full grid-cols-4 mb-6 h-auto gap-1">
                 <TabsTrigger value="quick" className="gap-1 text-xs sm:text-sm px-2 py-2 flex-col sm:flex-row">
                   <UploadSimple size={14} />
                   <span className="hidden md:inline">Upload</span>
@@ -933,27 +927,6 @@ export function CoverDesigner({
                   <span>Text</span>
                 </TabsTrigger>
               </TabsList>
-
-              {/* AI Generator Tab */}
-              <TabsContent value="ai" className="space-y-6">
-                <AICoverGenerator
-                  projectTitle={projectTitle}
-                  design={design}
-                  onDesignUpdate={updateDesign}
-                  onUpgradeClick={() => setShowUpgradeModal(true)}
-                  onCoverGenerated={(imageUrl) => {
-                    // Set the AI-generated image as background only - don't save yet
-                    // User needs to click "Save" button to persist
-                    updateDesign({
-                      backgroundType: 'image',
-                      backgroundImage: imageUrl,
-                      overlay: true,
-                      overlayOpacity: 40,
-                    });
-                    toast.success('AI cover applied! Click "Save Cover" when ready');
-                  }}
-                />
-              </TabsContent>
 
               {/* Quick Upload Tab */}
               <TabsContent value="quick" className="space-y-6">
@@ -1782,7 +1755,7 @@ export function CoverDesigner({
       <UpgradeModal
         open={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
-        highlightMessage="Upgrade to generate more AI covers per month"
+        highlightMessage="Upgrade to Premium for unlimited projects"
       />
     </Dialog>
   );

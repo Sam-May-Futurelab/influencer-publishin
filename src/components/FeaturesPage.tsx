@@ -37,13 +37,6 @@ export default function FeaturesPage() {
       badge: "New"
     },
     {
-      icon: <Sparkles className="h-8 w-8 text-pink-600" />,
-      title: "AI Cover Designer",
-      description: "Generate stunning book covers with DALL-E 3 AI. Choose from 6 art styles and create professional covers in seconds.",
-      benefits: ["Generate covers with AI", "6 artistic styles", "No design skills needed", "Unlimited customization"],
-      badge: "New"
-    },
-    {
       icon: <Palette className="h-8 w-8 text-purple-600" />,
       title: "Custom Branding",
       description: "Fully customize your ebook's appearance with colors, fonts, logos, and professional styling options.",

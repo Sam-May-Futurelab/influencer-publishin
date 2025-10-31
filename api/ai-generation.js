@@ -132,7 +132,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { type } = req.query; // content, outline, cover
+  const { type } = req.query; // content, outline
 
   try {
     // Route to appropriate handler
@@ -141,10 +141,8 @@ export default async function handler(req, res) {
         return await handleContentGeneration(req, res);
       case 'outline':
         return await handleOutlineGeneration(req, res);
-      case 'cover':
-        return await handleCoverGeneration(req, res);
       default:
-        return res.status(400).json({ error: 'Invalid type. Must be: content, outline, or cover. For audiobooks, use /api/audiobook-queue' });
+        return res.status(400).json({ error: 'Invalid type. Must be: content or outline. For audiobooks, use /api/audiobook-queue' });
     }
   } catch (error) {
     console.error('AI Generation error:', error);
@@ -336,53 +334,5 @@ Generate exactly ${numChapters} chapter titles with brief descriptions. Return a
   } catch (error) {
     console.error('Outline generation error:', error);
     return res.status(500).json({ error: 'Failed to generate outline' });
-  }
-}
-
-// Handler for cover generation
-async function handleCoverGeneration(req, res) {
-  const { prompt, userId } = req.body;
-
-  if (!prompt) {
-    return res.status(400).json({ error: 'Prompt is required' });
-  }
-
-  const rateLimit = await checkRateLimit(userId);
-  if (!rateLimit.allowed) {
-    return res.status(429).json({ error: 'Rate limit exceeded' });
-  }
-
-  try {
-    const response = await openai.images.generate({
-      model: "dall-e-3",
-      prompt: `Book cover design: ${prompt}. Professional, eye-catching, high-quality.`,
-      n: 1,
-      size: "1024x1024",
-      quality: "standard",
-    });
-
-    const imageUrl = response.data[0]?.url;
-    if (!imageUrl) {
-      throw new Error('No image generated');
-    }
-
-    // Download the image and convert to data URL to avoid CORS issues
-    try {
-      const imageResponse = await fetch(imageUrl);
-      const arrayBuffer = await imageResponse.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      const base64 = buffer.toString('base64');
-      const dataUrl = `data:image/png;base64,${base64}`;
-      
-      return res.status(200).json({ imageUrl: dataUrl });
-    } catch (fetchError) {
-      console.error('Failed to download image, returning URL:', fetchError);
-      // Fallback to original URL if download fails
-      return res.status(200).json({ imageUrl });
-    }
-
-  } catch (error) {
-    console.error('Cover generation error:', error);
-    return res.status(500).json({ error: 'Failed to generate cover' });
   }
 }
