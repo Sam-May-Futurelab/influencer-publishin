@@ -768,25 +768,25 @@ const STOCK_IMAGES: StockImage[] = [
   
   // More Abstract
   {
-    id: 'abstract-5',
+    id: 'abstract-6',
     name: 'Geometric Flow',
     url: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=1280&fit=crop',
     category: 'abstract', premium: true,
   },
   {
-    id: 'abstract-6',
+    id: 'abstract-7',
     name: 'Light Waves',
     url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=1280&fit=crop',
     category: 'abstract', premium: true,
   },
   {
-    id: 'abstract-7',
+    id: 'abstract-8',
     name: 'Neon Dreams',
     url: 'https://images.unsplash.com/photo-1614850523060-8da1d56ae167?w=800&h=1280&fit=crop',
     category: 'abstract', premium: true,
   },
   {
-    id: 'abstract-8',
+    id: 'abstract-9',
     name: 'Digital Art',
     url: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&h=1280&fit=crop',
     category: 'abstract', premium: true,
@@ -1265,7 +1265,7 @@ export function CoverDesigner({
             <div className="w-full flex justify-center items-start py-4">
               <div
                 ref={canvasRef}
-                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm bg-white"
+                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
                 style={getBackgroundStyle()}
               >
                 {/* Overlay */}
