@@ -166,7 +166,21 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
       });
 
       if (onCoverGenerated) {
-        onCoverGenerated(data.imageUrl);
+        // Convert to data URL to avoid CORS issues
+        try {
+          const response = await fetch(data.imageUrl);
+          const blob = await response.blob();
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const dataUrl = reader.result as string;
+            onCoverGenerated(dataUrl);
+          };
+          reader.readAsDataURL(blob);
+        } catch (error) {
+          console.error('Failed to convert image:', error);
+          // Fallback to original URL
+          onCoverGenerated(data.imageUrl);
+        }
       }
     } catch (error) {
       console.error('Generation error:', error);
@@ -283,21 +297,22 @@ export function AICoverGenerator({ onCoverGenerated, projectTitle, onUpgradeClic
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="style">Art Style</Label>
-            <Select value={style} onValueChange={setStyle}>
-              <SelectTrigger id="style">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {COVER_STYLES.map((s) => (
-                  <SelectItem key={s.value} value={s.value}>
-                    <div>
-                      <div className="font-medium">{s.label}</div>
-                      <div className="text-xs text-muted-foreground">{s.description}</div>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="grid grid-cols-2 gap-2">
+              {COVER_STYLES.map((s) => (
+                <button
+                  key={s.value}
+                  onClick={() => setStyle(s.value)}
+                  className={`p-3 rounded-lg border-2 text-left transition-all hover:border-primary/50 ${
+                    style === s.value 
+                      ? 'border-primary bg-primary/5' 
+                      : 'border-border'
+                  }`}
+                >
+                  <div className="font-medium text-sm">{s.label}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{s.description}</div>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="space-y-2">

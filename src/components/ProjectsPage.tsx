@@ -124,6 +124,9 @@ export function ProjectsPage({
       setSelectedAudiobooks([]);
       setBulkDeleteMode(false);
       setShowDeleteDialog(false);
+      
+      // Reload the page to refresh the lists
+      window.location.reload();
     } catch (error) {
       console.error('Error deleting items:', error);
       toast.error('Failed to delete items');
