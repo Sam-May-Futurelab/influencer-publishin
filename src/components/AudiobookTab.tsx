@@ -25,7 +25,7 @@ interface GeneratedChapter {
 }
 
 export function AudiobookTab({ project }: AudiobookTabProps) {
-  const { userProfile } = useAuth();
+  const { userProfile, user } = useAuth();
   const [selectedVoice, setSelectedVoice] = useState<Voice>('nova');
   const [selectedQuality, setSelectedQuality] = useState<Quality>('standard');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -35,6 +35,7 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
 
   const isPremium = userProfile?.isPremium || false;
   const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
+  const userId = user?.uid;
 
   // Calculate total characters
   const totalCharacters = project.chapters.reduce((sum, chapter) => {
@@ -98,6 +99,7 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
             quality: selectedQuality,
             chapterId: chapter.id,
             chapterTitle: chapter.title,
+            userId: userId,
           }),
         });
 

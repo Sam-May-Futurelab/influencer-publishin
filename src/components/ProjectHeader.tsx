@@ -13,11 +13,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash, Image as ImageIcon, DotsThree, ArrowLeft } from '@phosphor-icons/react';
+import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash, Image as ImageIcon, DotsThree, ArrowLeft, SpeakerHigh } from '@phosphor-icons/react';
 import { EbookProject, CoverDesign } from '@/lib/types';
 import { ExportDialog } from '@/components/ExportDialog';
 import { PreviewDialog } from '@/components/PreviewDialog';
 import { CoverDesigner } from '@/components/CoverDesigner';
+import { AudiobookTab } from '@/components/AudiobookTab';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
 import { toast } from 'sonner';
@@ -37,6 +38,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
   const [showCoverDesigner, setShowCoverDesigner] = useState(false);
+  const [showAudiobookDialog, setShowAudiobookDialog] = useState(false);
   const [tempTitle, setTempTitle] = useState(project.title);
   const [tempDescription, setTempDescription] = useState(project.description);
   const [tempAuthor, setTempAuthor] = useState(project.author);
@@ -211,6 +213,21 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
               </Button>
             </motion.div>
 
+            {/* Audiobook Button */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                onClick={() => setShowAudiobookDialog(true)} 
+                variant="outline"
+                size="sm"
+                className="gap-1.5 lg:gap-2 neomorph-button border-0 h-10 lg:h-12 px-2 lg:px-4 w-full lg:w-auto"
+              >
+                <SpeakerHigh size={16} className="lg:hidden" weight="fill" />
+                <SpeakerHigh size={18} className="hidden lg:block" weight="fill" />
+                <span className="hidden sm:inline">Audiobook</span>
+                <span className="sm:hidden text-xs">Audio</span>
+              </Button>
+            </motion.div>
+
             {/* Export Button - Primary Action */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="col-span-2 lg:col-span-1">
               <Button 
@@ -362,6 +379,22 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
         isOpen={showPreviewDialog}
         onClose={() => setShowPreviewDialog(false)}
       />
+
+      {/* Audiobook Dialog */}
+      <Dialog open={showAudiobookDialog} onOpenChange={setShowAudiobookDialog}>
+        <DialogContent className="neomorph-raised border-0 max-w-4xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl flex items-center gap-2">
+              <SpeakerHigh size={28} className="text-primary" weight="fill" />
+              Generate Audiobook
+            </DialogTitle>
+            <DialogDescription>
+              Convert your ebook to audiobook using AI voice synthesis
+            </DialogDescription>
+          </DialogHeader>
+          <AudiobookTab project={project} />
+        </DialogContent>
+      </Dialog>
 
       <CoverDesigner
         open={showCoverDesigner}
