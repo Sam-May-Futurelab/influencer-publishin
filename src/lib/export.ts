@@ -230,7 +230,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
         }
         
         .container {
-          max-width: 8.5in;
+          max-width: 100%;
           margin: 0 auto;
         }
         
@@ -239,13 +239,13 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          width: 8.5in;
-          height: 11in;
+          width: 100%;
+          min-height: 100vh;
           text-align: center;
           ${getCoverStyle()}
           color: white;
           margin: 0;
-          padding: 2in;
+          padding: 2rem;
           page-break-after: always;
           position: relative;
           overflow: hidden;
@@ -272,10 +272,11 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
         /* Copyright Page Styles */
         .copyright-page {
           page-break-after: always;
-          padding: 3in 1.5in;
+          padding: 3rem 1.5rem;
           font-size: 0.95em;
           color: #6b7280;
           line-height: 1.8;
+          min-height: 100vh;
         }
         
         .copyright-title {
@@ -336,7 +337,7 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
         
         .content-page {
           margin-top: 0;
-          padding: 1.25in;
+          padding: 2rem 1.5rem;
         }
         
         .chapter {
@@ -497,6 +498,27 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           word-break: break-all;
         }
         
+        /* Desktop/Tablet - use proper page dimensions */
+        @media screen and (min-width: 768px) {
+          .container {
+            max-width: 8.5in;
+          }
+          
+          .title-page {
+            width: 8.5in;
+            height: 11in;
+            padding: 2in;
+          }
+          
+          .copyright-page {
+            padding: 3in 1.5in;
+          }
+          
+          .content-page {
+            padding: 1.25in;
+          }
+        }
+        
         @media print {
           body {
             print-color-adjust: exact;
@@ -530,24 +552,26 @@ function generateHTML(project: EbookProject, options?: ExportOptions): string {
           .container {
             margin: 0;
             padding: 0;
-            max-width: none;
+            max-width: 8.5in;
           }
           
           .title-page {
             margin: 0;
             padding: 2in;
-            width: 100%;
-            height: 100vh;
+            width: 8.5in;
+            height: 11in;
           }
           
           .content-page {
             margin-top: 0;
-            padding: 0.75in;
+            padding: 1.25in;
             page: content;
           }
           
           .copyright-page {
             page-break-after: always;
+            padding: 3in 1.5in;
+          }
             margin: 0;
           }
           
@@ -677,6 +701,17 @@ function formatContent(content: string): string {
   // If content is already HTML (has paragraph tags), return as-is
   if (content.includes('<p>') || content.includes('<div>') || content.includes('<h1>')) {
     return content;
+  }
+  
+  // Convert plain text with \n\n to paragraphs (must check before markdown)
+  if (!content.includes('**') && !content.includes('##') && content.includes('\n\n')) {
+    const paragraphs = content
+      .split('\n\n')
+      .map(para => para.trim())
+      .filter(para => para.length > 0)
+      .map(para => `<p>${para.replace(/\n/g, ' ')}</p>`)
+      .join('');
+    return paragraphs || content;
   }
   
   // Check if content is markdown (contains markdown syntax)

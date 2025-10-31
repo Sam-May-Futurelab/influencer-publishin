@@ -43,6 +43,17 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
       return <div dangerouslySetInnerHTML={{ __html: content }} />;
     }
     
+    // Convert plain text with \n\n to paragraphs
+    if (!content.includes('**') && !content.includes('##') && content.includes('\n\n')) {
+      const paragraphs = content
+        .split('\n\n')
+        .map(para => para.trim())
+        .filter(para => para.length > 0)
+        .map(para => `<p>${para.replace(/\n/g, ' ')}</p>`)
+        .join('');
+      return <div dangerouslySetInnerHTML={{ __html: paragraphs }} />;
+    }
+    
     // Check if content is markdown (contains markdown syntax)
     const isMarkdown = content.includes('**') || content.includes('##') || content.includes('- ') || content.includes('# ');
     
