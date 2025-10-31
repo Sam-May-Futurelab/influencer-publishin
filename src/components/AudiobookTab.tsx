@@ -52,11 +52,8 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
   };
 
   const chapterLimit = getTierLimit();
-  const chaptersUsed = userProfile?.audiobookCharactersUsed || 0;
-  
-  // Safety check: if chaptersUsed is unreasonably high (from old character-based system), reset it
-  const safeChaptersUsed = chaptersUsed > 1000 ? 0 : chaptersUsed;
-  const chaptersRemaining = chapterLimit - safeChaptersUsed;
+  const chaptersUsed = userProfile?.audiobookChaptersUsed || 0;
+  const chaptersRemaining = chapterLimit - chaptersUsed;
 
   const canGenerate = () => {
     if (subscriptionStatus === 'free') return false;

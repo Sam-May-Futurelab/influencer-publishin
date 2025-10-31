@@ -130,10 +130,10 @@ async function checkAudiobookLimit(userId, chapterCount) {
 
     const now = new Date();
     const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-    const lastReset = userData.lastAudiobookCharactersReset;
+    const lastReset = userData.lastAudiobookChaptersReset;
     const needsReset = !lastReset || !lastReset.startsWith(currentMonth);
 
-    let chaptersUsed = needsReset ? 0 : (userData.audiobookCharactersUsed || 0);
+    let chaptersUsed = needsReset ? 0 : (userData.audiobookChaptersUsed || 0);
     const chaptersRemaining = limit - chaptersUsed;
 
     if (chapterCount > chaptersRemaining) {
@@ -144,8 +144,8 @@ async function checkAudiobookLimit(userId, chapterCount) {
     }
 
     await userRef.update({
-      audiobookCharactersUsed: needsReset ? chapterCount : chaptersUsed + chapterCount,
-      lastAudiobookCharactersReset: currentMonth,
+      audiobookChaptersUsed: needsReset ? chapterCount : chaptersUsed + chapterCount,
+      lastAudiobookChaptersReset: currentMonth,
     });
 
     return { allowed: true, charactersUsed: charactersUsed + characterCount, limit };

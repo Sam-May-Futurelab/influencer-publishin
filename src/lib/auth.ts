@@ -30,9 +30,9 @@ export interface UserProfile {
   // AI Book Generation Usage
   fullBookGenerationsUsed?: number;
   lastFullBookGenerationReset?: any;
-  // Audiobook Generation Usage
-  audiobookCharactersUsed?: number;
-  lastAudiobookCharactersReset?: any;
+  // Audiobook Generation Usage (chapter-based)
+  audiobookChaptersUsed?: number;
+  lastAudiobookChaptersReset?: any;
   // Writing Analytics
   writingStats?: {
     totalWords: number;
