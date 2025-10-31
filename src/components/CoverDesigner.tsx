@@ -869,7 +869,7 @@ const STOCK_IMAGES: StockImage[] = [
   },
   {
     id: 'crypto-9',
-    name: 'Digital Finance',
+    name: 'Crypto Trading',
     url: 'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=800&h=1280&fit=crop',
     category: 'crypto',
   },
@@ -1348,7 +1348,19 @@ export function CoverDesigner({
               <div
                 ref={canvasRef}
                 className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
-                style={getBackgroundStyle()}
+                style={{
+                  ...(design.backgroundType === 'gradient' && {
+                    backgroundImage: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
+                  }),
+                  ...(design.backgroundType === 'solid' && {
+                    backgroundColor: design.backgroundColor
+                  }),
+                  ...(design.backgroundType === 'image' && design.backgroundImage && {
+                    backgroundImage: `url(${design.backgroundImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  })
+                }}
               >
                 {/* Overlay */}
                 {design.backgroundType === 'image' && design.overlay && (
