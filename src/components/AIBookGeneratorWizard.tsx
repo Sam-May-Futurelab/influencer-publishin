@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sparkle, ArrowLeft, ArrowRight, Check } from '@phosphor-icons/react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Sparkle, ArrowLeft, ArrowRight, Check, CaretDown } from '@phosphor-icons/react';
 import { UserProfile } from '@/lib/auth';
 import { EbookProject } from '@/lib/types';
 import { toast } from 'sonner';
@@ -52,6 +53,8 @@ export function AIBookGeneratorWizard({
   const [isGeneratingOutline, setIsGeneratingOutline] = useState(false);
   const [isGeneratingBook, setIsGeneratingBook] = useState(false);
   const [generationProgress, setGenerationProgress] = useState({ current: 0, total: 0 });
+  const [completedChapters, setCompletedChapters] = useState<Array<{ title: string; content: string; order: number }>>([]);
+  const [expandedChapterId, setExpandedChapterId] = useState<number | null>(null);
 
   // Loading messages for book generation
   const loadingMessages = [
@@ -164,6 +167,7 @@ export function AIBookGeneratorWizard({
   const generateBook = async () => {
     setIsGeneratingBook(true);
     setGenerationProgress({ current: 0, total: outline.length });
+    setCompletedChapters([]); // Reset completed chapters
 
     try {
       // Create the project first
@@ -257,14 +261,23 @@ Write in a professional, engaging tone appropriate for the target audience.`,
             const data = await response.json();
             
             // Add chapter to project
-            newProject.chapters.push({
+            const newChapter = {
               id: `${projectId}-chapter-${i + 1}`,
               title: chapterOutline.title,
               content: data.content || '',
               order: chapterOutline.order,
               createdAt: new Date(),
               updatedAt: new Date(),
-            });
+            };
+            
+            newProject.chapters.push(newChapter);
+            
+            // Add to completed chapters for preview
+            setCompletedChapters(prev => [...prev, {
+              title: chapterOutline.title,
+              content: data.content || '',
+              order: chapterOutline.order
+            }]);
 
             success = true;
 
@@ -818,18 +831,50 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                         </div>
                       )}
 
-                      {/* Completed Chapters List */}
-                      {generationProgress.current > 1 && (
-                        <div className="mt-6 space-y-2">
-                          <p className="text-sm font-medium text-muted-foreground">Completed chapters:</p>
-                          <div className="space-y-1 max-h-[150px] overflow-y-auto">
-                            {outline.slice(0, generationProgress.current - 1).map((chapter) => (
-                              <div key={chapter.order} className="flex items-center gap-2 text-sm">
-                                <span className="text-green-500">✓</span>
-                                <span className="text-muted-foreground">Chapter {chapter.order}: {chapter.title}</span>
-                              </div>
-                            ))}
+                      {/* Completed Chapters - Expandable */}
+                      {completedChapters.length > 0 && (
+                        <div className="mt-6 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-semibold">Completed Chapters ({completedChapters.length}/{outline.length})</h4>
+                            <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400">
+                              <Check size={14} weight="bold" className="mr-1" />
+                              {completedChapters.length} Done
+                            </Badge>
                           </div>
+                          
+                          <Accordion type="single" collapsible className="space-y-2">
+                            {completedChapters.map((chapter) => (
+                              <AccordionItem 
+                                key={chapter.order} 
+                                value={`chapter-${chapter.order}`}
+                                className="border rounded-lg px-4 bg-card"
+                              >
+                                <AccordionTrigger className="hover:no-underline">
+                                  <div className="flex items-center gap-3 text-left">
+                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center">
+                                      <Check size={16} weight="bold" className="text-green-600 dark:text-green-400" />
+                                    </div>
+                                    <div>
+                                      <p className="font-medium">Chapter {chapter.order}</p>
+                                      <p className="text-sm text-muted-foreground line-clamp-1">{chapter.title}</p>
+                                    </div>
+                                  </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                  <div className="pt-4 pb-2 text-sm text-muted-foreground max-h-[300px] overflow-y-auto">
+                                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                                      {chapter.content.split('\n\n').map((paragraph, idx) => (
+                                        <p key={idx} className="mb-3">{paragraph}</p>
+                                      ))}
+                                    </div>
+                                    <div className="mt-4 pt-3 border-t text-xs">
+                                      Word count: ~{chapter.content.split(' ').length} words
+                                    </div>
+                                  </div>
+                                </AccordionContent>
+                              </AccordionItem>
+                            ))}
+                          </Accordion>
                         </div>
                       )}
                     </>
