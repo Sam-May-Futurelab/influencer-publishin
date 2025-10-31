@@ -1,3 +1,6 @@
+// Audiobook Management Endpoint
+// Handles audiobook generation queuing and status checking
+import { inngest } from '../src/lib/inngest-client';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import Cors from 'cors';
@@ -42,10 +45,62 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  const { action } = req.query; // 'queue' or 'status'
 
+  if (action === 'queue' && req.method === 'POST') {
+    return handleQueue(req, res);
+  } else if (action === 'status' && req.method === 'GET') {
+    return handleStatus(req, res);
+  } else {
+    return res.status(400).json({ error: 'Invalid action. Use ?action=queue (POST) or ?action=status (GET)' });
+  }
+}
+
+async function handleQueue(req, res) {
+  try {
+    const { userId, projectId, chapterId, chapterTitle, text, voice, quality } = req.body;
+
+    if (!userId || !projectId || !chapterId || !text || !voice) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: userId, projectId, chapterId, text, voice' 
+      });
+    }
+
+    console.log(`[Audiobook Queue] Triggering generation for chapter: ${chapterTitle}`);
+
+    // Send event to Inngest - this returns immediately
+    const { ids } = await inngest.send({
+      name: 'audiobook/generate.requested',
+      data: {
+        userId,
+        projectId,
+        chapterId,
+        chapterTitle,
+        text,
+        voice,
+        quality: quality || 'standard',
+      },
+    });
+
+    console.log(`[Audiobook Queue] Job queued with ID: ${ids[0]}`);
+
+    // Return immediately with job ID
+    res.status(202).json({
+      success: true,
+      jobId: ids[0],
+      message: 'Audiobook generation started',
+    });
+
+  } catch (error) {
+    console.error('[Audiobook Queue] Error:', error);
+    res.status(500).json({ 
+      error: 'Failed to queue audiobook generation',
+      details: error.message 
+    });
+  }
+}
+
+async function handleStatus(req, res) {
   try {
     const { projectId, chapterId } = req.query;
 
@@ -55,7 +110,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Check Firestore for audio URL (will be set by Inngest function when complete)
+    // Check Firestore for audio URL (set by Inngest function when complete)
     const db = getFirestore();
     const audioRef = db.collection('audiobooks').doc(`${projectId}_${chapterId}`);
     const audioDoc = await audioRef.get();

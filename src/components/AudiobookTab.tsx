@@ -220,7 +220,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
           setCurrentGeneratingChapter(baseTitle);
 
           // Queue the job
-          const queueResponse = await fetch('/api/audiobook-queue', {
+          const queueResponse = await fetch('/api/audiobook?action=queue', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -251,7 +251,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
             await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
             
             const statusResponse = await fetch(
-              `/api/audiobook-status?projectId=${project.id}&chapterId=${chapter.id}`
+              `/api/audiobook?action=status&projectId=${project.id}&chapterId=${chapter.id}`
             );
             
             if (!statusResponse.ok) {
