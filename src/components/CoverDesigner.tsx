@@ -1248,9 +1248,8 @@ export function CoverDesigner({
         cssString: gradientCSS
       });
       return {
-        background: gradientCSS,
         backgroundImage: gradientCSS,
-      } as React.CSSProperties;
+      };
     }
     
     if (design.usePreMadeCover && design.backgroundImage) {
@@ -1348,7 +1347,7 @@ export function CoverDesigner({
             <div className="w-full flex justify-center items-start py-4">
               <div
                 ref={canvasRef}
-                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm [background:unset]"
+                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
                 style={getBackgroundStyle()}
               >
                 {/* Overlay */}
