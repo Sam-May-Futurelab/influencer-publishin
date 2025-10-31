@@ -354,41 +354,49 @@ Write in a professional, engaging tone appropriate for the target audience.`,
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col p-0 gap-0">
-        <DialogHeader className="p-6 pb-4 border-b">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-purple-600 to-primary shadow-lg">
-              <Sparkle size={24} className="text-white" weight="fill" />
+      <DialogContent className="max-w-6xl max-h-[90vh] flex flex-col p-0 gap-0">
+        <DialogHeader className="p-8 pb-6 border-b bg-gradient-to-br from-background to-muted/20">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-purple-600 via-primary to-purple-600 shadow-xl">
+              <Sparkle size={28} className="text-white" weight="fill" />
             </div>
             <div className="flex-1">
-              <DialogTitle className="text-2xl">AI Book Generator</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-primary bg-clip-text text-transparent">
+                AI Book Generator
+              </DialogTitle>
+              <DialogDescription className="text-base">
                 Create a complete {numChapters}-chapter ebook with AI assistance
               </DialogDescription>
             </div>
           </div>
 
           {/* Progress Bar */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Step {step} of 4: {stepTitles[step]}</span>
-              <span>{Math.round(progressPercent)}% Complete</span>
+          <div className="space-y-3">
+            <div className="flex justify-between text-sm font-medium">
+              <span className="text-foreground">Step {step} of 4: {stepTitles[step]}</span>
+              <span className="text-primary">{Math.round(progressPercent)}% Complete</span>
             </div>
-            <Progress value={progressPercent} className="h-2" />
+            <div className="relative">
+              <Progress value={progressPercent} className="h-3" />
+            </div>
           </div>
 
           {/* Step Indicators */}
-          <div className="flex items-center justify-between mt-4 px-4">
+          <div className="flex items-center justify-between mt-6 px-2">
             {[1, 2, 3, 4].map((s) => (
               <div key={s} className="flex items-center">
-                <div className={`
-                  w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all
-                  ${step > s ? 'bg-primary text-white' : step === s ? 'bg-primary text-white ring-4 ring-primary/20' : 'bg-muted text-muted-foreground'}
-                `}>
-                  {step > s ? <Check size={18} weight="bold" /> : s}
-                </div>
+                <motion.div 
+                  className={`
+                    w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold transition-all shadow-lg
+                    ${step > s ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white' : step === s ? 'bg-gradient-to-br from-purple-600 to-primary text-white ring-4 ring-primary/30' : 'bg-muted text-muted-foreground'}
+                  `}
+                  animate={step === s ? { scale: [1, 1.05, 1] } : {}}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  {step > s ? <Check size={20} weight="bold" /> : s}
+                </motion.div>
                 {s < 4 && (
-                  <div className={`w-12 md:w-16 lg:w-20 h-1 mx-2 rounded ${step > s ? 'bg-primary' : 'bg-muted'}`} />
+                  <div className={`w-16 md:w-20 lg:w-24 h-1.5 mx-2 rounded-full transition-all ${step > s ? 'bg-gradient-to-r from-green-500 to-emerald-600' : 'bg-muted'}`} />
                 )}
               </div>
             ))}
@@ -396,7 +404,7 @@ Write in a professional, engaging tone appropriate for the target audience.`,
         </DialogHeader>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-8 bg-gradient-to-b from-transparent to-muted/10">
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div
@@ -404,17 +412,17 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
+                className="space-y-8"
               >
-                <div className="text-center mb-8">
-                  <h3 className="text-xl font-semibold mb-2">Let's start with the basics</h3>
-                  <p className="text-muted-foreground">Tell us about the book you want to create</p>
+                <div className="text-center mb-10">
+                  <h3 className="text-2xl font-bold mb-3">Let's start with the basics</h3>
+                  <p className="text-muted-foreground text-lg">Tell us about the book you want to create</p>
                 </div>
 
-                <div className="max-w-2xl mx-auto space-y-6">
+                <div className="max-w-3xl mx-auto space-y-8">
                   {/* Title */}
-                  <div className="space-y-2">
-                    <Label htmlFor="title">
+                  <div className="space-y-3">
+                    <Label htmlFor="title" className="text-base font-semibold">
                       Book Title <span className="text-destructive">*</span>
                     </Label>
                     <Input
@@ -422,13 +430,13 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                       placeholder="e.g., The Complete Guide to Social Media Marketing"
                       value={bookData.title}
                       onChange={(e) => setBookData({ ...bookData, title: e.target.value })}
-                      className="text-lg"
+                      className="text-lg h-12"
                     />
                   </div>
 
                   {/* Description */}
-                  <div className="space-y-2">
-                    <Label htmlFor="description">
+                  <div className="space-y-3">
+                    <Label htmlFor="description" className="text-base font-semibold">
                       Book Description <span className="text-destructive">*</span>
                     </Label>
                     <Textarea
@@ -436,8 +444,8 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                       placeholder="Describe what your book will cover, who it's for, and what readers will learn..."
                       value={bookData.description}
                       onChange={(e) => setBookData({ ...bookData, description: e.target.value })}
-                      rows={5}
-                      className="resize-none"
+                      rows={6}
+                      className="resize-none text-base"
                     />
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">
@@ -461,10 +469,10 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                   </div>
 
                   {/* Genre */}
-                  <div className="space-y-2">
-                    <Label htmlFor="genre">Genre (Optional)</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="genre" className="text-base font-semibold">Genre (Optional)</Label>
                     <Select value={bookData.genre} onValueChange={(value) => setBookData({ ...bookData, genre: value })}>
-                      <SelectTrigger id="genre">
+                      <SelectTrigger id="genre" className="h-12">
                         <SelectValue placeholder="Select a genre..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -484,38 +492,67 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                   </div>
 
                   {/* Target Audience */}
-                  <div className="space-y-2">
-                    <Label htmlFor="targetAudience">Target Audience (Optional)</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="targetAudience" className="text-base font-semibold">Target Audience (Optional)</Label>
                     <Input
                       id="targetAudience"
                       placeholder="e.g., Small business owners, Beginners, Professionals..."
                       value={bookData.targetAudience}
                       onChange={(e) => setBookData({ ...bookData, targetAudience: e.target.value })}
+                      className="h-12"
                     />
-                    <p className="text-sm text-muted-foreground">
-                      Who is this book for? This helps tailor the content and tone.
+                    <p className="text-sm text-muted-foreground flex items-start gap-2">
+                      <span className="text-primary">💡</span>
+                      <span>Who is this book for? This helps tailor the content and tone.</span>
                     </p>
                   </div>
 
-                  {/* Number of Chapters */}
-                  <div className="space-y-3">
-                    <Label>Number of Chapters</Label>
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="range"
-                        min="6"
-                        max="15"
-                        value={numChapters}
-                        onChange={(e) => setNumChapters(parseInt(e.target.value))}
-                        className="flex-1 h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
-                      />
-                      <Badge variant="secondary" className="text-base font-semibold min-w-[3rem] justify-center">
+                  {/* Number of Chapters - Enhanced Slider */}
+                  <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-purple-500/5 border border-primary/10">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-base font-semibold">Number of Chapters</Label>
+                      <motion.div
+                        key={numChapters}
+                        initial={{ scale: 1.2 }}
+                        animate={{ scale: 1 }}
+                        className="px-4 py-2 rounded-full bg-primary text-primary-foreground font-bold text-lg shadow-lg"
+                      >
                         {numChapters}
-                      </Badge>
+                      </motion.div>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      Recommended: 8-12 chapters for most ebooks
-                    </p>
+                    
+                    <div className="relative pt-2 pb-3">
+                      {/* Custom slider with gradient track */}
+                      <div className="relative">
+                        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-3 bg-gradient-to-r from-muted via-primary/20 to-muted rounded-full" />
+                        <div 
+                          className="absolute top-1/2 -translate-y-1/2 left-0 h-3 bg-gradient-to-r from-primary to-purple-500 rounded-full transition-all duration-300"
+                          style={{ width: `${((numChapters - 6) / (15 - 6)) * 100}%` }}
+                        />
+                        <input
+                          type="range"
+                          min="6"
+                          max="15"
+                          value={numChapters}
+                          onChange={(e) => setNumChapters(parseInt(e.target.value))}
+                          className="relative w-full h-3 bg-transparent appearance-none cursor-pointer z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:hover:scale-110"
+                        />
+                      </div>
+                      
+                      {/* Range markers */}
+                      <div className="flex justify-between mt-3 px-1">
+                        <span className="text-xs text-muted-foreground font-medium">6</span>
+                        <span className="text-xs text-muted-foreground font-medium">10</span>
+                        <span className="text-xs text-muted-foreground font-medium">15</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-2 text-sm">
+                      <span className="text-primary mt-0.5">💡</span>
+                      <span className="text-muted-foreground">
+                        <strong className="text-foreground">Recommended:</strong> 8-12 chapters for most ebooks. Longer books work better for comprehensive guides.
+                      </span>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -569,26 +606,53 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                           )}
                         </div>
 
-                        {/* Number of Chapters Slider */}
-                        <div className="space-y-3">
-                          <Label>Number of Chapters</Label>
-                          <div className="flex items-center gap-4">
-                            <input
-                              type="range"
-                              min="6"
-                              max="15"
-                              value={numChapters}
-                              onChange={(e) => setNumChapters(parseInt(e.target.value))}
-                              className="flex-1 h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
-                              disabled={isGeneratingOutline}
-                            />
-                            <Badge variant="secondary" className="text-base font-semibold min-w-[3rem] justify-center">
+                        {/* Number of Chapters Slider - Enhanced */}
+                        <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-purple-500/5 border border-primary/10">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-base font-semibold">Number of Chapters</Label>
+                            <motion.div
+                              key={numChapters}
+                              initial={{ scale: 1.2 }}
+                              animate={{ scale: 1 }}
+                              className="px-4 py-2 rounded-full bg-primary text-primary-foreground font-bold text-lg shadow-lg"
+                            >
                               {numChapters}
-                            </Badge>
+                            </motion.div>
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            Adjust the number of chapters before generating
-                          </p>
+                          
+                          <div className="relative pt-2 pb-3">
+                            {/* Custom slider with gradient track */}
+                            <div className="relative">
+                              <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-3 bg-gradient-to-r from-muted via-primary/20 to-muted rounded-full" />
+                              <div 
+                                className="absolute top-1/2 -translate-y-1/2 left-0 h-3 bg-gradient-to-r from-primary to-purple-500 rounded-full transition-all duration-300"
+                                style={{ width: `${((numChapters - 6) / (15 - 6)) * 100}%` }}
+                              />
+                              <input
+                                type="range"
+                                min="6"
+                                max="15"
+                                value={numChapters}
+                                onChange={(e) => setNumChapters(parseInt(e.target.value))}
+                                className="relative w-full h-3 bg-transparent appearance-none cursor-pointer z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:hover:scale-110"
+                                disabled={isGeneratingOutline}
+                              />
+                            </div>
+                            
+                            {/* Range markers */}
+                            <div className="flex justify-between mt-3 px-1">
+                              <span className="text-xs text-muted-foreground font-medium">6</span>
+                              <span className="text-xs text-muted-foreground font-medium">10</span>
+                              <span className="text-xs text-muted-foreground font-medium">15</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-start gap-2 text-sm">
+                            <span className="text-primary mt-0.5">💡</span>
+                            <span className="text-muted-foreground">
+                              Adjust the number of chapters before generating your outline
+                            </span>
+                          </div>
                         </div>
 
                         {/* Generate Button */}
@@ -808,74 +872,150 @@ Write in a professional, engaging tone appropriate for the target audience.`,
                     </>
                   ) : (
                     <>
-                      {/* Generation Progress with New AILoading Component */}
-                      <AILoading
-                        progress={(generationProgress.current / generationProgress.total) * 100}
-                        currentMessage={currentLoadingMessage}
-                        variant="book"
-                        messages={[
-                          'AI is trained on millions of books and articles',
-                          'Each chapter takes about 30-60 seconds to generate',
-                          'You can edit everything after generation completes',
-                          'Your book will be automatically saved',
-                        ]}
-                      />
-
-                      {/* Current Chapter Being Generated */}
-                      {generationProgress.current > 0 && generationProgress.current <= outline.length && (
-                        <div className="mt-6 p-4 bg-muted/50 rounded-lg border">
-                          <p className="text-sm font-medium mb-2">Currently generating:</p>
-                          <p className="text-lg font-semibold text-primary">
-                            Chapter {generationProgress.current}: {outline[generationProgress.current - 1]?.title}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Completed Chapters - Expandable */}
-                      {completedChapters.length > 0 && (
-                        <div className="mt-6 space-y-3">
-                          <div className="flex items-center justify-between">
-                            <h4 className="text-sm font-semibold">Completed Chapters ({completedChapters.length}/{outline.length})</h4>
-                            <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400">
-                              <Check size={14} weight="bold" className="mr-1" />
-                              {completedChapters.length} Done
-                            </Badge>
+                      {/* Generation Progress with Enhanced AILoading Component */}
+                      <div className="relative">
+                        <AILoading
+                          progress={(generationProgress.current / generationProgress.total) * 100}
+                          currentMessage={currentLoadingMessage}
+                          variant="book"
+                          messages={[
+                            'AI is trained on millions of books and articles',
+                            'Each chapter takes about 30-60 seconds to generate',
+                            'You can edit everything after generation completes',
+                            'Your book will be automatically saved',
+                          ]}
+                        />
+                        
+                        {/* Enhanced Status Card */}
+                        <motion.div 
+                          className="mt-6 p-5 rounded-xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 border-primary/20 shadow-lg"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                        >
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                              <Sparkle size={20} weight="fill" className="text-primary" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">AI is creating your content</p>
+                              <p className="text-xs text-muted-foreground">Chapter {generationProgress.current} of {generationProgress.total}</p>
+                            </div>
                           </div>
                           
-                          <Accordion type="single" collapsible className="space-y-2">
-                            {completedChapters.map((chapter) => (
-                              <AccordionItem 
-                                key={chapter.order} 
-                                value={`chapter-${chapter.order}`}
-                                className="border rounded-lg px-4 bg-card"
+                          {generationProgress.current > 0 && generationProgress.current <= outline.length && (
+                            <motion.div
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              className="pl-2 border-l-4 border-primary"
+                            >
+                              <p className="text-sm font-medium mb-1">Currently writing:</p>
+                              <p className="text-base font-semibold text-primary">
+                                {outline[generationProgress.current - 1]?.title}
+                              </p>
+                            </motion.div>
+                          )}
+                        </motion.div>
+                      </div>
+
+                      {/* Completed Chapters - Enhanced with Animations */}
+                      {completedChapters.length > 0 && (
+                        <motion.div 
+                          className="mt-8 space-y-4"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                        >
+                          <div className="flex items-center justify-between px-1">
+                            <div className="flex items-center gap-2">
+                              <motion.div
+                                animate={{ rotate: [0, 10, -10, 0] }}
+                                transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
                               >
-                                <AccordionTrigger className="hover:no-underline">
-                                  <div className="flex items-center gap-3 text-left">
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center">
-                                      <Check size={16} weight="bold" className="text-green-600 dark:text-green-400" />
+                                <Check size={20} weight="bold" className="text-green-600 dark:text-green-400" />
+                              </motion.div>
+                              <h4 className="text-base font-semibold">
+                                Completed Chapters
+                              </h4>
+                            </div>
+                            <motion.div
+                              key={completedChapters.length}
+                              initial={{ scale: 1.3, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                            >
+                              <Badge variant="secondary" className="bg-green-500/15 text-green-700 dark:text-green-400 border border-green-500/30 px-3 py-1">
+                                {completedChapters.length} / {outline.length}
+                              </Badge>
+                            </motion.div>
+                          </div>
+                          
+                          {/* Helpful hint */}
+                          <motion.div 
+                            className="flex items-start gap-2 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3 }}
+                          >
+                            <span className="text-lg">👇</span>
+                            <p className="text-sm text-muted-foreground">
+                              <strong className="text-foreground">Click any chapter below</strong> to preview the generated content while you wait
+                            </p>
+                          </motion.div>
+                          
+                          <Accordion type="single" collapsible className="space-y-3">
+                            {completedChapters.map((chapter, index) => (
+                              <motion.div
+                                key={chapter.order}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                              >
+                                <AccordionItem 
+                                  value={`chapter-${chapter.order}`}
+                                  className="border-2 border-green-500/20 rounded-xl px-5 py-1 bg-gradient-to-br from-card to-green-500/5 shadow-sm hover:shadow-md hover:border-green-500/30 transition-all"
+                                >
+                                  <AccordionTrigger className="hover:no-underline py-4">
+                                    <div className="flex items-center gap-4 text-left w-full">
+                                      <motion.div 
+                                        className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg"
+                                        whileHover={{ scale: 1.1, rotate: 5 }}
+                                        transition={{ type: "spring", stiffness: 400 }}
+                                      >
+                                        <Check size={20} weight="bold" className="text-white" />
+                                      </motion.div>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-semibold text-base mb-1">Chapter {chapter.order}</p>
+                                        <p className="text-sm text-muted-foreground line-clamp-1">{chapter.title}</p>
+                                      </div>
+                                      <Badge variant="outline" className="hidden sm:flex text-xs">
+                                        ~{chapter.content.split(' ').length} words
+                                      </Badge>
                                     </div>
-                                    <div>
-                                      <p className="font-medium">Chapter {chapter.order}</p>
-                                      <p className="text-sm text-muted-foreground line-clamp-1">{chapter.title}</p>
+                                  </AccordionTrigger>
+                                  <AccordionContent>
+                                    <div className="pt-4 pb-3 text-sm">
+                                      <div className="prose prose-sm dark:prose-invert max-w-none max-h-[400px] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-muted [&::-webkit-scrollbar-thumb]:bg-primary/30 [&::-webkit-scrollbar-thumb]:rounded-full">
+                                        {chapter.content.split('\n\n').map((paragraph, idx) => (
+                                          <motion.p 
+                                            key={idx} 
+                                            className="mb-4 leading-relaxed"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: idx * 0.05 }}
+                                          >
+                                            {paragraph}
+                                          </motion.p>
+                                        ))}
+                                      </div>
+                                      <div className="mt-5 pt-4 border-t border-green-500/20 flex items-center justify-between text-xs text-muted-foreground">
+                                        <span>Generated with AI • Editable after completion</span>
+                                        <span className="font-medium">{chapter.content.split(' ').length} words</span>
+                                      </div>
                                     </div>
-                                  </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                  <div className="pt-4 pb-2 text-sm text-muted-foreground max-h-[300px] overflow-y-auto">
-                                    <div className="prose prose-sm dark:prose-invert max-w-none">
-                                      {chapter.content.split('\n\n').map((paragraph, idx) => (
-                                        <p key={idx} className="mb-3">{paragraph}</p>
-                                      ))}
-                                    </div>
-                                    <div className="mt-4 pt-3 border-t text-xs">
-                                      Word count: ~{chapter.content.split(' ').length} words
-                                    </div>
-                                  </div>
-                                </AccordionContent>
-                              </AccordionItem>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              </motion.div>
                             ))}
                           </Accordion>
-                        </div>
+                        </motion.div>
                       )}
                     </>
                   )}
@@ -886,15 +1026,17 @@ Write in a professional, engaging tone appropriate for the target audience.`,
         </div>
 
         {/* Footer with Navigation */}
-        <div className="border-t p-6 flex items-center justify-between">
+        <div className="border-t bg-gradient-to-br from-background to-muted/20 p-8 flex items-center justify-between">
           <Button
             variant="outline"
             onClick={step === 1 ? handleClose : handleBack}
             disabled={isGeneratingOutline || isGeneratingBook}
+            size="lg"
+            className="px-6"
           >
             {step === 1 ? 'Cancel' : (
               <>
-                <ArrowLeft size={16} />
+                <ArrowLeft size={18} className="mr-2" />
                 Back
               </>
             )}
@@ -906,10 +1048,11 @@ Write in a professional, engaging tone appropriate for the target audience.`,
               <Button
                 onClick={handleContinue}
                 disabled={isGeneratingOutline || isGeneratingBook}
-                className="bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90"
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90 px-8 shadow-lg hover:shadow-xl transition-all"
               >
                 {step === 4 ? 'Generate Book' : 'Continue'}
-                <ArrowRight size={16} />
+                <ArrowRight size={18} className="ml-2" />
               </Button>
             )}
           </div>
