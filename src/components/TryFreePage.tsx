@@ -205,23 +205,24 @@ export function TryFreePage() {
                     </p>
                   </div>
 
-                  <Button
-                    onClick={handleGenerate}
-                    disabled={generating || !title.trim()}
-                    className="w-full h-16 text-lg bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 relative overflow-hidden"
-                  >
-                    {!generating ? (
+                  {/* Generate Button - hide when generating */}
+                  {!generating && (
+                    <Button
+                      onClick={handleGenerate}
+                      disabled={!title.trim()}
+                      className="w-full h-16 text-lg bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
+                    >
                       <div className="flex items-center gap-2">
                         <Lightning size={22} weight="fill" />
                         Generate Free Preview
                         <ArrowRight size={22} weight="bold" />
                       </div>
-                    ) : null}
-                  </Button>
+                    </Button>
+                  )}
 
-                  {/* Show AILoading below button when generating */}
+                  {/* Show AILoading when generating */}
                   {generating && (
-                    <div className="mt-8">
+                    <div className="mt-4">
                       <AILoading />
                     </div>
                   )}
