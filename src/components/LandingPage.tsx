@@ -298,7 +298,7 @@ export function LandingPage() {
                   <Mic className="w-8 h-8 text-white" />
                 </div>
                 <div className="text-center">
-                  <div className="text-sm font-bold text-[#9b87b8] mb-2">STEP 4</div>
+                  <div className="text-sm font-bold text-[#9b87b8] mb-2">STEP 4 (Optional)</div>
                   <h3 className="font-bold text-lg mb-2">Create Audiobook</h3>
                   <p className="text-sm text-gray-600">
                     Generate pro audiobook with 9 AI voices
