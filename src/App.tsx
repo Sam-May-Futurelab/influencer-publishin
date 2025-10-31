@@ -964,6 +964,7 @@ function App() {
                         onBrandCustomize={() => setShowBrandCustomizer(true)}
                         onUpgradeClick={() => setCurrentSection('profile')}
                         onDeleteProject={handleDeleteCurrentProject}
+                        onProjectsChanged={reloadProjects}
                         onBack={() => {
                           // Go back to where we came from (dashboard, projects, or templates)
                           if (currentSection === 'projects') {

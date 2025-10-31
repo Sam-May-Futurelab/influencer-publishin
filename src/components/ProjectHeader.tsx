@@ -31,9 +31,10 @@ interface ProjectHeaderProps {
   onDeleteProject?: () => void;
   onBack?: () => void;
   backLabel?: string;
+  onProjectsChanged?: () => Promise<void>;
 }
 
-export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUpgradeClick, onDeleteProject, onBack, backLabel }: ProjectHeaderProps) {
+export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUpgradeClick, onDeleteProject, onBack, backLabel, onProjectsChanged }: ProjectHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
@@ -392,7 +393,7 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
               Convert your ebook chapters to audio files using AI voice synthesis
             </DialogDescription>
           </DialogHeader>
-          <AudiobookTab project={project} />
+          <AudiobookTab project={project} onProjectsChanged={onProjectsChanged} />
         </DialogContent>
       </Dialog>
 

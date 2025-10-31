@@ -16,6 +16,7 @@ import { createAudioVersionProject } from '@/lib/projects';
 
 interface AudiobookTabProps {
   project: EbookProject;
+  onProjectsChanged?: () => Promise<void>;
 }
 
 export type Voice = 'alloy' | 'ash' | 'coral' | 'echo' | 'fable' | 'nova' | 'onyx' | 'sage' | 'shimmer';
@@ -51,7 +52,7 @@ async function mergeAudioBuffers(blobs: Blob[]): Promise<Blob> {
   return new Blob([mergedBuffer], { type: 'audio/mpeg' });
 }
 
-export function AudiobookTab({ project }: AudiobookTabProps) {
+export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) {
   const { userProfile, user } = useAuth();
   const navigate = useNavigate();
   const [selectedVoice, setSelectedVoice] = useState<Voice>('nova');
@@ -151,6 +152,11 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
         id: 'create-audio',
         description: `Project split into ${audioProject.chapters.length} chapters`
       });
+      
+      // Reload projects to ensure new project is in state
+      if (onProjectsChanged) {
+        await onProjectsChanged();
+      }
       
       // Navigate to the new audio project
       navigate(`/dashboard/project/${audioProject.id}`);

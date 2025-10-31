@@ -284,15 +284,15 @@ export const createAudioVersionProject = async (
       return [chapter];
     }
     
-    // Split into chunks
-    const chunks = splitIntoChunks(cleanContent, 4000);
+    // Split into chunks (use 3800 to be extra safe and account for any remaining HTML)
+    const chunks = splitIntoChunks(cleanContent, 3800);
     
     // Create new chapters for each chunk
     return chunks.map((chunk, index) => ({
       ...chapter,
       id: `${chapter.id}-part-${index + 1}`,
       title: `${chapter.title} (Part ${index + 1})`,
-      content: chunk,
+      content: chunk, // Use the cleaned chunk content
       order: chapter.order + (index * 0.01) // Maintain order with decimals
     }));
   });
