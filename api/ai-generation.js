@@ -489,6 +489,12 @@ async function handleAudiobookGeneration(req, res) {
   }
 
   try {
+    console.log('[Audiobook] ===== STARTING GENERATION =====');
+    console.log('[Audiobook] Chapter:', chapterTitle);
+    console.log('[Audiobook] Text length (raw):', text?.length || 0);
+    console.log('[Audiobook] Voice:', voice);
+    console.log('[Audiobook] Quality:', selectedQuality);
+    
     // Strip HTML tags and clean the text
     const cleanText = text
       .replace(/<[^>]*>/g, '') // Remove HTML tags
@@ -499,19 +505,31 @@ async function handleAudiobookGeneration(req, res) {
       .replace(/\s+/g, ' ') // Normalize whitespace
       .trim();
 
+    console.log('[Audiobook] Text length (cleaned):', cleanText.length);
+    
+    if (!cleanText) {
+      console.error('[Audiobook] ERROR: Empty text after cleaning!');
+      return res.status(400).json({ error: 'Chapter content is empty' });
+    }
+
     const model = selectedQuality === 'hd' ? 'tts-1-hd' : 'tts-1';
+    console.log('[Audiobook] Model:', model);
     
     // Check if we need to split into chunks
     if (cleanText.length <= 4000) {
+      console.log('[Audiobook] Single chunk generation (under 4000 chars)');
       // Single chunk - simple case
+      console.log('[Audiobook] Calling OpenAI TTS API...');
       const mp3 = await openai.audio.speech.create({
         model: model,
         voice: voice,
         input: cleanText,
         response_format: 'mp3',
       });
+      console.log('[Audiobook] OpenAI API call successful');
 
       const buffer = Buffer.from(await mp3.arrayBuffer());
+      console.log('[Audiobook] Buffer created, size:', buffer.length);
 
       res.setHeader('Content-Type', 'audio/mpeg');
       res.setHeader('Content-Disposition', `attachment; filename="${chapterTitle || chapterId || 'chapter'}.mp3"`);
@@ -530,6 +548,7 @@ async function handleAudiobookGeneration(req, res) {
       // Generate audio for each chunk
       for (let i = 0; i < chunks.length; i++) {
         console.log(`[Audiobook] Generating chunk ${i + 1}/${chunks.length} (${chunks[i].length} chars)`);
+        console.log(`[Audiobook] Calling OpenAI TTS API for chunk ${i + 1}...`);
         
         const mp3 = await openai.audio.speech.create({
           model: model,
@@ -538,7 +557,9 @@ async function handleAudiobookGeneration(req, res) {
           response_format: 'mp3',
         });
         
+        console.log(`[Audiobook] Chunk ${i + 1} API call successful`);
         const buffer = Buffer.from(await mp3.arrayBuffer());
+        console.log(`[Audiobook] Chunk ${i + 1} buffer created, size:`, buffer.length);
         audioBuffers.push(buffer);
       }
       
