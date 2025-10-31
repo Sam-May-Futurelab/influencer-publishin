@@ -325,9 +325,28 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
         }]);
       }
 
-      toast.success('Audiobook generated successfully!', {
-        description: `All ${sortedChapters.length} chapters are ready to download`
+      toast.success('🎉 Audiobook generated successfully!', {
+        description: `All ${sortedChapters.length} chapters are ready. Scroll down to listen or download.`,
+        duration: 6000,
+        action: {
+          label: 'View Audiobooks',
+          onClick: () => {
+            // Scroll to the audiobooks section
+            const audiobooksSection = document.getElementById('generated-audiobooks');
+            if (audiobooksSection) {
+              audiobooksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }
+        }
       });
+
+      // Auto-scroll to show the generated audiobooks
+      setTimeout(() => {
+        const audiobooksSection = document.getElementById('generated-audiobooks');
+        if (audiobooksSection) {
+          audiobooksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500);
     } catch (error) {
       console.error('Audiobook generation failed:', error);
       toast.error('Failed to generate audiobook', {
@@ -480,19 +499,29 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
       {isGenerating && (
         <Card className="neomorph-flat border-0">
           <CardContent className="pt-6">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Generating: {currentGeneratingChapter}</span>
-                <span className="font-semibold">{Math.round(generationProgress)}%</span>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="animate-pulse">
+                  <SpeakerHigh size={24} className="text-primary" weight="duotone" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between text-sm mb-1">
+                    <span className="text-muted-foreground">Generating: {currentGeneratingChapter}</span>
+                    <span className="font-semibold">{Math.round(generationProgress)}%</span>
+                  </div>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-primary to-accent"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${generationProgress}%` }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="h-2 bg-muted rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-gradient-to-r from-primary to-accent"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${generationProgress}%` }}
-                  transition={{ duration: 0.3 }}
-                />
-              </div>
+              <p className="text-xs text-muted-foreground">
+                This may take 20-30 seconds per chapter. You can stay on this page or navigate away - your audiobooks will be saved automatically.
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -500,12 +529,20 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
 
       {/* Generated Chapters */}
       {generatedChapters.length > 0 && (
-        <Card className="neomorph-flat border-0">
+        <Card id="generated-audiobooks" className="neomorph-flat border-0">
           <CardHeader>
-            <CardTitle className="text-lg">Your Audiobook</CardTitle>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <SpeakerHigh size={20} className="text-primary" />
+              Your Audiobook
+              <Badge variant="secondary" className="ml-auto">
+                {generatedChapters.length} chapter{generatedChapters.length !== 1 ? 's' : ''}
+              </Badge>
+            </CardTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              Your audiobooks are saved and can also be found in "My Books" page
+            </p>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {generatedChapters.map((chapter) => (
+          <CardContent className="space-y-3">{generatedChapters.map((chapter) => (
               <div key={chapter.chapterId} className="p-4 neomorph-inset rounded-lg">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold">{chapter.title}</h3>
