@@ -1,7 +1,6 @@
 import { inngest } from '../src/lib/inngest-client';
 import OpenAI from 'openai';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getFirestore, doc, updateDoc, increment, setDoc } from 'firebase/firestore';
+import { adminDb, adminStorage } from './firebase-admin';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -73,92 +72,83 @@ export const generateAudiobook = inngest.createFunction(
       return cleaned;
     });
 
-    // Step 2: Split into chunks if needed
-    const chunks = await step.run('split-chunks', async () => {
+    // Step 2: Generate and upload audio
+    const audioUrl = await step.run('generate-and-upload-audio', async () => {
+      // Split into chunks if needed
       const textChunks = splitIntoChunks(cleanedText);
       console.log(`[Inngest] Split into ${textChunks.length} chunk(s)`);
-      return textChunks;
-    });
-
-    // Step 3: Generate audio for each chunk (with retries built-in)
-    const audioBuffers: Uint8Array[] = [];
-    for (let i = 0; i < chunks.length; i++) {
-      const buffer = await step.run(`generate-audio-chunk-${i}`, async () => {
-        console.log(`[Inngest] Generating audio for chunk ${i + 1}/${chunks.length}...`);
+      
+      // Generate audio for each chunk
+      const audioBuffers: Buffer[] = [];
+      for (let i = 0; i < textChunks.length; i++) {
+        console.log(`[Inngest] Generating audio for chunk ${i + 1}/${textChunks.length}...`);
         
         const response = await openai.audio.speech.create({
           model: quality === 'premium' ? 'tts-1-hd' : 'tts-1',
           voice: voice as any,
-          input: chunks[i],
+          input: textChunks[i],
         });
 
         const arrayBuffer = await response.arrayBuffer();
-        const buffer = new Uint8Array(arrayBuffer);
+        const buffer = Buffer.from(arrayBuffer);
         
         console.log(`[Inngest] Chunk ${i + 1} generated, size: ${buffer.length} bytes`);
-        return buffer;
-      });
+        audioBuffers.push(buffer);
+      }
       
-      audioBuffers.push(buffer);
-    }
-
-    // Step 4: Merge chunks if multiple
-    const finalAudio = await step.run('merge-audio', async () => {
+      // Merge chunks if multiple
+      let finalAudio: Buffer;
       if (audioBuffers.length === 1) {
-        return audioBuffers[0];
+        finalAudio = audioBuffers[0];
+      } else {
+        console.log(`[Inngest] Merging ${audioBuffers.length} audio chunks...`);
+        finalAudio = Buffer.concat(audioBuffers);
+        console.log(`[Inngest] Merged audio size: ${finalAudio.length} bytes`);
       }
       
-      console.log(`[Inngest] Merging ${audioBuffers.length} audio chunks...`);
-      const totalLength = audioBuffers.reduce((acc, buf) => acc + buf.length, 0);
-      const merged = new Uint8Array(totalLength);
-      
-      let offset = 0;
-      for (const buffer of audioBuffers) {
-        merged.set(buffer, offset);
-        offset += buffer.length;
-      }
-      
-      console.log(`[Inngest] Merged audio size: ${merged.length} bytes`);
-      return merged;
-    });
-
-    // Step 5: Upload to Firebase Storage
-    const audioUrl = await step.run('upload-to-storage', async () => {
+      // Upload to Firebase Storage
       console.log(`[Inngest] Uploading to Firebase Storage...`);
-      
-      // Initialize Firebase Storage (assuming Firebase is already initialized)
-      const storage = getStorage();
       const fileName = `audiobooks/${userId}/${projectId}/${chapterId}.mp3`;
-      const storageRef = ref(storage, fileName);
+      const bucket = adminStorage.bucket();
+      const file = bucket.file(fileName);
       
-      // Upload the audio file
-      await uploadBytes(storageRef, finalAudio, {
+      await file.save(finalAudio, {
         contentType: 'audio/mpeg',
+        metadata: {
+          metadata: {
+            chapterId,
+            chapterTitle,
+            projectId,
+            userId,
+          }
+        }
       });
+      
+      // Make file publicly accessible
+      await file.makePublic();
       
       // Get download URL
-      const downloadUrl = await getDownloadURL(storageRef);
+      const downloadUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
       console.log(`[Inngest] Upload complete: ${downloadUrl}`);
       
-      return downloadUrl;
+      return { downloadUrl, audioSize: finalAudio.length };
     });
 
-    // Step 6: Update user's audiobook usage count and save result
+    // Step 3: Update user's audiobook usage count and save result
     await step.run('update-usage-and-save', async () => {
       console.log(`[Inngest] Updating usage count for user ${userId}`);
       
-      const db = getFirestore();
-      const userRef = doc(db, 'users', userId);
+      const userRef = adminDb.collection('users').doc(userId);
       
-      await updateDoc(userRef, {
-        audiobookChaptersUsed: increment(1),
+      await userRef.update({
+        audiobookChaptersUsed: (await userRef.get()).data()?.audiobookChaptersUsed || 0 + 1,
       });
 
       // Save the audio URL to Firestore for status polling
-      const audioRef = doc(db, 'audiobooks', `${projectId}_${chapterId}`);
-      await setDoc(audioRef, {
-        audioUrl,
-        audioSize: finalAudio.length,
+      const audioRef = adminDb.collection('audiobooks').doc(`${projectId}_${chapterId}`);
+      await audioRef.set({
+        audioUrl: audioUrl.downloadUrl,
+        audioSize: audioUrl.audioSize,
         chapterId,
         chapterTitle,
         projectId,
@@ -173,10 +163,10 @@ export const generateAudiobook = inngest.createFunction(
 
     return {
       success: true,
-      audioUrl,
+      audioUrl: audioUrl.downloadUrl,
       chapterId,
       chapterTitle,
-      audioSize: finalAudio.length,
+      audioSize: audioUrl.audioSize,
     };
   }
 );

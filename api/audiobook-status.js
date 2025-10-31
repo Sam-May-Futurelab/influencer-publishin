@@ -1,5 +1,21 @@
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 import Cors from 'cors';
+
+// Initialize Firebase Admin
+if (getApps().length === 0) {
+  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT 
+    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+    : undefined;
+
+  if (serviceAccount) {
+    initializeApp({
+      credential: cert(serviceAccount),
+    });
+  } else {
+    initializeApp();
+  }
+}
 
 const cors = Cors({
   methods: ['POST', 'GET', 'HEAD', 'OPTIONS'],
@@ -41,10 +57,10 @@ export default async function handler(req, res) {
 
     // Check Firestore for audio URL (will be set by Inngest function when complete)
     const db = getFirestore();
-    const audioRef = doc(db, 'audiobooks', `${projectId}_${chapterId}`);
-    const audioDoc = await getDoc(audioRef);
+    const audioRef = db.collection('audiobooks').doc(`${projectId}_${chapterId}`);
+    const audioDoc = await audioRef.get();
 
-    if (!audioDoc.exists()) {
+    if (!audioDoc.exists) {
       return res.status(200).json({
         status: 'processing',
         message: 'Audiobook generation in progress',
