@@ -14,7 +14,7 @@ interface AudiobookTabProps {
   project: EbookProject;
 }
 
-export type Voice = 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
+export type Voice = 'alloy' | 'ash' | 'ballad' | 'coral' | 'echo' | 'fable' | 'nova' | 'onyx' | 'sage' | 'shimmer';
 export type Quality = 'standard' | 'hd';
 
 interface GeneratedChapter {
@@ -42,24 +42,22 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
     return sum + (chapter.content?.length || 0);
   }, 0);
 
-  // Calculate cost
-  const costPerThousand = selectedQuality === 'hd' ? 0.030 : 0.015;
-  const estimatedCost = (totalCharacters / 1000) * costPerThousand;
+  const totalChapters = project.chapters.length;
 
-  // Get tier limits
+  // Get tier limits (chapter-based)
   const getTierLimit = () => {
     if (subscriptionStatus === 'free') return 0;
-    if (subscriptionStatus === 'creator') return 100000;
-    return 500000; // premium
+    if (subscriptionStatus === 'creator') return 25;
+    return 50; // premium
   };
 
-  const characterLimit = getTierLimit();
-  const charactersUsed = userProfile?.audiobookCharactersUsed || 0;
-  const charactersRemaining = characterLimit - charactersUsed;
+  const chapterLimit = getTierLimit();
+  const chaptersUsed = userProfile?.audiobookCharactersUsed || 0; // Will rename this field
+  const chaptersRemaining = chapterLimit - chaptersUsed;
 
   const canGenerate = () => {
     if (subscriptionStatus === 'free') return false;
-    if (totalCharacters > charactersRemaining) return false;
+    if (totalChapters > chaptersRemaining) return false;
     return true;
   };
 
@@ -70,8 +68,8 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
           description: 'Upgrade to Creator or Premium to generate audiobooks'
         });
       } else {
-        toast.error('Not enough character allowance', {
-          description: `You need ${totalCharacters.toLocaleString()} characters but only have ${charactersRemaining.toLocaleString()} remaining this month`
+        toast.error('Not enough chapter allowance', {
+          description: `You need ${totalChapters} chapters but only have ${chaptersRemaining} remaining this month`
         });
       }
       return;
@@ -89,7 +87,7 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
         setCurrentGeneratingChapter(chapter.title);
         setGenerationProgress(((i + 1) / sortedChapters.length) * 100);
 
-        // Call API to generate audio
+        // Call API to generate audio (only pass chapterCount on first chapter for limit check)
         const response = await fetch('/api/ai-generation?type=audiobook', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -100,6 +98,7 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
             chapterId: chapter.id,
             chapterTitle: chapter.title,
             userId: userId,
+            chapterCount: i === 0 ? sortedChapters.length : undefined,
           }),
         });
 
@@ -135,23 +134,23 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
   return (
     <div className="space-y-6">
       {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div className="p-3 neomorph-inset rounded-lg">
           <div className="text-xs text-muted-foreground mb-1">Chapters</div>
-          <div className="text-lg font-bold text-foreground">{project.chapters.length}</div>
+          <div className="text-lg font-bold text-foreground">{totalChapters}</div>
         </div>
         <div className="p-3 neomorph-inset rounded-lg">
           <div className="text-xs text-muted-foreground mb-1">Characters</div>
           <div className="text-lg font-bold text-foreground">{totalCharacters.toLocaleString()}</div>
         </div>
         <div className="p-3 neomorph-inset rounded-lg">
-          <div className="text-xs text-muted-foreground mb-1">Est. Cost</div>
-          <div className="text-lg font-bold text-foreground">${estimatedCost.toFixed(2)}</div>
-        </div>
-        <div className="p-3 neomorph-inset rounded-lg">
           <div className="text-xs text-muted-foreground mb-1">Remaining</div>
           <div className="text-lg font-bold text-foreground">
-            {characterLimit === 0 ? '0' : charactersRemaining.toLocaleString()}
+            {chapterLimit === 0 ? (
+              <span className="text-orange-600">Upgrade</span>
+            ) : (
+              `${chaptersRemaining}/${chapterLimit}`
+            )}
           </div>
         </div>
       </div>
@@ -160,15 +159,16 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
       {subscriptionStatus === 'free' && (
         <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg">
           <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
-            Audiobooks are a premium feature. Upgrade to Creator or Premium to generate audiobooks.
+            Audiobooks are available on Creator and Premium plans. Upgrade to start generating audiobooks.
           </p>
         </div>
       )}
 
-      {subscriptionStatus !== 'free' && totalCharacters > charactersRemaining && (
+      {subscriptionStatus !== 'free' && totalChapters > chaptersRemaining && (
         <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg">
           <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
-            This book requires {totalCharacters.toLocaleString()} characters but you only have {charactersRemaining.toLocaleString()} remaining this month.
+            This book requires {totalChapters} chapters but you only have {chaptersRemaining} remaining this month.
+            {subscriptionStatus === 'creator' && ' Upgrade to Premium for 50 chapters/month.'}
           </p>
         </div>
       )}
@@ -201,7 +201,7 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
                   }`}
                 >
                   <div className="font-semibold mb-1">Standard</div>
-                  <div className="text-xs text-muted-foreground">$0.015 / 1K chars</div>
+                  <div className="text-xs text-muted-foreground">Good quality</div>
                   <Badge variant="secondary" className="mt-2 text-xs">Recommended</Badge>
                 </button>
                 <button
@@ -213,8 +213,8 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
                   }`}
                 >
                   <div className="font-semibold mb-1">HD</div>
-                  <div className="text-xs text-muted-foreground">$0.030 / 1K chars</div>
-                  <Badge variant="secondary" className="mt-2 text-xs">Premium</Badge>
+                  <div className="text-xs text-muted-foreground">Best quality</div>
+                  <Badge variant="secondary" className="mt-2 text-xs">High-Def</Badge>
                 </button>
               </div>
             </div>
@@ -228,11 +228,11 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
                 size="lg"
               >
                 <Sparkle size={20} weight="fill" />
-                {isGenerating ? 'Generating...' : `Generate Audiobook ($${estimatedCost.toFixed(2)})`}
+                {isGenerating ? 'Generating...' : 'Generate Audiobook'}
               </Button>
               {canGenerate() && !isGenerating && (
                 <p className="text-xs text-muted-foreground text-center mt-2">
-                  Will use {totalCharacters.toLocaleString()} of {charactersRemaining.toLocaleString()} available characters
+                  Will use {totalChapters} of {chaptersRemaining} available chapters
                 </p>
               )}
             </div>

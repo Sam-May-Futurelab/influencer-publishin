@@ -2,34 +2,44 @@ import { useState } from 'react';
 import { SpeakerHigh, Play, Pause } from '@phosphor-icons/react';
 import { Voice } from './AudiobookTab';
 import { motion } from 'framer-motion';
+import { Button } from './ui/button';
 
 interface VoiceSelectorProps {
   selectedVoice: Voice;
   onSelectVoice: (voice: Voice) => void;
 }
 
-const voices: { id: Voice; name: string; description: string; gender: string }[] = [
+const voices: { id: Voice; name: string; description: string; gender: 'Male' | 'Female' | 'Neutral' }[] = [
   { id: 'alloy', name: 'Alloy', description: 'Neutral, versatile voice', gender: 'Neutral' },
+  { id: 'ash', name: 'Ash', description: 'Clear, articulate male voice', gender: 'Male' },
+  { id: 'ballad', name: 'Ballad', description: 'Smooth, storytelling male voice', gender: 'Male' },
+  { id: 'coral', name: 'Coral', description: 'Warm, friendly female voice', gender: 'Female' },
   { id: 'echo', name: 'Echo', description: 'Clear, expressive male voice', gender: 'Male' },
-  { id: 'fable', name: 'Fable', description: 'Warm, engaging male voice', gender: 'Male' },
+  { id: 'fable', name: 'Fable', description: 'Engaging, British male voice', gender: 'Male' },
+  { id: 'nova', name: 'Nova', description: 'Bright, energetic female voice', gender: 'Female' },
   { id: 'onyx', name: 'Onyx', description: 'Deep, authoritative male voice', gender: 'Male' },
-  { id: 'nova', name: 'Nova', description: 'Friendly, warm female voice', gender: 'Female' },
-  { id: 'shimmer', name: 'Shimmer', description: 'Bright, energetic female voice', gender: 'Female' },
+  { id: 'sage', name: 'Sage', description: 'Professional, composed female voice', gender: 'Female' },
+  { id: 'shimmer', name: 'Shimmer', description: 'Vibrant, enthusiastic female voice', gender: 'Female' },
 ];
 
 // OpenAI's official voice sample URLs (free to use)
 const voiceSampleUrls: Record<Voice, string> = {
   alloy: 'https://cdn.openai.com/API/docs/audio/alloy.wav',
+  ash: 'https://cdn.openai.com/API/docs/audio/ash.wav',
+  ballad: 'https://cdn.openai.com/API/docs/audio/ballad.wav',
+  coral: 'https://cdn.openai.com/API/docs/audio/coral.wav',
   echo: 'https://cdn.openai.com/API/docs/audio/echo.wav',
   fable: 'https://cdn.openai.com/API/docs/audio/fable.wav',
-  onyx: 'https://cdn.openai.com/API/docs/audio/onyx.wav',
   nova: 'https://cdn.openai.com/API/docs/audio/nova.wav',
+  onyx: 'https://cdn.openai.com/API/docs/audio/onyx.wav',
+  sage: 'https://cdn.openai.com/API/docs/audio/sage.wav',
   shimmer: 'https://cdn.openai.com/API/docs/audio/shimmer.wav',
 };
 
 export function VoiceSelector({ selectedVoice, onSelectVoice }: VoiceSelectorProps) {
   const [playingVoice, setPlayingVoice] = useState<Voice | null>(null);
   const [audioElements] = useState<Map<Voice, HTMLAudioElement>>(new Map());
+  const [genderFilter, setGenderFilter] = useState<'All' | 'Male' | 'Female' | 'Neutral'>('All');
 
   const handlePlayPreview = (voice: Voice) => {
     // Stop any currently playing audio
@@ -60,11 +70,30 @@ export function VoiceSelector({ selectedVoice, onSelectVoice }: VoiceSelectorPro
     setPlayingVoice(voice);
   };
 
+  const filteredVoices = genderFilter === 'All' 
+    ? voices 
+    : voices.filter(v => v.gender === genderFilter);
+
   return (
-    <div>
-      <label className="text-sm font-semibold mb-3 block">Choose a Voice</label>
+    <div className="space-y-3">
+      {/* Gender Filter */}
+      <div className="flex gap-2">
+        {(['All', 'Male', 'Female', 'Neutral'] as const).map((filter) => (
+          <Button
+            key={filter}
+            variant={genderFilter === filter ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setGenderFilter(filter)}
+            className="text-xs"
+          >
+            {filter}
+          </Button>
+        ))}
+      </div>
+
+      {/* Voice Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        {voices.map((voice) => (
+        {filteredVoices.map((voice) => (
           <motion.button
             key={voice.id}
             onClick={() => onSelectVoice(voice.id)}

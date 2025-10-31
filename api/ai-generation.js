@@ -94,8 +94,8 @@ async function checkRateLimit(userId) {
   }
 }
 
-// Check audiobook character limits
-async function checkAudiobookLimit(userId, characterCount) {
+// Check audiobook chapter limits
+async function checkAudiobookLimit(userId, chapterCount) {
   if (!userId) {
     return { allowed: false, error: 'Authentication required' };
   }
@@ -114,16 +114,16 @@ async function checkAudiobookLimit(userId, characterCount) {
     if (subscriptionStatus === 'free') {
       return { 
         allowed: false, 
-        error: 'Audiobooks are a premium feature. Upgrade to Creator or Premium.' 
+        error: 'Audiobooks are available on Creator and Premium plans.' 
       };
     }
 
-    const characterLimits = {
-      creator: 100000,
-      premium: 500000,
+    const chapterLimits = {
+      creator: 25,
+      premium: 50,
     };
 
-    const limit = characterLimits[subscriptionStatus];
+    const limit = chapterLimits[subscriptionStatus];
     if (!limit) {
       return { allowed: false, error: 'Invalid subscription status' };
     }
@@ -133,18 +133,18 @@ async function checkAudiobookLimit(userId, characterCount) {
     const lastReset = userData.lastAudiobookCharactersReset;
     const needsReset = !lastReset || !lastReset.startsWith(currentMonth);
 
-    let charactersUsed = needsReset ? 0 : (userData.audiobookCharactersUsed || 0);
-    const charactersRemaining = limit - charactersUsed;
+    let chaptersUsed = needsReset ? 0 : (userData.audiobookCharactersUsed || 0);
+    const chaptersRemaining = limit - chaptersUsed;
 
-    if (characterCount > charactersRemaining) {
+    if (chapterCount > chaptersRemaining) {
       return {
         allowed: false,
-        error: `Not enough character allowance. You need ${characterCount.toLocaleString()} but only have ${charactersRemaining.toLocaleString()} remaining this month.`
+        error: `Not enough chapter allowance. You need ${chapterCount} chapters but only have ${chaptersRemaining} remaining this month.`
       };
     }
 
     await userRef.update({
-      audiobookCharactersUsed: needsReset ? characterCount : charactersUsed + characterCount,
+      audiobookCharactersUsed: needsReset ? chapterCount : chaptersUsed + chapterCount,
       lastAudiobookCharactersReset: currentMonth,
     });
 
@@ -420,7 +420,7 @@ async function handleCoverGeneration(req, res) {
 
 // Handler for audiobook generation
 async function handleAudiobookGeneration(req, res) {
-  const { text, voice, quality, chapterId, chapterTitle, userId } = req.body;
+  const { text, voice, quality, chapterId, chapterTitle, userId, chapterCount } = req.body;
 
   if (!text || !voice) {
     return res.status(400).json({ 
@@ -428,7 +428,7 @@ async function handleAudiobookGeneration(req, res) {
     });
   }
 
-  const validVoices = ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer'];
+  const validVoices = ['alloy', 'ash', 'ballad', 'coral', 'echo', 'fable', 'nova', 'onyx', 'sage', 'shimmer'];
   if (!validVoices.includes(voice)) {
     return res.status(400).json({ 
       error: `Invalid voice. Must be one of: ${validVoices.join(', ')}` 
@@ -442,11 +442,12 @@ async function handleAudiobookGeneration(req, res) {
     });
   }
 
-  const characterCount = text.length;
-
-  const limitCheck = await checkAudiobookLimit(userId, characterCount);
-  if (!limitCheck.allowed) {
-    return res.status(403).json({ error: limitCheck.error });
+  // Use chapterCount for limit checking (only check on first chapter)
+  if (chapterCount) {
+    const limitCheck = await checkAudiobookLimit(userId, chapterCount);
+    if (!limitCheck.allowed) {
+      return res.status(403).json({ error: limitCheck.error });
+    }
   }
 
   try {
