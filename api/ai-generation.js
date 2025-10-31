@@ -228,7 +228,13 @@ Provide 3-5 practical, actionable ideas with brief descriptions.`;
       messages: [
         {
           role: 'system',
-          content: `You are an expert ebook author. Write complete, valuable chapters that meet the exact word count requested. Use natural paragraph breaks (\\n\\n). Focus on quality and substance.`
+          content: `You are an expert ebook author. Write complete, valuable chapter content that meets the requested word count. Use natural paragraph breaks (\\n\\n). 
+
+IMPORTANT: 
+- DO NOT include word counts in your output
+- DO NOT add meta notes or revisions offers
+- DO NOT add headers like "# Chapter Title"
+- Just write the chapter content itself`
         },
         {
           role: 'user',
@@ -240,6 +246,14 @@ Provide 3-5 practical, actionable ideas with brief descriptions.`;
     });
 
     let content = completion.choices[0]?.message?.content || '';
+    
+    // Clean up AI output - remove word counts, notes, and meta comments
+    content = content
+      .replace(/\(Word count:.*?\)/gi, '') // Remove "(Word count: 504)"
+      .replace(/\*Note:.*?\*/gs, '') // Remove "*Note: ...*"
+      .replace(/---\s*$/g, '') // Remove trailing "---"
+      .replace(/^\s*#/gm, '') // Remove markdown headers AI might add
+      .trim();
     
     // Ensure proper paragraph formatting
     content = formatWithParagraphBreaks(content);
