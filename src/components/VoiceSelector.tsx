@@ -12,7 +12,6 @@ interface VoiceSelectorProps {
 const voices: { id: Voice; name: string; description: string; gender: 'Male' | 'Female' | 'Neutral' }[] = [
   { id: 'alloy', name: 'Alloy', description: 'Neutral, versatile voice', gender: 'Neutral' },
   { id: 'ash', name: 'Ash', description: 'Clear, articulate male voice', gender: 'Male' },
-  { id: 'ballad', name: 'Ballad', description: 'Smooth, storytelling male voice', gender: 'Male' },
   { id: 'coral', name: 'Coral', description: 'Warm, friendly female voice', gender: 'Female' },
   { id: 'echo', name: 'Echo', description: 'Clear, expressive male voice', gender: 'Male' },
   { id: 'fable', name: 'Fable', description: 'Engaging, British male voice', gender: 'Male' },
@@ -26,7 +25,6 @@ const voices: { id: Voice; name: string; description: string; gender: 'Male' | '
 const voiceSampleUrls: Record<Voice, string> = {
   alloy: 'https://cdn.openai.com/API/docs/audio/alloy.wav',
   ash: 'https://cdn.openai.com/API/docs/audio/ash.wav',
-  ballad: 'https://cdn.openai.com/API/docs/audio/ballad.wav',
   coral: 'https://cdn.openai.com/API/docs/audio/coral.wav',
   echo: 'https://cdn.openai.com/API/docs/audio/echo.wav',
   fable: 'https://cdn.openai.com/API/docs/audio/fable.wav',

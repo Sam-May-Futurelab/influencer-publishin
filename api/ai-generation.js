@@ -428,7 +428,7 @@ async function handleAudiobookGeneration(req, res) {
     });
   }
 
-  const validVoices = ['alloy', 'ash', 'ballad', 'coral', 'echo', 'fable', 'nova', 'onyx', 'sage', 'shimmer'];
+  const validVoices = ['alloy', 'ash', 'coral', 'echo', 'fable', 'nova', 'onyx', 'sage', 'shimmer'];
   if (!validVoices.includes(voice)) {
     return res.status(400).json({ 
       error: `Invalid voice. Must be one of: ${validVoices.join(', ')}` 

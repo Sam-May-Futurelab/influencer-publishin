@@ -14,7 +14,7 @@ interface AudiobookTabProps {
   project: EbookProject;
 }
 
-export type Voice = 'alloy' | 'ash' | 'ballad' | 'coral' | 'echo' | 'fable' | 'nova' | 'onyx' | 'sage' | 'shimmer';
+export type Voice = 'alloy' | 'ash' | 'coral' | 'echo' | 'fable' | 'nova' | 'onyx' | 'sage' | 'shimmer';
 export type Quality = 'standard' | 'hd';
 
 interface GeneratedChapter {
@@ -52,8 +52,11 @@ export function AudiobookTab({ project }: AudiobookTabProps) {
   };
 
   const chapterLimit = getTierLimit();
-  const chaptersUsed = userProfile?.audiobookCharactersUsed || 0; // Will rename this field
-  const chaptersRemaining = chapterLimit - chaptersUsed;
+  const chaptersUsed = userProfile?.audiobookCharactersUsed || 0;
+  
+  // Safety check: if chaptersUsed is unreasonably high (from old character-based system), reset it
+  const safeChaptersUsed = chaptersUsed > 1000 ? 0 : chaptersUsed;
+  const chaptersRemaining = chapterLimit - safeChaptersUsed;
 
   const canGenerate = () => {
     if (subscriptionStatus === 'free') return false;
