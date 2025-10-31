@@ -133,6 +133,12 @@ export function AIContentAssistant({
         }),
       });
 
+      if (response.status === 429) {
+        toast.error('Rate limit reached. Please try again in a few minutes.', { duration: 5000 });
+        setIsGenerating(false);
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(`API request failed: ${response.statusText}`);
       }
@@ -344,12 +350,12 @@ export function AIContentAssistant({
           <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between">
               <Label className="text-xs font-medium text-muted-foreground">
-                Content Length
+                Chapter Length
               </Label>
               <span className="text-xs text-muted-foreground">
-                {length === 'brief' && '~150 words'}
-                {length === 'standard' && '~250 words'}
-                {length === 'detailed' && '~350 words'}
+                {length === 'brief' && '~200 words'}
+                {length === 'standard' && '~400 words'}
+                {length === 'detailed' && '~650 words'}
               </span>
             </div>
 

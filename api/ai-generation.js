@@ -188,30 +188,35 @@ async function handleContentGeneration(req, res) {
     });
   }
 
-  // Length mapping
+  // Length mapping - aligned with frontend values
   const lengthTokens = {
-    'short': { min: 100, max: 200 },
-    'standard': { min: 150, max: 300 },
-    'long': { min: 200, max: 400 }
+    'brief': { min: 150, max: 250, tokens: 500 },
+    'standard': { min: 300, max: 500, tokens: 1000 },
+    'detailed': { min: 500, max: 800, tokens: 1500 }
   };
 
   const targetLength = lengthTokens[length] || lengthTokens.standard;
 
   try {
     const prompt = contentType === 'chapter' 
-      ? `Write a compelling ${length} ebook chapter about "${chapterTitle || keywords}".
+      ? `Write a complete, well-structured ebook chapter.
 
-Style: ${tone} tone, ${format} format, ${genre} genre
-Length: ${targetLength.min}-${targetLength.max} words
+TOPIC: ${keywords.join(', ')}
+CHAPTER TITLE: ${chapterTitle}
+GENRE: ${genre}
+TONE: ${tone}
+REQUIRED LENGTH: ${targetLength.min}-${targetLength.max} words (STRICT - count your words!)
 
-Requirements:
-- Well-structured with ${format === 'narrative' ? 'engaging storytelling' : 'clear sections'}
-- Natural paragraph breaks (use double line breaks between paragraphs)
-- ${tone === 'professional' ? 'Formal and authoritative' : tone === 'casual' ? 'Conversational and relatable' : 'Balanced and accessible'} tone
-- Appropriate for ${context.targetAudience || 'general'} audience
-- Keep reader engaged throughout
+INSTRUCTIONS:
+- Write EXACTLY ${targetLength.min}-${targetLength.max} words
+- Create a FULL chapter with multiple substantial paragraphs
+- ${format === 'narrative' ? 'Use engaging storytelling with concrete examples' : format === 'bullets' ? 'Use bullet points and organized lists' : format === 'steps' ? 'Use clear step-by-step instructions' : 'Use well-structured content'}
+- ${tone === 'professional' ? 'Professional, authoritative voice' : tone === 'motivational' ? 'Inspiring, energetic voice' : tone === 'direct' ? 'Clear, concise voice' : 'Friendly, conversational voice'}
+- Include specific, actionable examples
+- Target audience: ${context.targetAudience || 'general readers'}
+- Use double line breaks between paragraphs for readability
 
-Write the content now:`
+Write the complete chapter now (${targetLength.min}-${targetLength.max} words):`
       : `Generate ${length} content suggestions for: "${keywords || chapterTitle}".
 
 Context: ${genre} genre, ${tone} tone, for ${context.targetAudience || 'general audience'}
@@ -223,15 +228,15 @@ Provide 3-5 practical, actionable ideas with brief descriptions.`;
       messages: [
         {
           role: 'system',
-          content: `You are an expert content writer. Create engaging, well-structured content with natural paragraph breaks. Use double line breaks (\\n\\n) between paragraphs for proper formatting.`
+          content: `You are an expert ebook author. Write complete, valuable chapters that meet the exact word count requested. Use natural paragraph breaks (\\n\\n). Focus on quality and substance.`
         },
         {
           role: 'user',
           content: prompt
         }
       ],
-      max_tokens: targetLength.max * 1.5,
-      temperature: 0.7,
+      max_tokens: targetLength.tokens,
+      temperature: 0.8,
     });
 
     let content = completion.choices[0]?.message?.content || '';
