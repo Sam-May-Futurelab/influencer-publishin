@@ -37,27 +37,38 @@ export function AudiobookSplitDialog({
           </AlertDialogTitle>
           <AlertDialogDescription className="space-y-3 pt-2">
             <p>
-              Some chapters in <span className="font-semibold text-foreground">"{projectTitle}"</span> are too long for audiobook generation.
+              Some chapters in <span className="font-semibold text-foreground">"{projectTitle}"</span> are too long for audiobook generation (max 4,000 characters per chapter).
             </p>
             
-            <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Current chapters:</span>
-                <span className="font-semibold text-foreground">{originalChapterCount}</span>
+            <div className="p-4 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Current chapters:</span>
+                <span className="text-2xl font-bold text-foreground">{originalChapterCount}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">After splitting:</span>
-                <span className="font-semibold text-foreground">{newChapterCount}</span>
+              <div className="h-px bg-border" />
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">After splitting:</span>
+                <span className="text-2xl font-bold text-primary">{newChapterCount}</span>
               </div>
             </div>
             
-            <p className="text-sm">
-              We'll create a new project called <span className="font-semibold text-foreground">"{projectTitle} (Audiobook)"</span> with optimized chapter lengths. Your original project will remain unchanged.
-            </p>
-            
-            <p className="text-xs text-muted-foreground">
-              Long chapters will be split into parts (e.g., "Chapter 1 (Part 1)", "Chapter 1 (Part 2)"). The generated audio files will be automatically merged back into single files per chapter.
-            </p>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-foreground">What happens next:</p>
+              <ul className="text-sm space-y-1.5 text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-green-500 mt-0.5">✓</span>
+                  <span>Creates new project: <span className="font-semibold text-foreground">"{projectTitle} (Audiobook)"</span></span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-500 mt-0.5">✓</span>
+                  <span>Splits long chapters into parts</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-500 mt-0.5">✓</span>
+                  <span>Your original project stays unchanged</span>
+                </li>
+              </ul>
+            </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

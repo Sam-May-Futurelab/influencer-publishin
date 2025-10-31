@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   BookOpen, 
   Plus, 
@@ -313,14 +314,23 @@ export function ProjectsPage({
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">{audiobooks.length}</Badge>
                   {audiobooks.length > 1 && (
-                    <Button
-                      size="sm"
-                      className="gap-2 bg-primary hover:bg-primary/90"
-                      onClick={() => setShowMergeDialog(true)}
-                    >
-                      <SpeakerHigh size={16} weight="fill" />
-                      Merge Chapters
-                    </Button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="sm"
+                            className="gap-2 bg-primary hover:bg-primary/90"
+                            onClick={() => setShowMergeDialog(true)}
+                          >
+                            <SpeakerHigh size={16} weight="fill" />
+                            Merge Chapters
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">Combine multiple chapter audiobooks into a single file (Premium feature)</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   )}
                 </div>
               </div>
@@ -768,8 +778,19 @@ export function ProjectsPage({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Audiobook?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete "{audiobookToDelete?.chapterTitle}"? This action cannot be undone.
+            <AlertDialogDescription className="space-y-2">
+              <p>
+                Are you sure you want to delete this audiobook?
+              </p>
+              <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <p className="font-semibold text-foreground">"{audiobookToDelete?.chapterTitle}"</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  from {audiobookToDelete?.projectTitle}
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                This action cannot be undone. The audio file will be permanently deleted.
+              </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -793,7 +814,7 @@ export function ProjectsPage({
                     // Update local state
                     setAudiobooks(prev => prev.filter(a => a.id !== audiobookToDelete.id));
                     
-                    toast.success('Audiobook deleted successfully');
+                    toast.success(`"${audiobookToDelete.chapterTitle}" deleted successfully`);
                   } catch (error) {
                     console.error('Failed to delete audiobook:', error);
                     toast.error('Failed to delete audiobook');

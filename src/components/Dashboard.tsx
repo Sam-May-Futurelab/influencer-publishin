@@ -1039,8 +1039,19 @@ export function Dashboard({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Audiobook?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete "{audiobookToDelete?.chapterTitle}"? This action cannot be undone.
+            <AlertDialogDescription className="space-y-2">
+              <p>
+                Are you sure you want to delete this audiobook?
+              </p>
+              <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <p className="font-semibold text-foreground">"{audiobookToDelete?.chapterTitle}"</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  from {audiobookToDelete?.projectTitle}
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                This action cannot be undone. The audio file will be permanently deleted.
+              </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -1059,7 +1070,7 @@ export function Dashboard({
                   try {
                     await deleteDoc(doc(db, 'audiobooks', audiobookToDelete.id));
                     setAudiobooks(prev => prev.filter(a => a.id !== audiobookToDelete.id));
-                    toast.success('Audiobook deleted successfully');
+                    toast.success(`"${audiobookToDelete.chapterTitle}" deleted successfully`);
                   } catch (error) {
                     console.error('Failed to delete audiobook:', error);
                     toast.error('Failed to delete audiobook');
