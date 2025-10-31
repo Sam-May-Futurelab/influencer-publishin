@@ -2,8 +2,8 @@
 
 ## 🚀 IN DEVELOPMENT
 
-### Phase 1: Free Preview Generator (1-2 days)
-**Status:** Planning → Implementation
+### Phase 1: Free Preview Generator ✅ COMPLETED
+**Status:** Live at `/try-free`
 
 **Decision Made:**
 - Keep existing landing page (`/`)
@@ -34,14 +34,18 @@
 
 ---
 
-### Phase 2: Full AI Book Generation (3-4 days)
-**Status:** Planning
+### Phase 2: Full AI Book Generation ✅ COMPLETED
+**Status:** Live - AI Book Generator Wizard
 
-**Decision Made:**
+**Implemented:**
 - ✅ Creates NEW project (don't interfere with existing)
 - ✅ Full workflow: Title → Description → Chapters → Generate All
-- ✅ Streaming progress updates
+- ✅ Progress updates with chapter completion accordion
 - ✅ All chapters generated automatically
+- ✅ Stop Generation feature with confirmation dialog
+- ✅ Custom slider with animations
+- ✅ Responsive UI with mobile optimization
+- ✅ Proper paragraph formatting in editor, preview, and export
 
 **User Flow:**
 ```
@@ -86,12 +90,14 @@ Complete: New project created → Redirect to editor
 
 ---
 
-### Phase 3: Audiobook Generation (5-7 days)
-**Status:** Planning
+### Phase 3: Audiobook Generation (3-4 days) 🔄 IN PROGRESS
+**Status:** Building Now
 
-**Decision Made:**
+**Implementation Approach: Level 1.5 (Simple + Playback)**
 - ✅ Use OpenAI TTS API (already integrated, super cheap)
-- ✅ Per-project feature (not global)
+- ✅ Per-project feature (new "Audiobook" tab on project page)
+- ✅ Download-based (no permanent storage needed)
+- ✅ Optional in-browser playback before download
 
 **OpenAI TTS Pricing:**
 - $0.015 per 1K characters (TTS)
@@ -107,62 +113,92 @@ Complete: New project created → Redirect to editor
 - Nova (female, warm)
 - Shimmer (female, bright)
 
-**User Flow:**
+**Simplified User Flow:**
 ```
-Project page → "Generate Audiobook" tab/button
-    ↓
-Choose Quality
-  - Standard ($0.90 for 10 chapters)
-  - HD ($1.80 for 10 chapters)
+Project page → "Audiobook" tab (next to Chapters, Preview, Export)
     ↓
 Choose Voice
-  - Shows 6 voice options with preview buttons
-  - Play 15-second sample of each
+  - Grid of 6 voices with preview samples (Nova, Alloy, Echo, Fable, Onyx, Shimmer)
+  - Pre-generated 15-second previews (no API calls)
     ↓
-Confirm
-  - Shows cost in credits/dollars
-  - "Generate Audiobook" button
+Choose Quality
+  - Standard ($0.015/1K chars) ✓
+  - HD ($0.030/1K chars)
     ↓
-Generation
-  - Progress: "Generating audio for Chapter 3 of 10..."
+Preview Cost
+  - Shows: "45,000 characters = $0.68 (Standard)"
+  - Shows: "Remaining this month: 55K/100K characters"
+  - Tier limit check
+    ↓
+Generate
+  - Progress: "Generating Chapter 3 of 10..."
+  - Each chapter shows when complete
   - Takes 1-2 minutes
     ↓
 Complete
-  - Audio player for each chapter
-  - Download individual chapters or full book MP3
-  - Option: Combine into single file
+  - HTML5 audio player per chapter (play in browser)
+  - Download button per chapter (MP3)
+  - No permanent storage - downloads only
+  - Store metadata in Firestore (voice used, timestamp)
 ```
 
-**Implementation:**
-- New component: `src/components/AudiobookGenerator.tsx`
-- New API: `api/generate-audiobook.js`
-- Firebase Storage for audio files
-- Audio player component for playback
+**Implementation Plan:**
+- **Day 1:** Voice selector UI + pre-generated samples
+- **Day 2:** Generation API + OpenAI TTS integration
+- **Day 3:** Audio player component + download functionality
+- **Day 4:** Cost tracking, tier limits, testing
 
-**Tier Limits:**
-- Free: 0 audiobooks
-- Creator: 1 audiobook/month (or 50K characters)
-- Premium: 5 audiobooks/month (or 250K characters)
+**Components:**
+- `src/components/AudiobookTab.tsx` - Main tab on project page
+- `src/components/VoiceSelector.tsx` - Voice grid with previews
+- `src/components/AudioPlayer.tsx` - HTML5 player per chapter
+- `api/generate-audiobook.js` - TTS generation endpoint
+- `src/lib/audiobook.ts` - Helper functions
 
-**Storage:**
-- Store MP3s in Firebase Storage
-- Keep for 90 days or until user deletes
-- Auto-cleanup for inactive users
+**Tier Limits (Character-based):**
+- Free: 0 characters (premium feature)
+- Creator: 100K characters/month (~2-3 average books)
+- Premium: 500K characters/month (~10-15 average books)
+
+**Storage Strategy:**
+- NO permanent storage (avoids Firebase limits)
+- Generate → Stream to user → Download
+- Store metadata only in Firestore (voice, quality, character count, timestamp)
+- Optional: Temporary Vercel Blob storage (24 hours) for playback
+- User keeps MP3 files locally
 
 ---
 
-## Priority: Medium (Future Phases)
+## Priority: Medium (Next Phases)
 
-### 4. Enhanced Onboarding Wizard
+### 4. Enhanced Onboarding Wizard (1-2 days)
 **Current State:** Basic onboarding exists in `Onboarding.tsx`
-**Improvement:** Make more comprehensive, add tooltips, better progression
+**Improvements Needed:**
+- Better progression indicators
+- Interactive tooltips for features
+- Quick-start tutorial (create first project)
+- Feature highlights (AI generator, templates, export)
+- Success metrics tracking
+- Mobile-optimized flow
 
-### 5. Import Content Feature
+### 5. Template System Improvements (2-3 days)
+**Current State:** Templates exist in `TemplateGallery.tsx`
+**Improvements Needed:**
+- More template categories (business, fiction, non-fiction, children's)
+- Preview before applying
+- Save custom templates
+- Template ratings/favorites
+- Better filtering/search
+- Mobile-responsive gallery
+
+### 6. Import Content Feature (Future)
 **Description:** Import PDFs, Word docs, text files → convert to chapters
+**Complexity:** Medium-High
+**Value:** High for users with existing content
 
-### 6. Custom AI Image Models
+### 7. Custom AI Image Models (Skip)
 **Description:** Train AI on user photos for personalized covers
-**Concern:** Very expensive, complex - maybe skip this
+**Decision:** Too expensive and complex - not worth it
 
 ---
 
@@ -177,21 +213,28 @@ Complete
 
 ## Implementation Schedule
 
-### Week 1: Free Preview
-- Day 1-2: Build preview page + API
-- Day 2: Add CTA to landing page
-- Day 3: Test, polish, deploy
+### ✅ Week 1: Free Preview (COMPLETED)
+- ✅ Built `/try-free` page
+- ✅ No-auth preview generator
+- ✅ IP-based rate limiting
 
-### Week 2: Full AI Generation  
-- Day 1-2: Build generation wizard
-- Day 2-3: API + streaming progress
-- Day 4: Test with various book types
+### ✅ Week 2: Full AI Generation (COMPLETED)
+- ✅ AI Book Generator Wizard (4-step flow)
+- ✅ Stop Generation feature
+- ✅ Progress tracking with animations
+- ✅ Responsive UI and mobile optimization
+- ✅ Paragraph formatting fixes
 
-### Week 3: Audiobooks
-- Day 1-2: Voice selection + preview
-- Day 3-4: Generation API + storage
-- Day 5: Audio player + download
-- Day 6-7: Test + polish
+### 🔄 Week 3: Audiobooks (IN PROGRESS)
+- **Day 1:** Voice selector UI + sample previews ⏳
+- **Day 2:** TTS API integration + generation logic
+- **Day 3:** Audio player + download
+- **Day 4:** Cost tracking + tier limits + polish
+
+### Week 4: Onboarding + Templates
+- Day 1-2: Enhanced onboarding flow
+- Day 3-4: Template system improvements
+- Day 5: Testing + polish
 
 ---
 
