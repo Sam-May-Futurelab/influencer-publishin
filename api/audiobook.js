@@ -1,9 +1,15 @@
 // Audiobook Management Endpoint
 // Handles audiobook generation queuing and status checking
-import { inngest } from '../src/lib/inngest-client';
+import { Inngest } from 'inngest';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import Cors from 'cors';
+
+// Initialize Inngest client
+const inngest = new Inngest({ 
+  id: 'inkfluence-ai',
+  name: 'Inkfluence AI'
+});
 
 // Initialize Firebase Admin
 if (getApps().length === 0) {
