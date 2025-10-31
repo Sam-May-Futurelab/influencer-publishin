@@ -298,7 +298,7 @@ export function AIContentAssistant({
           
           <div className="flex gap-2">
             <Input
-              placeholder="Enter topics or keywords for this chapter..."
+              placeholder="e.g., social media marketing, content strategy, engagement tips..."
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
               onKeyDown={(e) => {
@@ -465,11 +465,17 @@ export function AIContentAssistant({
             <div className="space-y-2">
               <h4 className="font-semibold text-foreground">AI Chapter Generator</h4>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Enter keywords and click Generate Chapter to create full chapter content instantly.
+                Describe your chapter topic in the box above, then click <strong>Generate Chapter</strong> to create full content instantly.
               </p>
-              <p className="text-xs text-muted-foreground">
-                Example: "email marketing strategies, automation, segmentation"
-              </p>
+              <div className="space-y-1 pt-2">
+                <p className="text-xs font-medium text-muted-foreground">Example topics:</p>
+                <p className="text-xs text-muted-foreground italic">
+                  "email marketing automation, segmentation, best practices"
+                </p>
+                <p className="text-xs text-muted-foreground italic">
+                  "productivity tips, time management, focus strategies"
+                </p>
+              </div>
             </div>
           </motion.div>
         )}

@@ -386,6 +386,16 @@ function App() {
     if (!requireAuth("create a new eBook project")) return;
     if (!user) return;
     
+    // Create Chapter 1 by default for better UX
+    const chapter1: Chapter = {
+      id: crypto.randomUUID(),
+      title: 'Chapter 1',
+      content: '',
+      order: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
     const newProject: EbookProject = {
       id: crypto.randomUUID(),
       title: projectData.title.trim() || 'Untitled Ebook',
@@ -393,7 +403,7 @@ function App() {
       author: projectData.author?.trim() || userProfile?.displayName || '',
       category: (projectData.category as any) || 'general',
       targetAudience: projectData.targetAudience?.trim(),
-      chapters: [],
+      chapters: [chapter1], // Start with Chapter 1
       brandConfig: { ...defaultBrandConfig },
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -403,6 +413,7 @@ function App() {
       await saveProject(user.uid, newProject);
       setProjects(currentProjects => [...currentProjects, newProject]);
       selectProject(newProject);
+      setCurrentChapter(chapter1); // Open Chapter 1 immediately
       
       // Show different success message based on whether setup was completed
       if (projectData.author && projectData.category) {
