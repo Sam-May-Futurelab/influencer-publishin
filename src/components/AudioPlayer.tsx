@@ -1,6 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, SpeakerHigh, SpeakerSlash } from '@phosphor-icons/react';
 import { Slider } from '@/components/ui/slider';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 
 interface AudioPlayerProps {
   src: string;
@@ -99,7 +106,7 @@ export function AudioPlayer({ src, title }: AudioPlayerProps) {
       <audio ref={audioRef} src={src} preload="metadata" />
 
       {/* Progress Bar */}
-      <div className="space-y-1">
+      <div>
         <Slider
           value={[currentTime]}
           max={duration || 100}
@@ -107,14 +114,10 @@ export function AudioPlayer({ src, title }: AudioPlayerProps) {
           onValueChange={handleSeek}
           className="cursor-pointer"
         />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>{formatTime(currentTime)}</span>
-          <span>{formatTime(duration)}</span>
-        </div>
       </div>
 
       {/* Controls */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         {/* Play/Pause */}
         <button
           onClick={togglePlay}
@@ -122,43 +125,57 @@ export function AudioPlayer({ src, title }: AudioPlayerProps) {
           title={isPlaying ? 'Pause' : 'Play'}
         >
           {isPlaying ? (
-            <Pause size={24} className="text-primary" weight="fill" />
+            <Pause size={20} className="text-primary" weight="fill" />
           ) : (
-            <Play size={24} className="text-primary" weight="fill" />
+            <Play size={20} className="text-primary" weight="fill" />
           )}
         </button>
 
-        {/* Playback Speed */}
-        <div className="flex gap-1">
-          {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
-            <button
-              key={rate}
-              onClick={() => handlePlaybackRateChange(rate)}
-              className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
-                playbackRate === rate
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted hover:bg-muted/80 text-muted-foreground'
-              }`}
-            >
-              {rate}x
-            </button>
-          ))}
+        {/* Time Display */}
+        <div className="flex items-center gap-1 text-xs text-muted-foreground min-w-[80px]">
+          <span>{formatTime(currentTime)}</span>
+          <span>/</span>
+          <span>{formatTime(duration)}</span>
         </div>
+
+        {/* Playback Speed Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-7 px-2 text-xs font-medium min-w-[45px]"
+            >
+              {playbackRate}x
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="min-w-[100px]">
+            {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
+              <DropdownMenuItem
+                key={rate}
+                onClick={() => handlePlaybackRateChange(rate)}
+                className={playbackRate === rate ? 'bg-primary/10' : ''}
+              >
+                {rate}x {rate === 1 && '(Normal)'}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Volume */}
         <div className="flex items-center gap-2 ml-auto">
           <button
             onClick={toggleMute}
-            className="p-2 rounded-full hover:bg-primary/10 transition-colors"
+            className="p-2 rounded-full hover:bg-primary/10 transition-colors flex-shrink-0"
             title={isMuted ? 'Unmute' : 'Mute'}
           >
             {isMuted ? (
-              <SpeakerSlash size={20} className="text-muted-foreground" />
+              <SpeakerSlash size={18} className="text-muted-foreground" />
             ) : (
-              <SpeakerHigh size={20} className="text-foreground" />
+              <SpeakerHigh size={18} className="text-foreground" />
             )}
           </button>
-          <div className="w-20 hidden sm:block">
+          <div className="w-16 hidden sm:block">
             <Slider
               value={[isMuted ? 0 : volume]}
               max={1}

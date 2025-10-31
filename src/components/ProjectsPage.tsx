@@ -30,6 +30,7 @@ import { AudioPlayer } from '@/components/AudioPlayer';
 import { useAuth } from '@/hooks/use-auth';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { toast } from 'sonner';
 
 interface ProjectsPageProps {
   projects: EbookProject[];
@@ -65,9 +66,11 @@ export function ProjectsPage({
   const [renameTitle, setRenameTitle] = useState('');
   const [audiobooks, setAudiobooks] = useState<any[]>([]);
   const [loadingAudiobooks, setLoadingAudiobooks] = useState(true);
+  const [audiobookToDelete, setAudiobookToDelete] = useState<any | null>(null);
+  const [showDeleteAudiobookDialog, setShowDeleteAudiobookDialog] = useState(false);
   const { user } = useAuth();
 
-  // Load audiobooks
+  // Load audiobooks with project titles
   useEffect(() => {
     const loadAudiobooks = async () => {
       if (!user?.uid) {
@@ -83,10 +86,16 @@ export function ProjectsPage({
         );
         
         const snapshot = await getDocs(q);
-        const loadedAudiobooks = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        const loadedAudiobooks = snapshot.docs.map(doc => {
+          const data = doc.data();
+          // Find matching project to get title
+          const project = projects.find(p => p.id === data.projectId);
+          return {
+            id: doc.id,
+            ...data,
+            projectTitle: data.projectTitle || project?.title || 'Unknown Project'
+          };
+        });
 
         setAudiobooks(loadedAudiobooks);
       } catch (error) {
@@ -97,7 +106,7 @@ export function ProjectsPage({
     };
 
     loadAudiobooks();
-  }, [user?.uid]);
+  }, [user?.uid, projects]);
 
   const filteredAndSortedProjects = projects
     .filter(project => {
@@ -300,24 +309,43 @@ export function ProjectsPage({
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {audiobooks.slice(0, 6).map((audiobook: any) => (
-                  <div key={audiobook.id} className="p-4 neomorph-inset rounded-lg">
-                    <div className="flex items-start justify-between mb-3">
+                  <div key={audiobook.id} className="p-4 neomorph-inset rounded-lg space-y-3">
+                    <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-sm truncate">{audiobook.chapterTitle}</h3>
-                        <p className="text-xs text-muted-foreground truncate">
-                          {audiobook.projectTitle || 'Unknown Project'}
+                        <h3 className="font-medium text-sm truncate" title={audiobook.chapterTitle}>
+                          {audiobook.chapterTitle}
+                        </h3>
+                        <p className="text-xs text-muted-foreground truncate" title={audiobook.projectTitle}>
+                          {audiobook.projectTitle}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {(audiobook.audioSize / (1024 * 1024)).toFixed(1)} MB
                         </p>
                       </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-8 w-8 p-0"
-                        asChild
-                      >
-                        <a href={audiobook.audioUrl} download={`${audiobook.chapterTitle}.mp3`}>
-                          <Download size={16} />
-                        </a>
-                      </Button>
+                      <div className="flex gap-1 flex-shrink-0">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 w-7 p-0"
+                          asChild
+                        >
+                          <a href={audiobook.audioUrl} download={`${audiobook.chapterTitle}.mp3`} title="Download">
+                            <Download size={14} />
+                          </a>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 w-7 p-0"
+                          onClick={() => {
+                            setAudiobookToDelete(audiobook);
+                            setShowDeleteAudiobookDialog(true);
+                          }}
+                          title="Delete"
+                        >
+                          <Trash size={14} className="text-destructive" />
+                        </Button>
+                      </div>
                     </div>
                     <AudioPlayer src={audiobook.audioUrl} />
                   </div>
@@ -713,6 +741,54 @@ export function ProjectsPage({
             >
               <Trash size={16} />
               Delete Project
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Audiobook Dialog */}
+      <AlertDialog open={showDeleteAudiobookDialog} onOpenChange={setShowDeleteAudiobookDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Audiobook?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{audiobookToDelete?.chapterTitle}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel 
+              onClick={() => {
+                setShowDeleteAudiobookDialog(false);
+                setAudiobookToDelete(null);
+              }}
+              className="neomorph-button border-0"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                if (audiobookToDelete) {
+                  try {
+                    // Delete from Firestore
+                    const { deleteDoc, doc } = await import('firebase/firestore');
+                    await deleteDoc(doc(db, 'audiobooks', audiobookToDelete.id));
+                    
+                    // Update local state
+                    setAudiobooks(prev => prev.filter(a => a.id !== audiobookToDelete.id));
+                    
+                    toast.success('Audiobook deleted successfully');
+                  } catch (error) {
+                    console.error('Failed to delete audiobook:', error);
+                    toast.error('Failed to delete audiobook');
+                  }
+                  setShowDeleteAudiobookDialog(false);
+                  setAudiobookToDelete(null);
+                }
+              }}
+              className="neomorph-button border-0 bg-destructive hover:bg-destructive/90 text-white gap-2"
+            >
+              <Trash size={16} />
+              Delete Audiobook
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
