@@ -2,6 +2,14 @@
 // Handles: content, outline, cover, audiobook
 import OpenAI from 'openai';
 import admin from 'firebase-admin';
+import ffmpeg from 'fluent-ffmpeg';
+import ffmpegStatic from 'ffmpeg-static';
+import { createWriteStream, mkdtempSync, rmSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
+
+// Set ffmpeg path
+ffmpeg.setFfmpegPath(ffmpegStatic);
 import { setCorsHeaders, handleCorsPreFlight } from './_cors.js';
 
 // Initialize OpenAI
@@ -164,6 +172,79 @@ async function checkAudiobookLimit(userId, chapterCount) {
     console.error('Error checking audiobook limit:', error);
     return { allowed: false, error: 'Failed to check usage limits' };
   }
+}
+
+// Split text into chunks at sentence boundaries (max 4000 chars to be safe)
+function splitIntoChunks(text, maxChars = 4000) {
+  const chunks = [];
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+  
+  let currentChunk = '';
+  
+  for (const sentence of sentences) {
+    const trimmedSentence = sentence.trim();
+    
+    // If adding this sentence would exceed limit, save current chunk and start new one
+    if (currentChunk.length + trimmedSentence.length > maxChars && currentChunk.length > 0) {
+      chunks.push(currentChunk.trim());
+      currentChunk = trimmedSentence;
+    } else {
+      currentChunk += (currentChunk ? ' ' : '') + trimmedSentence;
+    }
+  }
+  
+  // Add the last chunk
+  if (currentChunk.trim().length > 0) {
+    chunks.push(currentChunk.trim());
+  }
+  
+  return chunks;
+}
+
+// Concatenate audio files using ffmpeg
+async function concatenateAudioFiles(audioBuffers, chapterTitle) {
+  return new Promise((resolve, reject) => {
+    // Create temp directory
+    const tempDir = mkdtempSync(join(tmpdir(), 'audiobook-'));
+    const inputFiles = [];
+    const outputFile = join(tempDir, 'output.mp3');
+    
+    try {
+      // Write all audio buffers to temp files
+      audioBuffers.forEach((buffer, index) => {
+        const filePath = join(tempDir, `chunk-${index}.mp3`);
+        const writeStream = createWriteStream(filePath);
+        writeStream.write(buffer);
+        writeStream.end();
+        inputFiles.push(filePath);
+      });
+      
+      // Create ffmpeg command
+      const command = ffmpeg();
+      
+      // Add all input files
+      inputFiles.forEach(file => command.input(file));
+      
+      // Concatenate and output
+      command
+        .on('error', (err) => {
+          rmSync(tempDir, { recursive: true, force: true });
+          reject(new Error(`FFmpeg error: ${err.message}`));
+        })
+        .on('end', () => {
+          // Read the output file
+          import('fs').then(({ readFileSync }) => {
+            const outputBuffer = readFileSync(outputFile);
+            rmSync(tempDir, { recursive: true, force: true });
+            resolve(outputBuffer);
+          }).catch(reject);
+        })
+        .mergeToFile(outputFile, tempDir);
+    } catch (error) {
+      rmSync(tempDir, { recursive: true, force: true });
+      reject(error);
+    }
+  });
 }
 
 // Format content with paragraph breaks
@@ -472,29 +553,60 @@ async function handleAudiobookGeneration(req, res) {
       .replace(/\s+/g, ' ') // Normalize whitespace
       .trim();
 
-    // OpenAI TTS has a 4096 character limit
-    if (cleanText.length > 4096) {
-      return res.status(400).json({ 
-        error: `Chapter is too long (${cleanText.length} characters). Maximum is 4,096 characters. Please split this chapter into smaller sections.` 
-      });
-    }
-
     const model = selectedQuality === 'hd' ? 'tts-1-hd' : 'tts-1';
     
-    const mp3 = await openai.audio.speech.create({
-      model: model,
-      voice: voice,
-      input: cleanText,
-      response_format: 'mp3',
-    });
+    // Check if we need to split into chunks
+    if (cleanText.length <= 4000) {
+      // Single chunk - simple case
+      const mp3 = await openai.audio.speech.create({
+        model: model,
+        voice: voice,
+        input: cleanText,
+        response_format: 'mp3',
+      });
 
-    const buffer = Buffer.from(await mp3.arrayBuffer());
+      const buffer = Buffer.from(await mp3.arrayBuffer());
 
-    res.setHeader('Content-Type', 'audio/mpeg');
-    res.setHeader('Content-Disposition', `attachment; filename="${chapterTitle || chapterId || 'chapter'}.mp3"`);
-    res.setHeader('Content-Length', buffer.length);
+      res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Content-Disposition', `attachment; filename="${chapterTitle || chapterId || 'chapter'}.mp3"`);
+      res.setHeader('Content-Length', buffer.length);
 
-    return res.status(200).send(buffer);
+      return res.status(200).send(buffer);
+    } else {
+      // Multiple chunks - need to concatenate
+      console.log(`[Audiobook] Chapter "${chapterTitle}" is ${cleanText.length} chars, splitting into chunks...`);
+      
+      const chunks = splitIntoChunks(cleanText);
+      console.log(`[Audiobook] Split into ${chunks.length} chunks`);
+      
+      const audioBuffers = [];
+      
+      // Generate audio for each chunk
+      for (let i = 0; i < chunks.length; i++) {
+        console.log(`[Audiobook] Generating chunk ${i + 1}/${chunks.length} (${chunks[i].length} chars)`);
+        
+        const mp3 = await openai.audio.speech.create({
+          model: model,
+          voice: voice,
+          input: chunks[i],
+          response_format: 'mp3',
+        });
+        
+        const buffer = Buffer.from(await mp3.arrayBuffer());
+        audioBuffers.push(buffer);
+      }
+      
+      // Concatenate all audio chunks
+      console.log(`[Audiobook] Concatenating ${audioBuffers.length} audio chunks...`);
+      const finalBuffer = await concatenateAudioFiles(audioBuffers, chapterTitle);
+      console.log(`[Audiobook] Concatenation complete, final size: ${finalBuffer.length} bytes`);
+
+      res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Content-Disposition', `attachment; filename="${chapterTitle || chapterId || 'chapter'}.mp3"`);
+      res.setHeader('Content-Length', finalBuffer.length);
+
+      return res.status(200).send(finalBuffer);
+    }
 
   } catch (error) {
     console.error('Audiobook generation error:', error);
