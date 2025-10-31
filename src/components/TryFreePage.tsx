@@ -491,7 +491,20 @@ export function TryFreePage() {
         </AnimatePresence>
       </main>
 
-      <LandingFooter />
+      <LandingFooter 
+        onNavigateToAbout={() => navigate('/about')}
+        onNavigateToHelp={() => navigate('/help')}
+        onNavigateToPrivacy={() => navigate('/privacy')}
+        onNavigateToTerms={() => navigate('/terms')}
+        onNavigateToCookies={() => navigate('/cookies')}
+        onNavigateToContact={() => navigate('/contact')}
+        onNavigateToPricing={() => navigate('/pricing')}
+        onNavigateToFeatures={() => navigate('/features')}
+        onNavigateToBlog={() => navigate('/blog')}
+        onNavigateToTestimonials={() => navigate('/testimonials')}
+        onNavigateToCaseStudies={() => navigate('/case-studies')}
+        onNavigateToFAQ={() => navigate('/faq')}
+      />
 
       {/* Auth Modal for Rate Limit */}
       <AuthModal 
