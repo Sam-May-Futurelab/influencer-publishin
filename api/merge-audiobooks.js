@@ -14,6 +14,7 @@ if (getApps().length === 0) {
   if (serviceAccount) {
     initializeApp({
       credential: cert(serviceAccount),
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET
     });
   } else {
     initializeApp();
@@ -52,18 +53,25 @@ export default async function handler(req, res) {
     // Fetch all audiobook files
     const adminStorage = getStorage();
     const bucket = adminStorage.bucket();
+    
+    console.log('[Merge] Starting merge for project:', projectId);
+    console.log('[Merge] Chapter IDs:', chapterIds);
+    
     const audioBuffers = [];
 
     for (const chapterId of chapterIds) {
       const fileName = `audiobooks/${userId}/${projectId}/${chapterId}.mp3`;
+      console.log('[Merge] Fetching file:', fileName);
       const file = bucket.file(fileName);
       
       const [exists] = await file.exists();
       if (!exists) {
+        console.error('[Merge] File not found:', fileName);
         return res.status(404).json({ error: `Audio file not found for chapter: ${chapterId}` });
       }
 
       const [buffer] = await file.download();
+      console.log('[Merge] Downloaded:', fileName, 'Size:', buffer.length);
       audioBuffers.push(buffer);
     }
 

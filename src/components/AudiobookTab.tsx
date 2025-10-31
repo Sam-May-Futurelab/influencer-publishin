@@ -195,7 +195,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
       }
       
       // Navigate to the new audio project
-      navigate(`/dashboard/project/${audioProject.id}`);
+      navigate(`/app/project/${audioProject.id}`);
     } catch (error) {
       console.error('Failed to create audio version:', error);
       toast.error('Failed to create audio version', {

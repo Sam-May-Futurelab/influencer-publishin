@@ -314,11 +314,10 @@ export function ProjectsPage({
                   {audiobooks.length > 1 && (
                     <Button
                       size="sm"
-                      variant="outline"
-                      className="gap-2"
+                      className="gap-2 bg-primary hover:bg-primary/90"
                       onClick={() => setShowMergeDialog(true)}
                     >
-                      <SpeakerHigh size={14} />
+                      <SpeakerHigh size={16} weight="fill" />
                       Merge Chapters
                     </Button>
                   )}
@@ -825,42 +824,91 @@ export function ProjectsPage({
           </DialogHeader>
           <div className="space-y-4">
             {audiobooks.length > 0 && (
-              <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                {audiobooks.map((audiobook: any) => (
-                  <label
-                    key={audiobook.id}
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedChapters.includes(audiobook.chapterId)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedChapters(prev => [...prev, audiobook.chapterId]);
-                          if (!selectedProjectForMerge) {
-                            setSelectedProjectForMerge(audiobook.projectId);
+              <div className="space-y-4 max-h-[400px] overflow-y-auto">
+                {/* Group audiobooks by project */}
+                {Object.entries(
+                  audiobooks.reduce((acc, audiobook) => {
+                    const projectId = audiobook.projectId;
+                    if (!acc[projectId]) {
+                      acc[projectId] = [];
+                    }
+                    acc[projectId].push(audiobook);
+                    return acc;
+                  }, {} as Record<string, any[]>)
+                ).map(([projectId, projectAudiobooks]) => (
+                  <div key={projectId} className="space-y-2">
+                    <div className="flex items-center justify-between px-3 py-2 bg-muted/50 rounded-lg">
+                      <div>
+                        <p className="font-semibold text-sm">{projectAudiobooks[0].projectTitle}</p>
+                        <p className="text-xs text-muted-foreground">{projectAudiobooks.length} chapter{projectAudiobooks.length !== 1 ? 's' : ''}</p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          const projectChapterIds = projectAudiobooks.map(a => a.chapterId);
+                          const allSelected = projectChapterIds.every(id => selectedChapters.includes(id));
+                          
+                          if (allSelected) {
+                            // Deselect all from this project
+                            setSelectedChapters(prev => prev.filter(id => !projectChapterIds.includes(id)));
+                            if (selectedProjectForMerge === projectId) {
+                              setSelectedProjectForMerge(null);
+                            }
+                          } else {
+                            // Select all from this project
+                            setSelectedChapters(projectChapterIds);
+                            setSelectedProjectForMerge(projectId);
                           }
-                        } else {
-                          setSelectedChapters(prev => prev.filter(id => id !== audiobook.chapterId));
-                        }
-                      }}
-                      disabled={!!(selectedProjectForMerge && audiobook.projectId !== selectedProjectForMerge)}
-                      className="rounded"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm truncate">{audiobook.chapterTitle}</p>
-                      <p className="text-xs text-muted-foreground truncate">{audiobook.projectTitle}</p>
+                        }}
+                        className="text-xs"
+                      >
+                        {projectAudiobooks.every(a => selectedChapters.includes(a.chapterId)) ? 'Deselect All' : 'Select All'}
+                      </Button>
                     </div>
-                    <span className="text-xs text-muted-foreground">
-                      {(audiobook.audioSize / (1024 * 1024)).toFixed(1)} MB
-                    </span>
-                  </label>
+                    {projectAudiobooks.map((audiobook: any) => (
+                      <label
+                        key={audiobook.id}
+                        className={cn(
+                          "flex items-center gap-3 p-3 rounded-lg hover:bg-muted cursor-pointer ml-4",
+                          selectedProjectForMerge && audiobook.projectId !== selectedProjectForMerge && "opacity-50 cursor-not-allowed"
+                        )}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedChapters.includes(audiobook.chapterId)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedChapters(prev => [...prev, audiobook.chapterId]);
+                              if (!selectedProjectForMerge) {
+                                setSelectedProjectForMerge(audiobook.projectId);
+                              }
+                            } else {
+                              setSelectedChapters(prev => prev.filter(id => id !== audiobook.chapterId));
+                              if (selectedChapters.length === 1) {
+                                setSelectedProjectForMerge(null);
+                              }
+                            }
+                          }}
+                          disabled={!!(selectedProjectForMerge && audiobook.projectId !== selectedProjectForMerge)}
+                          className="rounded"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{audiobook.chapterTitle}</p>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {(audiobook.audioSize / (1024 * 1024)).toFixed(1)} MB
+                        </span>
+                      </label>
+                    ))}
+                  </div>
                 ))}
               </div>
             )}
             <div className="flex items-center justify-between pt-4 border-t">
               <p className="text-sm text-muted-foreground">
                 {selectedChapters.length} chapter{selectedChapters.length !== 1 ? 's' : ''} selected
+                {selectedProjectForMerge && ` from ${audiobooks.find(a => a.projectId === selectedProjectForMerge)?.projectTitle}`}
               </p>
               <div className="flex gap-2">
                 <Button

@@ -71,17 +71,19 @@ interface DashboardProps {
   onDeleteProject?: (projectId: string) => void;
   onImportProject?: (project: Partial<EbookProject>) => void;
   onProjectsChanged?: () => Promise<void>;
+  onNavigate?: (section: string) => void;
   userProfile?: UserProfile | null;
 }
 
 export function Dashboard({ 
   projects, 
   onSelectProject, 
-  onCreateProject, 
+  onCreateProject,
   onShowTemplateGallery,
   onDeleteProject,
   onImportProject,
   onProjectsChanged,
+  onNavigate,
   userProfile
 }: DashboardProps) {
   const { stats, totalWords, goals, progress } = useWritingAnalytics(projects);
@@ -453,7 +455,19 @@ export function Dashboard({
                   <SpeakerHigh size={20} className="text-primary" />
                   <h2 className="text-lg font-semibold">Your Audiobooks</h2>
                 </div>
-                <Badge variant="secondary">{audiobooks.length}</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">{audiobooks.length}</Badge>
+                  {audiobooks.length > 1 && (
+                    <Button
+                      size="sm"
+                      className="gap-2 bg-primary hover:bg-primary/90"
+                      onClick={() => onNavigate?.('projects')}
+                    >
+                      <SpeakerHigh size={16} weight="fill" />
+                      Merge Chapters
+                    </Button>
+                  )}
+                </div>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {audiobooks.slice(0, 3).map((audiobook: any) => (

@@ -36,10 +36,10 @@ service cloud.firestore {
       allow read, write, delete: if request.auth != null && request.resource.data.userId == request.auth.uid || resource.data.userId == request.auth.uid;
     }
     
-    // Audiobooks - users can only read their own audiobooks
+    // Audiobooks - users can read and delete their own audiobooks
     match /audiobooks/{audiobookId} {
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow write: if false; // Only server can write
+      allow read, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow write: if false; // Only server can create/update
     }
     
     // Deny all other access by default
