@@ -1163,6 +1163,13 @@ export function CoverDesigner({
   };
 
   const getBackgroundStyle = (): React.CSSProperties => {
+    // Check gradient first before any image checks
+    if (design.backgroundType === 'gradient') {
+      return {
+        background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`,
+      } as React.CSSProperties;
+    }
+    
     if (design.usePreMadeCover && design.backgroundImage) {
       return {
         backgroundImage: `url(${design.backgroundImage})`,
@@ -1171,11 +1178,7 @@ export function CoverDesigner({
       } as React.CSSProperties;
     }
 
-    if (design.backgroundType === 'gradient') {
-      return {
-        background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`,
-      } as React.CSSProperties;
-    } else if (design.backgroundType === 'image' && design.backgroundImage) {
+    if (design.backgroundType === 'image' && design.backgroundImage) {
       const filterValue = `brightness(${design.imageBrightness}%) contrast(${design.imageContrast}%)`;
       
       // Map alignment to CSS background-position
