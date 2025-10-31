@@ -564,13 +564,13 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'fitness-8',
     name: 'Crossfit Power',
-    url: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=1280&fit=crop',
     category: 'fitness', premium: true,
   },
   {
     id: 'fitness-9',
     name: 'Boxing Training',
-    url: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1549476464-37392f717541?w=800&h=1280&fit=crop',
     category: 'fitness', premium: true,
   },
   {
@@ -588,7 +588,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'fitness-12',
     name: 'Athlete Victory',
-    url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=800&h=1280&fit=crop',
     category: 'fitness', premium: true,
   },
   
@@ -608,7 +608,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'food-10',
     name: 'Smoothie Bowl',
-    url: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=800&h=1280&fit=crop',
     category: 'food',
   },
   {
@@ -628,7 +628,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'wellness-8',
     name: 'Mindfulness',
-    url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800&h=1280&fit=crop',
     category: 'wellness', premium: true,
   },
   {
@@ -666,13 +666,13 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'business-9',
     name: 'Global Network',
-    url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=1280&fit=crop',
     category: 'business', premium: true,
   },
   {
     id: 'business-10',
     name: 'Corporate Success',
-    url: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=1280&fit=crop',
     category: 'business', premium: true,
   },
   {
@@ -684,7 +684,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'business-12',
     name: 'Leadership',
-    url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=1280&fit=crop',
     category: 'business', premium: true,
   },
   
@@ -704,7 +704,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'crypto-7',
     name: 'Token Economy',
-    url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=800&h=1280&fit=crop',
     category: 'crypto', premium: true,
   },
   {
@@ -736,7 +736,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'dev-10',
     name: 'Cloud Computing',
-    url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&h=1280&fit=crop',
     category: 'development', premium: true,
   },
   
@@ -750,7 +750,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'marketing-6',
     name: 'Brand Identity',
-    url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&h=1280&fit=crop',
     category: 'marketing', premium: true,
   },
   {
@@ -762,7 +762,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'marketing-8',
     name: 'Campaign Launch',
-    url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=800&h=1280&fit=crop',
     category: 'marketing',
   },
   
@@ -770,13 +770,13 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'abstract-6',
     name: 'Geometric Flow',
-    url: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?w=800&h=1280&fit=crop',
     category: 'abstract', premium: true,
   },
   {
     id: 'abstract-7',
     name: 'Light Waves',
-    url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=800&h=1280&fit=crop',
     category: 'abstract', premium: true,
   },
   {
@@ -796,7 +796,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'minimal-5',
     name: 'Soft Gradient',
-    url: 'https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800&h=1280&fit=crop',
     category: 'minimal', premium: true,
   },
   {
@@ -814,10 +814,85 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'minimal-8',
     name: 'Monochrome',
-    url: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800&h=1280&fit=crop',
     category: 'minimal', premium: true,
   },
+  
+  // Additional FREE images for better balance
+  {
+    id: 'fitness-13',
+    name: 'Morning Run',
+    url: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800&h=1280&fit=crop',
+    category: 'fitness',
+  },
+  {
+    id: 'fitness-14',
+    name: 'Gym Motivation',
+    url: 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=800&h=1280&fit=crop',
+    category: 'fitness',
+  },
+  {
+    id: 'wellness-9',
+    name: 'Natural Wellness',
+    url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=1280&fit=crop',
+    category: 'wellness',
+  },
+  {
+    id: 'wellness-10',
+    name: 'Peaceful Mind',
+    url: 'https://images.unsplash.com/photo-1447452001602-7090c7ab2db3?w=800&h=1280&fit=crop',
+    category: 'wellness',
+  },
+  {
+    id: 'food-11',
+    name: 'Farm Fresh',
+    url: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&h=1280&fit=crop',
+    category: 'food',
+  },
+  {
+    id: 'food-12',
+    name: 'Cooking Joy',
+    url: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=1280&fit=crop',
+    category: 'food',
+  },
+  {
+    id: 'business-13',
+    name: 'Startup Growth',
+    url: 'https://images.unsplash.com/photo-1553484771-371a605b060b?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-14',
+    name: 'Office Workspace',
+    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'crypto-8',
+    name: 'Digital Finance',
+    url: 'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=800&h=1280&fit=crop',
+    category: 'crypto',
+  },
+  {
+    id: 'abstract-10',
+    name: 'Color Burst',
+    url: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800&h=1280&fit=crop',
+    category: 'abstract',
+  },
+  {
+    id: 'minimal-9',
+    name: 'Clean Lines',
+    url: 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?w=800&h=1280&fit=crop',
+    category: 'minimal',
+  },
+  {
+    id: 'marketing-9',
+    name: 'Social Strategy',
+    url: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&h=1280&fit=crop',
+    category: 'marketing',
+  },
 ];
+
 
 export function CoverDesigner({
   open,
@@ -1163,26 +1238,14 @@ export function CoverDesigner({
   };
 
   const getBackgroundStyle = (): React.CSSProperties => {
-    console.log('🎨 getBackgroundStyle called:', {
-      backgroundType: design.backgroundType,
-      gradientDirection: design.gradientDirection,
-      gradientStart: design.gradientStart,
-      gradientEnd: design.gradientEnd,
-      backgroundImage: design.backgroundImage?.substring(0, 50),
-      usePreMadeCover: design.usePreMadeCover
-    });
-    
     // Check gradient first before any image checks
     if (design.backgroundType === 'gradient') {
-      const gradientStyle = {
+      return {
         background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`,
       } as React.CSSProperties;
-      console.log('✅ Returning gradient style:', gradientStyle);
-      return gradientStyle;
     }
     
     if (design.usePreMadeCover && design.backgroundImage) {
-      console.log('📸 Returning pre-made cover style');
       return {
         backgroundImage: `url(${design.backgroundImage})`,
         backgroundSize: 'cover',
@@ -1694,7 +1757,7 @@ export function CoverDesigner({
                   </p>
                 </div>
 
-                <Tabs defaultValue={design.backgroundType === 'image' ? 'gradient' : design.backgroundType} onValueChange={(value: any) => updateDesign({ backgroundType: value })} className="w-full">
+                <Tabs defaultValue={design.backgroundType === 'image' ? 'gradient' : design.backgroundType} className="w-full">
                   <TabsList className="grid w-full grid-cols-2 h-12 mb-6">
                     <TabsTrigger value="gradient" className="text-sm font-medium">Gradient</TabsTrigger>
                     <TabsTrigger value="solid" className="text-sm font-medium">Solid Color</TabsTrigger>
@@ -1712,18 +1775,7 @@ export function CoverDesigner({
                           <Label className="text-sm font-semibold text-primary">✨ Premium Collection</Label>
                           <div className="grid grid-cols-3 gap-3">
                             <button
-                              onClick={() => {
-                                console.log('🔵 Gradient button clicked: Purple Dream');
-                                console.log('📝 Updating design with:', { 
-                                  backgroundType: 'gradient', 
-                                  backgroundImage: undefined, 
-                                  usePreMadeCover: false, 
-                                  gradientStart: '#667eea', 
-                                  gradientEnd: '#764ba2', 
-                                  gradientDirection: 'to-br' 
-                                });
-                                updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' });
-                              }}
+                              onClick={() => updateDesign({ backgroundType: 'gradient', backgroundImage: undefined, usePreMadeCover: false, gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' })}
                               className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
                               style={{ background: 'linear-gradient(to bottom right, #667eea, #764ba2)' }}
                               title="Purple Dream"
