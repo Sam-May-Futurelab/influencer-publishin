@@ -29,7 +29,7 @@ import { motion } from 'framer-motion';
 import { PreviewDialog } from '@/components/PreviewDialog';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { useAuth } from '@/hooks/use-auth';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -74,7 +74,59 @@ export function ProjectsPage({
   const [selectedProjectForMerge, setSelectedProjectForMerge] = useState<string | null>(null);
   const [selectedChapters, setSelectedChapters] = useState<string[]>([]);
   const [isMerging, setIsMerging] = useState(false);
+  
+  // Bulk selection states
+  const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
+  const [selectedAudiobooks, setSelectedAudiobooks] = useState<string[]>([]);
+  const [bulkDeleteMode, setBulkDeleteMode] = useState(false);
+  
   const { user } = useAuth();
+
+  // Bulk selection handlers
+  const toggleProjectSelection = (projectId: string) => {
+    setSelectedProjects(prev => 
+      prev.includes(projectId) 
+        ? prev.filter(id => id !== projectId)
+        : [...prev, projectId]
+    );
+  };
+
+  const toggleAudiobookSelection = (audiobookId: string) => {
+    setSelectedAudiobooks(prev => 
+      prev.includes(audiobookId) 
+        ? prev.filter(id => id !== audiobookId)
+        : [...prev, audiobookId]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      // Delete selected projects
+      await Promise.all(
+        selectedProjects.map(projectId => 
+          deleteDoc(doc(db, 'projects', projectId))
+        )
+      );
+
+      // Delete selected audiobooks
+      await Promise.all(
+        selectedAudiobooks.map(audiobookId => 
+          deleteDoc(doc(db, 'audiobooks', audiobookId))
+        )
+      );
+
+      toast.success(`Deleted ${selectedProjects.length} project(s) and ${selectedAudiobooks.length} audiobook(s)`);
+
+      // Reset selections
+      setSelectedProjects([]);
+      setSelectedAudiobooks([]);
+      setBulkDeleteMode(false);
+      setShowDeleteDialog(false);
+    } catch (error) {
+      console.error('Error deleting items:', error);
+      toast.error('Failed to delete items');
+    }
+  };
 
   // Load audiobooks with project titles
   useEffect(() => {
@@ -221,6 +273,45 @@ export function ProjectsPage({
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
+          {/* Bulk Actions Toggle */}
+          <Button
+            variant={bulkDeleteMode ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => {
+              setBulkDeleteMode(!bulkDeleteMode);
+              setSelectedProjects([]);
+              setSelectedAudiobooks([]);
+            }}
+            className="gap-2"
+          >
+            <input
+              type="checkbox"
+              checked={bulkDeleteMode}
+              onChange={() => {}}
+              className="w-4 h-4"
+            />
+            <span className="text-xs">Select Multiple</span>
+          </Button>
+
+          {/* Bulk Delete Button - Show when items selected */}
+          {bulkDeleteMode && (selectedProjects.length > 0 || selectedAudiobooks.length > 0) && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => {
+                if (selectedProjects.length > 0 || selectedAudiobooks.length > 0) {
+                  setShowDeleteDialog(true);
+                }
+              }}
+              className="gap-2"
+            >
+              <Trash size={14} />
+              <span className="text-xs">
+                Delete ({selectedProjects.length + selectedAudiobooks.length})
+              </span>
+            </Button>
+          )}
+
           {/* Sort */}
           <select
             value={sortBy}
@@ -338,16 +429,27 @@ export function ProjectsPage({
                 {audiobooks.slice(0, 6).map((audiobook: any) => (
                   <div key={audiobook.id} className="p-4 neomorph-inset rounded-lg space-y-3">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-sm truncate" title={audiobook.chapterTitle}>
-                          {audiobook.chapterTitle}
-                        </h3>
-                        <p className="text-xs text-muted-foreground truncate" title={audiobook.projectTitle}>
-                          {audiobook.projectTitle}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {(audiobook.audioSize / (1024 * 1024)).toFixed(1)} MB
-                        </p>
+                      <div className="flex-1 min-w-0 flex items-start gap-2">
+                        {bulkDeleteMode && (
+                          <input
+                            type="checkbox"
+                            checked={selectedAudiobooks.includes(audiobook.id)}
+                            onChange={() => toggleAudiobookSelection(audiobook.id)}
+                            className="h-4 w-4 rounded border-gray-300 cursor-pointer mt-0.5"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-sm truncate" title={audiobook.chapterTitle}>
+                            {audiobook.chapterTitle}
+                          </h3>
+                          <p className="text-xs text-muted-foreground truncate" title={audiobook.projectTitle}>
+                            {audiobook.projectTitle}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {(audiobook.audioSize / (1024 * 1024)).toFixed(1)} MB
+                          </p>
+                        </div>
                       </div>
                       <div className="flex gap-1 flex-shrink-0">
                         <Button
@@ -421,6 +523,15 @@ export function ProjectsPage({
                       <div className={viewMode === 'grid' ? "space-y-3" : "flex-1 space-y-1"}>
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-3 flex-1 min-w-0">
+                            {bulkDeleteMode && (
+                              <input
+                                type="checkbox"
+                                checked={selectedProjects.includes(project.id)}
+                                onChange={() => toggleProjectSelection(project.id)}
+                                className="h-4 w-4 rounded border-gray-300 cursor-pointer"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            )}
                             <div 
                               className="w-3 h-3 rounded-full flex-shrink-0"
                               style={{ backgroundColor: project.brandConfig?.primaryColor || '#8B5CF6' }}
@@ -740,10 +851,29 @@ export function ProjectsPage({
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <Trash size={20} className="text-destructive" />
-              Delete Project?
+              {bulkDeleteMode ? 'Delete Multiple Items?' : 'Delete Project?'}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "{projectToDelete?.title}"? This action cannot be undone and all content will be permanently lost.
+              {bulkDeleteMode ? (
+                <div className="space-y-3">
+                  <p className="text-sm">
+                    You are about to delete <span className="font-semibold text-foreground">{selectedProjects.length + selectedAudiobooks.length} item(s)</span>:
+                  </p>
+                  <div className="p-3 bg-destructive/10 rounded-lg space-y-1 text-sm">
+                    {selectedProjects.length > 0 && (
+                      <div>• <span className="font-medium">{selectedProjects.length}</span> project(s)</div>
+                    )}
+                    {selectedAudiobooks.length > 0 && (
+                      <div>• <span className="font-medium">{selectedAudiobooks.length}</span> audiobook(s)</div>
+                    )}
+                  </div>
+                  <p className="text-sm text-destructive font-medium">
+                    This action cannot be undone. All content will be permanently lost.
+                  </p>
+                </div>
+              ) : (
+                `Are you sure you want to delete "${projectToDelete?.title}"? This action cannot be undone and all content will be permanently lost.`
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -758,7 +888,9 @@ export function ProjectsPage({
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                if (projectToDelete && onDeleteProject) {
+                if (bulkDeleteMode) {
+                  handleBulkDelete();
+                } else if (projectToDelete && onDeleteProject) {
                   onDeleteProject(projectToDelete.id);
                   setShowDeleteDialog(false);
                   setProjectToDelete(null);
@@ -767,7 +899,7 @@ export function ProjectsPage({
               className="neomorph-button border-0 bg-destructive hover:bg-destructive/90 text-white gap-2"
             >
               <Trash size={16} />
-              Delete Project
+              {bulkDeleteMode ? `Delete ${selectedProjects.length + selectedAudiobooks.length} Items` : 'Delete Project'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
