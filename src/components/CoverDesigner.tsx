@@ -820,73 +820,73 @@ const STOCK_IMAGES: StockImage[] = [
   
   // Additional FREE images for better balance
   {
-    id: 'fitness-13',
+    id: 'fitness-15',
     name: 'Morning Run',
     url: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800&h=1280&fit=crop',
     category: 'fitness',
   },
   {
-    id: 'fitness-14',
+    id: 'fitness-16',
     name: 'Gym Motivation',
     url: 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=800&h=1280&fit=crop',
     category: 'fitness',
   },
   {
-    id: 'wellness-9',
+    id: 'wellness-11',
     name: 'Natural Wellness',
     url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=1280&fit=crop',
     category: 'wellness',
   },
   {
-    id: 'wellness-10',
+    id: 'wellness-12',
     name: 'Peaceful Mind',
     url: 'https://images.unsplash.com/photo-1447452001602-7090c7ab2db3?w=800&h=1280&fit=crop',
     category: 'wellness',
   },
   {
-    id: 'food-11',
+    id: 'food-13',
     name: 'Farm Fresh',
     url: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&h=1280&fit=crop',
     category: 'food',
   },
   {
-    id: 'food-12',
+    id: 'food-14',
     name: 'Cooking Joy',
     url: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=1280&fit=crop',
     category: 'food',
   },
   {
-    id: 'business-13',
+    id: 'business-15',
     name: 'Startup Growth',
     url: 'https://images.unsplash.com/photo-1553484771-371a605b060b?w=800&h=1280&fit=crop',
     category: 'business',
   },
   {
-    id: 'business-14',
+    id: 'business-16',
     name: 'Office Workspace',
     url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1280&fit=crop',
     category: 'business',
   },
   {
-    id: 'crypto-8',
+    id: 'crypto-9',
     name: 'Digital Finance',
     url: 'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=800&h=1280&fit=crop',
     category: 'crypto',
   },
   {
-    id: 'abstract-10',
+    id: 'abstract-11',
     name: 'Color Burst',
-    url: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&h=1280&fit=crop',
     category: 'abstract',
   },
   {
-    id: 'minimal-9',
+    id: 'minimal-10',
     name: 'Clean Lines',
     url: 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?w=800&h=1280&fit=crop',
     category: 'minimal',
   },
   {
-    id: 'marketing-9',
+    id: 'marketing-10',
     name: 'Social Strategy',
     url: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&h=1280&fit=crop',
     category: 'marketing',
@@ -1240,6 +1240,12 @@ export function CoverDesigner({
   const getBackgroundStyle = (): React.CSSProperties => {
     // Check gradient first before any image checks
     if (design.backgroundType === 'gradient') {
+      console.log('🎨 GRADIENT DEBUG:', {
+        gradientDirection: design.gradientDirection,
+        gradientStart: design.gradientStart,
+        gradientEnd: design.gradientEnd,
+        cssString: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
+      });
       return {
         background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`,
       } as React.CSSProperties;
