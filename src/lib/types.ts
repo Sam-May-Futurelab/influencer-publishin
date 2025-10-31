@@ -31,12 +31,21 @@ export interface CoverDesign {
   titleFont: string;
   titleSize: number;
   titleColor: string;
+  titlePosition?: number; // Vertical position percentage (0-100)
   subtitleFont: string;
   subtitleSize: number;
   subtitleColor: string;
+  subtitlePosition?: number; // Vertical position percentage (0-100)
   authorFont: string;
   authorSize: number;
   authorColor: string;
+  authorPosition?: number; // Vertical position percentage (0-100)
+  // Text shadow properties
+  textShadowEnabled?: boolean; // Master toggle for text shadows
+  shadowBlur?: number; // Shadow blur amount (0-20px)
+  shadowOffsetX?: number; // Shadow horizontal offset (-10 to 10px)
+  shadowOffsetY?: number; // Shadow vertical offset (-10 to 10px)
+  shadowColor?: string; // Shadow color (hex/rgba)
   overlay: boolean;
   overlayOpacity: number;
   imagePosition?: 'cover' | 'contain' | 'fill';

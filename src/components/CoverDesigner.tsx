@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -60,6 +61,14 @@ interface CoverDesign {
   imageBrightness: number;
   imageContrast: number;
   usePreMadeCover: boolean;
+  titlePosition?: number;
+  subtitlePosition?: number;
+  authorPosition?: number;
+  textShadowEnabled?: boolean;
+  shadowBlur?: number;
+  shadowOffsetX?: number;
+  shadowOffsetY?: number;
+  shadowColor?: string;
 }
 
 interface CoverDesignerProps {
@@ -688,12 +697,20 @@ export function CoverDesigner({
     titleFont: initialDesign?.titleFont || 'Playfair Display',
     titleSize: initialDesign?.titleSize || 52,
     titleColor: initialDesign?.titleColor || '#ffffff',
+    titlePosition: initialDesign?.titlePosition || 40,
     subtitleFont: initialDesign?.subtitleFont || 'Inter',
     subtitleSize: initialDesign?.subtitleSize || 22,
     subtitleColor: initialDesign?.subtitleColor || '#e0e7ff',
+    subtitlePosition: initialDesign?.subtitlePosition || 50,
     authorFont: initialDesign?.authorFont || 'Inter',
     authorSize: initialDesign?.authorSize || 18,
     authorColor: initialDesign?.authorColor || '#f0f9ff',
+    authorPosition: initialDesign?.authorPosition || 80,
+    textShadowEnabled: initialDesign?.textShadowEnabled ?? true,
+    shadowBlur: initialDesign?.shadowBlur ?? 8,
+    shadowOffsetX: initialDesign?.shadowOffsetX ?? 2,
+    shadowOffsetY: initialDesign?.shadowOffsetY ?? 2,
+    shadowColor: initialDesign?.shadowColor || 'rgba(0, 0, 0, 0.8)',
     overlay: initialDesign?.overlay ?? false,
     overlayOpacity: initialDesign?.overlayOpacity || 40,
     imagePosition: initialDesign?.imagePosition || 'cover',
@@ -820,15 +837,32 @@ export function CoverDesigner({
 
       // Draw text
       const drawText = (text: string, font: string, size: number, color: string, y: number) => {
+        // Apply shadow if enabled
+        if (design.textShadowEnabled) {
+          ctx.shadowColor = design.shadowColor || 'rgba(0, 0, 0, 0.8)';
+          ctx.shadowBlur = (design.shadowBlur || 8) * 3; // Scale for high-res canvas
+          ctx.shadowOffsetX = (design.shadowOffsetX || 2) * 3;
+          ctx.shadowOffsetY = (design.shadowOffsetY || 2) * 3;
+        } else {
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+        }
+        
         ctx.fillStyle = color;
         ctx.font = `${size * 3}px ${font}`;
         ctx.textAlign = 'center';
         ctx.fillText(text, canvas.width / 2, y);
       };
 
-      drawText(design.title, design.titleFont, design.titleSize, design.titleColor, canvas.height * 0.4);
-      drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, canvas.height * 0.5);
-      drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, canvas.height * 0.80);
+      const titleY = canvas.height * ((design.titlePosition || 40) / 100);
+      const subtitleY = canvas.height * ((design.subtitlePosition || 50) / 100);
+      const authorY = canvas.height * ((design.authorPosition || 80) / 100);
+
+      drawText(design.title, design.titleFont, design.titleSize, design.titleColor, titleY);
+      drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, subtitleY);
+      drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, authorY);
 
       return canvas.toDataURL('image/png');
     } catch (error) {
@@ -897,6 +931,19 @@ export function CoverDesigner({
         align: 'center' | 'left' | 'right' = 'center',
         maxWidth?: number
       ) => {
+        // Apply shadow if enabled
+        if (design.textShadowEnabled) {
+          ctx.shadowColor = design.shadowColor || 'rgba(0, 0, 0, 0.8)';
+          ctx.shadowBlur = (design.shadowBlur || 8) * 3; // Scale for high-res canvas
+          ctx.shadowOffsetX = (design.shadowOffsetX || 2) * 3;
+          ctx.shadowOffsetY = (design.shadowOffsetY || 2) * 3;
+        } else {
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+        }
+        
         ctx.fillStyle = color;
         ctx.font = `${size * 3}px ${font}`;
         ctx.textAlign = align;
@@ -937,13 +984,17 @@ export function CoverDesigner({
       };
 
       // Title with word wrapping (max 80% of canvas width)
-      drawText(design.title, design.titleFont, design.titleSize, design.titleColor, canvas.height * 0.4, 'center', canvas.width * 0.8);
+      const titleY = canvas.height * ((design.titlePosition || 40) / 100);
+      const subtitleY = canvas.height * ((design.subtitlePosition || 50) / 100);
+      const authorY = canvas.height * ((design.authorPosition || 80) / 100);
+      
+      drawText(design.title, design.titleFont, design.titleSize, design.titleColor, titleY, 'center', canvas.width * 0.8);
 
       // Subtitle
-      drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, canvas.height * 0.5, 'center', canvas.width * 0.8);
+      drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, subtitleY, 'center', canvas.width * 0.8);
 
       // Author
-      drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, canvas.height * 0.85, 'center', canvas.width * 0.8);
+      drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, authorY, 'center', canvas.width * 0.8);
 
       const imageData = canvas.toDataURL('image/png');
       
@@ -1078,7 +1129,9 @@ export function CoverDesigner({
                       wordBreak: 'break-word',
                       hyphens: 'auto',
                       maxWidth: '90%',
-                      textShadow: '2px 2px 4px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.5)'
+                      textShadow: design.textShadowEnabled 
+                        ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` 
+                        : 'none'
                     }}
                   >
                     {design.title}
@@ -1091,7 +1144,9 @@ export function CoverDesigner({
                       color: design.subtitleColor,
                       wordBreak: 'break-word',
                       hyphens: 'auto',
-                      textShadow: '1px 1px 3px rgba(0,0,0,0.7), -1px -1px 2px rgba(0,0,0,0.4)'
+                      textShadow: design.textShadowEnabled 
+                        ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` 
+                        : 'none'
                     }}
                   >
                     {design.subtitle}
@@ -1104,7 +1159,9 @@ export function CoverDesigner({
                       color: design.authorColor,
                       wordBreak: 'break-word',
                       maxWidth: '90%',
-                      textShadow: '1px 1px 3px rgba(0,0,0,0.7), -1px -1px 2px rgba(0,0,0,0.4)'
+                      textShadow: design.textShadowEnabled 
+                        ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` 
+                        : 'none'
                     }}
                   >
                     {design.authorName}
@@ -1424,13 +1481,265 @@ export function CoverDesigner({
 
               {/* Background Tab */}
               <TabsContent value="background" className="space-y-6">
-                <Tabs defaultValue={design.backgroundType === 'image' ? 'solid' : design.backgroundType} onValueChange={(value: any) => updateDesign({ backgroundType: value })} className="w-full">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-lg font-bold">Background Colors</Label>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Choose from stunning gradient presets or create your own custom colors
+                  </p>
+                </div>
+
+                <Tabs defaultValue={design.backgroundType === 'image' ? 'gradient' : design.backgroundType} onValueChange={(value: any) => updateDesign({ backgroundType: value })} className="w-full">
                   <TabsList className="grid w-full grid-cols-2 h-12 mb-6">
-                    <TabsTrigger value="solid" className="text-sm font-medium">Solid Color</TabsTrigger>
                     <TabsTrigger value="gradient" className="text-sm font-medium">Gradient</TabsTrigger>
+                    <TabsTrigger value="solid" className="text-sm font-medium">Solid Color</TabsTrigger>
                   </TabsList>
 
-                  {/* Solid Color Sub-Tab */}
+                  {/* Gradient Sub-Tab - NOW FIRST */}
+                  <TabsContent value="gradient" className="space-y-6">
+                      {/* Gradient Preset Gallery */}
+                      <div className="space-y-4">
+                        <Label className="text-base font-bold">Gradient Presets</Label>
+                        <p className="text-sm text-muted-foreground">Click any gradient to apply instantly</p>
+                        
+                        {/* Premium Gradients Category */}
+                        <div className="space-y-3">
+                          <Label className="text-sm font-semibold text-primary">✨ Premium Collection</Label>
+                          <div className="grid grid-cols-3 gap-3">
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #667eea, #764ba2)' }}
+                              title="Purple Dream"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#f857a6', gradientEnd: '#ff5858', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #f857a6, #ff5858)' }}
+                              title="Sunset Bliss"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#00c6ff', gradientEnd: '#0072ff', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #00c6ff, #0072ff)' }}
+                              title="Ocean Blue"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#f093fb', gradientEnd: '#f5576c', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #f093fb, #f5576c)' }}
+                              title="Pink Lemonade"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#4facfe', gradientEnd: '#00f2fe', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #4facfe, #00f2fe)' }}
+                              title="Fresh Air"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#43e97b', gradientEnd: '#38f9d7', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #43e97b, #38f9d7)' }}
+                              title="Mint Fresh"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Warm Tones Category */}
+                        <div className="space-y-3">
+                          <Label className="text-sm font-semibold text-orange-600 dark:text-orange-400">🔥 Warm & Energetic</Label>
+                          <div className="grid grid-cols-3 gap-3">
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#fa709a', gradientEnd: '#fee140', gradientDirection: 'to-b' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom, #fa709a, #fee140)' }}
+                              title="Summer Warmth"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#ff6a00', gradientEnd: '#ee0979', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #ff6a00, #ee0979)' }}
+                              title="Burning Fire"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#f83600', gradientEnd: '#f9d423', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #f83600, #f9d423)' }}
+                              title="Fiery Sunset"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#eb3349', gradientEnd: '#f45c43', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #eb3349, #f45c43)' }}
+                              title="Cherry Red"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#ff9966', gradientEnd: '#ff5e62', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #ff9966, #ff5e62)' }}
+                              title="Peach Flame"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#fc4a1a', gradientEnd: '#f7b733', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #fc4a1a, #f7b733)' }}
+                              title="Golden Hour"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Cool Tones Category */}
+                        <div className="space-y-3">
+                          <Label className="text-sm font-semibold text-blue-600 dark:text-blue-400">❄️ Cool & Calm</Label>
+                          <div className="grid grid-cols-3 gap-3">
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#30cfd0', gradientEnd: '#330867', gradientDirection: 'to-b' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom, #30cfd0, #330867)' }}
+                              title="Deep Ocean"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#a8edea', gradientEnd: '#fed6e3', gradientDirection: 'to-b' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom, #a8edea, #fed6e3)' }}
+                              title="Pastel Dream"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#89f7fe', gradientEnd: '#66a6ff', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #89f7fe, #66a6ff)' }}
+                              title="Sky Blue"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#06beb6', gradientEnd: '#48b1bf', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #06beb6, #48b1bf)' }}
+                              title="Teal Breeze"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#16a085', gradientEnd: '#f4d03f', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #16a085, #f4d03f)' }}
+                              title="Tropical"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#2193b0', gradientEnd: '#6dd5ed', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #2193b0, #6dd5ed)' }}
+                              title="Crystal Water"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Dark & Elegant Category */}
+                        <div className="space-y-3">
+                          <Label className="text-sm font-semibold text-purple-600 dark:text-purple-400">🌙 Dark & Elegant</Label>
+                          <div className="grid grid-cols-3 gap-3">
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#141e30', gradientEnd: '#243b55', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #141e30, #243b55)' }}
+                              title="Midnight"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#000000', gradientEnd: '#434343', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #000000, #434343)' }}
+                              title="Carbon"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#4b6cb7', gradientEnd: '#182848', gradientDirection: 'to-b' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom, #4b6cb7, #182848)' }}
+                              title="Navy Night"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#2c3e50', gradientEnd: '#4ca1af', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #2c3e50, #4ca1af)' }}
+                              title="Steel Blue"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#2c3e50', gradientEnd: '#fd746c', gradientDirection: 'to-r' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to right, #2c3e50, #fd746c)' }}
+                              title="Dark Coral"
+                            />
+                            <button
+                              onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#232526', gradientEnd: '#414345', gradientDirection: 'to-br' })}
+                              className="h-20 rounded-xl border-2 border-border hover:border-primary hover:scale-105 transition-all shadow-md"
+                              style={{ background: 'linear-gradient(to bottom right, #232526, #414345)' }}
+                              title="Graphite"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Custom Gradient Controls */}
+                      <div className="space-y-4 pt-4 border-t">
+                        <Label className="text-base font-bold">Custom Gradient</Label>
+                        <p className="text-sm text-muted-foreground">Fine-tune your gradient colors and direction</p>
+                        
+                        <div className="space-y-3">
+                          <Label className="text-sm font-medium">Start Color</Label>
+                          <div className="flex gap-3">
+                            <Input
+                              type="color"
+                              value={design.gradientStart}
+                              onChange={(e) => updateDesign({ gradientStart: e.target.value })}
+                              className="w-24 h-12 cursor-pointer"
+                            />
+                            <Input
+                              type="text"
+                              value={design.gradientStart}
+                              onChange={(e) => updateDesign({ gradientStart: e.target.value })}
+                              className="flex-1 h-12 text-base"
+                              placeholder="#667eea"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <Label className="text-sm font-medium">End Color</Label>
+                          <div className="flex gap-3">
+                            <Input
+                              type="color"
+                              value={design.gradientEnd}
+                              onChange={(e) => updateDesign({ gradientEnd: e.target.value })}
+                              className="w-24 h-12 cursor-pointer"
+                            />
+                            <Input
+                              type="text"
+                              value={design.gradientEnd}
+                              onChange={(e) => updateDesign({ gradientEnd: e.target.value })}
+                              className="flex-1 h-12 text-base"
+                              placeholder="#764ba2"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <Label className="text-sm font-medium">Gradient Direction</Label>
+                          <Select
+                            value={design.gradientDirection}
+                            onValueChange={(value: any) => updateDesign({ gradientDirection: value })}
+                          >
+                            <SelectTrigger className="h-12 text-base">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="to-br" className="text-base py-3">Diagonal Down-Right (↘)</SelectItem>
+                              <SelectItem value="to-tr" className="text-base py-3">Diagonal Up-Right (↗)</SelectItem>
+                              <SelectItem value="to-r" className="text-base py-3">Horizontal Right (→)</SelectItem>
+                              <SelectItem value="to-b" className="text-base py-3">Vertical Down (↓)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                  {/* Solid Color Sub-Tab - NOW SECOND */}
                   <TabsContent value="solid" className="space-y-6">
                     <div className="space-y-3">
                       <Label className="text-base font-medium">Background Color</Label>
@@ -1495,130 +1804,30 @@ export function CoverDesigner({
                           className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-amber-600"
                           title="Amber"
                         />
+                        <button
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#ec4899' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-pink-600"
+                          title="Pink"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#8b5cf6' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-purple-600"
+                          title="Purple"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#0891b2' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-cyan-600"
+                          title="Cyan"
+                        />
+                        <button
+                          onClick={() => updateDesign({ backgroundType: 'solid', backgroundColor: '#65a30d' })}
+                          className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors bg-lime-600"
+                          title="Lime"
+                        />
                       </div>
                     </div>
                   </TabsContent>
-
-                  {/* Gradient Sub-Tab */}
-                  <TabsContent value="gradient" className="space-y-6">
-                      <div className="space-y-3">
-                        <Label className="text-base font-medium">Color 1 (Start)</Label>
-                        <div className="flex gap-3">
-                          <Input
-                            type="color"
-                            value={design.gradientStart}
-                            onChange={(e) => updateDesign({ gradientStart: e.target.value })}
-                            className="w-24 h-12 cursor-pointer"
-                          />
-                          <Input
-                            type="text"
-                            value={design.gradientStart}
-                            onChange={(e) => updateDesign({ gradientStart: e.target.value })}
-                            className="flex-1 h-12 text-base"
-                            placeholder="#667eea"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label className="text-base font-medium">Color 2 (End)</Label>
-                        <div className="flex gap-3">
-                          <Input
-                            type="color"
-                            value={design.gradientEnd}
-                            onChange={(e) => updateDesign({ gradientEnd: e.target.value })}
-                            className="w-24 h-12 cursor-pointer"
-                          />
-                          <Input
-                            type="text"
-                            value={design.gradientEnd}
-                            onChange={(e) => updateDesign({ gradientEnd: e.target.value })}
-                            className="flex-1 h-12 text-base"
-                            placeholder="#764ba2"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label className="text-base font-medium">Gradient Direction</Label>
-                        <Select
-                          value={design.gradientDirection}
-                          onValueChange={(value: any) => updateDesign({ gradientDirection: value })}
-                        >
-                          <SelectTrigger className="h-12 text-base">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="to-br" className="text-base py-3">Diagonal Down-Right (↘)</SelectItem>
-                            <SelectItem value="to-tr" className="text-base py-3">Diagonal Up-Right (↗)</SelectItem>
-                            <SelectItem value="to-r" className="text-base py-3">Horizontal Right (→)</SelectItem>
-                            <SelectItem value="to-b" className="text-base py-3">Vertical Down (↓)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {/* Quick Gradient Presets */}
-                      <div className="space-y-3 pt-4 border-t">
-                        <Label className="text-base font-medium">Quick Gradient Presets</Label>
-                        <div className="grid grid-cols-3 gap-3">
-                          <button
-                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#667eea', gradientEnd: '#764ba2', gradientDirection: 'to-br' })}
-                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                            style={{ background: 'linear-gradient(to bottom right, #667eea, #764ba2)' }}
-                            title="Purple Dream"
-                          />
-                          <button
-                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#f857a6', gradientEnd: '#ff5858', gradientDirection: 'to-br' })}
-                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                            style={{ background: 'linear-gradient(to bottom right, #f857a6, #ff5858)' }}
-                            title="Sunset"
-                          />
-                          <button
-                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#00c6ff', gradientEnd: '#0072ff', gradientDirection: 'to-br' })}
-                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                            style={{ background: 'linear-gradient(to bottom right, #00c6ff, #0072ff)' }}
-                            title="Ocean Blue"
-                          />
-                          <button
-                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#f093fb', gradientEnd: '#f5576c', gradientDirection: 'to-r' })}
-                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                            style={{ background: 'linear-gradient(to right, #f093fb, #f5576c)' }}
-                            title="Pink Lemonade"
-                          />
-                          <button
-                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#4facfe', gradientEnd: '#00f2fe', gradientDirection: 'to-r' })}
-                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                            style={{ background: 'linear-gradient(to right, #4facfe, #00f2fe)' }}
-                            title="Fresh Air"
-                          />
-                          <button
-                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#43e97b', gradientEnd: '#38f9d7', gradientDirection: 'to-r' })}
-                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                            style={{ background: 'linear-gradient(to right, #43e97b, #38f9d7)' }}
-                            title="Mint Fresh"
-                          />
-                          <button
-                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#fa709a', gradientEnd: '#fee140', gradientDirection: 'to-b' })}
-                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                            style={{ background: 'linear-gradient(to bottom, #fa709a, #fee140)' }}
-                            title="Summer Warmth"
-                          />
-                          <button
-                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#30cfd0', gradientEnd: '#330867', gradientDirection: 'to-b' })}
-                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                            style={{ background: 'linear-gradient(to bottom, #30cfd0, #330867)' }}
-                            title="Deep Ocean"
-                          />
-                          <button
-                            onClick={() => updateDesign({ backgroundType: 'gradient', gradientStart: '#a8edea', gradientEnd: '#fed6e3', gradientDirection: 'to-b' })}
-                            className="h-16 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                            style={{ background: 'linear-gradient(to bottom, #a8edea, #fed6e3)' }}
-                            title="Pastel Dream"
-                          />
-                        </div>
-                      </div>
-                    </TabsContent>
-                  </Tabs>
+                </Tabs>
               </TabsContent>
 
               {/* Text Tab */}
@@ -1632,12 +1841,88 @@ export function CoverDesigner({
                   </p>
                 </div>
 
+                {/* Layout Presets */}
+                <Card className="p-5 border-2">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Label className="text-base font-bold">Text Layout</Label>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Choose a preset or customize positions</p>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => updateDesign({ 
+                          titlePosition: 40,
+                          subtitlePosition: 50,
+                          authorPosition: 80
+                        })}
+                        className="group h-20 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex flex-col items-center justify-center gap-1 px-4 bg-card"
+                      >
+                        <div className="flex flex-col gap-1 w-full items-center">
+                          <div className="w-16 h-1.5 bg-primary rounded"></div>
+                          <div className="w-12 h-1 bg-muted-foreground/50 rounded"></div>
+                          <div className="w-10 h-1 bg-muted-foreground/30 rounded mt-2"></div>
+                        </div>
+                        <span className="text-xs font-semibold mt-1">Classic</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => updateDesign({ 
+                          titlePosition: 50,
+                          subtitlePosition: 58,
+                          authorPosition: 90
+                        })}
+                        className="group h-20 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex flex-col items-center justify-center gap-1 px-4 bg-card"
+                      >
+                        <div className="flex flex-col gap-1 w-full items-center">
+                          <div className="w-16 h-1.5 bg-primary rounded mt-3"></div>
+                          <div className="w-12 h-1 bg-muted-foreground/50 rounded"></div>
+                          <div className="w-10 h-1 bg-muted-foreground/30 rounded mt-4"></div>
+                        </div>
+                        <span className="text-xs font-semibold mt-1">Modern</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => updateDesign({ 
+                          titlePosition: 30,
+                          subtitlePosition: 50,
+                          authorPosition: 70
+                        })}
+                        className="group h-20 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex flex-col items-center justify-center gap-1 px-4 bg-card"
+                      >
+                        <div className="flex flex-col gap-1 w-full items-center">
+                          <div className="w-16 h-1.5 bg-primary rounded"></div>
+                          <div className="w-12 h-1 bg-muted-foreground/50 rounded mt-2"></div>
+                          <div className="w-10 h-1 bg-muted-foreground/30 rounded mt-2"></div>
+                        </div>
+                        <span className="text-xs font-semibold mt-1">Balanced</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => updateDesign({ 
+                          titlePosition: 20,
+                          subtitlePosition: 28,
+                          authorPosition: 85
+                        })}
+                        className="group h-20 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex flex-col items-center justify-center gap-1 px-4 bg-card"
+                      >
+                        <div className="flex flex-col gap-1 w-full items-center">
+                          <div className="w-16 h-1.5 bg-primary rounded"></div>
+                          <div className="w-12 h-1 bg-muted-foreground/50 rounded"></div>
+                          <div className="w-10 h-1 bg-muted-foreground/30 rounded mt-6"></div>
+                        </div>
+                        <span className="text-xs font-semibold mt-1">Top Heavy</span>
+                      </button>
+                    </div>
+                  </div>
+                </Card>
+
                 {/* Title Section */}
-                <Card className="p-5 bg-gradient-to-br from-purple-50/50 to-white border-2 border-purple-100">
+                <Card className="p-5 border-2">
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-purple-600"></div>
-                      <Label className="text-base font-bold text-purple-900">Title</Label>
+                      <Label className="text-base font-bold">Title</Label>
                     </div>
                     
                     <div className="space-y-2">
@@ -1715,15 +2000,34 @@ export function CoverDesigner({
                         <span>Large (80px)</span>
                       </div>
                     </div>
+
+                    <div className="space-y-2 pt-2 border-t">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm text-muted-foreground">Vertical Position</Label>
+                        <Badge variant="secondary" className="text-xs">{design.titlePosition || 40}%</Badge>
+                      </div>
+                      <Slider
+                        value={[design.titlePosition || 40]}
+                        onValueChange={([value]) => updateDesign({ titlePosition: value })}
+                        min={10}
+                        max={90}
+                        step={1}
+                        className="py-3"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground pt-1">
+                        <span>Top (10%)</span>
+                        <span>Bottom (90%)</span>
+                      </div>
+                    </div>
                   </div>
                 </Card>
 
                 {/* Subtitle Section */}
-                <Card className="p-5 bg-gradient-to-br from-blue-50/50 to-white border-2 border-blue-100">
+                <Card className="p-5 border-2">
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-blue-600"></div>
-                      <Label className="text-base font-bold text-blue-900">Subtitle</Label>
+                      <Label className="text-base font-bold">Subtitle</Label>
                     </div>
                     
                     <div className="space-y-2">
@@ -1801,15 +2105,34 @@ export function CoverDesigner({
                         <span>Large (40px)</span>
                       </div>
                     </div>
+
+                    <div className="space-y-2 pt-2 border-t">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm text-muted-foreground">Vertical Position</Label>
+                        <Badge variant="secondary" className="text-xs">{design.subtitlePosition || 50}%</Badge>
+                      </div>
+                      <Slider
+                        value={[design.subtitlePosition || 50]}
+                        onValueChange={([value]) => updateDesign({ subtitlePosition: value })}
+                        min={10}
+                        max={90}
+                        step={1}
+                        className="py-3"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground pt-1">
+                        <span>Top (10%)</span>
+                        <span>Bottom (90%)</span>
+                      </div>
+                    </div>
                   </div>
                 </Card>
 
                 {/* Author Section */}
-                <Card className="p-5 bg-gradient-to-br from-green-50/50 to-white border-2 border-green-100">
+                <Card className="p-5 border-2">
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-green-600"></div>
-                      <Label className="text-base font-bold text-green-900">Author Name</Label>
+                      <Label className="text-base font-bold">Author Name</Label>
                     </div>
                     
                     <div className="space-y-2">
@@ -1887,15 +2210,180 @@ export function CoverDesigner({
                         <span>Large (32px)</span>
                       </div>
                     </div>
+
+                    <div className="space-y-2 pt-2 border-t">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm text-muted-foreground">Vertical Position</Label>
+                        <Badge variant="secondary" className="text-xs">{design.authorPosition || 80}%</Badge>
+                      </div>
+                      <Slider
+                        value={[design.authorPosition || 80]}
+                        onValueChange={([value]) => updateDesign({ authorPosition: value })}
+                        min={10}
+                        max={90}
+                        step={1}
+                        className="py-3"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground pt-1">
+                        <span>Top (10%)</span>
+                        <span>Bottom (90%)</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Text Shadow Controls */}
+                <Card className="p-5 border-2">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <Label className="text-base font-bold">Text Shadow</Label>
+                        <p className="text-sm text-muted-foreground">Add depth and readability to your text</p>
+                      </div>
+                      <Switch
+                        checked={design.textShadowEnabled ?? true}
+                        onCheckedChange={(checked) => updateDesign({ textShadowEnabled: checked })}
+                      />
+                    </div>
+                    
+                    {design.textShadowEnabled && (
+                      <div className="space-y-4 pt-2 border-t">
+                        {/* Shadow Blur */}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-sm font-medium">Blur Amount</Label>
+                            <Badge variant="secondary" className="text-xs">{design.shadowBlur ?? 8}px</Badge>
+                          </div>
+                          <Slider
+                            value={[design.shadowBlur ?? 8]}
+                            onValueChange={([value]) => updateDesign({ shadowBlur: value })}
+                            min={0}
+                            max={20}
+                            step={1}
+                            className="py-3"
+                          />
+                          <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>Sharp (0px)</span>
+                            <span>Soft (20px)</span>
+                          </div>
+                        </div>
+
+                        {/* Shadow Offset X */}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-sm font-medium">Horizontal Offset</Label>
+                            <Badge variant="secondary" className="text-xs">{design.shadowOffsetX ?? 2}px</Badge>
+                          </div>
+                          <Slider
+                            value={[design.shadowOffsetX ?? 2]}
+                            onValueChange={([value]) => updateDesign({ shadowOffsetX: value })}
+                            min={-10}
+                            max={10}
+                            step={1}
+                            className="py-3"
+                          />
+                          <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>← Left (-10px)</span>
+                            <span>Right (10px) →</span>
+                          </div>
+                        </div>
+
+                        {/* Shadow Offset Y */}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-sm font-medium">Vertical Offset</Label>
+                            <Badge variant="secondary" className="text-xs">{design.shadowOffsetY ?? 2}px</Badge>
+                          </div>
+                          <Slider
+                            value={[design.shadowOffsetY ?? 2]}
+                            onValueChange={([value]) => updateDesign({ shadowOffsetY: value })}
+                            min={-10}
+                            max={10}
+                            step={1}
+                            className="py-3"
+                          />
+                          <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>↑ Up (-10px)</span>
+                            <span>Down (10px) ↓</span>
+                          </div>
+                        </div>
+
+                        {/* Shadow Color */}
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium">Shadow Color</Label>
+                          <div className="flex gap-3">
+                            <Input
+                              type="color"
+                              value={design.shadowColor?.startsWith('rgba') ? '#000000' : (design.shadowColor || '#000000')}
+                              onChange={(e) => updateDesign({ shadowColor: e.target.value })}
+                              className="w-20 h-12 cursor-pointer"
+                            />
+                            <Input
+                              type="text"
+                              value={design.shadowColor || 'rgba(0, 0, 0, 0.8)'}
+                              onChange={(e) => updateDesign({ shadowColor: e.target.value })}
+                              className="flex-1 h-12 text-sm"
+                              placeholder="rgba(0, 0, 0, 0.8)"
+                            />
+                          </div>
+                          <p className="text-xs text-muted-foreground">Use rgba() for transparency or hex colors</p>
+                        </div>
+
+                        {/* Shadow Presets */}
+                        <div className="space-y-2 pt-2 border-t">
+                          <Label className="text-sm font-medium">Quick Presets</Label>
+                          <div className="grid grid-cols-3 gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => updateDesign({ 
+                                shadowBlur: 8, 
+                                shadowOffsetX: 2, 
+                                shadowOffsetY: 2, 
+                                shadowColor: 'rgba(0, 0, 0, 0.8)' 
+                              })}
+                              className="text-xs"
+                            >
+                              Subtle
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => updateDesign({ 
+                                shadowBlur: 15, 
+                                shadowOffsetX: 4, 
+                                shadowOffsetY: 4, 
+                                shadowColor: 'rgba(0, 0, 0, 0.9)' 
+                              })}
+                              className="text-xs"
+                            >
+                              Bold
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => updateDesign({ 
+                                shadowBlur: 20, 
+                                shadowOffsetX: 0, 
+                                shadowOffsetY: 0, 
+                                shadowColor: 'rgba(0, 0, 0, 0.7)' 
+                              })}
+                              className="text-xs"
+                            >
+                              Glow
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </Card>
 
                 {/* Quick Color Palettes */}
-                <Card className="p-5 bg-gradient-to-br from-orange-50/50 to-white border-2 border-orange-100">
+                <Card className="p-5 border-2">
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-orange-600"></div>
-                      <Label className="text-base font-bold text-orange-900">Quick Color Themes</Label>
+                      <Label className="text-base font-bold">Quick Color Themes</Label>
                     </div>
                     <p className="text-sm text-muted-foreground">Apply professional color combinations instantly</p>
                     
@@ -1906,7 +2394,7 @@ export function CoverDesigner({
                           subtitleColor: '#e0e0e0', 
                           authorColor: '#ffffff' 
                         })}
-                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-card"
                       >
                         <div className="flex gap-1.5">
                           <div className="w-7 h-7 rounded-lg bg-white border-2 border-gray-300 shadow-sm" />
@@ -1921,7 +2409,7 @@ export function CoverDesigner({
                           subtitleColor: '#333333', 
                           authorColor: '#000000' 
                         })}
-                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-card"
                       >
                         <div className="flex gap-1.5">
                           <div className="w-7 h-7 rounded-lg bg-black border-2 border-gray-300 shadow-sm" />
@@ -1936,7 +2424,7 @@ export function CoverDesigner({
                           subtitleColor: '#fff8dc', 
                           authorColor: '#ffd700' 
                         })}
-                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-card"
                       >
                         <div className="flex gap-1.5">
                           <div className="w-7 h-7 rounded-lg bg-yellow-400 border-2 border-gray-300 shadow-sm" />
@@ -1951,7 +2439,7 @@ export function CoverDesigner({
                           subtitleColor: '#fce4ec', 
                           authorColor: '#c2185b' 
                         })}
-                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-card"
                       >
                         <div className="flex gap-1.5">
                           <div className="w-7 h-7 rounded-lg bg-pink-600 border-2 border-gray-300 shadow-sm" />
@@ -1966,7 +2454,7 @@ export function CoverDesigner({
                           subtitleColor: '#e3f2fd', 
                           authorColor: '#1976d2' 
                         })}
-                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-card"
                       >
                         <div className="flex gap-1.5">
                           <div className="w-7 h-7 rounded-lg bg-blue-500 border-2 border-gray-300 shadow-sm" />
@@ -1981,7 +2469,7 @@ export function CoverDesigner({
                           subtitleColor: '#ede9fe', 
                           authorColor: '#7c3aed' 
                         })}
-                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-white"
+                        className="group h-16 rounded-xl border-2 border-border hover:border-primary hover:shadow-md transition-all flex items-center gap-3 px-4 bg-card"
                       >
                         <div className="flex gap-1.5">
                           <div className="w-7 h-7 rounded-lg bg-violet-500 border-2 border-gray-300 shadow-sm" />
