@@ -644,13 +644,13 @@ const STOCK_IMAGES: StockImage[] = [
     category: 'wellness', premium: true,
   },
   {
-    id: 'wellness-11',
+    id: 'wellness-13',
     name: 'Zen Garden',
     url: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&h=1280&fit=crop',
     category: 'wellness', premium: true,
   },
   {
-    id: 'wellness-12',
+    id: 'wellness-14',
     name: 'Herbal Medicine',
     url: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=800&h=1280&fit=crop',
     category: 'wellness', premium: true,
@@ -710,7 +710,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'crypto-8',
     name: 'NFT Art',
-    url: 'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1642104704074-907c0698cbd9?w=800&h=1280&fit=crop',
     category: 'crypto', premium: true,
   },
   
@@ -814,7 +814,7 @@ const STOCK_IMAGES: StockImage[] = [
   {
     id: 'minimal-8',
     name: 'Monochrome',
-    url: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800&h=1280&fit=crop',
+    url: 'https://images.unsplash.com/photo-1557682260-96773eb01377?w=800&h=1280&fit=crop',
     category: 'minimal', premium: true,
   },
   
@@ -1240,14 +1240,16 @@ export function CoverDesigner({
   const getBackgroundStyle = (): React.CSSProperties => {
     // Check gradient first before any image checks
     if (design.backgroundType === 'gradient') {
+      const gradientCSS = `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`;
       console.log('🎨 GRADIENT DEBUG:', {
         gradientDirection: design.gradientDirection,
         gradientStart: design.gradientStart,
         gradientEnd: design.gradientEnd,
-        cssString: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
+        cssString: gradientCSS
       });
       return {
-        background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`,
+        background: gradientCSS,
+        backgroundImage: gradientCSS,
       } as React.CSSProperties;
     }
     
@@ -1346,7 +1348,7 @@ export function CoverDesigner({
             <div className="w-full flex justify-center items-start py-4">
               <div
                 ref={canvasRef}
-                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
+                className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm [background:unset]"
                 style={getBackgroundStyle()}
               >
                 {/* Overlay */}
