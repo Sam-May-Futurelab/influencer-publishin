@@ -110,6 +110,11 @@ const GRADIENT_DIRECTION_MAP: Record<GradientDirection, string> = {
 const getCssGradientDirection = (direction: GradientDirection): string =>
   GRADIENT_DIRECTION_MAP[direction] ?? GRADIENT_DIRECTION_MAP['to-br'];
 
+const clampPosition = (value: number | undefined, fallback: number) => {
+  const target = value ?? fallback;
+  return Math.min(95, Math.max(5, target));
+};
+
 const COVER_TEMPLATES = [
   {
     id: 'minimal',
@@ -1024,8 +1029,7 @@ export function CoverDesigner({
       
       // Pass the complete baked image
       onSave(designToSave, coverImageData);
-      toast.success('Cover saved successfully!');
-      onOpenChange(false);
+      toast.success('Cover applied to your project. You can keep editing or close when you are ready.');
     } catch (error) {
       console.error('Save failed:', error);
       toast.error('Failed to save cover');
@@ -1305,6 +1309,70 @@ export function CoverDesigner({
     }
   };
 
+  const renderPreviewTextLayer = () => {
+    const titleTop = clampPosition(design.titlePosition, 40);
+    const subtitleTop = clampPosition(design.subtitlePosition, 50);
+    const authorTop = clampPosition(design.authorPosition, 80);
+    const textShadow = design.textShadowEnabled
+      ? `${design.shadowOffsetX ?? 0}px ${design.shadowOffsetY ?? 0}px ${design.shadowBlur ?? 0}px ${design.shadowColor ?? 'rgba(0, 0, 0, 0.75)'}`
+      : 'none';
+
+    return (
+      <div className="absolute inset-0 pointer-events-none z-[2]">
+        <div
+          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-6 text-center"
+          style={{ top: `${titleTop}%` }}
+        >
+          <h1
+            className="font-bold leading-tight break-words"
+            style={{
+              fontFamily: design.titleFont,
+              fontSize: `${design.titleSize}px`,
+              color: design.titleColor,
+              textShadow,
+            }}
+          >
+            {design.title}
+          </h1>
+        </div>
+
+        <div
+          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-6 text-center"
+          style={{ top: `${subtitleTop}%` }}
+        >
+          <p
+            className="max-w-md mx-auto break-words"
+            style={{
+              fontFamily: design.subtitleFont,
+              fontSize: `${design.subtitleSize}px`,
+              color: design.subtitleColor,
+              textShadow,
+            }}
+          >
+            {design.subtitle}
+          </p>
+        </div>
+
+        <div
+          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-6 text-center"
+          style={{ top: `${authorTop}%` }}
+        >
+          <p
+            className="tracking-wider font-medium break-words"
+            style={{
+              fontFamily: design.authorFont,
+              fontSize: `${design.authorSize}px`,
+              color: design.authorColor,
+              textShadow,
+            }}
+          >
+            {design.authorName}
+          </p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="!max-w-[1800px] sm:!max-w-[1800px] w-[98vw] max-h-[95vh] flex flex-col p-0 gap-0" aria-describedby="cover-designer-description">
@@ -1367,41 +1435,7 @@ export function CoverDesigner({
                     background: `linear-gradient(${getCssGradientDirection(design.gradientDirection)}, ${design.gradientStart}, ${design.gradientEnd})`
                   }}
                 >
-                  <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
-                    <h1
-                      className="font-bold leading-tight mb-4 break-words px-2"
-                      style={{
-                        fontFamily: design.titleFont,
-                        fontSize: `${design.titleSize}px`,
-                        color: design.titleColor,
-                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
-                      }}
-                    >
-                      {design.title}
-                    </h1>
-                    <p
-                      className="mb-auto max-w-md break-words px-2"
-                      style={{
-                        fontFamily: design.subtitleFont,
-                        fontSize: `${design.subtitleSize}px`,
-                        color: design.subtitleColor,
-                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
-                      }}
-                    >
-                      {design.subtitle}
-                    </p>
-                    <p
-                      className="mt-auto mb-8 tracking-wider font-medium break-words px-2"
-                      style={{
-                        fontFamily: design.authorFont,
-                        fontSize: `${design.authorSize}px`,
-                        color: design.authorColor,
-                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
-                      }}
-                    >
-                      {design.authorName}
-                    </p>
-                  </div>
+                  {renderPreviewTextLayer()}
                 </div>
               )}
 
@@ -1412,41 +1446,7 @@ export function CoverDesigner({
                   className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
                   style={{ backgroundColor: design.backgroundColor }}
                 >
-                  <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
-                    <h1
-                      className="font-bold leading-tight mb-4 break-words px-2"
-                      style={{
-                        fontFamily: design.titleFont,
-                        fontSize: `${design.titleSize}px`,
-                        color: design.titleColor,
-                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
-                      }}
-                    >
-                      {design.title}
-                    </h1>
-                    <p
-                      className="mb-auto max-w-md break-words px-2"
-                      style={{
-                        fontFamily: design.subtitleFont,
-                        fontSize: `${design.subtitleSize}px`,
-                        color: design.subtitleColor,
-                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
-                      }}
-                    >
-                      {design.subtitle}
-                    </p>
-                    <p
-                      className="mt-auto mb-8 tracking-wider font-medium break-words px-2"
-                      style={{
-                        fontFamily: design.authorFont,
-                        fontSize: `${design.authorSize}px`,
-                        color: design.authorColor,
-                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
-                      }}
-                    >
-                      {design.authorName}
-                    </p>
-                  </div>
+                  {renderPreviewTextLayer()}
                 </div>
               )}
 
@@ -1462,43 +1462,12 @@ export function CoverDesigner({
                   }}
                 >
                   {design.overlay && (
-                    <div className="absolute inset-0" style={{ backgroundColor: `rgba(0, 0, 0, ${design.overlayOpacity / 100})` }} />
+                    <div
+                      className="absolute inset-0 z-[1]"
+                      style={{ backgroundColor: `rgba(0, 0, 0, ${design.overlayOpacity / 100})` }}
+                    />
                   )}
-                  <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
-                    <h1
-                      className="font-bold leading-tight mb-4 break-words px-2"
-                      style={{
-                        fontFamily: design.titleFont,
-                        fontSize: `${design.titleSize}px`,
-                        color: design.titleColor,
-                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
-                      }}
-                    >
-                      {design.title}
-                    </h1>
-                    <p
-                      className="mb-auto max-w-md break-words px-2"
-                      style={{
-                        fontFamily: design.subtitleFont,
-                        fontSize: `${design.subtitleSize}px`,
-                        color: design.subtitleColor,
-                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
-                      }}
-                    >
-                      {design.subtitle}
-                    </p>
-                    <p
-                      className="mt-auto mb-8 tracking-wider font-medium break-words px-2"
-                      style={{
-                        fontFamily: design.authorFont,
-                        fontSize: `${design.authorSize}px`,
-                        color: design.authorColor,
-                        textShadow: design.textShadowEnabled ? `${design.shadowOffsetX}px ${design.shadowOffsetY}px ${design.shadowBlur}px ${design.shadowColor}` : 'none'
-                      }}
-                    >
-                      {design.authorName}
-                    </p>
-                  </div>
+                  {renderPreviewTextLayer()}
                 </div>
               )}
             </div>
@@ -2950,7 +2919,7 @@ export function CoverDesigner({
               className="gap-2 h-10 px-6 font-semibold sm:ml-auto order-1 sm:order-3"
             >
               <Download size={18} />
-              Save Cover
+              Apply Cover
             </Button>
           </div>
         </div>
@@ -2970,7 +2939,7 @@ export function CoverDesigner({
               className="gap-2 h-12 px-8 text-base font-semibold shadow-lg"
             >
               <Download size={18} />
-              Save Cover
+              Apply Cover
             </Button>
           </div>
         )}
