@@ -107,9 +107,13 @@ export function LandingPage() {
               {' '}with AI
             </h1>
             
+            <p className="text-xl md:text-2xl font-semibold text-[#7a5f96] mb-4">
+              For Authors, Coaches, and Content Creators
+            </p>
+            
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               From a single idea to a fully written book with AI. Generate complete chapter outlines,
-              write entire chapters automatically, and publish professionally. Your book, powered by AI.
+              write entire chapters automatically, create audiobooks, and publish professionally. Your book, powered by AI.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -191,6 +195,156 @@ export function LandingPage() {
               <div className="text-gray-600">To Start Writing</div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* How It Works - Visual Journey */}
+      <section className="container mx-auto px-4 py-20 bg-gradient-to-b from-white to-[#f0e8f8]/30">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              How Inkfluence AI Works
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              From idea to published book in 5 simple steps
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-5 gap-8 relative">
+            {/* Connection Lines (hidden on mobile) */}
+            <div className="hidden md:block absolute top-20 left-0 right-0 h-1 bg-gradient-to-r from-[#9b87b8] via-[#b89ed6] to-[#9b87b8] opacity-20"></div>
+
+            {/* Step 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="relative"
+            >
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all border-2 border-[#e2d1f0] relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-xl flex items-center justify-center mb-4 mx-auto">
+                  <Sparkles className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-bold text-[#9b87b8] mb-2">STEP 1</div>
+                  <h3 className="font-bold text-lg mb-2">Input Your Idea</h3>
+                  <p className="text-sm text-gray-600">
+                    Describe your book concept in a few sentences
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Step 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="relative"
+            >
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all border-2 border-[#e2d1f0] relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-xl flex items-center justify-center mb-4 mx-auto">
+                  <FileText className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-bold text-[#9b87b8] mb-2">STEP 2</div>
+                  <h3 className="font-bold text-lg mb-2">Generate Chapters</h3>
+                  <p className="text-sm text-gray-600">
+                    AI creates a complete outline and writes all chapters
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Step 3 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="relative"
+            >
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all border-2 border-[#e2d1f0] relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-xl flex items-center justify-center mb-4 mx-auto">
+                  <Palette className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-bold text-[#9b87b8] mb-2">STEP 3</div>
+                  <h3 className="font-bold text-lg mb-2">Edit & Brand</h3>
+                  <p className="text-sm text-gray-600">
+                    Visual editor with custom branding and formatting
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Step 4 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="relative"
+            >
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all border-2 border-[#e2d1f0] relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-xl flex items-center justify-center mb-4 mx-auto">
+                  <Mic className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-bold text-[#9b87b8] mb-2">STEP 4</div>
+                  <h3 className="font-bold text-lg mb-2">Create Audiobook</h3>
+                  <p className="text-sm text-gray-600">
+                    Generate pro audiobook with 9 AI voices
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Step 5 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+              className="relative"
+            >
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all border-2 border-[#e2d1f0] relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-xl flex items-center justify-center mb-4 mx-auto">
+                  <Download className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-bold text-[#9b87b8] mb-2">STEP 5</div>
+                  <h3 className="font-bold text-lg mb-2">Export & Publish</h3>
+                  <p className="text-sm text-gray-600">
+                    Download as PDF, EPUB, DOCX - Kindle ready
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Button 
+              size="lg"
+              onClick={handleGetStarted}
+              className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90 text-lg px-10 py-6"
+            >
+              Start Creating Now
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </motion.div>
         </div>
       </section>
 
@@ -521,6 +675,84 @@ export function LandingPage() {
               </Button>
             </div>
           </motion.div>
+
+          {/* Feature 6: Audiobook Generation */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 gap-12 items-center"
+          >
+            <div className="bg-gradient-to-br from-[#e2d1f0] to-[#f0e8f8] rounded-2xl p-4 overflow-hidden order-2 md:order-1 shadow-lg">
+              <div className="bg-white rounded-xl p-8 shadow-sm space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-lg mb-1">Chapter 1: The Beginning</h4>
+                    <p className="text-sm text-gray-600">4,292 characters</p>
+                  </div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-full flex items-center justify-center">
+                    <Mic className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-3">
+                  {['Nova', 'Shimmer', 'Echo', 'Fable', 'Onyx', 'Sage'].map((voice) => (
+                    <button key={voice} className="px-3 py-2 rounded-lg border-2 border-[#e2d1f0] hover:border-[#9b87b8] hover:bg-[#f0e8f8] text-sm font-medium transition-all">
+                      {voice}
+                    </button>
+                  ))}
+                </div>
+                
+                <div className="pt-4 border-t border-gray-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] h-2 rounded-full" style={{width: '75%'}}></div>
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">75%</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Generating audiobook...</p>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-6 order-1 md:order-2">
+              <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-[#7a5f96] text-sm font-medium">
+                🎵 NEW: AI Audiobook
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold">
+                Turn your book into an audiobook
+              </h2>
+              <p className="text-lg text-gray-600">
+                Transform your written chapters into professional audiobooks with AI-powered text-to-speech. 
+                Choose from 9 realistic voices and generate studio-quality audio in minutes.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">9 professional AI voices (male, female, neutral)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Standard & HD audio quality options</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Auto-split long chapters for optimal generation</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Download individual chapters or full audiobook</span>
+                </li>
+              </ul>
+              <Button 
+                onClick={handleGetStarted}
+                size="lg"
+                className="bg-gradient-to-r from-[#9b87b8] to-[#b89ed6] hover:opacity-90"
+              >
+                Create Audiobook
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -580,6 +812,141 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* Why Choose Us / Unique Value Props */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Why Inkfluence AI is Different
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Not just another AI writer. A complete publishing platform designed for authors.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+            >
+              <Card className="p-6 h-full hover:shadow-xl transition-all border-2 border-[#e2d1f0]">
+                <CardContent className="p-0 space-y-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-xl flex items-center justify-center">
+                    <FileText className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold">Structured Generation</h3>
+                  <p className="text-gray-600">
+                    Not random text. Our AI creates organized chapters with proper flow, not scattered content.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="p-6 h-full hover:shadow-xl transition-all border-2 border-[#e2d1f0]">
+                <CardContent className="p-0 space-y-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-xl flex items-center justify-center">
+                    <Download className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold">Publish-Ready Exports</h3>
+                  <p className="text-gray-600">
+                    Export to PDF, EPUB, DOCX - formatted and ready for Kindle, print, or digital publishing.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
+              <Card className="p-6 h-full hover:shadow-xl transition-all border-2 border-[#e2d1f0]">
+                <CardContent className="p-0 space-y-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-xl flex items-center justify-center">
+                    <Palette className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold">Brand Retention</h3>
+                  <p className="text-gray-600">
+                    Custom colors, fonts, logos. Your book maintains your unique brand voice and style throughout.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+            >
+              <Card className="p-6 h-full hover:shadow-xl transition-all border-2 border-[#e2d1f0]">
+                <CardContent className="p-0 space-y-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-[#9b87b8] to-[#b89ed6] rounded-xl flex items-center justify-center">
+                    <Mic className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold">Audiobook Included</h3>
+                  <p className="text-gray-600">
+                    Generate professional audiobooks with AI voices. No extra software, no complicated setup.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          {/* Trust Badges Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 pt-12 border-t border-gray-200"
+          >
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+              <div className="flex items-center gap-3 text-gray-600">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <CheckCircle2 className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">Secure Payments</p>
+                  <p className="text-xs">Powered by Stripe</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 text-gray-600">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">AI-Powered</p>
+                  <p className="text-xs">OpenAI GPT-4</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 text-gray-600">
+                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                  <Users className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">Trusted Globally</p>
+                  <p className="text-xs">500+ Active Authors</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section id="pricing" className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
@@ -622,6 +989,9 @@ export function LandingPage() {
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
                   <span>PDF export</span>
                 </li>
+                <li className="flex items-center gap-2 opacity-50">
+                  <span className="text-sm text-gray-500">No audiobook generation</span>
+                </li>
               </ul>
               <Button 
                 onClick={handleGetStarted}
@@ -660,6 +1030,10 @@ export function LandingPage() {
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
                   <span>10 AI covers/month</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <span>25 audiobook chapters/month</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -713,6 +1087,10 @@ export function LandingPage() {
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
                   <span>50 AI covers/month</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <span>50 audiobook chapters/month</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
