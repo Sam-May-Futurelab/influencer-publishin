@@ -537,20 +537,91 @@ export function CoverDesigner({
 
   const saveCover = async () => {
     try {
-      // Save design settings and background image (no text baking)
+      // Generate the complete cover image with text baked in
+      const coverImageData = await generateCoverImageWithText();
+      
+      if (!coverImageData) {
+        toast.error('Failed to generate cover image');
+        return;
+      }
+
+      // Save both the design settings AND the final rendered image
       const designToSave = {
         ...design,
         uploadedCoverImage: design.backgroundImage || design.uploadedCoverImage,
       };
       
-      // Don't pass imageData with text baked in - just pass empty string
-      // The preview will always use live text overlay
-      onSave(designToSave, '');
-      toast.success('Cover design saved!');
-      onOpenChange(false); // Close the dialog after saving
+      // Pass the complete baked image
+      onSave(designToSave, coverImageData);
+      toast.success('Cover saved successfully!');
+      onOpenChange(false);
     } catch (error) {
       console.error('Save failed:', error);
       toast.error('Failed to save cover');
+    }
+  };
+
+  // Helper function to generate cover with text baked in
+  const generateCoverImageWithText = async (): Promise<string | null> => {
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return null;
+
+      canvas.width = 1600;
+      canvas.height = 2560;
+
+      // Draw background
+      if (design.backgroundType === 'gradient') {
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, design.gradientStart);
+        gradient.addColorStop(1, design.gradientEnd);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } else if (design.backgroundType === 'image' && design.backgroundImage) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = design.backgroundImage;
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = () => {
+            console.error('Failed to load image');
+            resolve(null);
+          };
+        });
+        
+        if (img.complete && img.naturalHeight !== 0) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          if (design.overlay) {
+            ctx.fillStyle = `rgba(0, 0, 0, ${design.overlayOpacity / 100})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
+        } else {
+          ctx.fillStyle = design.gradientStart || '#667eea';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+      } else {
+        ctx.fillStyle = design.backgroundColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      // Draw text
+      const drawText = (text: string, font: string, size: number, color: string, y: number) => {
+        ctx.fillStyle = color;
+        ctx.font = `${size * 3}px ${font}`;
+        ctx.textAlign = 'center';
+        ctx.fillText(text, canvas.width / 2, y);
+      };
+
+      drawText(design.title, design.titleFont, design.titleSize, design.titleColor, canvas.height * 0.4);
+      drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, canvas.height * 0.5);
+      drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, canvas.height * 0.80);
+
+      return canvas.toDataURL('image/png');
+    } catch (error) {
+      console.error('Error generating cover:', error);
+      return null;
     }
   };
 
