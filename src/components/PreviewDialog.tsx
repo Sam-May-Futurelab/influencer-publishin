@@ -38,6 +38,11 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
   const formatContent = (content: string) => {
     if (!content) return <p className="text-muted-foreground italic">No content yet...</p>;
     
+    // If content is already HTML (has paragraph tags), render it directly
+    if (content.includes('<p>') || content.includes('<div>') || content.includes('<h1>')) {
+      return <div dangerouslySetInnerHTML={{ __html: content }} />;
+    }
+    
     // Check if content is markdown (contains markdown syntax)
     const isMarkdown = content.includes('**') || content.includes('##') || content.includes('- ') || content.includes('# ');
     

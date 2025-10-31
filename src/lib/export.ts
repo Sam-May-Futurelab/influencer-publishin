@@ -674,6 +674,11 @@ function escapeHtml(text: string): string {
 function formatContent(content: string): string {
   if (!content) return '<p><em>No content yet...</em></p>';
   
+  // If content is already HTML (has paragraph tags), return as-is
+  if (content.includes('<p>') || content.includes('<div>') || content.includes('<h1>')) {
+    return content;
+  }
+  
   // Check if content is markdown (contains markdown syntax)
   const isMarkdown = content.includes('**') || content.includes('##') || content.includes('- ') || content.includes('# ');
   
