@@ -132,8 +132,8 @@ function formatWithParagraphBreaks(text) {
     currentParagraph += sentence + ' ';
     sentenceCount++;
     
-    // Create new paragraph every 3-4 sentences or after 400 characters
-    if (sentenceCount >= 3 && currentParagraph.length > 200 || currentParagraph.length > 400) {
+    // Create new paragraph every 3-4 sentences or after 300 characters
+    if ((sentenceCount >= 3 && currentParagraph.length > 200) || currentParagraph.length > 300) {
       formattedText += currentParagraph.trim() + '\n\n';
       currentParagraph = '';
       sentenceCount = 0;
@@ -277,13 +277,17 @@ export default async function handler(req, res) {
 Style: ${toneDescriptors[tone] || 'engaging, conversational'}
 Target length: ${targetWords} words
 
-Write a complete, well-developed paragraph or section with:
+Write well-structured content with MULTIPLE PARAGRAPHS:
+- Break content into 3-5 short paragraphs
+- Use double line breaks (\\n\\n) between paragraphs
 - Clear explanation of the topic
 - Specific examples or details
 - Practical insights readers can use
 
+FORMATTING: Separate each paragraph with \\n\\n for readability. Do NOT write walls of text.
+
 IMPORTANT: Return ONLY a JSON array with 1 string. No markdown, no code blocks.
-Example format: ["Your content text here..."]
+Example format: ["Paragraph 1...\\n\\nParagraph 2...\\n\\nParagraph 3..."]
 
 Make it substantial and valuable - around ${targetWords} words.`;
       
@@ -393,8 +397,8 @@ Provide helpful, creative, and engaging content suggestions that match the speci
       .replace(/…/g, '...'); // Replace ellipsis
 
     // Add paragraph breaks to prevent walls of text
-    // Split long paragraphs (more than 500 chars) into smaller ones
-    if (contentType === 'enhance' || contentType === 'content') {
+    // Apply to book chapters (suggestions) and enhanced content
+    if (contentType === 'suggestions' || contentType === 'enhance' || contentType === 'content') {
       cleanedContent = formatWithParagraphBreaks(cleanedContent);
     }
 
