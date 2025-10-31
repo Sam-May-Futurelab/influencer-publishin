@@ -1353,7 +1353,7 @@ export function CoverDesigner({
                     ref={canvasRef}
                     className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
                     style={{
-                      backgroundImage: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
+                      background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
                     }}
                   >
                   <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
