@@ -98,6 +98,18 @@ const FONTS = [
   { value: 'Bebas Neue', label: 'Bebas Neue' },
 ];
 
+type GradientDirection = CoverDesign['gradientDirection'];
+
+const GRADIENT_DIRECTION_MAP: Record<GradientDirection, string> = {
+  'to-br': 'to bottom right',
+  'to-tr': 'to top right',
+  'to-r': 'to right',
+  'to-b': 'to bottom',
+};
+
+const getCssGradientDirection = (direction: GradientDirection): string =>
+  GRADIENT_DIRECTION_MAP[direction] ?? GRADIENT_DIRECTION_MAP['to-br'];
+
 const COVER_TEMPLATES = [
   {
     id: 'minimal',
@@ -1240,9 +1252,10 @@ export function CoverDesigner({
   const getBackgroundStyle = (): React.CSSProperties => {
     // Check gradient first before any image checks
     if (design.backgroundType === 'gradient') {
-      const gradientCSS = `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`;
+      const cssDirection = getCssGradientDirection(design.gradientDirection);
+      const gradientCSS = `linear-gradient(${cssDirection}, ${design.gradientStart}, ${design.gradientEnd})`;
       console.log('🎨 GRADIENT DEBUG:', {
-        gradientDirection: design.gradientDirection,
+        gradientDirection: cssDirection,
         gradientStart: design.gradientStart,
         gradientEnd: design.gradientEnd,
         cssString: gradientCSS
@@ -1351,7 +1364,7 @@ export function CoverDesigner({
                   ref={canvasRef}
                   className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
                   style={{
-                    background: `linear-gradient(${design.gradientDirection}, ${design.gradientStart}, ${design.gradientEnd})`
+                    background: `linear-gradient(${getCssGradientDirection(design.gradientDirection)}, ${design.gradientStart}, ${design.gradientEnd})`
                   }}
                 >
                   <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
