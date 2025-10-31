@@ -210,12 +210,254 @@ const COVER_TEMPLATES = [
   },
 ];
 
-// Stock background images - you can host these on your CDN or use Unsplash API
+// Stock background images - focused on ebook demographics: fitness, wellness, business, crypto, food
 const STOCK_IMAGES = [
-  // Abstract & Artistic
+  // Fitness & Health
+  {
+    id: 'fitness-1',
+    name: 'Gym Workout',
+    url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=1280&fit=crop',
+    category: 'fitness',
+  },
+  {
+    id: 'fitness-2',
+    name: 'Running Track',
+    url: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800&h=1280&fit=crop',
+    category: 'fitness',
+  },
+  {
+    id: 'fitness-3',
+    name: 'Yoga Practice',
+    url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=1280&fit=crop',
+    category: 'fitness',
+  },
+  {
+    id: 'fitness-4',
+    name: 'Strength Training',
+    url: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&h=1280&fit=crop',
+    category: 'fitness',
+  },
+  {
+    id: 'fitness-5',
+    name: 'Athletic Performance',
+    url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=1280&fit=crop',
+    category: 'fitness',
+  },
+  {
+    id: 'fitness-6',
+    name: 'Boxing Training',
+    url: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&h=1280&fit=crop',
+    category: 'fitness',
+  },
+  
+  // Food & Cooking
+  {
+    id: 'food-1',
+    name: 'Healthy Bowl',
+    url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=1280&fit=crop',
+    category: 'food',
+  },
+  {
+    id: 'food-2',
+    name: 'Fresh Ingredients',
+    url: 'https://images.unsplash.com/photo-1506368249639-73a05d6f6488?w=800&h=1280&fit=crop',
+    category: 'food',
+  },
+  {
+    id: 'food-3',
+    name: 'Cooking Kitchen',
+    url: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=1280&fit=crop',
+    category: 'food',
+  },
+  {
+    id: 'food-4',
+    name: 'Gourmet Dish',
+    url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=1280&fit=crop',
+    category: 'food',
+  },
+  {
+    id: 'food-5',
+    name: 'Smoothie Bowl',
+    url: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&h=1280&fit=crop',
+    category: 'food',
+  },
+  {
+    id: 'food-6',
+    name: 'Culinary Art',
+    url: 'https://images.unsplash.com/photo-1493770348161-369560ae357d?w=800&h=1280&fit=crop',
+    category: 'food',
+  },
+  
+  // Wellness & Mindfulness
+  {
+    id: 'wellness-1',
+    name: 'Meditation',
+    url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1280&fit=crop',
+    category: 'wellness',
+  },
+  {
+    id: 'wellness-2',
+    name: 'Spa Wellness',
+    url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=1280&fit=crop',
+    category: 'wellness',
+  },
+  {
+    id: 'wellness-3',
+    name: 'Morning Routine',
+    url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800&h=1280&fit=crop',
+    category: 'wellness',
+  },
+  {
+    id: 'wellness-4',
+    name: 'Self Care',
+    url: 'https://images.unsplash.com/photo-1552693673-1bf958298935?w=800&h=1280&fit=crop',
+    category: 'wellness',
+  },
+  {
+    id: 'wellness-5',
+    name: 'Peaceful Nature',
+    url: 'https://images.unsplash.com/photo-1469259943454-aa100abba749?w=800&h=1280&fit=crop',
+    category: 'wellness',
+  },
+  {
+    id: 'wellness-6',
+    name: 'Mindful Moment',
+    url: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&h=1280&fit=crop',
+    category: 'wellness',
+  },
+  
+  // Business & Finance
+  {
+    id: 'business-1',
+    name: 'Stock Market',
+    url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-2',
+    name: 'Financial Growth',
+    url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-3',
+    name: 'Entrepreneur',
+    url: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-4',
+    name: 'Investment Strategy',
+    url: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-5',
+    name: 'Success Mindset',
+    url: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  {
+    id: 'business-6',
+    name: 'Corporate Success',
+    url: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=800&h=1280&fit=crop',
+    category: 'business',
+  },
+  
+  // Crypto & Tech
+  {
+    id: 'crypto-1',
+    name: 'Blockchain Network',
+    url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=1280&fit=crop',
+    category: 'crypto',
+  },
+  {
+    id: 'crypto-2',
+    name: 'Digital Currency',
+    url: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=800&h=1280&fit=crop',
+    category: 'crypto',
+  },
+  {
+    id: 'crypto-3',
+    name: 'Cryptocurrency',
+    url: 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=800&h=1280&fit=crop',
+    category: 'crypto',
+  },
+  {
+    id: 'crypto-4',
+    name: 'Tech Innovation',
+    url: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=1280&fit=crop',
+    category: 'crypto',
+  },
+  {
+    id: 'crypto-5',
+    name: 'Digital Finance',
+    url: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=1280&fit=crop',
+    category: 'crypto',
+  },
+  
+  // Personal Development
+  {
+    id: 'development-1',
+    name: 'Goal Setting',
+    url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&h=1280&fit=crop',
+    category: 'development',
+  },
+  {
+    id: 'development-2',
+    name: 'Learning Journey',
+    url: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&h=1280&fit=crop',
+    category: 'development',
+  },
+  {
+    id: 'development-3',
+    name: 'Motivation',
+    url: 'https://images.unsplash.com/photo-1504805572947-34fad45aed93?w=800&h=1280&fit=crop',
+    category: 'development',
+  },
+  {
+    id: 'development-4',
+    name: 'Achievement',
+    url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=1280&fit=crop',
+    category: 'development',
+  },
+  {
+    id: 'development-5',
+    name: 'Success Path',
+    url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=1280&fit=crop',
+    category: 'development',
+  },
+  
+  // Marketing & Social Media
+  {
+    id: 'marketing-1',
+    name: 'Social Media',
+    url: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=1280&fit=crop',
+    category: 'marketing',
+  },
+  {
+    id: 'marketing-2',
+    name: 'Content Creation',
+    url: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&h=1280&fit=crop',
+    category: 'marketing',
+  },
+  {
+    id: 'marketing-3',
+    name: 'Brand Building',
+    url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=1280&fit=crop',
+    category: 'marketing',
+  },
+  {
+    id: 'marketing-4',
+    name: 'Digital Strategy',
+    url: 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=800&h=1280&fit=crop',
+    category: 'marketing',
+  },
+  
+  // Abstract & Modern
   {
     id: 'abstract-1',
-    name: 'Abstract Purple',
+    name: 'Vibrant Energy',
     url: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=800&h=1280&fit=crop',
     category: 'abstract',
   },
@@ -238,430 +480,56 @@ const STOCK_IMAGES = [
     category: 'abstract',
   },
   {
-    id: 'artistic-1',
-    name: 'Watercolor',
-    url: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=1280&fit=crop',
-    category: 'artistic',
-  },
-  {
-    id: 'artistic-2',
-    name: 'Ink Art',
-    url: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&h=1280&fit=crop',
-    category: 'artistic',
-  },
-  {
-    id: 'artistic-3',
-    name: 'Paint Strokes',
-    url: 'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&h=1280&fit=crop',
-    category: 'artistic',
+    id: 'abstract-5',
+    name: 'Neon Glow',
+    url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&h=1280&fit=crop',
+    category: 'abstract',
   },
   
-  // Nature & Landscapes
-  {
-    id: 'nature-1',
-    name: 'Mountain Landscape',
-    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  {
-    id: 'nature-2',
-    name: 'Forest Path',
-    url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  {
-    id: 'nature-3',
-    name: 'Ocean Waves',
-    url: 'https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  {
-    id: 'nature-4',
-    name: 'Desert Dunes',
-    url: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  {
-    id: 'nature-5',
-    name: 'Northern Lights',
-    url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  
-  // Business & Professional
-  {
-    id: 'business-1',
-    name: 'Modern Office',
-    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1280&fit=crop',
-    category: 'business',
-  },
-  {
-    id: 'business-2',
-    name: 'Workspace',
-    url: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&h=1280&fit=crop',
-    category: 'business',
-  },
-  {
-    id: 'business-3',
-    name: 'City Skyline',
-    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=1280&fit=crop',
-    category: 'business',
-  },
-  {
-    id: 'business-4',
-    name: 'Glass Building',
-    url: 'https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=800&h=1280&fit=crop',
-    category: 'business',
-  },
-  
-  // Textures & Patterns
-  {
-    id: 'texture-1',
-    name: 'Gold Marble',
-    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1280&fit=crop',
-    category: 'texture',
-  },
-  {
-    id: 'texture-2',
-    name: 'Dark Texture',
-    url: 'https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800&h=1280&fit=crop',
-    category: 'texture',
-  },
-  {
-    id: 'texture-3',
-    name: 'Watercolor Texture',
-    url: 'https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=800&h=1280&fit=crop',
-    category: 'texture',
-  },
-  {
-    id: 'texture-4',
-    name: 'Concrete Wall',
-    url: 'https://images.unsplash.com/photo-1510936111840-65e151ad71bb?w=800&h=1280&fit=crop',
-    category: 'texture',
-  },
-  
-  // Minimal & Clean
+  // Minimal & Professional
   {
     id: 'minimal-1',
-    name: 'Minimal Gradient',
+    name: 'Clean Minimal',
     url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=1280&fit=crop',
     category: 'minimal',
   },
   {
     id: 'minimal-2',
-    name: 'Soft Clouds',
+    name: 'Soft Elegance',
     url: 'https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=800&h=1280&fit=crop',
     category: 'minimal',
   },
   {
     id: 'minimal-3',
-    name: 'White Space',
+    name: 'Professional White',
     url: 'https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=800&h=1280&fit=crop',
     category: 'minimal',
   },
   {
     id: 'minimal-4',
-    name: 'Pastel Sky',
+    name: 'Pastel Calm',
     url: 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?w=800&h=1280&fit=crop',
     category: 'minimal',
   },
   
-  // Urban & Modern
+  // Luxury & Premium
   {
-    id: 'urban-1',
-    name: 'City Night',
-    url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&h=1280&fit=crop',
-    category: 'urban',
-  },
-  {
-    id: 'urban-2',
-    name: 'Neon Lights',
-    url: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&h=1280&fit=crop',
-    category: 'urban',
-  },
-  {
-    id: 'urban-3',
-    name: 'Urban Graffiti',
-    url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=1280&fit=crop',
-    category: 'urban',
-  },
-  {
-    id: 'urban-4',
-    name: 'Architecture',
-    url: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=1280&fit=crop',
-    category: 'urban',
-  },
-  
-  // Book-Themed
-  {
-    id: 'book-1',
-    name: 'Book Shelf',
-    url: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&h=1280&fit=crop',
-    category: 'book-themed',
-  },
-  {
-    id: 'book-2',
-    name: 'Old Books',
-    url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=1280&fit=crop',
-    category: 'book-themed',
-  },
-  {
-    id: 'book-3',
-    name: 'Library',
-    url: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&h=1280&fit=crop',
-    category: 'book-themed',
-  },
-  
-  // Vintage & Classic
-  {
-    id: 'vintage-1',
-    name: 'Vintage Paper',
-    url: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=1280&fit=crop',
-    category: 'vintage',
-  },
-  {
-    id: 'vintage-2',
-    name: 'Aged Texture',
-    url: 'https://images.unsplash.com/photo-1534670007418-fbb7f6cf32c3?w=800&h=1280&fit=crop',
-    category: 'vintage',
-  },
-  {
-    id: 'vintage-3',
-    name: 'Retro Pattern',
-    url: 'https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=800&h=1280&fit=crop',
-    category: 'vintage',
-  },
-  
-  // Tech & Digital
-  {
-    id: 'tech-1',
-    name: 'Digital Code',
-    url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=1280&fit=crop',
-    category: 'tech',
-  },
-  {
-    id: 'tech-2',
-    name: 'Circuit Board',
-    url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=1280&fit=crop',
-    category: 'tech',
-  },
-  {
-    id: 'tech-3',
-    name: 'Data Visualization',
-    url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=1280&fit=crop',
-    category: 'tech',
-  },
-  
-  // Additional Abstract
-  {
-    id: 'abstract-5',
-    name: 'Neon Waves',
-    url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&h=1280&fit=crop',
-    category: 'abstract',
-  },
-  {
-    id: 'abstract-6',
-    name: 'Gradient Mesh',
+    id: 'luxury-1',
+    name: 'Gold Elegance',
     url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1280&fit=crop',
-    category: 'abstract',
+    category: 'luxury',
   },
   {
-    id: 'abstract-7',
-    name: 'Liquid Colors',
-    url: 'https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=800&h=1280&fit=crop',
-    category: 'abstract',
+    id: 'luxury-2',
+    name: 'Dark Premium',
+    url: 'https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800&h=1280&fit=crop',
+    category: 'luxury',
   },
   {
-    id: 'abstract-8',
-    name: 'Digital Aurora',
-    url: 'https://images.unsplash.com/photo-1558470598-a5dda9640f68?w=800&h=1280&fit=crop',
-    category: 'abstract',
-  },
-  
-  // Additional Nature
-  {
-    id: 'nature-6',
-    name: 'Sunset Sky',
-    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  {
-    id: 'nature-7',
-    name: 'Misty Mountains',
-    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  {
-    id: 'nature-8',
-    name: 'Tropical Beach',
-    url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  {
-    id: 'nature-9',
-    name: 'Aurora Borealis',
-    url: 'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  {
-    id: 'nature-10',
-    name: 'Lavender Field',
-    url: 'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=800&h=1280&fit=crop',
-    category: 'nature',
-  },
-  
-  // Additional Artistic
-  {
-    id: 'artistic-4',
-    name: 'Abstract Painting',
-    url: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&h=1280&fit=crop',
-    category: 'artistic',
-  },
-  {
-    id: 'artistic-5',
-    name: 'Oil Paint Texture',
-    url: 'https://images.unsplash.com/photo-1533158326339-7f3cf2404354?w=800&h=1280&fit=crop',
-    category: 'artistic',
-  },
-  {
-    id: 'artistic-6',
-    name: 'Color Splash',
-    url: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=1280&fit=crop',
-    category: 'artistic',
-  },
-  
-  // Additional Business
-  {
-    id: 'business-5',
-    name: 'Corporate Meeting',
-    url: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=1280&fit=crop',
-    category: 'business',
-  },
-  {
-    id: 'business-6',
-    name: 'Financial Charts',
-    url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=1280&fit=crop',
-    category: 'business',
-  },
-  {
-    id: 'business-7',
-    name: 'Modern Desk',
-    url: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=1280&fit=crop',
-    category: 'business',
-  },
-  
-  // Additional Minimal
-  {
-    id: 'minimal-5',
-    name: 'Soft Beige',
-    url: 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=800&h=1280&fit=crop',
-    category: 'minimal',
-  },
-  {
-    id: 'minimal-6',
-    name: 'Clean White',
-    url: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800&h=1280&fit=crop',
-    category: 'minimal',
-  },
-  {
-    id: 'minimal-7',
-    name: 'Soft Pink',
-    url: 'https://images.unsplash.com/photo-1506260408121-e353d10b87c7?w=800&h=1280&fit=crop',
-    category: 'minimal',
-  },
-  
-  // Additional Textures
-  {
-    id: 'texture-5',
-    name: 'Wood Grain',
-    url: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&h=1280&fit=crop',
-    category: 'texture',
-  },
-  {
-    id: 'texture-6',
-    name: 'Fabric Texture',
-    url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=1280&fit=crop',
-    category: 'texture',
-  },
-  {
-    id: 'texture-7',
-    name: 'Stone Surface',
-    url: 'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=800&h=1280&fit=crop',
-    category: 'texture',
-  },
-  {
-    id: 'texture-8',
-    name: 'Metal Texture',
-    url: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&h=1280&fit=crop',
-    category: 'texture',
-  },
-  
-  // Additional Urban
-  {
-    id: 'urban-5',
-    name: 'City Street',
-    url: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&h=1280&fit=crop',
-    category: 'urban',
-  },
-  {
-    id: 'urban-6',
-    name: 'Subway Station',
-    url: 'https://images.unsplash.com/photo-1496568816309-51d7c20e3b21?w=800&h=1280&fit=crop',
-    category: 'urban',
-  },
-  {
-    id: 'urban-7',
-    name: 'Industrial',
-    url: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=800&h=1280&fit=crop',
-    category: 'urban',
-  },
-  
-  // Additional Book-Themed
-  {
-    id: 'book-4',
-    name: 'Reading Corner',
-    url: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&h=1280&fit=crop',
-    category: 'book-themed',
-  },
-  {
-    id: 'book-5',
-    name: 'Open Book',
-    url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=1280&fit=crop',
-    category: 'book-themed',
-  },
-  {
-    id: 'book-6',
-    name: 'Antique Books',
-    url: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&h=1280&fit=crop',
-    category: 'book-themed',
-  },
-  
-  // Additional Vintage
-  {
-    id: 'vintage-4',
-    name: 'Old Map',
-    url: 'https://images.unsplash.com/photo-1526243741027-444d633d7365?w=800&h=1280&fit=crop',
-    category: 'vintage',
-  },
-  {
-    id: 'vintage-5',
-    name: 'Sepia Tone',
-    url: 'https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=800&h=1280&fit=crop',
-    category: 'vintage',
-  },
-  
-  // Additional Tech
-  {
-    id: 'tech-4',
-    name: 'Neural Network',
-    url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=1280&fit=crop',
-    category: 'tech',
-  },
-  {
-    id: 'tech-5',
-    name: 'Server Room',
-    url: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=800&h=1280&fit=crop',
-    category: 'tech',
+    id: 'luxury-3',
+    name: 'Sophisticated',
+    url: 'https://images.unsplash.com/photo-1535350356005-fd52b3b524fb?w=800&h=1280&fit=crop',
+    category: 'luxury',
   },
 ];
 
@@ -1362,20 +1230,28 @@ export function CoverDesigner({
                       All ({STOCK_IMAGES.length})
                     </Button>
                     <Button
-                      variant={selectedCategory === 'abstract' ? 'default' : 'outline'}
+                      variant={selectedCategory === 'fitness' ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => setSelectedCategory('abstract')}
+                      onClick={() => setSelectedCategory('fitness')}
                       className="text-xs"
                     >
-                      Abstract ({STOCK_IMAGES.filter(img => img.category === 'abstract').length})
+                      💪 Fitness ({STOCK_IMAGES.filter(img => img.category === 'fitness').length})
                     </Button>
                     <Button
-                      variant={selectedCategory === 'nature' ? 'default' : 'outline'}
+                      variant={selectedCategory === 'food' ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => setSelectedCategory('nature')}
+                      onClick={() => setSelectedCategory('food')}
                       className="text-xs"
                     >
-                      Nature ({STOCK_IMAGES.filter(img => img.category === 'nature').length})
+                      🍳 Food ({STOCK_IMAGES.filter(img => img.category === 'food').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'wellness' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('wellness')}
+                      className="text-xs"
+                    >
+                      🧘 Wellness ({STOCK_IMAGES.filter(img => img.category === 'wellness').length})
                     </Button>
                     <Button
                       variant={selectedCategory === 'business' ? 'default' : 'outline'}
@@ -1383,7 +1259,39 @@ export function CoverDesigner({
                       onClick={() => setSelectedCategory('business')}
                       className="text-xs"
                     >
-                      Business ({STOCK_IMAGES.filter(img => img.category === 'business').length})
+                      💼 Business ({STOCK_IMAGES.filter(img => img.category === 'business').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'crypto' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('crypto')}
+                      className="text-xs"
+                    >
+                      ₿ Crypto ({STOCK_IMAGES.filter(img => img.category === 'crypto').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'development' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('development')}
+                      className="text-xs"
+                    >
+                      📈 Growth ({STOCK_IMAGES.filter(img => img.category === 'development').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'marketing' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('marketing')}
+                      className="text-xs"
+                    >
+                      📱 Marketing ({STOCK_IMAGES.filter(img => img.category === 'marketing').length})
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'abstract' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('abstract')}
+                      className="text-xs"
+                    >
+                      🎨 Abstract ({STOCK_IMAGES.filter(img => img.category === 'abstract').length})
                     </Button>
                     <Button
                       variant={selectedCategory === 'minimal' ? 'default' : 'outline'}
@@ -1391,55 +1299,15 @@ export function CoverDesigner({
                       onClick={() => setSelectedCategory('minimal')}
                       className="text-xs"
                     >
-                      Minimal ({STOCK_IMAGES.filter(img => img.category === 'minimal').length})
+                      ✨ Minimal ({STOCK_IMAGES.filter(img => img.category === 'minimal').length})
                     </Button>
                     <Button
-                      variant={selectedCategory === 'urban' ? 'default' : 'outline'}
+                      variant={selectedCategory === 'luxury' ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => setSelectedCategory('urban')}
+                      onClick={() => setSelectedCategory('luxury')}
                       className="text-xs"
                     >
-                      Urban ({STOCK_IMAGES.filter(img => img.category === 'urban').length})
-                    </Button>
-                    <Button
-                      variant={selectedCategory === 'artistic' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setSelectedCategory('artistic')}
-                      className="text-xs"
-                    >
-                      Artistic ({STOCK_IMAGES.filter(img => img.category === 'artistic').length})
-                    </Button>
-                    <Button
-                      variant={selectedCategory === 'texture' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setSelectedCategory('texture')}
-                      className="text-xs"
-                    >
-                      Texture ({STOCK_IMAGES.filter(img => img.category === 'texture').length})
-                    </Button>
-                    <Button
-                      variant={selectedCategory === 'book-themed' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setSelectedCategory('book-themed')}
-                      className="text-xs"
-                    >
-                      Books ({STOCK_IMAGES.filter(img => img.category === 'book-themed').length})
-                    </Button>
-                    <Button
-                      variant={selectedCategory === 'vintage' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setSelectedCategory('vintage')}
-                      className="text-xs"
-                    >
-                      Vintage ({STOCK_IMAGES.filter(img => img.category === 'vintage').length})
-                    </Button>
-                    <Button
-                      variant={selectedCategory === 'tech' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setSelectedCategory('tech')}
-                      className="text-xs"
-                    >
-                      Tech ({STOCK_IMAGES.filter(img => img.category === 'tech').length})
+                      👑 Luxury ({STOCK_IMAGES.filter(img => img.category === 'luxury').length})
                     </Button>
                   </div>
                 </div>
