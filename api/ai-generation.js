@@ -291,6 +291,7 @@ IMPORTANT:
     content = formatWithParagraphBreaks(content);
 
     return res.status(200).json({
+      success: true,
       content,
       usage: completion.usage,
       rateLimitRemaining: rateLimit.remaining
