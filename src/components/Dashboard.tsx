@@ -60,8 +60,7 @@ import { importFile } from '@/lib/import';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { ProjectSetupDialog } from '@/components/ProjectSetupDialog';
-import { AIBookGeneratorWizard } from '@/components/AIBookGeneratorWizard';
-import { UserProfile } from '@/lib/auth';
+import { UserProfile, canGenerateFullBook, getRemainingFullBooks } from '@/lib/auth';
 
 interface DashboardProps {
   projects: EbookProject[];
@@ -73,6 +72,7 @@ interface DashboardProps {
   onProjectsChanged?: () => Promise<void>;
   onNavigate?: (section: string) => void;
   userProfile?: UserProfile | null;
+  onOpenBookGenerator?: () => void;
 }
 
 export function Dashboard({ 
@@ -84,7 +84,8 @@ export function Dashboard({
   onImportProject,
   onProjectsChanged,
   onNavigate,
-  userProfile
+  userProfile,
+  onOpenBookGenerator
 }: DashboardProps) {
   const { stats, totalWords, goals, progress } = useWritingAnalytics(projects);
   const { hasPreview, previewData, isMigrating, migrateToAccount, dismissPreview } = usePreviewMigration();
@@ -111,8 +112,9 @@ export function Dashboard({
   const [showSetupDialog, setShowSetupDialog] = useState(false);
   const [pendingProjectTitle, setPendingProjectTitle] = useState('');
   
-  // AI Book Generator state
-  const [showBookGenerator, setShowBookGenerator] = useState(false);
+  // AI Book Generator quick action is controlled by parent via onOpenBookGenerator
+  const canUseAiBookGenerator = userProfile ? canGenerateFullBook(userProfile) : false;
+  const remainingAiBooks = userProfile ? getRemainingFullBooks(userProfile) : null;
 
   const filteredProjects = projects.filter((project) =>
     project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -416,11 +418,21 @@ export function Dashboard({
               Generate a complete ebook (6-15 chapters) with AI in minutes.
             </p>
             <Button
-              onClick={() => setShowBookGenerator(true)}
-              className="w-full neomorph-button border-0 text-sm min-h-[40px] bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90 text-white"
+              onClick={() => onOpenBookGenerator?.()}
+              disabled={!userProfile}
+              className={cn(
+                'w-full neomorph-button border-0 text-sm min-h-[40px] bg-gradient-to-r from-purple-600 to-primary hover:from-purple-700 hover:to-primary/90 text-white',
+                !canUseAiBookGenerator && userProfile && 'opacity-80 hover:opacity-90'
+              )}
             >
               <Sparkle size={16} weight="fill" />
-              Generate Full Book
+              {userProfile
+                ? canUseAiBookGenerator
+                  ? 'Generate Full Book'
+                  : userProfile.subscriptionStatus === 'free'
+                    ? 'Unlock AI Book Generator'
+                    : 'Upgrade for More Books'
+                : 'Generate Full Book'}
             </Button>
             
             {/* Usage indicator */}
@@ -429,10 +441,13 @@ export function Dashboard({
                 {userProfile.subscriptionStatus === 'free' && (
                   <Badge variant="outline" className="text-xs">Premium Feature</Badge>
                 )}
-                {userProfile.subscriptionStatus === 'creator' && (
-                  <>
-                    {userProfile.fullBookGenerationsUsed || 0}/5 books this month
-                  </>
+                {userProfile.subscriptionStatus === 'creator' && typeof remainingAiBooks === 'number' && (
+                  <div className="space-y-1">
+                    <span>{remainingAiBooks} of 5 books left this month</span>
+                    {remainingAiBooks === 0 && (
+                      <span className="block text-[11px] text-muted-foreground/80">Upgrade for unlimited AI books</span>
+                    )}
+                  </div>
                 )}
                 {userProfile.subscriptionStatus === 'premium' && (
                   <>Unlimited ✨</>
@@ -1028,19 +1043,6 @@ export function Dashboard({
         onComplete={handleSetupComplete}
         onSkip={handleSetupSkip}
       />
-
-      {/* AI Book Generator Wizard */}
-      {userProfile && (
-        <AIBookGeneratorWizard
-          open={showBookGenerator}
-          onClose={() => setShowBookGenerator(false)}
-          onComplete={(project) => {
-            setShowBookGenerator(false);
-            onSelectProject(project);
-          }}
-          userProfile={userProfile}
-        />
-      )}
 
       {/* Delete Audiobook Dialog */}
       <AlertDialog open={showDeleteAudiobookDialog} onOpenChange={setShowDeleteAudiobookDialog}>

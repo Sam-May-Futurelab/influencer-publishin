@@ -1,11 +1,11 @@
-import { useState, useEffect, lazy, Suspense, useRef } from 'react';
+import { useState, useEffect, lazy, Suspense, useRef, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 import { cn } from '@/lib/utils';
-import { incrementPageUsage, syncPageUsage, updateUserProfile } from '@/lib/auth';
+import { incrementPageUsage, syncPageUsage, updateUserProfile, canGenerateFullBook, getRemainingFullBooks, incrementFullBookGeneration } from '@/lib/auth';
 import { getUserProjects, saveProject, deleteProject as deleteProjectFromFirestore } from '@/lib/projects';
 import { ProjectHeader } from '@/components/ProjectHeader';
 import { Header } from '@/components/Header';
@@ -24,6 +24,7 @@ import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { AIBookGeneratorWizard } from '@/components/AIBookGeneratorWizard';
 
 // Lazy load page components for code splitting
 const Dashboard = lazy(() => import('@/components/Dashboard').then(module => ({ default: module.Dashboard })));
@@ -77,9 +78,11 @@ function App() {
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeHighlightMessage, setUpgradeHighlightMessage] = useState<string | undefined>(undefined);
   const [showAuthGuard, setShowAuthGuard] = useState(false);
   const [authGuardAction, setAuthGuardAction] = useState("create an eBook");
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showBookGenerator, setShowBookGenerator] = useState(false);
 
   // Debounce timer for auto-save
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -301,6 +304,46 @@ function App() {
     }
   };
 
+  const openBookGenerator = useCallback(() => {
+    if (!user) {
+      setAuthGuardAction('use the AI Book Generator');
+      setShowAuthGuard(true);
+      return;
+    }
+
+    if (!userProfile) {
+      toast.info('Loading your account details. Please try again in a moment.');
+      return;
+    }
+
+    if (!canGenerateFullBook(userProfile)) {
+      const remainingBooks = getRemainingFullBooks(userProfile);
+
+      if (userProfile.subscriptionStatus === 'free' || userProfile.subscriptionStatus === 'trial') {
+        setUpgradeHighlightMessage('Unlock the AI Book Generator with the Creator or Premium plan.');
+        setShowUpgradeModal(true);
+      } else if (userProfile.subscriptionStatus === 'creator' && typeof remainingBooks === 'number' && remainingBooks <= 0) {
+        setUpgradeHighlightMessage('You’ve used all 5 AI book generations this month. Upgrade for unlimited access.');
+        setShowUpgradeModal(true);
+      } else {
+        toast.info('Your current plan does not include the AI Book Generator.');
+      }
+      return;
+    }
+
+    setUpgradeHighlightMessage(undefined);
+    setShowBookGenerator(true);
+  }, [
+    user,
+    userProfile,
+    setAuthGuardAction,
+    setShowAuthGuard,
+    setShowUpgradeModal,
+    setUpgradeHighlightMessage,
+    setShowBookGenerator,
+    toast
+  ]);
+
   const selectProject = (project: EbookProject) => {
     setCurrentProject(project);
     // Auto-select first chapter if available
@@ -308,6 +351,36 @@ function App() {
     setCurrentChapter(firstChapter);
     navigate('/app/editor');
     setCurrentSection('editor');
+  };
+
+  const handleBookGeneratorComplete = async (project: EbookProject) => {
+    if (!user) {
+      toast.error('Please sign in to save your AI-generated book.');
+      return;
+    }
+
+    setShowBookGenerator(false);
+
+    try {
+      await saveProject(user.uid, project);
+      setProjects(currentProjects => {
+        const alreadyExists = currentProjects.some(existing => existing.id === project.id);
+        return alreadyExists ? currentProjects : [...currentProjects, project];
+      });
+
+      try {
+        await incrementFullBookGeneration(user.uid);
+        await refreshProfile();
+      } catch (usageError) {
+        console.error('Error updating AI book usage:', usageError);
+      }
+
+      toast.success('AI-generated book saved to your projects!');
+      selectProject(project);
+    } catch (error) {
+      console.error('Error saving AI-generated project:', error);
+      toast.error('Failed to save AI-generated book. Please try again.');
+    }
   };
 
   const returnToDashboard = async () => {
@@ -652,6 +725,7 @@ function App() {
       const maxPages = userProfile?.maxPages || 4;
       
       if (currentUsage >= maxPages) {
+        setUpgradeHighlightMessage("You've reached your page limit! Upgrade to Premium for unlimited pages.");
         setShowUpgradeModal(true);
         return;
       }
@@ -660,6 +734,7 @@ function App() {
     // Try to increment page usage
     const canCreatePage = await incrementPageUsage(user.uid);
     if (!canCreatePage) {
+      setUpgradeHighlightMessage("You've reached your page limit! Upgrade to Premium for unlimited pages.");
       setShowUpgradeModal(true);
       return;
     }
@@ -903,6 +978,7 @@ function App() {
                           onProjectsChanged={reloadProjects}
                           onNavigate={handleNavigation}
                           userProfile={userProfile}
+                          onOpenBookGenerator={openBookGenerator}
                         />
                       )}
                     </Suspense>
@@ -933,7 +1009,10 @@ function App() {
                     <Suspense fallback={<PageLoading />}>
                       <TemplateGallery
                         onSelectTemplate={createProjectFromTemplate}
-                        onShowUpgradeModal={() => setShowUpgradeModal(true)}
+                        onShowUpgradeModal={() => {
+                          setUpgradeHighlightMessage('Unlock premium templates and advanced AI workflows with Creator or Premium.');
+                          setShowUpgradeModal(true);
+                        }}
                         onClose={() => {
                           // Go back to where we came from
                           if (currentSection === 'projects') {
@@ -996,7 +1075,10 @@ function App() {
                       
                       <main className="p-3 lg:p-6 pb-6 lg:pb-8 space-y-6">
                         <UsageTracker 
-                          onUpgradeClick={() => setShowUpgradeModal(true)}
+                          onUpgradeClick={() => {
+                            setUpgradeHighlightMessage('Upgrade to unlock higher page limits and advanced analytics.');
+                            setShowUpgradeModal(true);
+                          }}
                         />
                         
                         <Suspense fallback={<PageLoading />}>
@@ -1066,16 +1148,28 @@ function App() {
         onShowTemplates={goToTemplatesPage}
         onStartProject={() => createProject({ title: 'My First Ebook' })}
         onShowAIGenerate={() => {
+          openBookGenerator();
           navigate('/app/dashboard');
-          toast.info('Head to "Generate Full Book" on the dashboard to let AI draft every chapter.');
         }}
       />
 
       <UpgradeModal
         open={showUpgradeModal}
-        onClose={() => setShowUpgradeModal(false)}
-        highlightMessage="You've reached your page limit! Upgrade to Premium for unlimited pages."
+        onClose={() => {
+          setShowUpgradeModal(false);
+          setUpgradeHighlightMessage(undefined);
+        }}
+        highlightMessage={upgradeHighlightMessage || "You've reached your page limit! Upgrade to Premium for unlimited pages."}
       />
+
+      {user && userProfile && (
+        <AIBookGeneratorWizard
+          open={showBookGenerator}
+          onClose={() => setShowBookGenerator(false)}
+          onComplete={handleBookGeneratorComplete}
+          userProfile={userProfile}
+        />
+      )}
 
       {/* Auth Modal - Show for both authenticated and non-authenticated users */}
       <AuthModal
