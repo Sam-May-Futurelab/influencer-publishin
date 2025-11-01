@@ -115,6 +115,20 @@ const clampPosition = (value: number | undefined, fallback: number) => {
   return Math.min(95, Math.max(5, target));
 };
 
+const mapAlignmentToPosition = (alignment: CoverDesign['imageAlignment']): string => {
+  switch (alignment) {
+    case 'top': return 'top center';
+    case 'bottom': return 'bottom center';
+    case 'left': return 'center left';
+    case 'right': return 'center right';
+    case 'top-left': return 'top left';
+    case 'top-right': return 'top right';
+    case 'bottom-left': return 'bottom left';
+    case 'bottom-right': return 'bottom right';
+    default: return 'center';
+  }
+};
+
 const COVER_TEMPLATES = [
   {
     id: 'minimal',
@@ -983,7 +997,22 @@ export function CoverDesigner({
   const { user, userProfile } = useAuth();
 
   const updateDesign = (updates: Partial<CoverDesign>) => {
-    setDesign((prev) => ({ ...prev, ...updates }));
+    setDesign((prev) => {
+      const next: CoverDesign = { ...prev, ...updates } as CoverDesign;
+
+      // Automatically switch to image mode when a background image is supplied
+      if (updates.backgroundImage && typeof updates.backgroundImage === 'string') {
+        next.backgroundType = updates.backgroundType ?? 'image';
+        next.usePreMadeCover = updates.usePreMadeCover ?? false;
+      }
+
+      // When switching away from image mode, ensure overlay settings stay consistent
+      if (updates.backgroundType && updates.backgroundType !== 'image') {
+        next.usePreMadeCover = updates.usePreMadeCover ?? false;
+      }
+
+      return next;
+    });
   };
 
   const applyTemplate = (template: typeof COVER_TEMPLATES[0]) => {
@@ -1253,6 +1282,29 @@ export function CoverDesigner({
     }
   };
 
+  const getImageBackgroundStyle = (): React.CSSProperties | undefined => {
+    if (!design.backgroundImage) return undefined;
+
+    const filterValue = `brightness(${design.imageBrightness}%) contrast(${design.imageContrast}%)`;
+    const alignment = mapAlignmentToPosition(design.imageAlignment || 'center');
+
+    let backgroundSize = 'cover';
+    const imagePosition = design.imagePosition || 'cover';
+    if (imagePosition === 'contain') {
+      backgroundSize = 'contain';
+    } else if (imagePosition === 'fill') {
+      backgroundSize = '100% 100%';
+    }
+
+    return {
+      backgroundImage: `url(${design.backgroundImage})`,
+      backgroundSize,
+      backgroundPosition: alignment,
+      backgroundRepeat: 'no-repeat',
+      filter: filterValue,
+    } as React.CSSProperties;
+  };
+
   const getBackgroundStyle = (): React.CSSProperties => {
     // Check gradient first before any image checks
     if (design.backgroundType === 'gradient') {
@@ -1269,44 +1321,18 @@ export function CoverDesigner({
       };
     }
     
-    if (design.usePreMadeCover && design.backgroundImage) {
-      return {
-        backgroundImage: `url(${design.backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      } as React.CSSProperties;
+    const imageStyle = getImageBackgroundStyle();
+    if (design.usePreMadeCover && imageStyle) {
+      return imageStyle;
     }
 
-    if (design.backgroundType === 'image' && design.backgroundImage) {
-      const filterValue = `brightness(${design.imageBrightness}%) contrast(${design.imageContrast}%)`;
-      
-      // Map alignment to CSS background-position
-      let bgPosition = 'center';
-      const alignment = design.imageAlignment || 'center';
-      switch (alignment) {
-        case 'top': bgPosition = 'top center'; break;
-        case 'bottom': bgPosition = 'bottom center'; break;
-        case 'left': bgPosition = 'center left'; break;
-        case 'right': bgPosition = 'center right'; break;
-        case 'top-left': bgPosition = 'top left'; break;
-        case 'top-right': bgPosition = 'top right'; break;
-        case 'bottom-left': bgPosition = 'bottom left'; break;
-        case 'bottom-right': bgPosition = 'bottom right'; break;
-        default: bgPosition = 'center';
-      }
-      
-      return {
-        backgroundImage: `url(${design.backgroundImage})`,
-        backgroundSize: 'cover', // Always cover for AI-generated images
-        backgroundPosition: bgPosition,
-        backgroundRepeat: 'no-repeat',
-        filter: filterValue,
-      } as React.CSSProperties;
-    } else {
-      return {
-        backgroundColor: design.backgroundColor,
-      } as React.CSSProperties;
+    if (design.backgroundType === 'image' && imageStyle) {
+      return imageStyle;
     }
+
+    return {
+      backgroundColor: design.backgroundColor,
+    } as React.CSSProperties;
   };
 
   const renderPreviewTextLayer = () => {
@@ -1455,11 +1481,7 @@ export function CoverDesigner({
                 <div
                   ref={canvasRef}
                   className="relative aspect-[5/8] rounded-2xl shadow-2xl overflow-hidden w-full max-w-[280px] sm:max-w-sm"
-                  style={{
-                    backgroundImage: `url(${design.backgroundImage})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                  }}
+                  style={getImageBackgroundStyle() || {}}
                 >
                   {design.overlay && (
                     <div
@@ -1519,10 +1541,13 @@ export function CoverDesigner({
                       const reader = new FileReader();
                       reader.onload = (event) => {
                         updateDesign({
-                          usePreMadeCover: true,
+                          backgroundType: 'image',
+                          usePreMadeCover: false,
                           backgroundImage: event.target?.result as string,
+                          imagePosition: design.imagePosition || 'cover',
+                          imageAlignment: design.imageAlignment || 'center',
                         });
-                        toast.success('Cover uploaded! Click Save to apply');
+                        toast.success('Cover uploaded! Click Apply Cover to bake it in.');
                       };
                       reader.readAsDataURL(file);
                     }
@@ -1541,93 +1566,107 @@ export function CoverDesigner({
                   </div>
                 </Button>
 
-                {design.backgroundImage && (
-                  <div className="space-y-6 pt-4 border-t">
-                    <div className="space-y-3">
-                      <Label className="text-base font-medium">Image Fit</Label>
-                      <Select
-                        value={design.imagePosition}
-                        onValueChange={(value: any) => updateDesign({ imagePosition: value })}
-                      >
-                        <SelectTrigger className="h-12 text-base">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="cover" className="text-base py-3">Cover (Fill & crop to fit)</SelectItem>
-                          <SelectItem value="contain" className="text-base py-3">Contain (Fit inside, no crop)</SelectItem>
-                          <SelectItem value="fill" className="text-base py-3">Fill (Stretch to fill)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-xs text-muted-foreground">
-                        {design.imagePosition === 'cover' && '• Fills the cover, cropping edges if needed'}
-                        {design.imagePosition === 'contain' && '• Shows full image, may have empty space'}
-                        {design.imagePosition === 'fill' && '• Stretches to fill, may distort image'}
-                      </p>
+                {design.backgroundType === 'image' && design.backgroundImage && (
+                  <div className="pt-4 border-t space-y-6">
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label className="text-base font-medium">Image Fit</Label>
+                          <Select
+                            value={design.imagePosition}
+                            onValueChange={(value: any) => updateDesign({ imagePosition: value })}
+                          >
+                            <SelectTrigger className="h-12 text-base">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="cover" className="text-base py-3">Cover (Fill & crop)</SelectItem>
+                              <SelectItem value="contain" className="text-base py-3">Contain (Fit inside)</SelectItem>
+                              <SelectItem value="fill" className="text-base py-3">Fill (Stretch to edges)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <p className="text-xs text-muted-foreground">
+                            {design.imagePosition === 'cover' && 'Best for most backgrounds, crops edges if needed.'}
+                            {design.imagePosition === 'contain' && 'Shows the full image with potential letterboxing.'}
+                            {design.imagePosition === 'fill' && 'Stretches to fit, which may distort the artwork.'}
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-base font-medium">Image Alignment</Label>
+                          <Select
+                            value={design.imageAlignment || 'center'}
+                            onValueChange={(value: any) => updateDesign({ imageAlignment: value })}
+                          >
+                            <SelectTrigger className="h-12 text-base">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="center" className="text-base py-3">Center</SelectItem>
+                              <SelectItem value="top" className="text-base py-3">Top</SelectItem>
+                              <SelectItem value="bottom" className="text-base py-3">Bottom</SelectItem>
+                              <SelectItem value="left" className="text-base py-3">Left</SelectItem>
+                              <SelectItem value="right" className="text-base py-3">Right</SelectItem>
+                              <SelectItem value="top-left" className="text-base py-3">Top Left</SelectItem>
+                              <SelectItem value="top-right" className="text-base py-3">Top Right</SelectItem>
+                              <SelectItem value="bottom-left" className="text-base py-3">Bottom Left</SelectItem>
+                              <SelectItem value="bottom-right" className="text-base py-3">Bottom Right</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <p className="text-xs text-muted-foreground">Position the focal point without reopening the editor.</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-base font-medium">Brightness</Label>
+                            <Badge variant="secondary" className="text-xs">{design.imageBrightness}%</Badge>
+                          </div>
+                          <Slider
+                            value={[design.imageBrightness]}
+                            onValueChange={([value]) => updateDesign({ imageBrightness: value })}
+                            min={50}
+                            max={150}
+                            step={5}
+                            className="py-2"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-base font-medium">Contrast</Label>
+                            <Badge variant="secondary" className="text-xs">{design.imageContrast}%</Badge>
+                          </div>
+                          <Slider
+                            value={[design.imageContrast]}
+                            onValueChange={([value]) => updateDesign({ imageContrast: value })}
+                            min={50}
+                            max={150}
+                            step={5}
+                            className="py-2"
+                          />
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <Label className="text-base font-medium">Image Alignment</Label>
-                      <Select
-                        value={design.imageAlignment || 'center'}
-                        onValueChange={(value: any) => updateDesign({ imageAlignment: value })}
-                      >
-                        <SelectTrigger className="h-12 text-base">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="center" className="text-base py-3">Center</SelectItem>
-                          <SelectItem value="top" className="text-base py-3">Top</SelectItem>
-                          <SelectItem value="bottom" className="text-base py-3">Bottom</SelectItem>
-                          <SelectItem value="left" className="text-base py-3">Left</SelectItem>
-                          <SelectItem value="right" className="text-base py-3">Right</SelectItem>
-                          <SelectItem value="top-left" className="text-base py-3">Top Left</SelectItem>
-                          <SelectItem value="top-right" className="text-base py-3">Top Right</SelectItem>
-                          <SelectItem value="bottom-left" className="text-base py-3">Bottom Left</SelectItem>
-                          <SelectItem value="bottom-right" className="text-base py-3">Bottom Right</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-xs text-muted-foreground">
-                        Position the image within the cover area
-                      </p>
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label className="text-base font-medium">Brightness: {design.imageBrightness}%</Label>
-                      <Slider
-                        value={[design.imageBrightness]}
-                        onValueChange={([value]) => updateDesign({ imageBrightness: value })}
-                        min={50}
-                        max={150}
-                        step={5}
-                        className="py-2"
-                      />
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label className="text-base font-medium">Contrast: {design.imageContrast}%</Label>
-                      <Slider
-                        value={[design.imageContrast]}
-                        onValueChange={([value]) => updateDesign({ imageContrast: value })}
-                        min={50}
-                        max={150}
-                        step={5}
-                        className="py-2"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
-                      <Label className="text-base font-medium">Dark Overlay</Label>
-                      <input
-                        type="checkbox"
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 p-4 rounded-lg bg-muted/50">
+                      <div>
+                        <Label className="text-base font-medium">Dark Overlay</Label>
+                        <p className="text-xs text-muted-foreground">Add a subtle tint so text pops against busy art.</p>
+                      </div>
+                      <Switch
                         checked={design.overlay}
-                        onChange={(e) => updateDesign({ overlay: e.target.checked })}
-                        className="w-5 h-5 rounded cursor-pointer"
+                        onCheckedChange={(checked) => updateDesign({ overlay: checked })}
                       />
                     </div>
 
                     {design.overlay && (
-                      <div className="space-y-3">
-                        <Label className="text-base font-medium">Overlay Opacity: {design.overlayOpacity}%</Label>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-base font-medium">Overlay Opacity</Label>
+                          <Badge variant="secondary" className="text-xs">{design.overlayOpacity}%</Badge>
+                        </div>
                         <Slider
                           value={[design.overlayOpacity]}
                           onValueChange={([value]) => updateDesign({ overlayOpacity: value })}
