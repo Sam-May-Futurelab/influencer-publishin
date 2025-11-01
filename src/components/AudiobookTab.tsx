@@ -65,6 +65,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
   const [currentGeneratingChapter, setCurrentGeneratingChapter] = useState<string>('');
   const [showSplitDialog, setShowSplitDialog] = useState(false);
   const [isCreatingAudioVersion, setIsCreatingAudioVersion] = useState(false);
+  const [showPostGenerationGuide, setShowPostGenerationGuide] = useState(false);
 
   const isPremium = userProfile?.isPremium || false;
   const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
@@ -96,6 +97,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
         if (existingAudiobooks.length > 0) {
           setGeneratedChapters(existingAudiobooks);
         }
+        setShowPostGenerationGuide(false);
       } catch (error) {
         console.error('Failed to load existing audiobooks:', error);
       }
@@ -230,6 +232,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
     setIsGenerating(true);
     setGenerationProgress(0);
     setGeneratedChapters([]);
+    setShowPostGenerationGuide(false);
 
     try {
       const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
@@ -329,6 +332,8 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
         }]);
       }
 
+      setShowPostGenerationGuide(true);
+
       toast.success('🎉 Audiobook generated successfully!', {
         description: `All ${sortedChapters.length} chapters are ready. Scroll down to listen or download.`,
         duration: 6000,
@@ -360,6 +365,11 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
       setIsGenerating(false);
       setCurrentGeneratingChapter('');
     }
+  };
+
+  const handleViewAudiobooks = () => {
+    setShowPostGenerationGuide(false);
+    navigate('/app/audiobooks');
   };
 
   return (
@@ -546,7 +556,32 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
               Your audiobooks are saved and can also be found in "My Books" page
             </p>
           </CardHeader>
-          <CardContent className="space-y-3">{generatedChapters.map((chapter) => (
+          <CardContent className="space-y-3">
+            {showPostGenerationGuide && (
+              <div
+                className="rounded-lg border border-primary/30 bg-primary/5 p-4 space-y-3 sm:space-y-0 sm:flex sm:items-start sm:justify-between sm:gap-6"
+                aria-live="polite"
+              >
+                <div className="flex items-start gap-3 text-sm">
+                  <Info size={20} className="mt-0.5 text-primary" weight="duotone" />
+                  <div className="space-y-1">
+                    <p className="font-medium text-foreground">Audiobook saved to My Books</p>
+                    <p className="text-muted-foreground">
+                      Download your chapters now or manage the full audio experience from the My Books area anytime.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2 sm:self-center">
+                  <Button size="sm" variant="secondary" onClick={handleViewAudiobooks}>
+                    Go to My Books
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => setShowPostGenerationGuide(false)}>
+                    Dismiss
+                  </Button>
+                </div>
+              </div>
+            )}
+            {generatedChapters.map((chapter) => (
               <div key={chapter.chapterId} className="p-4 neomorph-inset rounded-lg">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold">{chapter.title}</h3>
