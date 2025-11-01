@@ -20,12 +20,8 @@ import {
   Zap,
   TrendingUp,
   Target,
-  Lightbulb,
-  PenTool,
-  Settings,
   Brain,
   Sparkles,
-  Share2,
   Twitter,
   Facebook,
   Linkedin
@@ -256,16 +252,17 @@ export default function BlogPage() {
   const { postId } = useParams<{ postId: string }>();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const post = postId ? getPostBySlug(postId) : null;
+
+  useEffect(() => {
+    if (postId && !post) {
+      navigate('/blog');
+    }
+  }, [postId, post, navigate]);
 
   // If we have a postId, show individual post
   if (postId) {
-    const post = getPostBySlug(postId);
-    
     if (!post) {
-      // Post not found, redirect to blog listing
-      useEffect(() => {
-        navigate('/blog');
-      }, [navigate]);
       return null;
     }
 
@@ -293,7 +290,6 @@ export default function BlogPage() {
   });
 
   const featuredPosts = getFeaturedPosts();
-  const recentPosts = allPosts.slice(0, 4);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {

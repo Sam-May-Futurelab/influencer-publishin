@@ -4,16 +4,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { DownloadSimple, FileText, Gear, Palette, Eye, Crown, Sparkle, Trash, Image as ImageIcon, DotsThree, ArrowLeft, SpeakerHigh } from '@phosphor-icons/react';
+import { DownloadSimple, FileText, Gear, Palette, Eye, Trash, Image as ImageIcon, DotsThree, ArrowLeft, SpeakerHigh } from '@phosphor-icons/react';
 import { EbookProject, CoverDesign } from '@/lib/types';
 import { ExportDialog } from '@/components/ExportDialog';
 import { PreviewDialog } from '@/components/PreviewDialog';
@@ -46,14 +45,6 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
   const { userProfile } = useAuth();
 
   const isPremium = userProfile?.isPremium || false;
-  const pagesUsed = userProfile?.pagesUsed || 0;
-  const maxPages = userProfile?.maxPages || 4; // Free tier default
-  // Only show unlimited if user is actually premium (not just if maxPages is -1)
-  const isUnlimited = isPremium && (maxPages === -1 || userProfile?.subscriptionStatus === 'premium');
-  // Default to 4 pages for free users if maxPages is invalid
-  const effectiveMaxPages = !isPremium && (maxPages <= 0 || maxPages === -1) ? 4 : maxPages;
-  const pagesRemaining = isUnlimited ? 0 : Math.max(0, effectiveMaxPages - pagesUsed);
-  const usagePercentage = isUnlimited ? 0 : Math.min((pagesUsed / effectiveMaxPages) * 100, 100);
 
   const handleSave = () => {
     onProjectUpdate({

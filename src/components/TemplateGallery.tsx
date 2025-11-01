@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Clock, Users, Star, MagnifyingGlass, GridFour, ListBullets, Eye } from '@phosphor-icons/react';
+import { BookOpen, Clock, MagnifyingGlass, Eye } from '@phosphor-icons/react';
 import { ebookTemplates, createProjectFromTemplate, EbookTemplate } from '@/lib/templates';
 import { EbookProject } from '@/lib/types';
 import { PreviewDialog } from '@/components/PreviewDialog';
@@ -24,7 +24,6 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
   const [customTitle, setCustomTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const handleTemplateSelect = (template: EbookTemplate) => {
     // If clicking the same template, deselect it
@@ -158,7 +157,7 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
       </motion.div>
 
       {/* Template Grid/List */}
-      <div className={viewMode === 'grid' ? 'grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6' : 'space-y-4'}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
         {filteredTemplates.map((template, index) => (
           <motion.div
             key={template.id}
@@ -171,10 +170,10 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
                 selectedTemplate?.id === template.id
                   ? 'border-primary shadow-lg' 
                   : 'border-border hover:border-primary/50 hover:shadow-md'
-              } ${viewMode === 'list' ? 'flex flex-row' : ''}`}
+              }`}
               onClick={() => handleTemplateSelect(template)}
             >
-              <CardHeader className={`pb-3 ${viewMode === 'list' ? 'flex-1' : ''}`}>
+              <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="text-2xl">{template.icon}</div>
                   <div className="flex items-center gap-1">
@@ -190,7 +189,7 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
                   {template.description}
                 </p>
               </CardHeader>
-              <CardContent className={`space-y-3 ${viewMode === 'list' ? 'flex items-center gap-4' : ''}`}>
+              <CardContent className="space-y-3">
                 <div className="flex flex-wrap gap-1">
                   <Badge variant="secondary" className="text-xs capitalize">{template.category}</Badge>
                   <Badge variant="outline" className="text-xs">
@@ -202,47 +201,27 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
                     {template.chapters.length} chapters
                   </Badge>
                 </div>
-                
-                {viewMode === 'grid' && (
-                  <>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>~{template.chapters.reduce((sum, ch) => sum + (ch.content?.split(' ').length || 0), 0).toLocaleString()} words</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex gap-1">
-                        <div 
-                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                          style={{ backgroundColor: template.brandConfig.primaryColor }}
-                        />
-                        <div 
-                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                          style={{ backgroundColor: template.brandConfig.secondaryColor }}
-                        />
-                        <div 
-                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                          style={{ backgroundColor: template.brandConfig.accentColor }}
-                        />
-                      </div>
-                      
-                      {/* Preview Button */}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setPreviewTemplate(template);
-                        }}
-                        className="h-8 px-3 text-xs gap-1.5"
-                      >
-                        <Eye size={14} weight="duotone" />
-                        Preview
-                      </Button>
-                    </div>
-                  </>
-                )}
-                
-                {viewMode === 'list' && (
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>~{template.chapters.reduce((sum, ch) => sum + (ch.content?.split(' ').length || 0), 0).toLocaleString()} words</span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-1">
+                    <div 
+                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: template.brandConfig.primaryColor }}
+                    />
+                    <div 
+                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: template.brandConfig.secondaryColor }}
+                    />
+                    <div 
+                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: template.brandConfig.accentColor }}
+                    />
+                  </div>
+
+                  {/* Preview Button */}
                   <Button
                     variant="outline"
                     size="sm"
@@ -250,12 +229,12 @@ export function TemplateGallery({ onSelectTemplate, onClose, onShowUpgradeModal 
                       e.stopPropagation();
                       setPreviewTemplate(template);
                     }}
-                    className="h-8 px-3 text-xs gap-1.5 ml-auto"
+                    className="h-8 px-3 text-xs gap-1.5"
                   >
                     <Eye size={14} weight="duotone" />
                     Preview
                   </Button>
-                )}
+                </div>
               </CardContent>
             </Card>
           </motion.div>

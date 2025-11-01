@@ -16,8 +16,7 @@ import {
   TrendingUp,
   CheckCircle,
   ArrowRight,
-  MessageCircle,
-  Clock
+  MessageCircle
 } from 'lucide-react';
 
 export function TestimonialsPage() {
@@ -145,33 +144,6 @@ export function TestimonialsPage() {
       rating: 5,
       text: "Inkfluence AI helps me deliver more projects to clients. The quality is consistent, and turnaround time is incredible. Game-changer for freelancers.",
       verified: true
-    }
-  ];
-
-  const videoTestimonials = [
-    {
-      name: 'Mark Stevens',
-      role: 'Full-Time Author',
-      thumbnail: '/images/testimonials/video-mark.jpg',
-      duration: '2:15',
-      views: '15K',
-      title: 'How I Published 10 Ebooks in 6 Months'
-    },
-    {
-      name: 'Kelly Anderson',
-      role: 'Marketing Director',
-      thumbnail: '/images/testimonials/video-kelly.jpg',
-      duration: '1:45',
-      views: '8K',
-      title: 'Our Lead Generation Increased 400%'
-    },
-    {
-      name: 'Daniel Park',
-      role: 'Course Creator',
-      thumbnail: '/images/testimonials/video-daniel.jpg',
-      duration: '3:20',
-      views: '12K',
-      title: 'From Idea to Published Ebook in 48 Hours'
     }
   ];
 

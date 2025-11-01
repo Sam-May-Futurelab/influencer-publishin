@@ -86,6 +86,7 @@ export const useVoiceInput = (options: VoiceInputOptions = {}): VoiceInputReturn
       recognitionRef.current = recognition;
       recognition.start();
     } catch (err) {
+      console.error('Failed to start speech recognition:', err);
       setError('Failed to start speech recognition');
       setIsListening(false);
     }

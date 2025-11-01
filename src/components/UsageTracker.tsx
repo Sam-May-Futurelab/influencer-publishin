@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Crown, TrendUp, FileText, Sparkle } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
-import { usePayments } from '@/hooks/use-payments';
 
 interface UsageTrackerProps {
   onUpgradeClick?: () => void;
@@ -15,8 +14,6 @@ interface UsageTrackerProps {
 
 export function UsageTracker({ onUpgradeClick, className = '', forceShow = false }: UsageTrackerProps) {
   const { userProfile } = useAuth();
-  const { purchaseSubscription, purchasing, canPurchase } = usePayments();
-
   if (!userProfile) return null;
 
   const { pagesUsed, maxPages, isPremium, subscriptionStatus } = userProfile;

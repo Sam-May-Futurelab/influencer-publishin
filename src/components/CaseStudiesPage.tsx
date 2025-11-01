@@ -11,7 +11,6 @@ import {
   TrendingUp, 
   Target,
   BookOpen,
-  DollarSign,
   Clock,
   Users,
   ArrowRight,

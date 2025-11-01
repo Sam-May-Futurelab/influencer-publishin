@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { ProgressRing, ProgressBar } from '@/components/ui/progress-ring';
-import { Target, Flame, Trophy, Gear, Calendar, TrendUp } from '@phosphor-icons/react';
+import { Target, Flame, Gear, Calendar, TrendUp } from '@phosphor-icons/react';
 import { WritingGoals, WritingStats } from '@/lib/types';
 import { cn } from '@/lib/utils';
 

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,10 +36,8 @@ import {
   Check,
   X,
   BookOpen,
-  Palette,
   ChartBar,
-  FileText,
-  Gear
+  FileText
 } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
@@ -66,7 +64,7 @@ interface AppSettings {
 }
 
 export function ProfilePage({ onNavigate }: ProfilePageProps) {
-  const { user, userProfile, updateUserProfile, signOut, refreshProfile } = useAuth();
+  const { user, userProfile, updateUserProfile, refreshProfile } = useAuth();
   const { purchaseSubscription, purchasing, canPurchase, loading: paymentsLoading } = usePayments();
   const [projects] = useLocalStorage('ebook-projects', []);
   const [isEditing, setIsEditing] = useState(false);
@@ -143,6 +141,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
       setIsEditing(false);
       toast.success('Profile updated successfully!');
     } catch (error) {
+      console.error('Failed to update profile:', error);
       toast.error('Failed to update profile');
     }
   };
@@ -175,6 +174,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
       
       toast.success('Data exported successfully!');
     } catch (error) {
+      console.error('Failed to export data:', error);
       toast.error('Failed to export data');
     }
   };

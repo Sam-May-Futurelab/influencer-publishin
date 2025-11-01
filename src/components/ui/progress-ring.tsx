@@ -108,7 +108,7 @@ export function ProgressBar({
       
       <div 
         className="w-full rounded-full neomorph-inset"
-        style={{ height }}
+        style={{ height, backgroundColor }}
       >
         <motion.div
           className="h-full rounded-full bg-gradient-to-r from-primary to-accent"

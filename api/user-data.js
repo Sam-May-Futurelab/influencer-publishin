@@ -98,6 +98,7 @@ async function handleExport(req, res) {
         };
       }
     } catch (error) {
+      console.warn(`⚠️ Usage data unavailable for export: ${userId}`, error);
       exportData.data.usage = null;
     }
 
@@ -153,7 +154,7 @@ async function handleDelete(req, res) {
     try {
       await db.collection('usage').doc(userId).delete();
     } catch (error) {
-      // Ignore if doesn't exist
+      console.warn(`ℹ️ No usage document to delete for user: ${userId}`, error);
     }
 
     // Delete user profile

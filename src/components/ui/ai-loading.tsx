@@ -54,6 +54,7 @@ export function AILoading({
   
   // Fake progress animation when progress is 0
   const [fakeProgress, setFakeProgress] = useState(0);
+  const [factIndex, setFactIndex] = useState(0);
   
   useEffect(() => {
     if (progress === 0) {
@@ -72,7 +73,18 @@ export function AILoading({
     }
   }, [progress]);
   
+  useEffect(() => {
+    if (funFacts.length === 0) return;
+
+    const timer = setInterval(() => {
+      setFactIndex((prev) => (prev + 1) % funFacts.length);
+    }, Math.max(messageDelay, 1000));
+
+    return () => clearInterval(timer);
+  }, [funFacts, messageDelay]);
+
   const displayProgress = Math.round(fakeProgress);
+  const currentFact = funFacts.length > 0 ? funFacts[factIndex] : null;
 
   return (
     <div className="space-y-6">
@@ -290,14 +302,26 @@ export function AILoading({
             </motion.div>
           )}
         </div>
+        {currentOperation && (
+          <p className="text-xs text-muted-foreground text-center">
+            {currentOperation}
+          </p>
+        )}
       </div>
 
       {/* Fun fact or tip (optional) */}
-      {messages.length > 0 && (
-        <div className={`text-center p-4 rounded-lg ${config.bgColor} border border-primary/10`}>
-          <p className="text-sm text-muted-foreground italic">
-            💡 {messages[Math.floor((displayProgress / 100) * messages.length) % messages.length]}
-          </p>
+      {(messages.length > 0 || currentFact) && (
+        <div className={`text-center p-4 rounded-lg ${config.bgColor} border border-primary/10 space-y-1`}>
+          {messages.length > 0 && (
+            <p className="text-sm text-muted-foreground italic">
+              💡 {messages[Math.floor((displayProgress / 100) * messages.length) % messages.length]}
+            </p>
+          )}
+          {currentFact && (
+            <p className="text-xs text-muted-foreground">
+              ⚡ {currentFact}
+            </p>
+          )}
         </div>
       )}
     </div>
