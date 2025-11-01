@@ -1151,6 +1151,7 @@ function App() {
           openBookGenerator();
           navigate('/app/dashboard');
         }}
+        subscriptionStatus={userProfile?.subscriptionStatus}
       />
 
       <UpgradeModal
