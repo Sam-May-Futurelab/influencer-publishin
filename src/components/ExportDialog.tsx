@@ -63,7 +63,6 @@ const exportOptions: ExportOption[] = [
 export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
   const { userProfile } = useAuth();
   const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
-  const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('pdf');
   const [customWatermark, setCustomWatermark] = useState<string>('');
   const [authorName, setAuthorName] = useState<string>('');
   const [authorBio, setAuthorBio] = useState<string>('');
@@ -85,11 +84,10 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
     const settings = localStorage.getItem('ebookCrafterSettings');
     if (settings) {
       const parsed = JSON.parse(settings);
-      setCustomWatermark(parsed.customWatermark || '');
-      setAuthorName(parsed.authorName || '');
-      setAuthorBio(parsed.authorBio || '');
-      setAuthorWebsite(parsed.authorWebsite || '');
-      setSelectedFormat(parsed.defaultExportFormat || 'pdf');
+  setCustomWatermark(parsed.customWatermark || '');
+  setAuthorName(parsed.authorName || '');
+  setAuthorBio(parsed.authorBio || '');
+  setAuthorWebsite(parsed.authorWebsite || '');
       setIncludeTOC(parsed.includeTOC ?? true);
       setIncludeCopyright(parsed.includeCopyright ?? true);
       setCopyrightPosition(parsed.copyrightPosition || 'end');
@@ -161,9 +159,10 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
       });
       toast.success(`${format.toUpperCase()} export complete!`, { id: 'export' });
       onClose();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Export failed:', error);
-      toast.error(`Export failed. Please try again.`, { id: 'export' });
+      const message = error instanceof Error ? error.message : 'Export failed. Please try again.';
+      toast.error(message, { id: 'export' });
     } finally {
       setExportingFormat(null);
     }
@@ -345,7 +344,10 @@ export function ExportDialog({ project, isOpen, onClose }: ExportDialogProps) {
                   {/* Chapter Numbering Style */}
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Chapter Numbering</Label>
-                    <Select value={chapterNumberStyle} onValueChange={(value: any) => setChapterNumberStyle(value)}>
+                    <Select
+                      value={chapterNumberStyle}
+                      onValueChange={(value) => setChapterNumberStyle(value as 'numeric' | 'roman' | 'none')}
+                    >
                       <SelectTrigger className="neomorph-inset border-0">
                         <SelectValue />
                       </SelectTrigger>

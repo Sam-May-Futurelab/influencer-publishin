@@ -74,6 +74,16 @@ interface DashboardProps {
   onOpenBookGenerator?: () => void;
 }
 
+interface UserAudiobook {
+  id: string;
+  projectTitle: string;
+  chapterTitle: string;
+  audioUrl: string;
+  audioSize: number;
+  projectId?: string;
+  voiceId?: string;
+}
+
 export function Dashboard({ 
   projects, 
   onSelectProject, 
@@ -102,9 +112,9 @@ export function Dashboard({
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Audiobooks state
-  const [audiobooks, setAudiobooks] = useState<any[]>([]);
+  const [audiobooks, setAudiobooks] = useState<UserAudiobook[]>([]);
   const [loadingAudiobooks, setLoadingAudiobooks] = useState(true);
-  const [audiobookToDelete, setAudiobookToDelete] = useState<any | null>(null);
+  const [audiobookToDelete, setAudiobookToDelete] = useState<UserAudiobook | null>(null);
   const [showDeleteAudiobookDialog, setShowDeleteAudiobookDialog] = useState(false);
   
   // Project setup dialog state
@@ -140,18 +150,27 @@ export function Dashboard({
         );
         
         const snapshot = await getDocs(q);
-        const loadedAudiobooks = snapshot.docs.map(doc => {
-          const data = doc.data();
+        const loadedAudiobooks = snapshot.docs.map<UserAudiobook>((docSnapshot) => {
+          const data = docSnapshot.data();
           const project = projects.find(p => p.id === data.projectId);
+          const chapterTitle = typeof data.chapterTitle === 'string' ? data.chapterTitle : 'Untitled Chapter';
+          const audioUrl = typeof data.audioUrl === 'string' ? data.audioUrl : '';
+          const audioSize = typeof data.audioSize === 'number' ? data.audioSize : 0;
+          const projectTitle = typeof data.projectTitle === 'string' ? data.projectTitle : project?.title || 'Unknown Project';
+
           return {
-            id: doc.id,
-            ...data,
-            projectTitle: data.projectTitle || project?.title || 'Unknown Project'
+            id: docSnapshot.id,
+            projectId: typeof data.projectId === 'string' ? data.projectId : project?.id,
+            voiceId: typeof data.voiceId === 'string' ? data.voiceId : undefined,
+            chapterTitle,
+            audioUrl,
+            audioSize,
+            projectTitle,
           };
         });
 
         setAudiobooks(loadedAudiobooks);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Failed to load audiobooks:', error);
       } finally {
         setLoadingAudiobooks(false);
@@ -267,9 +286,10 @@ export function Dashboard({
       } else {
         toast.error(result.error || 'Failed to import file');
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Import error:', error);
-      toast.error('An error occurred while importing the file');
+      const message = error instanceof Error ? error.message : 'An error occurred while importing the file';
+      toast.error(message);
     } finally {
       setIsImporting(false);
       // Reset file input
@@ -486,7 +506,7 @@ export function Dashboard({
                 </div>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {audiobooks.slice(0, 3).map((audiobook: any) => (
+                {audiobooks.slice(0, 3).map((audiobook) => (
                   <div key={audiobook.id} className="p-4 neomorph-inset rounded-lg space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
@@ -1080,9 +1100,10 @@ export function Dashboard({
                     await deleteDoc(doc(db, 'audiobooks', audiobookToDelete.id));
                     setAudiobooks(prev => prev.filter(a => a.id !== audiobookToDelete.id));
                     toast.success(`"${audiobookToDelete.chapterTitle}" deleted successfully`);
-                  } catch (error) {
+                  } catch (error: unknown) {
                     console.error('Failed to delete audiobook:', error);
-                    toast.error('Failed to delete audiobook');
+                    const message = error instanceof Error ? error.message : 'Failed to delete audiobook';
+                    toast.error(message);
                   }
                   setShowDeleteAudiobookDialog(false);
                   setAudiobookToDelete(null);

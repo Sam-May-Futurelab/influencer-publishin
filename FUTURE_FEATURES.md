@@ -196,7 +196,12 @@ Complete
 **Complexity:** Medium-High
 **Value:** High for users with existing content
 
-### 7. Custom AI Image Models (Skip)
+### 7. Direct Publishing Integrations (Amazon KDP, Apple Books, Kobo)
+**Description:** Generate store-ready exports and sync metadata directly to major ebook marketplaces (Kindle Direct Publishing, Apple Books, Kobo Writing Life, etc.)
+**Complexity:** High (API credentials, format compliance, regional differences)
+**Value:** Very high—removes manual upload friction and makes the platform an end-to-end publishing hub
+
+### 8. Custom AI Image Models (Skip)
 **Description:** Train AI on user photos for personalized covers
 **Decision:** Too expensive and complex - not worth it
 
@@ -204,10 +209,10 @@ Complete
 
 ## Priority: Low
 
-### 7. FlipBook Export Format
-### 8. Collaboration Features
-### 9. Template Marketplace
-### 10. Analytics Dashboard
+### 9. FlipBook Export Format
+### 10. Collaboration Features
+### 11. Template Marketplace
+### 12. Analytics Dashboard
 
 ---
 
