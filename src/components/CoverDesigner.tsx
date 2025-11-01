@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
@@ -129,124 +129,7 @@ const mapAlignmentToPosition = (alignment: CoverDesign['imageAlignment']): strin
   }
 };
 
-const COVER_TEMPLATES = [
-  {
-    id: 'minimal',
-    name: 'Minimal',
-    preview: '🎯',
-    design: {
-      backgroundType: 'solid' as const,
-      backgroundColor: '#1a1a1a',
-      titleColor: '#ffffff',
-      subtitleColor: '#a0a0a0',
-      authorColor: '#ffffff',
-      titleFont: 'Montserrat',
-      subtitleFont: 'Inter',
-      authorFont: 'Inter',
-      titleSize: 48,
-      subtitleSize: 20,
-      authorSize: 18,
-    },
-  },
-  {
-    id: 'gradient-blue',
-    name: 'Ocean Wave',
-    preview: '🌊',
-    design: {
-      backgroundType: 'gradient' as const,
-      gradientStart: '#1e3a8a',
-      gradientEnd: '#1e40af',
-      gradientDirection: 'to-br' as const,
-      titleColor: '#ffffff',
-      subtitleColor: '#e0e7ff',
-      authorColor: '#f0f9ff',
-      titleFont: 'Playfair Display',
-      subtitleFont: 'Inter',
-      authorFont: 'Inter',
-      titleSize: 52,
-      subtitleSize: 22,
-      authorSize: 18,
-    },
-  },
-  {
-    id: 'gradient-sunset',
-    name: 'Sunset Glow',
-    preview: '🌅',
-    design: {
-      backgroundType: 'gradient' as const,
-      gradientStart: '#dc2626',
-      gradientEnd: '#ea580c',
-      gradientDirection: 'to-br' as const,
-      titleColor: '#ffffff',
-      subtitleColor: '#fef2f2',
-      authorColor: '#fffbeb',
-      titleFont: 'Bebas Neue',
-      subtitleFont: 'Open Sans',
-      authorFont: 'Open Sans',
-      titleSize: 56,
-      subtitleSize: 20,
-      authorSize: 18,
-    },
-  },
-  {
-    id: 'gradient-forest',
-    name: 'Forest Dream',
-    preview: '🌲',
-    design: {
-      backgroundType: 'gradient' as const,
-      gradientStart: '#0f2027',
-      gradientEnd: '#2c5364',
-      gradientDirection: 'to-br' as const,
-      titleColor: '#ffffff',
-      subtitleColor: '#b8d4db',
-      authorColor: '#ffffff',
-      titleFont: 'Merriweather',
-      subtitleFont: 'Lora',
-      authorFont: 'Lora',
-      titleSize: 46,
-      subtitleSize: 22,
-      authorSize: 18,
-    },
-  },
-  {
-    id: 'modern-bold',
-    name: 'Bold Modern',
-    preview: '⚡',
-    design: {
-      backgroundType: 'gradient' as const,
-      gradientStart: '#7c2d12',
-      gradientEnd: '#0f766e',
-      gradientDirection: 'to-r' as const,
-      titleColor: '#ffffff',
-      subtitleColor: '#f0fdfa',
-      authorColor: '#fef2f2',
-      titleFont: 'Bebas Neue',
-      subtitleFont: 'Roboto',
-      authorFont: 'Roboto',
-      titleSize: 60,
-      subtitleSize: 24,
-      authorSize: 20,
-    },
-  },
-  {
-    id: 'elegant',
-    name: 'Elegant Classic',
-    preview: '✨',
-    design: {
-      backgroundType: 'solid' as const,
-      backgroundColor: '#2d3748',
-      titleColor: '#f7fafc',
-      subtitleColor: '#cbd5e0',
-      authorColor: '#e2e8f0',
-      titleFont: 'Playfair Display',
-      subtitleFont: 'Merriweather',
-      authorFont: 'Inter',
-      titleSize: 50,
-      subtitleSize: 20,
-      authorSize: 16,
-    },
-  },
-];
+// Template presets moved to future feature set; keeping stock backgrounds only for now.
 
 // Stock image interface
 interface StockImage {
@@ -995,7 +878,7 @@ export function CoverDesigner({
   const [showCloseHint, setShowCloseHint] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { user, userProfile } = useAuth();
+  const { userProfile } = useAuth();
 
   useEffect(() => {
     if (!open) {
@@ -1022,31 +905,6 @@ export function CoverDesigner({
 
       return next;
     });
-  };
-
-  const applyTemplate = (template: typeof COVER_TEMPLATES[0]) => {
-    updateDesign({
-      ...template.design,
-      title: design.title,
-      subtitle: design.subtitle,
-      authorName: design.authorName,
-    });
-    toast.success(`Applied ${template.name} template`);
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        updateDesign({
-          backgroundType: 'image',
-          backgroundImage: event.target?.result as string,
-        });
-        toast.success('Background image uploaded');
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const saveCover = async () => {
@@ -1156,142 +1014,6 @@ export function CoverDesigner({
     }
   };
 
-  const exportCover = async () => {
-    if (!canvasRef.current) return;
-
-    try {
-      // Use html2canvas library or similar - for now we'll use a simple approach
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      // Set canvas dimensions (standard ebook cover: 1600x2560)
-      canvas.width = 1600;
-      canvas.height = 2560;
-
-      // Draw background
-      if (design.backgroundType === 'gradient') {
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        gradient.addColorStop(0, design.gradientStart);
-        gradient.addColorStop(1, design.gradientEnd);
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      } else if (design.backgroundType === 'image' && design.backgroundImage) {
-        const img = new Image();
-        img.crossOrigin = 'anonymous'; // Enable CORS for Unsplash images
-        img.src = design.backgroundImage;
-        await new Promise((resolve, reject) => {
-          img.onload = resolve;
-          img.onerror = () => {
-            console.error('Failed to load image, using fallback');
-            resolve(null);
-          };
-        });
-        
-        if (img.complete && img.naturalHeight !== 0) {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        } else {
-          // Fallback to gradient if image fails
-          ctx.fillStyle = design.gradientStart || '#667eea';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-        
-        // Add overlay if enabled
-        if (design.overlay) {
-          ctx.fillStyle = `rgba(0, 0, 0, ${design.overlayOpacity / 100})`;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-      } else {
-        ctx.fillStyle = design.backgroundColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-
-      // Draw text elements with word wrapping
-      const drawText = (
-        text: string,
-        font: string,
-        size: number,
-        color: string,
-        y: number,
-        align: 'center' | 'left' | 'right' = 'center',
-        maxWidth?: number
-      ) => {
-        // Apply shadow if enabled
-        if (design.textShadowEnabled) {
-          ctx.shadowColor = design.shadowColor || 'rgba(0, 0, 0, 0.8)';
-          ctx.shadowBlur = (design.shadowBlur || 8) * 3; // Scale for high-res canvas
-          ctx.shadowOffsetX = (design.shadowOffsetX || 2) * 3;
-          ctx.shadowOffsetY = (design.shadowOffsetY || 2) * 3;
-        } else {
-          ctx.shadowColor = 'transparent';
-          ctx.shadowBlur = 0;
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 0;
-        }
-        
-        ctx.fillStyle = color;
-        ctx.font = `${size * 3}px ${font}`;
-        ctx.textAlign = align;
-        const x = align === 'center' ? canvas.width / 2 : align === 'left' ? 100 : canvas.width - 100;
-        
-        // If no maxWidth or text fits, draw normally
-        const actualMaxWidth = maxWidth || canvas.width - 200;
-        if (ctx.measureText(text).width <= actualMaxWidth) {
-          ctx.fillText(text, x, y);
-          return;
-        }
-        
-        // Word wrap for long text
-        const words = text.split(' ');
-        const lines: string[] = [];
-        let currentLine = words[0];
-        
-        for (let i = 1; i < words.length; i++) {
-          const testLine = currentLine + ' ' + words[i];
-          const metrics = ctx.measureText(testLine);
-          
-          if (metrics.width > actualMaxWidth) {
-            lines.push(currentLine);
-            currentLine = words[i];
-          } else {
-            currentLine = testLine;
-          }
-        }
-        lines.push(currentLine);
-        
-        // Draw each line
-        const lineHeight = size * 3.5; // 1.2x line height
-        const startY = y - ((lines.length - 1) * lineHeight) / 2;
-        
-        lines.forEach((line, index) => {
-          ctx.fillText(line, x, startY + (index * lineHeight));
-        });
-      };
-
-      // Title with word wrapping (max 80% of canvas width)
-      const titleY = canvas.height * ((design.titlePosition || 40) / 100);
-      const subtitleY = canvas.height * ((design.subtitlePosition || 50) / 100);
-      const authorY = canvas.height * ((design.authorPosition || 80) / 100);
-      
-      drawText(design.title, design.titleFont, design.titleSize, design.titleColor, titleY, 'center', canvas.width * 0.8);
-
-      // Subtitle
-      drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, subtitleY, 'center', canvas.width * 0.8);
-
-      // Author
-      drawText(design.authorName, design.authorFont, design.authorSize, design.authorColor, authorY, 'center', canvas.width * 0.8);
-
-      const imageData = canvas.toDataURL('image/png');
-      
-      // This is for export/preview - don't save, just return the full image with text
-      return imageData;
-    } catch (error) {
-      console.error('Export failed:', error);
-      toast.error('Failed to export cover');
-      return null;
-    }
-  };
-
   const getImageBackgroundStyle = (): React.CSSProperties | undefined => {
     if (!design.backgroundImage) return undefined;
 
@@ -1312,36 +1034,6 @@ export function CoverDesigner({
       backgroundPosition: alignment,
       backgroundRepeat: 'no-repeat',
       filter: filterValue,
-    } as React.CSSProperties;
-  };
-
-  const getBackgroundStyle = (): React.CSSProperties => {
-    // Check gradient first before any image checks
-    if (design.backgroundType === 'gradient') {
-      const cssDirection = getCssGradientDirection(design.gradientDirection);
-      const gradientCSS = `linear-gradient(${cssDirection}, ${design.gradientStart}, ${design.gradientEnd})`;
-      console.log('🎨 GRADIENT DEBUG:', {
-        gradientDirection: cssDirection,
-        gradientStart: design.gradientStart,
-        gradientEnd: design.gradientEnd,
-        cssString: gradientCSS
-      });
-      return {
-        backgroundImage: gradientCSS,
-      };
-    }
-    
-    const imageStyle = getImageBackgroundStyle();
-    if (design.usePreMadeCover && imageStyle) {
-      return imageStyle;
-    }
-
-    if (design.backgroundType === 'image' && imageStyle) {
-      return imageStyle;
-    }
-
-    return {
-      backgroundColor: design.backgroundColor,
     } as React.CSSProperties;
   };
 
@@ -1584,7 +1276,9 @@ export function CoverDesigner({
                           <Label className="text-base font-medium">Image Fit</Label>
                           <Select
                             value={design.imagePosition}
-                            onValueChange={(value: any) => updateDesign({ imagePosition: value })}
+                            onValueChange={(value: CoverDesign['imagePosition']) =>
+                              updateDesign({ imagePosition: value })
+                            }
                           >
                             <SelectTrigger className="h-12 text-base">
                               <SelectValue />
@@ -1606,7 +1300,9 @@ export function CoverDesigner({
                           <Label className="text-base font-medium">Image Alignment</Label>
                           <Select
                             value={design.imageAlignment || 'center'}
-                            onValueChange={(value: any) => updateDesign({ imageAlignment: value })}
+                            onValueChange={(value: NonNullable<CoverDesign['imageAlignment']>) =>
+                              updateDesign({ imageAlignment: value })
+                            }
                           >
                             <SelectTrigger className="h-12 text-base">
                               <SelectValue />
@@ -2108,7 +1804,9 @@ export function CoverDesigner({
                           <Label className="text-sm font-medium">Gradient Direction</Label>
                           <Select
                             value={design.gradientDirection}
-                            onValueChange={(value: any) => updateDesign({ gradientDirection: value })}
+                            onValueChange={(value: CoverDesign['gradientDirection']) =>
+                              updateDesign({ gradientDirection: value })
+                            }
                           >
                             <SelectTrigger className="h-12 text-base">
                               <SelectValue />

@@ -1,5 +1,5 @@
 import mammoth from 'mammoth';
-import { Chapter, EbookProject, BrandConfig } from './types';
+import { Chapter, EbookProject } from './types';
 
 export interface ImportResult {
   success: boolean;
@@ -87,9 +87,8 @@ function parseHTMLIntoChapters(html: string, splitOnH2: boolean = false): Chapte
   // Process all body elements
   const bodyElements = Array.from(doc.body.children);
   
-  bodyElements.forEach((element, index) => {
+  bodyElements.forEach((element) => {
     const tagName = element.tagName.toLowerCase();
-    const text = element.textContent?.trim();
     
     // H1 = New chapter (always)
     // H2/H3 = New chapter (if splitOnH2 is true)
@@ -171,7 +170,7 @@ function generateId(): string {
  */
 export function cleanGoogleDocsHTML(html: string): string {
   // Remove Google Docs specific styles and spans
-  let cleaned = html
+  const cleaned = html
     .replace(/<span[^>]*>/gi, '')
     .replace(/<\/span>/gi, '')
     .replace(/style="[^"]*"/gi, '')
@@ -209,7 +208,7 @@ export function importPlainText(text: string, title: string = 'Imported Document
     /^\d+\.\s+(.+)$/,
   ];
   
-  lines.forEach((line, index) => {
+  lines.forEach((line) => {
     const trimmedLine = line.trim();
     
     if (!trimmedLine) {
@@ -312,10 +311,11 @@ export async function importFile(file: File, options?: ImportOptions): Promise<I
     case 'docx':
       return await importDocx(file, options);
       
-    case 'txt':
+    case 'txt': {
       const text = await file.text();
       const title = file.name.replace(/\.txt$/i, '').trim();
       return importPlainText(text, title);
+    }
       
     case 'unsupported':
     default:
