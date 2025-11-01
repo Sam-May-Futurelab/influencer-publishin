@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,6 +17,9 @@ import { createAudioVersionProject } from '@/lib/projects';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
+const STANDARD_RATE_PER_1K = 0.015;
+const HD_RATE_PER_1K = 0.03;
+
 interface AudiobookTabProps {
   project: EbookProject;
   onProjectsChanged?: () => Promise<void>;
@@ -30,29 +33,6 @@ interface GeneratedChapter {
   title: string;
   audioUrl: string;
   duration?: number;
-}
-
-// Helper to merge multiple audio blobs into one
-async function mergeAudioBuffers(blobs: Blob[]): Promise<Blob> {
-  // Convert blobs to array buffers
-  const buffers = await Promise.all(
-    blobs.map(blob => blob.arrayBuffer())
-  );
-  
-  // Calculate total size
-  const totalSize = buffers.reduce((sum, buffer) => sum + buffer.byteLength, 0);
-  
-  // Create merged buffer
-  const mergedBuffer = new Uint8Array(totalSize);
-  let offset = 0;
-  
-  for (const buffer of buffers) {
-    mergedBuffer.set(new Uint8Array(buffer), offset);
-    offset += buffer.byteLength;
-  }
-  
-  // Return as blob
-  return new Blob([mergedBuffer], { type: 'audio/mpeg' });
 }
 
 export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) {
@@ -69,8 +49,8 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
   const [showPostGenerationGuide, setShowPostGenerationGuide] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
-  const isPremium = userProfile?.isPremium || false;
   const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
+  const isFreePlan = subscriptionStatus === 'free';
   const userId = user?.uid;
 
   // Load existing audiobooks from Firestore on mount
@@ -115,6 +95,24 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
   }, 0);
 
   const totalChapters = project.chapters.length;
+
+  const costFormatter = useMemo(() => new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }), []);
+
+  const estimatedCostStandard = useMemo(() => {
+    return totalCharacters > 0 ? (totalCharacters / 1000) * STANDARD_RATE_PER_1K : 0;
+  }, [totalCharacters]);
+
+  const estimatedCostHd = useMemo(() => {
+    return totalCharacters > 0 ? (totalCharacters / 1000) * HD_RATE_PER_1K : 0;
+  }, [totalCharacters]);
+
+  const selectedQualityCost = selectedQuality === 'hd' ? estimatedCostHd : estimatedCostStandard;
+  const selectedQualityLabel = selectedQuality === 'hd' ? 'HD' : 'Standard';
 
   // Get tier limits (chapter-based)
   const getTierLimit = () => {
@@ -171,6 +169,9 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
   };
 
   const estimatedChapterCount = estimateChapterCount();
+
+  const monthlyAllowanceLabel = chapterLimit === 0 ? 'Premium feature' : `${Math.max(chaptersRemaining, 0)}/${chapterLimit}`;
+  const chaptersNeeded = needsSplitting && !project.isAudioVersion ? estimatedChapterCount : totalChapters;
 
   const canGenerate = () => {
     if (subscriptionStatus === 'free') return false;
@@ -357,6 +358,10 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
     }
   };
 
+  const handleUpgradeClick = () => {
+    navigate('/pricing');
+  };
+
   const handleViewProjects = () => {
     setShowPostGenerationGuide(false);
     setShowSuccessDialog(false);
@@ -378,22 +383,42 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
         <div className="p-3 neomorph-inset rounded-lg">
           <div className="text-xs text-muted-foreground mb-1">Remaining</div>
           <div className="text-lg font-bold text-foreground">
-            {chapterLimit === 0 ? (
-              <span className="text-orange-600">Upgrade</span>
+            {isFreePlan ? (
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                <Sparkle size={16} weight="fill" className="text-primary" />
+                Premium feature
+              </span>
             ) : (
-              `${chaptersRemaining}/${chapterLimit}`
+              `${Math.max(chaptersRemaining, 0)}/${chapterLimit}`
             )}
           </div>
         </div>
       </div>
 
       {/* Tier limit warning */}
-      {subscriptionStatus === 'free' && (
-        <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg">
-          <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
-            Audiobooks are available on Creator and Premium plans. Upgrade to start generating audiobooks.
-          </p>
-        </div>
+      {isFreePlan && (
+        <Card className="border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/5 to-background shadow-sm">
+          <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="mt-1 flex h-11 w-11 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <Sparkle size={22} weight="fill" />
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm font-semibold text-foreground">Audiobooks are a premium feature</p>
+                <p className="text-sm text-muted-foreground">
+                  Upgrade to the Creator or Premium plan to turn your chapters into polished, AI-narrated audiobooks.
+                </p>
+                <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                  <span className="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary">Creator: 25 chapters/month</span>
+                  <span className="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary">Premium: 50 chapters/month</span>
+                </div>
+              </div>
+            </div>
+            <Button onClick={handleUpgradeClick} className="w-full md:w-auto">
+              View plans
+            </Button>
+          </CardContent>
+        </Card>
       )}
 
       {subscriptionStatus !== 'free' && totalChapters > chaptersRemaining && (
@@ -435,6 +460,9 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
                 >
                   <div className="font-semibold mb-1">Standard</div>
                   <div className="text-xs text-muted-foreground">Good quality</div>
+                  <div className="text-[11px] text-muted-foreground mt-2">
+                    ~{costFormatter.format(estimatedCostStandard)} ({totalCharacters.toLocaleString()} chars)
+                  </div>
                   <Badge variant="secondary" className="mt-2 text-xs">Recommended</Badge>
                 </button>
                 <button
@@ -448,6 +476,9 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
                 >
                   <div className="font-semibold mb-1">HD</div>
                   <div className="text-xs text-muted-foreground">Best quality</div>
+                  <div className="text-[11px] text-muted-foreground mt-2">
+                    ~{costFormatter.format(estimatedCostHd)} ({totalCharacters.toLocaleString()} chars)
+                  </div>
                   <Badge variant="secondary" className="mt-2 text-xs">High-Def</Badge>
                 </button>
               </div>
@@ -478,11 +509,21 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
                     <Sparkle size={20} weight="fill" />
                     Generate Audiobook
                   </Button>
-                  {canGenerate() && (
-                    <p className="text-xs text-muted-foreground text-center">
-                      Will use {totalChapters} of {chaptersRemaining} available chapters
+                  <div className="text-xs text-muted-foreground text-center space-y-1">
+                    <p>
+                      Monthly allowance: {monthlyAllowanceLabel}
                     </p>
-                  )}
+                    <p>
+                      This run uses approximately {chaptersNeeded} chapter credit{chaptersNeeded !== 1 ? 's' : ''}.
+                    </p>
+                    <p>
+                      Estimated {selectedQualityLabel} cost: {costFormatter.format(selectedQualityCost)}
+                      {selectedQuality === 'hd' ? ' (HD doubles the rate for richer vocals).' : ' (Standard keeps costs low with natural narration.)'}
+                    </p>
+                    <p className="text-[11px]">
+                      Standard ≈ {costFormatter.format(estimatedCostStandard)} • HD ≈ {costFormatter.format(estimatedCostHd)} ({totalCharacters.toLocaleString()} characters)
+                    </p>
+                  </div>
                 </>
               )}
             </div>
