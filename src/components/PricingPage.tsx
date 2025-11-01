@@ -12,7 +12,6 @@ import {
   CheckCircle, 
   Crown, 
   Zap, 
-  Users, 
   Palette,
   Download,
   Shield,
@@ -21,8 +20,6 @@ import {
   HelpCircle,
   ArrowRight,
   Star,
-  Clock,
-  Globe,
   Brain
 } from 'lucide-react';
 

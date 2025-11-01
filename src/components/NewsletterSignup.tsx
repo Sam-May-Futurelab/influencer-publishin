@@ -63,7 +63,7 @@ export function NewsletterSignup({ variant = 'default', showLeadMagnet = true }:
       } else {
         throw new Error('Failed to subscribe');
       }
-    } catch (err) {
+    } catch {
       setError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);

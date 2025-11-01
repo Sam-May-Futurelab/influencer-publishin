@@ -5,9 +5,9 @@ import { LandingFooter } from '@/components/LandingFooter';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
 import { SEO, createOrganizationSchema, createSoftwareApplicationSchema } from '@/components/SEO';
 import { 
-  BookOpen, Sparkles, FileText, Download, Palette, TrendingUp, 
-  Zap, Users, Award, Play, CheckCircle2, ArrowRight,
-  Twitter, Linkedin, Instagram, Github, Mail, Star, Mic, Pause
+  BookOpen, Sparkles, FileText, Download, Palette,
+  Zap, Users, Play, CheckCircle2, ArrowRight,
+  Star, Mic, Pause
 } from 'lucide-react';
 import { 
   Accordion,

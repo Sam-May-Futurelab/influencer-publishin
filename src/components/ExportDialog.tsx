@@ -5,7 +5,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -14,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { FilePdf, FileDoc, BookOpen, Download, Star, Check } from '@phosphor-icons/react';
+import { FilePdf, FileDoc, BookOpen, Download, Star } from '@phosphor-icons/react';
 import { ExportFormat, exportToFormat } from '@/lib/export';
 import { EbookProject } from '@/lib/types';
 import { useAuth } from '@/hooks/use-auth';

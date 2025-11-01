@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -11,10 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { 
   House, 
-  BookOpen, 
-  Palette, 
   User, 
-  Bell,
   List,
   X,
   SignOut,
@@ -38,15 +34,13 @@ interface HeaderProps {
   logoText?: string;
   onNavigate?: (section: string) => void;
   currentSection?: string;
-  notifications?: number;
 }
 
 export function Header({
   logoUrl,
   logoText = "Publishing Platform",
   onNavigate,
-  currentSection = "dashboard",
-  notifications = 0
+  currentSection = "dashboard"
 }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, userProfile, signOut } = useAuth();

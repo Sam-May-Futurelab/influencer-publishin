@@ -24,7 +24,7 @@ interface LandingHeaderProps {
 export function LandingHeader({ 
   onGetStarted, 
   onSignIn, 
-  scrollToSection, 
+  scrollToSection,
   showNavLinks = true,
   isAuthenticated = false,
   onNavigateToPricing,
@@ -33,6 +33,42 @@ export function LandingHeader({
 }: LandingHeaderProps) {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleFeaturesClick = () => {
+    if (onNavigateToFeatures) {
+      onNavigateToFeatures();
+      return;
+    }
+    if (scrollToSection) {
+      scrollToSection('features');
+      return;
+    }
+    navigate('/features');
+  };
+
+  const handlePricingClick = () => {
+    if (onNavigateToPricing) {
+      onNavigateToPricing();
+      return;
+    }
+    if (scrollToSection) {
+      scrollToSection('pricing');
+      return;
+    }
+    navigate('/pricing');
+  };
+
+  const handleBlogClick = () => {
+    if (onNavigateToBlog) {
+      onNavigateToBlog();
+      return;
+    }
+    if (scrollToSection) {
+      scrollToSection('blog');
+      return;
+    }
+    navigate('/blog');
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#e2d1f0] shadow-sm">
@@ -51,13 +87,13 @@ export function LandingHeader({
         {showNavLinks && (
           <div className="hidden md:flex items-center gap-6">
             <button 
-              onClick={onNavigateToFeatures || (() => navigate('/features'))}
+              onClick={handleFeaturesClick}
               className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
             >
               Features
             </button>
             <button 
-              onClick={onNavigateToPricing || (() => navigate('/pricing'))}
+              onClick={handlePricingClick}
               className="text-gray-600 hover:text-[#9b87b8] transition-colors font-medium"
             >
               Pricing
@@ -74,7 +110,7 @@ export function LandingHeader({
                 <ChevronDown className="w-4 h-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={onNavigateToBlog || (() => navigate('/blog'))}>
+                <DropdownMenuItem onClick={handleBlogClick}>
                   Blog
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate('/help')}>
@@ -102,7 +138,7 @@ export function LandingHeader({
         
         {/* Desktop Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          {onSignIn && (
+          {!isAuthenticated && onSignIn && (
             <Button 
               variant="ghost" 
               onClick={onSignIn}

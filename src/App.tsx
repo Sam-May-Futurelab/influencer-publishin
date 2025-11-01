@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense, useRef, useCallback } from 'react';
-import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { useAuth } from '@/hooks/use-auth';
@@ -19,11 +19,8 @@ import { LandingPage } from '@/components/LandingPage';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { KeyboardShortcutsDialog } from '@/components/KeyboardShortcutsDialog';
 import { CookieConsent } from '@/components/CookieConsent';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from '@phosphor-icons/react';
 import { EbookProject, Chapter, BrandConfig } from '@/lib/types';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
 import { AIBookGeneratorWizard } from '@/components/AIBookGeneratorWizard';
 
 // Lazy load page components for code splitting
@@ -69,7 +66,6 @@ function App() {
   const { user, userProfile, loading: authLoading, refreshProfile } = useAuth();
   const { actualTheme } = useTheme();
   const navigate = useNavigate();
-  const location = useLocation();
   const [projects, setProjects] = useState<EbookProject[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(false);
   const [currentProject, setCurrentProject] = useState<EbookProject | null>(null);
@@ -959,7 +955,6 @@ function App() {
                 logoText="Inkfluence AI"
                 onNavigate={handleNavigation}
                 currentSection={currentSection}
-                notifications={0}
               />
               <Routes>
                 <Route path="dashboard" element={

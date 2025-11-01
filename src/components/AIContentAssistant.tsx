@@ -189,7 +189,7 @@ export function AIContentAssistant({
     try {
       await navigator.clipboard.writeText(generatedContent);
       toast.success('Content copied to clipboard!');
-    } catch (error) {
+    } catch {
       toast.error('Failed to copy content');
     }
   };

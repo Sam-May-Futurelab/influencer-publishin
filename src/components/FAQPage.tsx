@@ -5,7 +5,6 @@ import { SEO, createBreadcrumbSchema } from '@/components/SEO';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
   HelpCircle,
@@ -17,8 +16,7 @@ import {
   Lock,
   Zap,
   ArrowRight,
-  MessageCircle,
-  ChevronDown
+  MessageCircle
 } from 'lucide-react';
 import { useState } from 'react';
 import {

@@ -18,10 +18,10 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.json'],
+        project: ['./tsconfig.eslint.json'],
         tsconfigRootDir: import.meta.dirname
       },
       globals: {
@@ -37,6 +37,21 @@ export default tseslint.config(
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }]
+    }
+  },
+  {
+    files: ['inngest/**/*.ts', 'vite.config.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.eslint.json'],
+        tsconfigRootDir: import.meta.dirname
+      },
+      globals: {
+        ...globals.node
+      }
+    },
+    rules: {
+      'react-refresh/only-export-components': 'off'
     }
   },
   {

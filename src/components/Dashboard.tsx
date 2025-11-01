@@ -39,7 +39,6 @@ import {
   Rocket,
   Trash,
   Pencil,
-  Fire,
   CheckCircle,
   Clock,
   Target,
@@ -51,11 +50,11 @@ import {
   Download
 } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { PreviewDialog } from '@/components/PreviewDialog';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { useWritingAnalytics } from '@/hooks/use-writing-analytics';
-import { WritingStreakCard, GoalProgressCard, ProjectCompletionCard } from '@/components/AnalyticsCards';
+import { WritingStreakCard, GoalProgressCard } from '@/components/AnalyticsCards';
 import { importFile } from '@/lib/import';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src",
+    "inngest/**/*.ts",
+    "vite.config.ts"
+  ]
+}

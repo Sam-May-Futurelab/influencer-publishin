@@ -15,7 +15,6 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
-const auth = admin.auth();
 
 export default async function handler(req, res) {
   // Handle CORS

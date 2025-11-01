@@ -118,9 +118,9 @@ export default async function handler(req, res) {
         throw new Error(`Resend API error: ${result.error.message || 'Unknown error'}`);
       }
 
-      // Send confirmation email to customer
-      const ticketId = `INK-${Date.now().toString(36).toUpperCase()}`;
-      const confirmationResult = await resend.emails.send({
+    // Send confirmation email to customer
+    const ticketId = `INK-${Date.now().toString(36).toUpperCase()}`;
+    await resend.emails.send({
         from: 'InkFluence AI <hello@inkfluenceai.com>',
         to: sanitizedEmail,
         subject: `✅ We received your message - ${sanitizedSubject}`,

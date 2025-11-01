@@ -1,4 +1,4 @@
-import { BookOpen, Twitter, Linkedin, Instagram, Github } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface LandingFooterProps {

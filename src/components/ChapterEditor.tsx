@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, PencilSimple, Trash, DotsSixVertical, BookOpen, Star, Eye, FloppyDisk, CaretLeft, CaretRight, ArrowUp, ArrowDown, BookmarkSimple } from '@phosphor-icons/react';
+import { Plus, PencilSimple, Trash, BookOpen, Star, Eye, FloppyDisk, CaretLeft, CaretRight, ArrowUp, ArrowDown, BookmarkSimple } from '@phosphor-icons/react';
 import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { SaveIndicator } from '@/components/SaveIndicator';
 import { RichTextEditor } from '@/components/RichTextEditor';
@@ -286,7 +285,6 @@ export function ChapterEditor({
     if (!usageLoading && usage) {
       const canUse = await incrementUsage();
       if (!canUse) {
-        const remaining = usage.dailyGenerations - usage.usedToday;
         toast.error('Daily AI limit reached', {
           description: isPremium 
             ? 'You\'ve used all your AI enhancements for today. Your limit will reset tomorrow.'
