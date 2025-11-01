@@ -179,10 +179,12 @@ export function ProjectsPage({
       return matchesSearch;
     })
     .sort((a, b) => {
-      // Always sort favorites to the top first
-      if (a.isFavorite && !b.isFavorite) return -1;
-      if (!a.isFavorite && b.isFavorite) return 1;
-      
+      // Keep favorites prioritized unless we're explicitly sorting by recency
+      if (sortBy !== 'updated') {
+        if (a.isFavorite && !b.isFavorite) return -1;
+        if (!a.isFavorite && b.isFavorite) return 1;
+      }
+
       // Then apply the selected sort
       switch (sortBy) {
         case 'updated':
@@ -538,6 +540,7 @@ export function ProjectsPage({
           {filteredAndSortedProjects.map((project, index) => {
             const stats = getProjectStats(project);
             const status = getProjectStatus(project);
+            const isMostRecent = sortBy === 'updated' && index === 0 && !searchQuery;
             
             return (
               <motion.div
@@ -598,6 +601,11 @@ export function ProjectsPage({
                             {project.isAudioVersion && (
                               <Badge variant="secondary" className="text-xs gap-1 flex-shrink-0">
                                 🎵 Audiobook
+                              </Badge>
+                            )}
+                            {isMostRecent && (
+                              <Badge variant="outline" className="text-xs flex-shrink-0">
+                                Most Recent
                               </Badge>
                             )}
                             {onToggleFavorite && (
