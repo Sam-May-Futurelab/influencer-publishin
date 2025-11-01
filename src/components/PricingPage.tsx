@@ -215,7 +215,7 @@ export function PricingPage() {
     },
     {
       question: 'Do you offer refunds?',
-      answer: 'Yes! We offer a 30-day money-back guarantee. If you\'re not satisfied with your subscription within 30 days of purchase, contact support for a full refund.'
+      answer: 'We don\'t issue refunds for partial months. You can cancel anytime and keep access through the end of your billing period. If a charge was made in error, contact support within 7 days and we\'ll review it right away.'
     },
     {
       question: 'Can I cancel my subscription anytime?',

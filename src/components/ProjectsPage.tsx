@@ -85,6 +85,21 @@ export function ProjectsPage({
   
   const { user } = useAuth();
   const navigate = useNavigate();
+  const trimmedMergeTitle = mergeTitle.trim();
+
+  const selectedProjectTitle = selectedProjectForMerge
+    ? trimmedMergeTitle ||
+      audiobooks.find(a => a.projectId === selectedProjectForMerge)?.projectTitle ||
+      projects.find(p => p.id === selectedProjectForMerge)?.title ||
+      'Untitled Project'
+    : '';
+
+  const totalSelectedBytes = selectedChapters.reduce((total, chapterId) => {
+    const audio = audiobooks.find(a => a.chapterId === chapterId);
+    return total + (audio?.audioSize || 0);
+  }, 0);
+
+  const totalSelectedMb = totalSelectedBytes > 0 ? totalSelectedBytes / (1024 * 1024) : 0;
 
   // Bulk selection handlers
   const toggleProjectSelection = (projectId: string) => {
@@ -1184,7 +1199,7 @@ export function ProjectsPage({
                     className="gap-2"
                     onClick={() => {
                       handleMergeDialogChange(false);
-                      navigate('/app/audiobooks');
+                      navigate('/app/projects');
                     }}
                   >
                     <SpeakerHigh size={14} />
@@ -1224,7 +1239,11 @@ export function ProjectsPage({
                   <div key={projectId} className="space-y-2">
                     <div className="flex items-center justify-between px-3 py-2 bg-muted/50 rounded-lg">
                       <div>
-                        <p className="font-semibold text-sm">{projectAudiobooks[0].projectTitle}</p>
+                        <p className="font-semibold text-sm">
+                          {selectedProjectForMerge === projectId && trimmedMergeTitle
+                            ? trimmedMergeTitle
+                            : projectAudiobooks[0].projectTitle}
+                        </p>
                         <p className="text-xs text-muted-foreground">{projectAudiobooks.length} chapter{projectAudiobooks.length !== 1 ? 's' : ''}</p>
                       </div>
                       <Button
@@ -1304,7 +1323,8 @@ export function ProjectsPage({
             <div className="flex items-center justify-between pt-4 border-t">
               <p className="text-sm text-muted-foreground">
                 {selectedChapters.length} chapter{selectedChapters.length !== 1 ? 's' : ''} selected
-                {selectedProjectForMerge && ` from ${audiobooks.find(a => a.projectId === selectedProjectForMerge)?.projectTitle}`}
+                {selectedProjectForMerge && selectedProjectTitle && ` from ${selectedProjectTitle}`}
+                {totalSelectedMb > 0 && ` • ${totalSelectedMb.toFixed(1)} MB total`}
               </p>
               <div className="flex gap-2">
                 <Button

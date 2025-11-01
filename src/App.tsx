@@ -901,6 +901,7 @@ function App() {
                           onDeleteProject={deleteProject}
                           onImportProject={importProject}
                           onProjectsChanged={reloadProjects}
+                          onNavigate={handleNavigation}
                           userProfile={userProfile}
                         />
                       )}

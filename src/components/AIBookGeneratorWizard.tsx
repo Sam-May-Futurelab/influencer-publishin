@@ -241,24 +241,23 @@ export function AIBookGeneratorWizard({
                   bookDescription: bookData.description,
                   targetAudience: bookData.targetAudience,
                 },
-                prompt: `Write a complete chapter for an ebook titled "${bookData.title}".
+                prompt: `You are writing Chapter ${chapterOutline.order} titled "${chapterOutline.title}" for the ebook "${bookData.title}".
 
-Chapter ${chapterOutline.order}: ${chapterOutline.title}
-${chapterOutline.description ? `Description: ${chapterOutline.description}` : ''}
-
-Book Context:
+Book overview:
 ${bookData.description}
-${bookData.targetAudience ? `Target Audience: ${bookData.targetAudience}` : ''}
+${bookData.targetAudience ? `Target audience: ${bookData.targetAudience}` : ''}
 ${bookData.genre ? `Genre: ${bookData.genre}` : ''}
+${chapterOutline.description ? `Chapter focus: ${chapterOutline.description}` : ''}
 
-Write a comprehensive, well-structured chapter (500-750 words) that:
-1. Opens with an engaging introduction
-2. Covers the topic thoroughly with clear explanations
-3. Includes practical examples or actionable insights
-4. Flows naturally and maintains reader engagement
-5. Concludes with a smooth transition to the next chapter
+Write 550-750 words of polished prose that:
+- Hooks readers immediately with a vivid opening.
+- Weaves insights, examples, and stories into cohesive paragraphs.
+- Maintains a consistent professional tone tailored to the audience.
+- Embeds practical takeaways inside the narrative instead of lists or instructions.
+- Uses smooth transitions and closes with momentum toward the next chapter.
+- Avoids phrases like "In this chapter" or "This chapter will" and avoids numbered or bulleted formats.
 
-Write in a professional, engaging tone appropriate for the target audience.`,
+Return the finished chapter as narrative paragraphs separated by blank lines.`,
               }),
             });
 

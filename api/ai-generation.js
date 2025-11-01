@@ -161,8 +161,15 @@ async function handleContentGeneration(req, res) {
     tone = 'friendly',
     length = 'standard',
     format = 'narrative',
-    context = {}
+    context = {},
+    prompt: customPrompt
   } = req.body;
+
+  const keywordsList = Array.isArray(keywords)
+    ? keywords.filter(Boolean)
+    : typeof keywords === 'string' && keywords.trim()
+      ? [keywords.trim()]
+      : [];
 
   const rateLimit = await checkRateLimit(userId);
   
@@ -195,32 +202,59 @@ async function handleContentGeneration(req, res) {
 
   const targetLength = lengthTokens[length] || lengthTokens.standard;
 
+  const narrativeGuidance = format === 'narrative'
+    ? 'Write in a flowing narrative style with vivid examples and smooth transitions.'
+    : format === 'bullets'
+      ? 'Organize the chapter around clear bullet points with concise explanations.'
+      : format === 'steps'
+        ? 'Present the content as a sequence of well-explained steps.'
+        : 'Provide a well-structured chapter with coherent sections.';
+
+  const chapterName = chapterTitle || keywordsList[0] || 'Untitled Chapter';
+  const contextLines = [];
+  if (context.bookDescription) contextLines.push(`- Description: ${context.bookDescription}`);
+  if (context.targetAudience) contextLines.push(`- Target audience: ${context.targetAudience}`);
+  if (genre) contextLines.push(`- Genre: ${genre}`);
+  if (keywordsList.length > 0) contextLines.push(`- Focus keywords: ${keywordsList.join(', ')}`);
+
+  const bookContextSection = contextLines.length > 0
+    ? `Book context:\n${contextLines.join('\n')}\n\n`
+    : '';
+
+  const defaultChapterPrompt = `Write a complete ebook chapter titled "${chapterName}".\n\n${bookContextSection}Aim for approximately ${targetLength.min}-${targetLength.max} words across rich paragraphs.\n\nGuidelines:\n- Open with an engaging scene, question, or bold statement that hooks the reader.\n- Develop the chapter through specific details, stories, or case studies.\n- ${narrativeGuidance}\n- Maintain a consistent ${tone} voice suitable for the stated audience.\n- Avoid numbered lists, bullet points, or phrases like "In this chapter we will" unless absolutely necessary.\n- Do not include meta commentary, apologies, or editorial notes.\n- Use natural double line breaks between paragraphs.\n\nDeliver the finished chapter now:`;
+
+  const topicLabel = keywordsList.join(', ') || chapterTitle || 'your topic';
+
+  const suggestionsPrompt = `Generate ${length} content suggestions for: "${topicLabel}".\n\nContext: ${genre} genre, ${tone} tone, for ${context.targetAudience || 'general audience'}\n\nProvide 3-5 practical, actionable ideas with brief descriptions.`;
+
+  const originalContentText = keywordsList.join('\n\n');
+
+  const enhancementPrompt = `Improve the following chapter passage titled "${chapterName}" while preserving its core ideas.
+
+Target tone: ${tone}
+Intended audience: ${context.targetAudience || 'general readers'}
+
+Guidelines:
+- Maintain roughly the same length and structure as the original text.
+- Strengthen clarity, storytelling flow, and connective transitions.
+- Integrate vivid details or examples where helpful, but do not invent new facts that contradict the source.
+- Avoid bullet points and meta commentary.
+- Return only the revised prose with natural paragraph breaks.
+
+Original passage:
+"""
+${originalContentText}
+"""`;
+
+  const userPrompt = customPrompt?.trim()
+    ? customPrompt.trim()
+    : contentType === 'chapter'
+      ? defaultChapterPrompt
+      : contentType === 'enhance'
+        ? enhancementPrompt
+        : suggestionsPrompt;
+
   try {
-    const prompt = contentType === 'chapter' 
-      ? `Write a complete, well-structured ebook chapter.
-
-TOPIC: ${keywords.join(', ')}
-CHAPTER TITLE: ${chapterTitle}
-GENRE: ${genre}
-TONE: ${tone}
-REQUIRED LENGTH: ${targetLength.min}-${targetLength.max} words (STRICT - count your words!)
-
-INSTRUCTIONS:
-- Write EXACTLY ${targetLength.min}-${targetLength.max} words
-- Create a FULL chapter with multiple substantial paragraphs
-- ${format === 'narrative' ? 'Use engaging storytelling with concrete examples' : format === 'bullets' ? 'Use bullet points and organized lists' : format === 'steps' ? 'Use clear step-by-step instructions' : 'Use well-structured content'}
-- ${tone === 'professional' ? 'Professional, authoritative voice' : tone === 'motivational' ? 'Inspiring, energetic voice' : tone === 'direct' ? 'Clear, concise voice' : 'Friendly, conversational voice'}
-- Include specific, actionable examples
-- Target audience: ${context.targetAudience || 'general readers'}
-- Use double line breaks between paragraphs for readability
-
-Write the complete chapter now (${targetLength.min}-${targetLength.max} words):`
-      : `Generate ${length} content suggestions for: "${keywords || chapterTitle}".
-
-Context: ${genre} genre, ${tone} tone, for ${context.targetAudience || 'general audience'}
-
-Provide 3-5 practical, actionable ideas with brief descriptions.`;
-
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
@@ -236,7 +270,7 @@ IMPORTANT:
         },
         {
           role: 'user',
-          content: prompt
+          content: userPrompt
         }
       ],
       max_tokens: targetLength.tokens,
