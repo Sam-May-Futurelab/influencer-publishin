@@ -8,13 +8,14 @@ import { AudioPlayer } from '@/components/AudioPlayer';
 import { AILoading } from '@/components/AILoading';
 import { AudiobookSplitDialog } from '@/components/AudiobookSplitDialog';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { SpeakerHigh, Download, Sparkle, Info } from '@phosphor-icons/react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { SpeakerHigh, Download, Sparkle, Info, Trash, ArrowDown } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
 import { createAudioVersionProject } from '@/lib/projects';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 const STANDARD_RATE_PER_1K = 0.015;
@@ -23,19 +24,21 @@ const HD_RATE_PER_1K = 0.03;
 interface AudiobookTabProps {
   project: EbookProject;
   onProjectsChanged?: () => Promise<void>;
+  onUpgradeClick?: () => void;
 }
 
 export type Voice = 'alloy' | 'ash' | 'coral' | 'echo' | 'fable' | 'nova' | 'onyx' | 'sage' | 'shimmer';
 export type Quality = 'standard' | 'hd';
 
 interface GeneratedChapter {
+  id: string;
   chapterId: string;
   title: string;
   audioUrl: string;
   duration?: number;
 }
 
-export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) {
+export function AudiobookTab({ project, onProjectsChanged, onUpgradeClick }: AudiobookTabProps) {
   const { userProfile, user } = useAuth();
   const navigate = useNavigate();
   const [selectedVoice, setSelectedVoice] = useState<Voice>('nova');
@@ -48,6 +51,8 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
   const [isCreatingAudioVersion, setIsCreatingAudioVersion] = useState(false);
   const [showPostGenerationGuide, setShowPostGenerationGuide] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [chapterToDelete, setChapterToDelete] = useState<GeneratedChapter | null>(null);
+  const [isDeletingChapter, setIsDeletingChapter] = useState(false);
 
   const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
   const isFreePlan = subscriptionStatus === 'free';
@@ -67,9 +72,10 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
         );
         
         const snapshot = await getDocs(q);
-        const existingAudiobooks: GeneratedChapter[] = snapshot.docs.map(doc => {
-          const data = doc.data();
+        const existingAudiobooks: GeneratedChapter[] = snapshot.docs.map(docSnapshot => {
+          const data = docSnapshot.data();
           return {
+            id: docSnapshot.id,
             chapterId: data.chapterId,
             title: data.chapterTitle,
             audioUrl: data.audioUrl,
@@ -331,6 +337,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
         const finalUrl = audioUrls[0]; // If you want to merge, implement server-side merging
 
         setGeneratedChapters(prev => [...prev, {
+          id: `${project.id}_${chapters[0].id}`,
           chapterId: chapters[0].id,
           title: baseTitle, // Use base title without "Part X"
           audioUrl: finalUrl,
@@ -359,6 +366,11 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
   };
 
   const handleUpgradeClick = () => {
+    if (onUpgradeClick) {
+      onUpgradeClick();
+      return;
+    }
+
     navigate('/pricing');
   };
 
@@ -366,6 +378,31 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
     setShowPostGenerationGuide(false);
     setShowSuccessDialog(false);
     navigate('/app/projects');
+  };
+
+  const handleDeleteChapter = async () => {
+    if (!chapterToDelete) return;
+
+    try {
+      setIsDeletingChapter(true);
+      const docId = chapterToDelete.id || `${project.id}_${chapterToDelete.chapterId}`;
+      await deleteDoc(doc(db, 'audiobooks', docId));
+      setGeneratedChapters(prev => prev.filter(chapter => chapter.id !== docId));
+      toast.success('Audiobook deleted');
+    } catch (error) {
+      console.error('Failed to delete audiobook chapter:', error);
+      toast.error('Unable to delete audiobook. Please try again.');
+    } finally {
+      setIsDeletingChapter(false);
+      setChapterToDelete(null);
+    }
+  };
+
+  const scrollToGeneratedAudiobooks = () => {
+    const section = document.getElementById('generated-audiobooks');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -531,6 +568,19 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
         </div>
       )}
 
+      {/* Existing Audiobooks Notice */}
+      {generatedChapters.length > 0 && !isGenerating && (
+        <div className="flex flex-col gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm text-muted-foreground">
+            You already have saved audiobooks for this project. Scroll down to manage or download them anytime.
+          </div>
+          <Button size="sm" variant="secondary" className="w-full sm:w-auto" onClick={scrollToGeneratedAudiobooks}>
+            <ArrowDown size={16} className="mr-2" />
+            Jump to Audiobooks
+          </Button>
+        </div>
+      )}
+
       {/* Split Dialog */}
       <AudiobookSplitDialog
         open={showSplitDialog}
@@ -614,20 +664,31 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
               </div>
             )}
             {generatedChapters.map((chapter) => (
-              <div key={chapter.chapterId} className="p-4 neomorph-inset rounded-lg">
+              <div key={chapter.id} className="p-4 neomorph-inset rounded-lg">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold">{chapter.title}</h3>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="gap-2"
-                    asChild
-                  >
-                    <a href={chapter.audioUrl} download={`${chapter.title}.mp3`}>
-                      <Download size={16} />
-                      Download
-                    </a>
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-2"
+                      asChild
+                    >
+                      <a href={chapter.audioUrl} download={`${chapter.title}.mp3`}>
+                        <Download size={16} />
+                        Download
+                      </a>
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="text-destructive hover:bg-destructive/10"
+                      onClick={() => setChapterToDelete(chapter)}
+                      aria-label={`Delete ${chapter.title}`}
+                    >
+                      <Trash size={16} />
+                    </Button>
+                  </div>
                 </div>
                 <AudioPlayer src={chapter.audioUrl} />
               </div>
@@ -665,6 +726,23 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!chapterToDelete} onOpenChange={(open) => !open && !isDeletingChapter && setChapterToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete audiobook?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently remove the generated audio file for "{chapterToDelete?.title}". You can regenerate it later if needed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeletingChapter}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteChapter} disabled={isDeletingChapter} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {isDeletingChapter ? 'Deleting…' : 'Delete' }
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

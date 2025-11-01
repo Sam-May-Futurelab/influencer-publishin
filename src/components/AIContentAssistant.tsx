@@ -44,9 +44,9 @@ export function AIContentAssistant({
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   
   // AI Controls
-  const [tone, setTone] = useState<Tone>('friendly');
+  const [tone] = useState<Tone>('friendly');
   const [length, setLength] = useState<Length>('standard');
-  const [format, setFormat] = useState<Format>('narrative');
+  const [format] = useState<Format>('narrative');
   const [showPromptLibrary, setShowPromptLibrary] = useState(false);
 
   // Prompt Library Examples

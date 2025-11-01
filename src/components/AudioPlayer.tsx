@@ -103,7 +103,12 @@ export function AudioPlayer({ src, title }: AudioPlayerProps) {
 
   return (
     <div className="space-y-3">
-      <audio ref={audioRef} src={src} preload="metadata" />
+      <audio
+        ref={audioRef}
+        src={src}
+        preload="metadata"
+        aria-label={title ? `${title} audio` : undefined}
+      />
 
       {/* Progress Bar */}
       <div>

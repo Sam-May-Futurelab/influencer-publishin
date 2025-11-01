@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Flame, Target, TrendingUp, Calendar, Award, Star, Zap, PenTool } from 'lucide-react';
+import { Flame, Target, TrendingUp, Award, Star, Zap, PenTool } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 

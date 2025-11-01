@@ -376,7 +376,11 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
               Convert your ebook chapters to audio files using AI voice synthesis
             </DialogDescription>
           </DialogHeader>
-          <AudiobookTab project={project} onProjectsChanged={onProjectsChanged} />
+          <AudiobookTab 
+            project={project} 
+            onProjectsChanged={onProjectsChanged}
+            onUpgradeClick={onUpgradeClick}
+          />
         </DialogContent>
       </Dialog>
 

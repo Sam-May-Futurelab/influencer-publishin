@@ -1053,7 +1053,10 @@ function App() {
                         project={currentProject}
                         onProjectUpdate={updateProject}
                         onBrandCustomize={() => setShowBrandCustomizer(true)}
-                        onUpgradeClick={() => setCurrentSection('profile')}
+                        onUpgradeClick={() => {
+                          setUpgradeHighlightMessage('Upgrade to unlock AI audiobook generation with Creator or Premium.');
+                          setShowUpgradeModal(true);
+                        }}
                         onDeleteProject={handleDeleteCurrentProject}
                         onProjectsChanged={reloadProjects}
                         onBack={() => {

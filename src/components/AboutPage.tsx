@@ -10,14 +10,12 @@ import {
   Sparkles, 
   Zap, 
   Shield, 
-  Users, 
   Target, 
   Heart,
   BookOpen,
   Palette,
   Download,
   Brain,
-  Clock,
   Globe
 } from 'lucide-react';
 

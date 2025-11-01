@@ -147,9 +147,9 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto p-6 lg:p-8 max-h-[calc(92vh-140px)] bg-slate-100">
-          <div className="mx-auto flex w-full max-w-[1120px] justify-center">
-            <div className="w-full max-w-[820px] rounded-2xl border border-border/40 bg-white shadow-[0_24px_48px_rgba(15,23,42,0.08)] overflow-hidden">
-              <div className="px-8 lg:px-12 py-10 lg:py-14 space-y-12">
+          <div className="mx-auto flex w-full max-w-[1200px] justify-center">
+            <div className="w-full max-w-[900px] rounded-2xl border border-border/40 bg-white shadow-[0_24px_48px_rgba(15,23,42,0.08)] overflow-hidden">
+              <div className="px-10 lg:px-14 py-12 lg:py-16 space-y-14">
                 {/* Title Page - Show custom cover if available, otherwise use default */}
                 {coverImageData ? (
                   <motion.div

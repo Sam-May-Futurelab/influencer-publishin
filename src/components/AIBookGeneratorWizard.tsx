@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Sparkle, ArrowLeft, ArrowRight, Check, CaretDown, StopCircle } from '@phosphor-icons/react';
+import { Sparkle, ArrowLeft, ArrowRight, Check, StopCircle } from '@phosphor-icons/react';
 import { UserProfile } from '@/lib/auth';
 import { EbookProject } from '@/lib/types';
 import { toast } from 'sonner';
@@ -55,7 +55,6 @@ export function AIBookGeneratorWizard({
   const [isGeneratingBook, setIsGeneratingBook] = useState(false);
   const [generationProgress, setGenerationProgress] = useState({ current: 0, total: 0 });
   const [completedChapters, setCompletedChapters] = useState<Array<{ title: string; content: string; order: number }>>([]);
-  const [expandedChapterId, setExpandedChapterId] = useState<number | null>(null);
   const [showStopDialog, setShowStopDialog] = useState(false);
   const shouldStopGeneration = useRef(false);
 
