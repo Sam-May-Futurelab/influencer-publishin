@@ -92,9 +92,10 @@ export function AuthModal({
         onAuthSuccess();
       }
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Auth error:', error);
-      toast.error(error.message || 'Authentication failed');
+      const message = error instanceof Error ? error.message : 'Authentication failed';
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -115,9 +116,10 @@ export function AuthModal({
         onAuthSuccess();
       }
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Google auth error:', error);
-      toast.error(error.message || 'Google sign-in failed');
+      const message = error instanceof Error ? error.message : 'Google sign-in failed';
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

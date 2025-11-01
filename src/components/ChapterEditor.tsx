@@ -7,7 +7,7 @@ import { Plus, PencilSimple, Trash, BookOpen, Star, Eye, FloppyDisk, CaretLeft, 
 import { AIContentAssistant } from '@/components/AIContentAssistant';
 import { SaveIndicator } from '@/components/SaveIndicator';
 import { RichTextEditor } from '@/components/RichTextEditor';
-import { Chapter, InputMode, ContentSnippet } from '@/lib/types';
+import { Chapter, InputMode, ContentSnippet, BrandConfig } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -35,7 +35,7 @@ interface ChapterEditorProps {
   projectTitle?: string;
   projectAuthor?: string;
   projectDescription?: string;
-  brandConfig?: any;
+  brandConfig?: BrandConfig;
   onSaveRef?: React.MutableRefObject<(() => void) | null>;
 }
 
@@ -309,7 +309,7 @@ export function ChapterEditor({
       });
       
       return enhanced;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('AI enhancement failed:', error);
       throw error;
     }
@@ -323,7 +323,7 @@ export function ChapterEditor({
       pendingContentRef.current = htmlContent; // Update ref
       markAsSaved(); // Reset state for new chapter
     }
-  }, [currentChapter?.id]); // Only run when chapter ID changes
+  }, [currentChapter, markAsSaved]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 min-h-0 relative">

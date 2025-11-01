@@ -837,18 +837,18 @@ export function CoverDesigner({
     gradientStart: initialDesign?.gradientStart || '#1e3a8a',
     gradientEnd: initialDesign?.gradientEnd || '#1e40af',
     gradientDirection: initialDesign?.gradientDirection || 'to-br',
-    titleFont: initialDesign?.titleFont || 'Playfair Display',
-    titleSize: initialDesign?.titleSize || 52,
+  titleFont: initialDesign?.titleFont || 'Playfair Display',
+  titleSize: initialDesign?.titleSize || 44,
     titleColor: initialDesign?.titleColor || '#ffffff',
-    titlePosition: initialDesign?.titlePosition ?? 34,
-    subtitleFont: initialDesign?.subtitleFont || 'Inter',
-    subtitleSize: initialDesign?.subtitleSize || 22,
-    subtitleColor: initialDesign?.subtitleColor || '#e0e7ff',
-    subtitlePosition: initialDesign?.subtitlePosition ?? 58,
-    authorFont: initialDesign?.authorFont || 'Inter',
-    authorSize: initialDesign?.authorSize || 18,
-    authorColor: initialDesign?.authorColor || '#f0f9ff',
-    authorPosition: initialDesign?.authorPosition ?? 82,
+  titlePosition: initialDesign?.titlePosition ?? 32,
+  subtitleFont: initialDesign?.subtitleFont || 'Inter',
+  subtitleSize: initialDesign?.subtitleSize || 20,
+  subtitleColor: initialDesign?.subtitleColor || '#e0e7ff',
+  subtitlePosition: initialDesign?.subtitlePosition ?? 64,
+  authorFont: initialDesign?.authorFont || 'Inter',
+  authorSize: initialDesign?.authorSize || 18,
+  authorColor: initialDesign?.authorColor || '#f0f9ff',
+  authorPosition: initialDesign?.authorPosition ?? 86,
     textShadowEnabled: initialDesign?.textShadowEnabled ?? true,
     shadowBlur: initialDesign?.shadowBlur ?? 8,
     shadowOffsetX: initialDesign?.shadowOffsetX ?? 2,
@@ -999,9 +999,9 @@ export function CoverDesigner({
         ctx.fillText(text, canvas.width / 2, y);
       };
 
-      const titleY = canvas.height * ((design.titlePosition || 40) / 100);
-      const subtitleY = canvas.height * ((design.subtitlePosition || 50) / 100);
-      const authorY = canvas.height * ((design.authorPosition || 80) / 100);
+  const titleY = canvas.height * (clampPosition(design.titlePosition, 32) / 100);
+  const subtitleY = canvas.height * (clampPosition(design.subtitlePosition, 64) / 100);
+  const authorY = canvas.height * (clampPosition(design.authorPosition, 86) / 100);
 
       drawText(design.title, design.titleFont, design.titleSize, design.titleColor, titleY);
       drawText(design.subtitle, design.subtitleFont, design.subtitleSize, design.subtitleColor, subtitleY);
@@ -1038,9 +1038,9 @@ export function CoverDesigner({
   };
 
   const renderPreviewTextLayer = () => {
-    const titleTop = clampPosition(design.titlePosition, 34);
-    const subtitleTop = clampPosition(design.subtitlePosition, 58);
-    const authorTop = clampPosition(design.authorPosition, 82);
+  const titleTop = clampPosition(design.titlePosition, 32);
+  const subtitleTop = clampPosition(design.subtitlePosition, 64);
+  const authorTop = clampPosition(design.authorPosition, 86);
     const textShadow = design.textShadowEnabled
       ? `${design.shadowOffsetX ?? 0}px ${design.shadowOffsetY ?? 0}px ${design.shadowBlur ?? 0}px ${design.shadowColor ?? 'rgba(0, 0, 0, 0.75)'}`
       : 'none';
@@ -2095,10 +2095,10 @@ export function CoverDesigner({
                     <div className="space-y-2 pt-2 border-t">
                       <div className="flex items-center justify-between">
                         <Label className="text-sm text-muted-foreground">Vertical Position</Label>
-                        <Badge variant="secondary" className="text-xs">{design.titlePosition || 40}%</Badge>
+                        <Badge variant="secondary" className="text-xs">{(design.titlePosition ?? 32)}%</Badge>
                       </div>
                       <Slider
-                        value={[design.titlePosition || 40]}
+                        value={[design.titlePosition ?? 32]}
                         onValueChange={([value]) => updateDesign({ titlePosition: value })}
                         min={10}
                         max={90}
@@ -2216,10 +2216,10 @@ export function CoverDesigner({
                     <div className="space-y-2 pt-2 border-t">
                       <div className="flex items-center justify-between">
                         <Label className="text-sm text-muted-foreground">Vertical Position</Label>
-                        <Badge variant="secondary" className="text-xs">{design.subtitlePosition || 50}%</Badge>
+                        <Badge variant="secondary" className="text-xs">{(design.subtitlePosition ?? 64)}%</Badge>
                       </div>
                       <Slider
-                        value={[design.subtitlePosition || 50]}
+                        value={[design.subtitlePosition ?? 64]}
                         onValueChange={([value]) => updateDesign({ subtitlePosition: value })}
                         min={10}
                         max={90}
@@ -2337,10 +2337,10 @@ export function CoverDesigner({
                     <div className="space-y-2 pt-2 border-t">
                       <div className="flex items-center justify-between">
                         <Label className="text-sm text-muted-foreground">Vertical Position</Label>
-                        <Badge variant="secondary" className="text-xs">{design.authorPosition || 80}%</Badge>
+                        <Badge variant="secondary" className="text-xs">{(design.authorPosition ?? 86)}%</Badge>
                       </div>
                       <Slider
-                        value={[design.authorPosition || 80]}
+                        value={[design.authorPosition ?? 86]}
                         onValueChange={([value]) => updateDesign({ authorPosition: value })}
                         min={10}
                         max={90}
@@ -2651,12 +2651,12 @@ export function CoverDesigner({
                   titleColor: '#ffffff',
                   subtitleColor: '#e0e0e0',
                   authorColor: '#ffffff',
-                  titleSize: 48,
-                  subtitleSize: 24,
+                  titleSize: 44,
+                  subtitleSize: 20,
                   authorSize: 18,
-                  titlePosition: 34,
-                  subtitlePosition: 58,
-                  authorPosition: 82,
+                  titlePosition: 32,
+                  subtitlePosition: 64,
+                  authorPosition: 86,
                 });
                 toast.success('Reset to default design');
               }}

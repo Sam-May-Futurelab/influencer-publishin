@@ -19,7 +19,6 @@ import {
   Bell, 
   Shield, 
   Palette,
-  Globe,
   BookOpen,
   ChartBar
 } from '@phosphor-icons/react';
@@ -56,7 +55,7 @@ interface AppSettings {
 }
 
 export function SettingsPage({ onBack }: SettingsPageProps) {
-  const { user, userProfile, signOut } = useAuth();
+  const { user, userProfile } = useAuth();
   const [settings, setSettings] = useState<AppSettings>({
     // User Profile
     authorName: '',
@@ -92,7 +91,7 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
     if (saved) {
       try {
         setSettings(JSON.parse(saved));
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Failed to load settings:', error);
       }
     }
@@ -485,7 +484,8 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                       document.body.removeChild(a);
                       
                       toast.success('Data exported successfully');
-                    } catch (error) {
+                    } catch (error: unknown) {
+                      console.error('Failed to export data:', error);
                       toast.error('Failed to export data');
                     }
                   }}
@@ -556,9 +556,10 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                       setTimeout(() => {
                         window.location.href = '/';
                       }, 1000);
-                    } catch (error: any) {
+                    } catch (error: unknown) {
                       console.error('Account deletion error:', error);
-                      toast.error(error?.message || 'Failed to delete account. Please try again.');
+                      const message = error instanceof Error ? error.message : 'Failed to delete account. Please try again.';
+                      toast.error(message);
                     }
                   }}
                 >
