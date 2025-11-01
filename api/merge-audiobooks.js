@@ -50,16 +50,54 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'Premium subscription required to merge audiobooks' });
     }
 
+    // Determine canonical chapter order so merged audio plays correctly
+    let orderedChapterIds = [...chapterIds];
+    const selectionOrder = [...chapterIds];
+    try {
+      const projectSnap = await adminDb
+        .collection('users')
+        .doc(userId)
+        .collection('projects')
+        .doc(projectId)
+        .get();
+
+      if (projectSnap.exists) {
+        const projectData = projectSnap.data() || {};
+        const chapters = Array.isArray(projectData.chapters) ? projectData.chapters : [];
+        const orderMap = new Map();
+
+        chapters.forEach((chapter, index) => {
+          if (!chapter?.id) return;
+          const orderValue = typeof chapter.order === 'number' ? chapter.order : index;
+          orderMap.set(chapter.id, orderValue);
+        });
+
+        orderedChapterIds.sort((a, b) => {
+          const orderA = orderMap.has(a) ? orderMap.get(a) : Number.MAX_SAFE_INTEGER;
+          const orderB = orderMap.has(b) ? orderMap.get(b) : Number.MAX_SAFE_INTEGER;
+
+          if (orderA === orderB) {
+            return selectionOrder.indexOf(a) - selectionOrder.indexOf(b);
+          }
+
+          return orderA - orderB;
+        });
+      }
+    } catch (orderError) {
+      console.warn('[Merge] Failed to resolve chapter order, using selection order.', orderError);
+    }
+
     // Fetch all audiobook files
     const adminStorage = getStorage();
     const bucket = adminStorage.bucket();
     
     console.log('[Merge] Starting merge for project:', projectId);
-    console.log('[Merge] Chapter IDs:', chapterIds);
+    console.log('[Merge] Chapter IDs (requested):', chapterIds);
+    console.log('[Merge] Chapter IDs (ordered):', orderedChapterIds);
     
     const audioBuffers = [];
 
-    for (const chapterId of chapterIds) {
+    for (const chapterId of orderedChapterIds) {
       const fileName = `audiobooks/${userId}/${projectId}/${chapterId}.mp3`;
       console.log('[Merge] Fetching file:', fileName);
       const file = bucket.file(fileName);
@@ -100,7 +138,7 @@ export default async function handler(req, res) {
       projectId,
       userId,
       isMerged: true,
-      mergedChapters: chapterIds,
+      mergedChapters: orderedChapterIds,
       completedAt: new Date().toISOString(),
     });
 

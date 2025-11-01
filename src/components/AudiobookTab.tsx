@@ -7,6 +7,7 @@ import { VoiceSelector } from '@/components/VoiceSelector';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { AILoading } from '@/components/AILoading';
 import { AudiobookSplitDialog } from '@/components/AudiobookSplitDialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { SpeakerHigh, Download, Sparkle, Info } from '@phosphor-icons/react';
 import { EbookProject } from '@/lib/types';
 import { motion } from 'framer-motion';
@@ -66,6 +67,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
   const [showSplitDialog, setShowSplitDialog] = useState(false);
   const [isCreatingAudioVersion, setIsCreatingAudioVersion] = useState(false);
   const [showPostGenerationGuide, setShowPostGenerationGuide] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   const isPremium = userProfile?.isPremium || false;
   const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
@@ -98,6 +100,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
           setGeneratedChapters(existingAudiobooks);
         }
         setShowPostGenerationGuide(false);
+        setShowSuccessDialog(false);
       } catch (error) {
         console.error('Failed to load existing audiobooks:', error);
       }
@@ -233,6 +236,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
     setGenerationProgress(0);
     setGeneratedChapters([]);
     setShowPostGenerationGuide(false);
+    setShowSuccessDialog(false);
 
     try {
       const sortedChapters = [...project.chapters].sort((a, b) => a.order - b.order);
@@ -333,21 +337,7 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
       }
 
       setShowPostGenerationGuide(true);
-
-      toast.success('🎉 Audiobook generated successfully!', {
-        description: `All ${sortedChapters.length} chapters are ready. Scroll down to listen or download.`,
-        duration: 6000,
-        action: {
-          label: 'View Audiobooks',
-          onClick: () => {
-            // Scroll to the audiobooks section
-            const audiobooksSection = document.getElementById('generated-audiobooks');
-            if (audiobooksSection) {
-              audiobooksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }
-        }
-      });
+      setShowSuccessDialog(true);
 
       // Auto-scroll to show the generated audiobooks
       setTimeout(() => {
@@ -367,9 +357,10 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
     }
   };
 
-  const handleViewAudiobooks = () => {
+  const handleViewProjects = () => {
     setShowPostGenerationGuide(false);
-    navigate('/app/audiobooks');
+    setShowSuccessDialog(false);
+    navigate('/app/projects');
   };
 
   return (
@@ -565,15 +556,15 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
                 <div className="flex items-start gap-3 text-sm">
                   <Info size={20} className="mt-0.5 text-primary" weight="duotone" />
                   <div className="space-y-1">
-                    <p className="font-medium text-foreground">Audiobook saved to My Books</p>
+                    <p className="font-medium text-foreground">Audiobook saved to Projects</p>
                     <p className="text-muted-foreground">
-                      Download your chapters now or manage the full audio experience from the My Books area anytime.
+                      Download your chapters now or manage the full audio experience from the Projects area anytime.
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-2 sm:self-center">
-                  <Button size="sm" variant="secondary" onClick={handleViewAudiobooks}>
-                    Go to My Books
+                  <Button size="sm" variant="secondary" onClick={handleViewProjects}>
+                    Go to Projects
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => setShowPostGenerationGuide(false)}>
                     Dismiss
@@ -603,6 +594,36 @@ export function AudiobookTab({ project, onProjectsChanged }: AudiobookTabProps) 
           </CardContent>
         </Card>
       )}
+
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <SpeakerHigh size={22} className="text-primary" />
+              Audiobook Ready
+            </DialogTitle>
+            <DialogDescription>
+              All chapters were generated successfully. You can keep listening here or manage the files from Projects.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 text-sm text-muted-foreground">
+            <p>
+              We saved the audio to your Projects area so you can download, merge, or share whenever you're ready.
+            </p>
+            <p>
+              Need to generate more chapters? Just run the wizard again and we'll add them alongside these files.
+            </p>
+          </div>
+          <DialogFooter className="pt-6">
+            <Button variant="outline" onClick={() => setShowSuccessDialog(false)}>
+              Keep Listening
+            </Button>
+            <Button onClick={handleViewProjects}>
+              Go to Projects
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
