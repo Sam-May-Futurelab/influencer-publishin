@@ -192,7 +192,7 @@ export default function FeaturesPage() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-4 text-lg"
+                className="bg-[#4b3f6b] border-[#4b3f6b] text-white hover:bg-[#3b3157] hover:border-[#3b3157] font-semibold px-8 py-4 text-lg shadow-lg"
                 onClick={() => navigate('/pricing')}
               >
                 View Pricing
@@ -626,7 +626,7 @@ export default function FeaturesPage() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-4 text-lg"
+              className="bg-[#4b3f6b] border-[#4b3f6b] text-white hover:bg-[#3b3157] hover:border-[#3b3157] font-semibold px-8 py-4 text-lg shadow-lg"
               onClick={() => navigate('/help')}
             >
               <Globe className="mr-2 h-5 w-5" />

@@ -430,7 +430,7 @@ export function LandingPage() {
                   size="lg"
                   variant="outline"
                   onClick={handleGetStarted}
-                  className="border-2 border-white text-white hover:bg-white/10 text-lg px-10 py-7 backdrop-blur-sm font-semibold"
+                  className="bg-[#4b3f6b] border-[#4b3f6b] text-white hover:bg-[#3b3157] hover:border-[#3b3157] text-lg px-10 py-7 font-semibold shadow-lg"
                 >
                   Start Full Trial
                   <ArrowRight className="ml-2 w-5 h-5" />
@@ -736,12 +736,12 @@ export function LandingPage() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {['Nova', 'Shimmer', 'Echo', 'Fable', 'Onyx', 'Sage'].map((voice) => (
                     <button 
                       key={voice} 
                       onClick={() => handlePlayVoice(voice)}
-                      className="px-3 py-2 rounded-lg border-2 border-[#e2d1f0] hover:border-[#9b87b8] hover:bg-[#f0e8f8] text-sm font-medium transition-all flex items-center justify-center gap-2 relative"
+                      className="w-full px-3 py-2 rounded-lg border-2 border-[#e2d1f0] hover:border-[#9b87b8] hover:bg-[#f0e8f8] text-sm font-medium transition-all flex items-center justify-center gap-2 relative"
                     >
                       {playingVoice === voice ? (
                         <Pause className="w-4 h-4 text-[#9b87b8]" />
@@ -1406,7 +1406,7 @@ export function LandingPage() {
               size="lg"
               onClick={handleSignIn}
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6"
+              className="bg-[#4b3f6b] border-[#4b3f6b] text-white hover:bg-[#3b3157] hover:border-[#3b3157] text-lg px-8 py-6 shadow-lg"
             >
               Sign In
             </Button>
