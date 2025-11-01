@@ -174,7 +174,8 @@ const generateAudiobook = inngest.createFunction(
   },
   { event: 'audiobook/generate.requested' },
   async ({ event, step }) => {
-    const { userId, projectId, projectTitle, chapterId, chapterTitle, text, voice, quality = 'standard' } = event.data;
+  const { userId, projectId, projectTitle, chapterId, chapterTitle, text, voice, quality = 'standard' } = event.data;
+  const resolvedProjectTitle = projectTitle && projectTitle.trim().length > 0 ? projectTitle.trim() : 'Untitled Project';
 
     console.log(`[Inngest] Starting audiobook generation for chapter: ${chapterTitle}`);
 
@@ -187,7 +188,7 @@ const generateAudiobook = inngest.createFunction(
         status: 'processing',
         userId,
         projectId,
-        projectTitle,
+        projectTitle: resolvedProjectTitle,
         chapterId,
         chapterTitle,
         queuedAt: new Date().toISOString(),
@@ -237,7 +238,7 @@ const generateAudiobook = inngest.createFunction(
               chapterId,
               chapterTitle,
               projectId,
-              projectTitle,
+              projectTitle: resolvedProjectTitle,
               userId,
             },
           },
@@ -262,7 +263,7 @@ const generateAudiobook = inngest.createFunction(
           chapterId,
           chapterTitle,
           projectId,
-          projectTitle,
+          projectTitle: resolvedProjectTitle,
           userId,
           completedAt: new Date().toISOString(),
         }, { merge: true });
@@ -283,6 +284,7 @@ const generateAudiobook = inngest.createFunction(
       await audioRef.set({
         status: 'failed',
         error: error instanceof Error ? error.message : 'Unknown error',
+        projectTitle: resolvedProjectTitle,
         completedAt: new Date().toISOString(),
       }, { merge: true });
 

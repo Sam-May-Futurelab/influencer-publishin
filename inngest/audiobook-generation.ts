@@ -84,6 +84,7 @@ interface AudiobookJobData {
   text: string;
   voice: string;
   quality?: string;
+  projectTitle?: string;
 }
 
 export const generateAudiobook = inngest.createFunction(
@@ -94,7 +95,17 @@ export const generateAudiobook = inngest.createFunction(
   { event: 'audiobook/generate.requested' },
   async ({ event, step }) => {
     const data = event.data as AudiobookJobData;
-    const { userId, projectId, chapterId, chapterTitle, text, voice, quality = 'standard' } = data;
+    const {
+      userId,
+      projectId,
+      chapterId,
+      chapterTitle,
+      text,
+      voice,
+      quality = 'standard',
+      projectTitle,
+    } = data;
+    const resolvedProjectTitle = projectTitle?.trim() ? projectTitle.trim() : 'Untitled Project';
 
     console.log(`[Inngest] Starting audiobook generation for chapter: ${chapterTitle}`);
     console.log(`[Inngest] Text length: ${text.length}, Voice: ${voice}, Quality: ${quality}`);
@@ -108,6 +119,7 @@ export const generateAudiobook = inngest.createFunction(
           projectId,
           chapterId,
           chapterTitle,
+          projectTitle: resolvedProjectTitle,
           queuedAt: new Date().toISOString(),
         },
         { merge: true }
@@ -159,6 +171,7 @@ export const generateAudiobook = inngest.createFunction(
               chapterId,
               chapterTitle,
               projectId,
+              projectTitle: resolvedProjectTitle,
               userId,
             },
           },
@@ -192,6 +205,7 @@ export const generateAudiobook = inngest.createFunction(
             chapterId,
             chapterTitle,
             projectId,
+            projectTitle: resolvedProjectTitle,
             userId,
             completedAt: new Date().toISOString(),
           },
@@ -217,6 +231,7 @@ export const generateAudiobook = inngest.createFunction(
         {
           status: 'failed',
           error: error instanceof Error ? error.message : 'Unknown error',
+          projectTitle: resolvedProjectTitle,
           completedAt: new Date().toISOString(),
         },
         { merge: true }
