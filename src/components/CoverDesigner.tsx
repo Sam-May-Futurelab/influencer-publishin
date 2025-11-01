@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -992,9 +992,16 @@ export function CoverDesigner({
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showCloseHint, setShowCloseHint] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { user, userProfile } = useAuth();
+
+  useEffect(() => {
+    if (!open) {
+      setShowCloseHint(false);
+    }
+  }, [open]);
 
   const updateDesign = (updates: Partial<CoverDesign>) => {
     setDesign((prev) => {
@@ -1004,6 +1011,8 @@ export function CoverDesigner({
       if (updates.backgroundImage && typeof updates.backgroundImage === 'string') {
         next.backgroundType = updates.backgroundType ?? 'image';
         next.usePreMadeCover = updates.usePreMadeCover ?? false;
+        next.imageAlignment = updates.imageAlignment ?? prev.imageAlignment ?? 'center';
+        next.imagePosition = updates.imagePosition ?? prev.imagePosition ?? 'cover';
       }
 
       // When switching away from image mode, ensure overlay settings stay consistent
@@ -1059,6 +1068,7 @@ export function CoverDesigner({
       // Pass the complete baked image
       onSave(designToSave, coverImageData);
       toast.success('Cover applied to your project. You can keep editing or close when you are ready.');
+      setShowCloseHint(true);
     } catch (error) {
       console.error('Save failed:', error);
       toast.error('Failed to save cover');
@@ -2926,7 +2936,7 @@ export function CoverDesigner({
               onClick={() => onOpenChange(false)} 
               className="h-10 px-4 order-3 sm:order-1"
             >
-              Cancel
+              Close
             </Button>
             <Button 
               variant="ghost" 
@@ -2960,6 +2970,15 @@ export function CoverDesigner({
               <Download size={18} />
               Apply Cover
             </Button>
+            {showCloseHint && (
+              <Button
+                variant="secondary"
+                onClick={() => onOpenChange(false)}
+                className="h-10 px-4 order-4"
+              >
+                Close Designer
+              </Button>
+            )}
           </div>
         </div>
 
@@ -2980,6 +2999,15 @@ export function CoverDesigner({
               <Download size={18} />
               Apply Cover
             </Button>
+            {showCloseHint && (
+              <Button
+                variant="secondary"
+                onClick={() => onOpenChange(false)}
+                className="h-12 px-6 text-base font-semibold shadow-lg"
+              >
+                Close
+              </Button>
+            )}
           </div>
         )}
       </DialogContent>

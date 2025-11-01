@@ -21,7 +21,6 @@ import { CoverDesigner } from '@/components/CoverDesigner';
 import { AudiobookTab } from '@/components/AudiobookTab';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
-import { toast } from 'sonner';
 
 interface ProjectHeaderProps {
   project: EbookProject;
@@ -70,7 +69,6 @@ export function ProjectHeader({ project, onProjectUpdate, onBrandCustomize, onUp
     onProjectUpdate({
       coverDesign: { ...design, coverImageData: imageData },
     });
-    toast.success('Cover saved successfully!');
   };
 
   const wordCount = project.chapters.reduce((total, chapter) => {
