@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { getAnalytics } from 'firebase/analytics';
+import { getAnalytics, type Analytics } from 'firebase/analytics';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -22,7 +22,7 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 
 // Initialize Analytics (only in browser)
-let analytics: any = null;
+let analytics: Analytics | null = null;
 if (typeof window !== 'undefined') {
   analytics = getAnalytics(app);
 }
