@@ -1064,10 +1064,10 @@ function App() {
         onComplete={handleOnboardingComplete}
         onSkip={handleOnboardingSkip}
         onShowTemplates={goToTemplatesPage}
+        onStartProject={() => createProject({ title: 'My First Ebook' })}
         onShowAIGenerate={() => {
-          // Close onboarding and show AI generation (Phase 2 feature)
-          handleOnboardingComplete();
-          toast.info('AI Book Generation coming in Phase 2!');
+          navigate('/app/dashboard');
+          toast.info('Head to "Generate Full Book" on the dashboard to let AI draft every chapter.');
         }}
       />
 

@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { ArrowRight, BookOpen, MagicWand, FileArrowDown, CheckCircle, Sparkle } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { analytics } from '@/lib/firebase';
+import { logEvent } from 'firebase/analytics';
 
 interface OnboardingProps {
   open: boolean;
@@ -11,25 +12,54 @@ interface OnboardingProps {
   onSkip: () => void;
   onShowTemplates?: () => void;
   onShowAIGenerate?: () => void;
+  onStartProject?: () => Promise<void> | void;
 }
 
-export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAIGenerate }: OnboardingProps) {
-  const [currentStep, setCurrentStep] = useState(0);
+type OnboardingAction = 'templates' | 'start-project' | 'ai-generate';
 
-  const handleStepAction = (action: 'templates' | 'ai-generate') => {
+export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAIGenerate, onStartProject }: OnboardingProps) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const closingReasonRef = useRef<'skip' | 'complete' | null>(null);
+  const stepTitles = useMemo(() => [
+    'Welcome to Inkfluence AI',
+    'Create Your First Project',
+    'Using AI to Write'
+  ], []);
+
+  const logOnboardingEvent = (eventName: string, params?: Record<string, any>) => {
+    if (!analytics) return;
+    logEvent(analytics, eventName, params);
+  };
+
+  const handleStepAction = async (action: OnboardingAction) => {
+    logOnboardingEvent('onboarding_action_selected', {
+      action,
+      step_index: currentStep,
+      step_title: stepTitles[currentStep] ?? 'unknown'
+    });
+
     if (action === 'templates' && onShowTemplates) {
       onShowTemplates();
-      onComplete(); // Close onboarding after action
+      closingReasonRef.current = 'complete';
+      logOnboardingEvent('onboarding_completed', { completion_type: action });
+      onComplete();
     } else if (action === 'ai-generate' && onShowAIGenerate) {
       onShowAIGenerate();
-      onComplete(); // Close onboarding after action
+      closingReasonRef.current = 'complete';
+      logOnboardingEvent('onboarding_completed', { completion_type: action });
+      onComplete();
+    } else if (action === 'start-project' && onStartProject) {
+      await Promise.resolve(onStartProject());
+      closingReasonRef.current = 'complete';
+      logOnboardingEvent('onboarding_completed', { completion_type: action });
+      onComplete();
     }
   };
 
   // Create steps with action handlers
   const steps = [
     {
-      title: "Welcome to Inkfluence AI",
+      title: stepTitles[0],
       description: "AI-powered writing for professional ebooks and content",
       icon: Sparkle,
       content: (
@@ -74,14 +104,15 @@ export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAI
       )
     },
     {
-      title: "Create Your First Project",
+      title: stepTitles[1],
       description: "Three ways to get started",
       icon: BookOpen,
       content: (
         <div className="space-y-4">
           <div className="space-y-3">
             <button
-              onClick={() => handleStepAction('templates')}
+              type="button"
+              onClick={() => void handleStepAction('templates')}
               className="w-full flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/10 hover:border-primary/30 transition-all cursor-pointer text-left"
             >
               <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -95,20 +126,30 @@ export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAI
               </div>
             </button>
 
-            <div className="flex items-start gap-4 p-4 rounded-lg border bg-card">
+            <button
+              type="button"
+              onClick={() => void handleStepAction('start-project')}
+              disabled={!onStartProject}
+              className={`w-full flex items-start gap-4 p-4 rounded-lg border bg-card transition-all text-left ${
+                onStartProject
+                  ? 'hover:bg-accent/10 hover:border-primary/30 cursor-pointer'
+                  : 'opacity-60 cursor-not-allowed'
+              }`}
+            >
               <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-primary font-bold text-sm">2</span>
               </div>
               <div className="flex-1">
                 <p className="font-semibold text-sm mb-1">Start From Scratch</p>
                 <p className="text-xs text-muted-foreground">
-                  Click "New Project" on the dashboard and build your ebook chapter by chapter
+                  Create a blank project and begin writing your first chapter instantly
                 </p>
               </div>
-            </div>
+            </button>
 
             <button
-              onClick={() => handleStepAction('ai-generate')}
+              type="button"
+              onClick={() => void handleStepAction('ai-generate')}
               className="w-full flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/10 hover:border-primary/30 transition-all cursor-pointer text-left"
             >
               <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -132,7 +173,7 @@ export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAI
       )
     },
     {
-      title: "Using AI to Write",
+      title: stepTitles[2],
       description: "Get AI help whenever you need it",
       icon: MagicWand,
       content: (
@@ -181,24 +222,73 @@ export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAI
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
+      logOnboardingEvent('onboarding_next_clicked', {
+        step_index: currentStep,
+        step_title: stepTitles[currentStep]
+      });
       setCurrentStep(prev => prev + 1);
     } else {
+      closingReasonRef.current = 'complete';
+      logOnboardingEvent('onboarding_completed', { completion_type: 'steps' });
       onComplete();
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
+      logOnboardingEvent('onboarding_back_clicked', {
+        step_index: currentStep,
+        step_title: stepTitles[currentStep]
+      });
       setCurrentStep(prev => prev - 1);
     }
   };
 
+  const handleSkip = () => {
+    closingReasonRef.current = 'skip';
+    logOnboardingEvent('onboarding_skipped', {
+      step_index: currentStep,
+      step_title: stepTitles[currentStep]
+    });
+    onSkip();
+  };
+
+  const handleDialogOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      if (closingReasonRef.current === null) {
+        logOnboardingEvent('onboarding_skipped', {
+          step_index: currentStep,
+          step_title: stepTitles[currentStep],
+          reason: 'dismiss'
+        });
+        onSkip();
+      }
+      closingReasonRef.current = null;
+    }
+  };
+
   const currentStepData = steps[currentStep];
+  useEffect(() => {
+    if (open) {
+      logOnboardingEvent('onboarding_step_viewed', {
+        step_index: currentStep,
+        step_title: stepTitles[currentStep] ?? 'unknown'
+      });
+    } else {
+      setCurrentStep(0);
+    }
+  }, [open, currentStep]);
+
+  useEffect(() => {
+    if (open) {
+      logOnboardingEvent('onboarding_opened');
+    }
+  }, [open]);
   const Icon = currentStepData.icon;
   const isLastStep = currentStep === steps.length - 1;
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onSkip()}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="max-w-xl border shadow-lg p-0 overflow-hidden">
         <DialogHeader className="p-6 pb-4 border-b">
           <div className="flex items-center gap-3">
@@ -242,7 +332,7 @@ export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAI
         <div className="flex items-center justify-between p-6 pt-4 border-t bg-muted/30">
           <Button
             variant="ghost"
-            onClick={onSkip}
+            onClick={handleSkip}
             size="sm"
             className="text-muted-foreground hover:text-foreground"
           >
