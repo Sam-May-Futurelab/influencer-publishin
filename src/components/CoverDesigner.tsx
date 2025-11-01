@@ -840,15 +840,15 @@ export function CoverDesigner({
     titleFont: initialDesign?.titleFont || 'Playfair Display',
     titleSize: initialDesign?.titleSize || 52,
     titleColor: initialDesign?.titleColor || '#ffffff',
-    titlePosition: initialDesign?.titlePosition || 40,
+    titlePosition: initialDesign?.titlePosition ?? 34,
     subtitleFont: initialDesign?.subtitleFont || 'Inter',
     subtitleSize: initialDesign?.subtitleSize || 22,
     subtitleColor: initialDesign?.subtitleColor || '#e0e7ff',
-    subtitlePosition: initialDesign?.subtitlePosition || 50,
+    subtitlePosition: initialDesign?.subtitlePosition ?? 58,
     authorFont: initialDesign?.authorFont || 'Inter',
     authorSize: initialDesign?.authorSize || 18,
     authorColor: initialDesign?.authorColor || '#f0f9ff',
-    authorPosition: initialDesign?.authorPosition || 80,
+    authorPosition: initialDesign?.authorPosition ?? 82,
     textShadowEnabled: initialDesign?.textShadowEnabled ?? true,
     shadowBlur: initialDesign?.shadowBlur ?? 8,
     shadowOffsetX: initialDesign?.shadowOffsetX ?? 2,
@@ -1038,9 +1038,9 @@ export function CoverDesigner({
   };
 
   const renderPreviewTextLayer = () => {
-    const titleTop = clampPosition(design.titlePosition, 40);
-    const subtitleTop = clampPosition(design.subtitlePosition, 50);
-    const authorTop = clampPosition(design.authorPosition, 80);
+    const titleTop = clampPosition(design.titlePosition, 34);
+    const subtitleTop = clampPosition(design.subtitlePosition, 58);
+    const authorTop = clampPosition(design.authorPosition, 82);
     const textShadow = design.textShadowEnabled
       ? `${design.shadowOffsetX ?? 0}px ${design.shadowOffsetY ?? 0}px ${design.shadowBlur ?? 0}px ${design.shadowColor ?? 'rgba(0, 0, 0, 0.75)'}`
       : 'none';
@@ -2654,6 +2654,9 @@ export function CoverDesigner({
                   titleSize: 48,
                   subtitleSize: 24,
                   authorSize: 18,
+                  titlePosition: 34,
+                  subtitlePosition: 58,
+                  authorPosition: 82,
                 });
                 toast.success('Reset to default design');
               }}
