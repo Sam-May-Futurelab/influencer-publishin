@@ -117,6 +117,7 @@ export async function enhanceContent(
   originalContent: string,
   chapterTitle: string,
   options?: {
+    userId?: string;
     genre?: string;
     tone?: Tone;
     length?: Length;
@@ -136,7 +137,8 @@ export async function enhanceContent(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        keywords: [originalContent],
+  userId: options?.userId,
+  keywords: [originalContent],
         chapterTitle,
         contentType: 'enhance',
         genre: options?.genre || 'general',

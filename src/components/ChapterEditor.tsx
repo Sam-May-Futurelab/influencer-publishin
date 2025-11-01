@@ -300,6 +300,7 @@ export function ChapterEditor({
 
     try {
       const enhanced = await enhanceContent(selectedText, currentChapter.title, {
+        userId: user?.uid,
         genre: ebookCategory || 'general',
         context: {
           targetAudience: targetAudience || 'general audience',
