@@ -364,7 +364,7 @@ export function HelpCenter() {
     },
     {
       question: 'Do you offer refunds?',
-      answer: 'We offer a 30-day money-back guarantee for Premium subscriptions. If you\'re not satisfied within 30 days of your first payment, contact support for a full refund. After 30 days, you can cancel anytime to avoid future charges.'
+      answer: 'We don\'t issue refunds for partial months. You can cancel your subscription at any time and you\'ll keep access through the end of the current billing period. If a charge was made in error, contact support within 7 days and we\'ll review it right away.'
     }
   ];
 

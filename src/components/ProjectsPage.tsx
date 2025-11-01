@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -74,6 +75,8 @@ export function ProjectsPage({
   const [selectedProjectForMerge, setSelectedProjectForMerge] = useState<string | null>(null);
   const [selectedChapters, setSelectedChapters] = useState<string[]>([]);
   const [isMerging, setIsMerging] = useState(false);
+  const [mergeTitle, setMergeTitle] = useState('');
+  const [mergeSuccess, setMergeSuccess] = useState<{ title: string; audioUrl: string; mergedId: string } | null>(null);
   
   // Bulk selection states
   const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
@@ -81,6 +84,7 @@ export function ProjectsPage({
   const [bulkDeleteMode, setBulkDeleteMode] = useState(false);
   
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Bulk selection handlers
   const toggleProjectSelection = (projectId: string) => {
@@ -130,6 +134,104 @@ export function ProjectsPage({
     } catch (error) {
       console.error('Error deleting items:', error);
       toast.error('Failed to delete items');
+    }
+  };
+
+  const deriveMergeTitle = (projectTitle?: string) => {
+    const base = projectTitle?.trim();
+    return `${base && base.length ? base : 'Audiobook'} - Full Audiobook`;
+  };
+
+  const resetMergeDialogState = () => {
+    setSelectedChapters([]);
+    setSelectedProjectForMerge(null);
+    setMergeTitle('');
+    setMergeSuccess(null);
+    setIsMerging(false);
+  };
+
+  const handleMergeDialogChange = (open: boolean) => {
+    setShowMergeDialog(open);
+    if (!open) {
+      resetMergeDialogState();
+    } else {
+      setMergeSuccess(null);
+    }
+  };
+
+  const handleMergeChapters = async () => {
+    if (selectedChapters.length < 2) {
+      toast.error('Select at least 2 chapters to merge');
+      return;
+    }
+
+    if (!user?.uid) {
+      toast.error('Sign in to merge chapters');
+      return;
+    }
+
+    if (!selectedProjectForMerge) {
+      toast.error('Choose chapters from a single project to merge');
+      return;
+    }
+
+    const projectContext = audiobooks.find(a => a.projectId === selectedProjectForMerge);
+    const fallbackProject = projects.find(p => p.id === selectedProjectForMerge);
+    const projectTitle = projectContext?.projectTitle || fallbackProject?.title;
+    const trimmedTitle = (mergeTitle || '').trim() || deriveMergeTitle(projectTitle);
+
+    setIsMerging(true);
+    setMergeSuccess(null);
+
+    try {
+      const response = await fetch('/api/merge-audiobooks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.uid,
+          projectId: selectedProjectForMerge,
+          projectTitle,
+          chapterIds: selectedChapters,
+          title: trimmedTitle
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.error || 'Failed to merge');
+      }
+
+      const data = await response.json();
+      toast.success(`"${trimmedTitle}" saved to My Books`);
+
+      const audiobooksRef = collection(db, 'audiobooks');
+      const q = query(audiobooksRef, where('userId', '==', user.uid));
+      const snapshot = await getDocs(q);
+      const loadedAudiobooks = snapshot.docs.map(doc => {
+        const docData = doc.data();
+        const project = projects.find(p => p.id === docData.projectId);
+        return {
+          id: doc.id,
+          ...docData,
+          projectTitle: docData.projectTitle || project?.title || 'Unknown Project'
+        };
+      });
+      setAudiobooks(loadedAudiobooks);
+
+      setMergeSuccess({
+        title: trimmedTitle,
+        audioUrl: data.audioUrl,
+        mergedId: data.mergedId
+      });
+      setSelectedChapters([]);
+      setSelectedProjectForMerge(null);
+      setMergeTitle('');
+    } catch (error) {
+      console.error('Failed to merge audiobooks:', error);
+      const message = error instanceof Error ? error.message : 'Failed to merge audiobooks';
+      toast.error(message);
+    } finally {
+      setIsMerging(false);
     }
   };
 
@@ -424,7 +526,7 @@ export function ProjectsPage({
                           <Button
                             size="sm"
                             className="gap-2 bg-primary hover:bg-primary/90"
-                            onClick={() => setShowMergeDialog(true)}
+                            onClick={() => handleMergeDialogChange(true)}
                           >
                             <SpeakerHigh size={16} weight="fill" />
                             Merge Chapters
@@ -1039,7 +1141,7 @@ export function ProjectsPage({
       </AlertDialog>
 
       {/* Merge Audiobooks Dialog */}
-      <Dialog open={showMergeDialog} onOpenChange={setShowMergeDialog}>
+      <Dialog open={showMergeDialog} onOpenChange={handleMergeDialogChange}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -1051,6 +1153,61 @@ export function ProjectsPage({
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {mergeSuccess && (
+              <div
+                className="rounded-lg border border-green-500/20 bg-green-500/10 p-4 space-y-3"
+                aria-live="polite"
+              >
+                <div>
+                  <p className="font-semibold text-green-700 dark:text-green-400">
+                    Merged file created
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    "{mergeSuccess.title}" is now available in My Books. You can download it or jump straight to the audiobooks library.
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button size="sm" className="gap-2" asChild>
+                    <a
+                      href={mergeSuccess.audioUrl}
+                      download={`${mergeSuccess.title}.mp3`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Download size={14} />
+                      Download audio
+                    </a>
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-2"
+                    onClick={() => {
+                      handleMergeDialogChange(false);
+                      navigate('/app/audiobooks');
+                    }}
+                  >
+                    <SpeakerHigh size={14} />
+                    View in My Books
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="merge-title">Merged file name</Label>
+              <Input
+                id="merge-title"
+                value={mergeTitle}
+                onChange={(event) => setMergeTitle(event.target.value)}
+                placeholder="e.g., My Project - Full Audiobook"
+                disabled={isMerging || (!selectedProjectForMerge && !mergeTitle)}
+              />
+              <p className="text-xs text-muted-foreground">
+                We’ll save the merged audio using this name inside My Books.
+              </p>
+            </div>
+
             {audiobooks.length > 0 && (
               <div className="space-y-4 max-h-[400px] overflow-y-auto">
                 {/* Group audiobooks by project */}
@@ -1082,11 +1239,15 @@ export function ProjectsPage({
                             setSelectedChapters(prev => prev.filter(id => !projectChapterIds.includes(id)));
                             if (selectedProjectForMerge === projectId) {
                               setSelectedProjectForMerge(null);
+                              setMergeTitle('');
+                              setMergeSuccess(null);
                             }
                           } else {
                             // Select all from this project
                             setSelectedChapters(projectChapterIds);
                             setSelectedProjectForMerge(projectId);
+                            setMergeTitle(prev => prev.trim().length ? prev : deriveMergeTitle(projectAudiobooks[0]?.projectTitle));
+                            setMergeSuccess(null);
                           }
                         }}
                         className="text-xs"
@@ -1107,14 +1268,21 @@ export function ProjectsPage({
                           checked={selectedChapters.includes(audiobook.chapterId)}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setSelectedChapters(prev => [...prev, audiobook.chapterId]);
+                              if (!selectedChapters.includes(audiobook.chapterId)) {
+                                setSelectedChapters([...selectedChapters, audiobook.chapterId]);
+                              }
                               if (!selectedProjectForMerge) {
                                 setSelectedProjectForMerge(audiobook.projectId);
+                                setMergeTitle(prev => prev.trim().length ? prev : deriveMergeTitle(audiobook.projectTitle));
                               }
+                              setMergeSuccess(null);
                             } else {
-                              setSelectedChapters(prev => prev.filter(id => id !== audiobook.chapterId));
-                              if (selectedChapters.length === 1) {
+                              const next = selectedChapters.filter(id => id !== audiobook.chapterId);
+                              setSelectedChapters(next);
+                              if (next.length === 0) {
                                 setSelectedProjectForMerge(null);
+                                setMergeTitle('');
+                                setMergeSuccess(null);
                               }
                             }
                           }}
@@ -1141,67 +1309,12 @@ export function ProjectsPage({
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  onClick={() => {
-                    setShowMergeDialog(false);
-                    setSelectedChapters([]);
-                    setSelectedProjectForMerge(null);
-                  }}
+                  onClick={() => handleMergeDialogChange(false)}
                 >
-                  Cancel
+                  {mergeSuccess ? 'Close' : 'Cancel'}
                 </Button>
                 <Button
-                  onClick={async () => {
-                    if (selectedChapters.length < 2) {
-                      toast.error('Select at least 2 chapters to merge');
-                      return;
-                    }
-
-                    setIsMerging(true);
-                    try {
-                      const response = await fetch('/api/merge-audiobooks', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          userId: user?.uid,
-                          projectId: selectedProjectForMerge,
-                          chapterIds: selectedChapters,
-                          title: 'Merged Audiobook'
-                        })
-                      });
-
-                      if (!response.ok) {
-                        const error = await response.json();
-                        throw new Error(error.error || 'Failed to merge');
-                      }
-
-                      const data = await response.json();
-                      toast.success('Audiobook chapters merged successfully!');
-                      
-                      // Reload audiobooks
-                      const audiobooksRef = collection(db, 'audiobooks');
-                      const q = query(audiobooksRef, where('userId', '==', user?.uid));
-                      const snapshot = await getDocs(q);
-                      const loadedAudiobooks = snapshot.docs.map(doc => {
-                        const data = doc.data();
-                        const project = projects.find(p => p.id === data.projectId);
-                        return {
-                          id: doc.id,
-                          ...data,
-                          projectTitle: data.projectTitle || project?.title || 'Unknown Project'
-                        };
-                      });
-                      setAudiobooks(loadedAudiobooks);
-                      
-                      setShowMergeDialog(false);
-                      setSelectedChapters([]);
-                      setSelectedProjectForMerge(null);
-                    } catch (error: any) {
-                      console.error('Failed to merge audiobooks:', error);
-                      toast.error(error.message || 'Failed to merge audiobooks');
-                    } finally {
-                      setIsMerging(false);
-                    }
-                  }}
+                  onClick={handleMergeChapters}
                   disabled={selectedChapters.length < 2 || isMerging}
                   className="gap-2"
                 >

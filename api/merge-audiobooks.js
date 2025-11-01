@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { userId, projectId, chapterIds, title } = req.body;
+    const { userId, projectId, chapterIds, title, projectTitle } = req.body;
 
     if (!userId || !projectId || !chapterIds || !Array.isArray(chapterIds) || chapterIds.length < 2) {
       return res.status(400).json({ 
@@ -53,6 +53,8 @@ export default async function handler(req, res) {
     // Determine canonical chapter order so merged audio plays correctly
     let orderedChapterIds = [...chapterIds];
     const selectionOrder = [...chapterIds];
+    let resolvedProjectTitle = typeof projectTitle === 'string' && projectTitle.trim() ? projectTitle.trim() : '';
+    let projectData = null;
     try {
       const projectSnap = await adminDb
         .collection('users')
@@ -62,7 +64,7 @@ export default async function handler(req, res) {
         .get();
 
       if (projectSnap.exists) {
-        const projectData = projectSnap.data() || {};
+        projectData = projectSnap.data() || {};
         const chapters = Array.isArray(projectData.chapters) ? projectData.chapters : [];
         const orderMap = new Map();
 
@@ -82,10 +84,21 @@ export default async function handler(req, res) {
 
           return orderA - orderB;
         });
+
+        if (!resolvedProjectTitle) {
+          const docTitle = typeof projectData.title === 'string' ? projectData.title.trim() : '';
+          if (docTitle) {
+            resolvedProjectTitle = docTitle;
+          }
+        }
       }
     } catch (orderError) {
       console.warn('[Merge] Failed to resolve chapter order, using selection order.', orderError);
     }
+
+    const finalTitle = typeof title === 'string' && title.trim().length > 0
+      ? title.trim()
+      : (resolvedProjectTitle ? `${resolvedProjectTitle} - Full Audiobook` : 'Merged Audiobook');
 
     // Fetch all audiobook files
     const adminStorage = getStorage();
@@ -94,6 +107,7 @@ export default async function handler(req, res) {
     console.log('[Merge] Starting merge for project:', projectId);
     console.log('[Merge] Chapter IDs (requested):', chapterIds);
     console.log('[Merge] Chapter IDs (ordered):', orderedChapterIds);
+    console.log('[Merge] Final title:', finalTitle);
     
     const audioBuffers = [];
 
@@ -130,15 +144,18 @@ export default async function handler(req, res) {
 
     // Save merged audiobook to Firestore
     const mergedId = `${projectId}_merged_${Date.now()}`;
+    const storedProjectTitle = resolvedProjectTitle || (projectData && typeof projectData.title === 'string' ? projectData.title : undefined);
+
     await adminDb.collection('audiobooks').doc(mergedId).set({
       audioUrl: downloadUrl,
       audioSize: mergedBuffer.length,
       chapterId: mergedId,
-      chapterTitle: title || 'Merged Audiobook',
+      chapterTitle: finalTitle,
       projectId,
       userId,
       isMerged: true,
       mergedChapters: orderedChapterIds,
+      projectTitle: storedProjectTitle || null,
       completedAt: new Date().toISOString(),
     });
 
@@ -146,7 +163,9 @@ export default async function handler(req, res) {
       success: true,
       audioUrl: downloadUrl,
       audioSize: mergedBuffer.length,
-      mergedId
+      mergedId,
+      title: finalTitle,
+      projectTitle: storedProjectTitle || null,
     });
 
   } catch (error) {
