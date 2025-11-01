@@ -530,7 +530,7 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
                       }
 
                       // Delete Firestore data via backend
-                      const response = await fetch('/api/delete-user-data', {
+                      const response = await fetch('/api/user-data?action=delete', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
