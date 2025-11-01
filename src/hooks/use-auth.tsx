@@ -3,6 +3,7 @@ import { User } from 'firebase/auth';
 import { 
   onAuthStateChange, 
   getUserProfile, 
+  createUserProfile,
   UserProfile, 
   updateUserProfile as updateUserProfileAPI 
 } from '@/lib/auth';
@@ -47,8 +48,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(user);
       
       if (user) {
-        // Get user profile from Firestore
-        const profile = await getUserProfile(user.uid);
+        // Get user profile from Firestore. If it does not exist yet (new account), create it.
+        let profile = await getUserProfile(user.uid);
+        if (!profile) {
+          profile = await createUserProfile(user);
+        }
         setUserProfile(profile);
       } else {
         setUserProfile(null);
