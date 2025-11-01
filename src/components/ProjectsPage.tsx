@@ -632,10 +632,17 @@ export function ProjectsPage({
                 ))}
               </div>
               {audiobooks.length > 6 && (
-                <div className="mt-4 text-center">
+                <div className="mt-4 text-center space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    +{audiobooks.length - 6} more audiobook{audiobooks.length - 6 !== 1 ? 's' : ''}
+                    {audiobooks.length - 6} more audiobook{audiobooks.length - 6 !== 1 ? 's' : ''} saved in My Books
                   </p>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => navigate('/app/projects')}
+                  >
+                    Go to My Books
+                  </Button>
                 </div>
               )}
             </CardContent>
