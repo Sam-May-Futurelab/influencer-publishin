@@ -113,7 +113,7 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="preview-dialog max-w-6xl w-full h-[90vh] border border-border/50 p-0 gap-0 [&>button]:hidden !bg-white shadow-xl">
+      <DialogContent className="preview-dialog max-w-[min(96vw,1280px)] w-full h-[92vh] border border-border/40 p-0 gap-0 [&>button]:hidden !bg-slate-100 shadow-2xl">
         <DialogHeader className="p-4 lg:p-6 border-b border-border/20 relative !bg-white">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-primary/10">
@@ -146,304 +146,308 @@ export function PreviewDialog({ project, isOpen, onClose }: PreviewDialogProps) 
           </motion.div>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto p-6 max-h-[calc(90vh-120px)] !bg-gray-50">
-          <div className="max-w-3xl mx-auto">
-            {/* Title Page - Show custom cover if available, otherwise use default */}
-            {coverImageData ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-12 rounded-2xl overflow-hidden shadow-2xl mx-auto"
-                style={{ maxWidth: '500px' }}
-              >
-                <img 
-                  src={coverImageData} 
-                  alt={`${project.title} cover`}
-                  className="w-full h-auto"
-                />
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center py-12 mb-12 border-b-4 border-border/30"
-                style={{ borderColor: project.brandConfig?.accentColor || '#C4B5FD' }}
-              >
-              {/* Logo if available */}
-              {project.brandConfig?.logoUrl && (
-                <div className="mb-6">
-                  <img 
-                    src={project.brandConfig.logoUrl} 
-                    alt="Logo" 
-                    className="h-16 mx-auto object-contain"
-                  />
-                </div>
-              )}
-              
-              <h1 
-                className="text-3xl lg:text-4xl font-bold mb-6 leading-tight px-4"
-                style={{ 
-                  color: project.brandConfig?.primaryColor || '#8B5CF6',
-                  fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif',
-                  wordBreak: 'break-word',
-                  hyphens: 'auto'
-                }}
-              >
-                {project.title}
-              </h1>
-              
-              {project.author && (
-                <p 
-                  className="text-xl mb-6 italic"
-                  style={{ 
-                    color: project.brandConfig?.secondaryColor || '#A78BFA',
-                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
-                  }}
-                >
-                  by {project.author}
-                </p>
-              )}
-              
-              {project.description && (
-                <p 
-                  className="text-base !text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8"
-                  style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
-                >
-                  {project.description}
-                </p>
-              )}
-              
-              <div className="flex justify-center gap-4 mt-8 text-sm font-medium !text-gray-700">
-                <span 
-                  style={{ 
-                    color: project.brandConfig?.primaryColor || '#8B5CF6',
-                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
-                  }}
-                >
-                  {sortedChapters.length} Chapter{sortedChapters.length !== 1 ? 's' : ''}
-                </span>
-                <span className="!text-gray-500">•</span>
-                <span 
-                  style={{ 
-                    color: project.brandConfig?.primaryColor || '#8B5CF6',
-                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
-                  }}
-                >
-                  {getWordCount().toLocaleString()} Words
-                </span>
-                <span className="!text-gray-500">•</span>
-                <span 
-                  style={{ 
-                    color: project.brandConfig?.primaryColor || '#8B5CF6',
-                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
-                  }}
-                >
-                  ~{Math.ceil(getWordCount() / 250)} Pages
-                </span>
-              </div>
-            </motion.div>
-            )}
-
-            {/* Copyright Page */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="py-12 mb-12 border-b-2 border-border/20"
-              style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
-            >
-              <div className="max-w-xl mx-auto space-y-6 text-sm !text-gray-600">
-                <p className="font-semibold text-base !text-gray-900">{project.title}</p>
-                {project.author && (
-                  <p className="!text-gray-900">by {project.author}</p>
-                )}
-                
-                <div className="space-y-2">
-                  <p>Copyright © {new Date().getFullYear()} {project.author || 'Author'}</p>
-                  <p>All rights reserved.</p>
-                </div>
-                
-                <p className="leading-relaxed">
-                  No part of this book may be reproduced in any form or by any electronic or mechanical means, 
-                  including information storage and retrieval systems, without written permission from the author, 
-                  except for the use of brief quotations in a book review.
-                </p>
-                
-                <div className="pt-4 border-t border-border/20 text-xs space-y-1">
-                  <p><strong>First Edition:</strong> {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-                  <p>Created with Inkfluence AI</p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Table of Contents */}
-            {sortedChapters.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="py-12 mb-12"
-                style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
-              >
-                <h2 
-                  className="text-3xl font-bold mb-8 pb-4 text-center"
-                  style={{ 
-                    color: project.brandConfig?.primaryColor || '#8B5CF6',
-                    borderBottom: `3px solid ${project.brandConfig?.accentColor || '#C4B5FD'}`
-                  }}
-                >
-                  Table of Contents
-                </h2>
-                <div className="space-y-3">
-                  {sortedChapters.map((chapter, index) => (
-                    <div 
-                      key={chapter.id}
-                      className="flex items-baseline justify-between py-2 px-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer border-b border-dotted border-border/30"
-                      onClick={() => {
-                        const element = document.getElementById(`chapter-${chapter.id}`);
-                        element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        <div className="flex-1 overflow-y-auto p-6 lg:p-8 max-h-[calc(92vh-140px)] bg-slate-100">
+          <div className="mx-auto flex w-full max-w-[1120px] justify-center">
+            <div className="w-full max-w-[820px] rounded-2xl border border-border/40 bg-white shadow-[0_24px_48px_rgba(15,23,42,0.08)] overflow-hidden">
+              <div className="px-8 lg:px-12 py-10 lg:py-14 space-y-12">
+                {/* Title Page - Show custom cover if available, otherwise use default */}
+                {coverImageData ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-2xl overflow-hidden shadow-2xl mx-auto"
+                    style={{ maxWidth: '520px' }}
+                  >
+                    <img 
+                      src={coverImageData} 
+                      alt={`${project.title} cover`}
+                      className="w-full h-auto"
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center py-12 border-b-4 border-border/30"
+                    style={{ borderColor: project.brandConfig?.accentColor || '#C4B5FD' }}
+                  >
+                    {/* Logo if available */}
+                    {project.brandConfig?.logoUrl && (
+                      <div className="mb-6">
+                        <img 
+                          src={project.brandConfig.logoUrl} 
+                          alt="Logo" 
+                          className="h-16 mx-auto object-contain"
+                        />
+                      </div>
+                    )}
+                    
+                    <h1 
+                      className="text-3xl lg:text-4xl font-bold mb-6 leading-tight px-4"
+                      style={{ 
+                        color: project.brandConfig?.primaryColor || '#8B5CF6',
+                        fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif',
+                        wordBreak: 'break-word',
+                        hyphens: 'auto'
                       }}
                     >
-                      <div className="flex items-baseline gap-3 flex-1">
-                        <span 
-                          className="text-sm font-semibold"
-                          style={{ color: project.brandConfig?.secondaryColor || '#A78BFA' }}
-                        >
-                          Chapter {index + 1}
-                        </span>
-                        <span 
-                          className="font-medium !text-gray-900"
-                          style={{ flex: 1 }}
-                        >
-                          {chapter.title}
-                        </span>
-                      </div>
-                      <span 
-                        className="text-sm font-semibold ml-4"
-                        style={{ color: project.brandConfig?.primaryColor || '#8B5CF6' }}
+                      {project.title}
+                    </h1>
+                    
+                    {project.author && (
+                      <p 
+                        className="text-xl mb-6 italic"
+                        style={{ 
+                          color: project.brandConfig?.secondaryColor || '#A78BFA',
+                          fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                        }}
                       >
-                        {index + 2}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {/* Chapters - Enhanced with export-like styling */}
-            <div className="space-y-12 mt-8">
-              {sortedChapters.map((chapter, index) => (
-                <motion.div
-                  key={chapter.id}
-                  id={`chapter-${chapter.id}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="space-y-6 pb-8 scroll-mt-24"
-                  style={{ 
-                    borderBottom: index < sortedChapters.length - 1 ? `2px solid ${project.brandConfig?.accentColor || '#E9D5FF'}` : 'none',
-                    fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
-                  }}
-                >
-                  {/* Chapter Number */}
-                  <div 
-                    className="text-sm font-semibold tracking-wider uppercase mb-2"
-                    style={{ color: project.brandConfig?.secondaryColor || '#A78BFA' }}
-                  >
-                    Chapter {index + 1}
-                  </div>
-                  
-                  {/* Chapter Title with bottom border */}
-                  <h2 
-                    className="text-2xl lg:text-3xl font-bold pb-4"
-                    style={{ 
-                      color: project.brandConfig?.primaryColor || '#8B5CF6',
-                      borderBottom: `3px solid ${project.brandConfig?.accentColor || '#C4B5FD'}`,
-                      fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
-                    }}
-                  >
-                    {chapter.title}
-                  </h2>
-                  
-                  {/* Chapter Content with drop cap styling - matching export.ts */}
-                  <div 
-                    className="text-foreground/90 chapter-content-preview"
-                    style={{ 
-                      fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif',
-                      fontSize: '1.15em',
-                      lineHeight: '1.9',
-                      textAlign: 'justify',
-                      color: '#374151',
-                      hyphens: 'auto',
-                      wordSpacing: '0.05em'
-                    }}
-                  >
-                    {chapter.content ? (
-                      <div>
-                        <style>{`
-                          .chapter-content-preview p {
-                            margin-bottom: 1.5em;
-                            text-indent: 1.5em;
-                          }
-                          .chapter-content-preview p:first-of-type,
-                          .chapter-content-preview p:first-child {
-                            text-indent: 0;
-                          }
-                          .chapter-content-preview p:first-child::first-letter {
-                            font-size: 3.5em;
-                            font-weight: 700;
-                            color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
-                            float: left;
-                            line-height: 0.9;
-                            margin-right: 0.1em;
-                            margin-top: 0.1em;
-                          }
-                          .chapter-content-preview h1,
-                          .chapter-content-preview h2,
-                          .chapter-content-preview h3 {
-                            color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
-                            margin-top: 1.5em;
-                            margin-bottom: 0.8em;
-                            text-indent: 0;
-                          }
-                          .chapter-content-preview ul,
-                          .chapter-content-preview ol {
-                            margin-bottom: 1.5em;
-                            padding-left: 2em;
-                          }
-                          .chapter-content-preview li {
-                            margin-bottom: 0.5em;
-                          }
-                          .chapter-content-preview strong {
-                            font-weight: 600;
-                            color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
-                          }
-                          .chapter-content-preview a {
-                            color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
-                            text-decoration: underline;
-                          }
-                        `}</style>
-                        {formatContent(chapter.content)}
-                      </div>
-                    ) : (
-                      <p className="text-muted-foreground italic">
-                        This chapter has no content yet.
+                        by {project.author}
                       </p>
                     )}
+                    
+                    {project.description && (
+                      <p 
+                        className="text-base !text-gray-600 max-w-2xl mx-auto leading-relaxed"
+                        style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
+                      >
+                        {project.description}
+                      </p>
+                    )}
+                    
+                    <div className="flex justify-center gap-4 mt-8 text-sm font-medium !text-gray-700">
+                      <span 
+                        style={{ 
+                          color: project.brandConfig?.primaryColor || '#8B5CF6',
+                          fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                        }}
+                      >
+                        {sortedChapters.length} Chapter{sortedChapters.length !== 1 ? 's' : ''}
+                      </span>
+                      <span className="!text-gray-500">•</span>
+                      <span 
+                        style={{ 
+                          color: project.brandConfig?.primaryColor || '#8B5CF6',
+                          fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                        }}
+                      >
+                        {getWordCount().toLocaleString()} Words
+                      </span>
+                      <span className="!text-gray-500">•</span>
+                      <span 
+                        style={{ 
+                          color: project.brandConfig?.primaryColor || '#8B5CF6',
+                          fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                        }}
+                      >
+                        ~{Math.ceil(getWordCount() / 250)} Pages
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Copyright Page */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="py-12 border-b-2 border-border/20"
+                  style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
+                >
+                  <div className="max-w-xl mx-auto space-y-6 text-sm !text-gray-600">
+                    <p className="font-semibold text-base !text-gray-900">{project.title}</p>
+                    {project.author && (
+                      <p className="!text-gray-900">by {project.author}</p>
+                    )}
+                    
+                    <div className="space-y-2">
+                      <p>Copyright © {new Date().getFullYear()} {project.author || 'Author'}</p>
+                      <p>All rights reserved.</p>
+                    </div>
+                    
+                    <p className="leading-relaxed">
+                      No part of this book may be reproduced in any form or by any electronic or mechanical means, 
+                      including information storage and retrieval systems, without written permission from the author, 
+                      except for the use of brief quotations in a book review.
+                    </p>
+                    
+                    <div className="pt-4 border-t border-border/20 text-xs space-y-1">
+                      <p><strong>First Edition:</strong> {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+                      <p>Created with Inkfluence AI</p>
+                    </div>
                   </div>
                 </motion.div>
-              ))}
-            </div>
 
-            {sortedChapters.length === 0 && (
-              <div className="text-center py-12">
-                <BookOpen size={64} className="mx-auto mb-4 text-muted-foreground opacity-50" />
-                <h3 className="text-lg font-semibold mb-2">No Chapters Yet</h3>
-                <p className="text-muted-foreground">
-                  Create your first chapter to see the preview.
-                </p>
+                {/* Table of Contents */}
+                {sortedChapters.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="py-12"
+                    style={{ fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif' }}
+                  >
+                    <h2 
+                      className="text-3xl font-bold mb-8 pb-4 text-center"
+                      style={{ 
+                        color: project.brandConfig?.primaryColor || '#8B5CF6',
+                        borderBottom: `3px solid ${project.brandConfig?.accentColor || '#C4B5FD'}`
+                      }}
+                    >
+                      Table of Contents
+                    </h2>
+                    <div className="space-y-3">
+                      {sortedChapters.map((chapter, index) => (
+                        <div 
+                          key={chapter.id}
+                          className="flex items-baseline justify-between py-2 px-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer border-b border-dotted border-border/30"
+                          onClick={() => {
+                            const element = document.getElementById(`chapter-${chapter.id}`);
+                            element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }}
+                        >
+                          <div className="flex items-baseline gap-3 flex-1">
+                            <span 
+                              className="text-sm font-semibold"
+                              style={{ color: project.brandConfig?.secondaryColor || '#A78BFA' }}
+                            >
+                              Chapter {index + 1}
+                            </span>
+                            <span 
+                              className="font-medium !text-gray-900"
+                              style={{ flex: 1 }}
+                            >
+                              {chapter.title}
+                            </span>
+                          </div>
+                          <span 
+                            className="text-sm font-semibold ml-4"
+                            style={{ color: project.brandConfig?.primaryColor || '#8B5CF6' }}
+                          >
+                            {index + 2}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Chapters - Enhanced with export-like styling */}
+                <div className="space-y-12">
+                  {sortedChapters.map((chapter, index) => (
+                    <motion.div
+                      key={chapter.id}
+                      id={`chapter-${chapter.id}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="space-y-6 pb-8 scroll-mt-24"
+                      style={{ 
+                        borderBottom: index < sortedChapters.length - 1 ? `2px solid ${project.brandConfig?.accentColor || '#E9D5FF'}` : 'none',
+                        fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                      }}
+                    >
+                      {/* Chapter Number */}
+                      <div 
+                        className="text-sm font-semibold tracking-wider uppercase mb-2"
+                        style={{ color: project.brandConfig?.secondaryColor || '#A78BFA' }}
+                      >
+                        Chapter {index + 1}
+                      </div>
+                      
+                      {/* Chapter Title with bottom border */}
+                      <h2 
+                        className="text-2xl lg:text-3xl font-bold pb-4"
+                        style={{ 
+                          color: project.brandConfig?.primaryColor || '#8B5CF6',
+                          borderBottom: `3px solid ${project.brandConfig?.accentColor || '#C4B5FD'}`,
+                          fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif'
+                        }}
+                      >
+                        {chapter.title}
+                      </h2>
+                      
+                      {/* Chapter Content with drop cap styling - matching export.ts */}
+                      <div 
+                        className="text-foreground/90 chapter-content-preview"
+                        style={{ 
+                          fontFamily: project.brandConfig?.fontFamily || 'Inter, sans-serif',
+                          fontSize: '1.15em',
+                          lineHeight: '1.9',
+                          textAlign: 'justify',
+                          color: '#374151',
+                          hyphens: 'auto',
+                          wordSpacing: '0.05em'
+                        }}
+                      >
+                        {chapter.content ? (
+                          <div>
+                            <style>{`
+                              .chapter-content-preview p {
+                                margin-bottom: 1.5em;
+                                text-indent: 1.5em;
+                              }
+                              .chapter-content-preview p:first-of-type,
+                              .chapter-content-preview p:first-child {
+                                text-indent: 0;
+                              }
+                              .chapter-content-preview p:first-child::first-letter {
+                                font-size: 3.5em;
+                                font-weight: 700;
+                                color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
+                                float: left;
+                                line-height: 0.9;
+                                margin-right: 0.1em;
+                                margin-top: 0.1em;
+                              }
+                              .chapter-content-preview h1,
+                              .chapter-content-preview h2,
+                              .chapter-content-preview h3 {
+                                color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
+                                margin-top: 1.5em;
+                                margin-bottom: 0.8em;
+                                text-indent: 0;
+                              }
+                              .chapter-content-preview ul,
+                              .chapter-content-preview ol {
+                                margin-bottom: 1.5em;
+                                padding-left: 2em;
+                              }
+                              .chapter-content-preview li {
+                                margin-bottom: 0.5em;
+                              }
+                              .chapter-content-preview strong {
+                                font-weight: 600;
+                                color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
+                              }
+                              .chapter-content-preview a {
+                                color: ${project.brandConfig?.primaryColor || '#8B5CF6'};
+                                text-decoration: underline;
+                              }
+                            `}</style>
+                            {formatContent(chapter.content)}
+                          </div>
+                        ) : (
+                          <p className="text-muted-foreground italic">
+                            This chapter has no content yet.
+                          </p>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {sortedChapters.length === 0 && (
+                  <div className="text-center py-12">
+                    <BookOpen size={64} className="mx-auto mb-4 text-muted-foreground opacity-50" />
+                    <h3 className="text-lg font-semibold mb-2">No Chapters Yet</h3>
+                    <p className="text-muted-foreground">
+                      Create your first chapter to see the preview.
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </DialogContent>

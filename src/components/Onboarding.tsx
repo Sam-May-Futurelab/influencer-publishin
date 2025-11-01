@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, BookOpen, MagicWand, FileArrowDown, CheckCircle, Sparkle } from '@phosphor-icons/react';
+import { Badge } from '@/components/ui/badge';
+import { UserProfile } from '@/lib/auth';
 import { motion, AnimatePresence } from 'framer-motion';
 import { analytics } from '@/lib/firebase';
 import { logEvent } from 'firebase/analytics';
@@ -13,11 +15,12 @@ interface OnboardingProps {
   onShowTemplates?: () => void;
   onShowAIGenerate?: () => void;
   onStartProject?: () => Promise<void> | void;
+  subscriptionStatus?: UserProfile['subscriptionStatus'];
 }
 
 type OnboardingAction = 'templates' | 'start-project' | 'ai-generate';
 
-export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAIGenerate, onStartProject }: OnboardingProps) {
+export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAIGenerate, onStartProject, subscriptionStatus }: OnboardingProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const closingReasonRef = useRef<'skip' | 'complete' | null>(null);
   const stepTitles = useMemo(() => [
@@ -25,6 +28,9 @@ export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAI
     'Create Your First Project',
     'Using AI to Write'
   ], []);
+
+  const subscriptionTier = subscriptionStatus ?? 'free';
+  const isAiGeneratorPremium = subscriptionTier !== 'creator' && subscriptionTier !== 'premium';
 
   const logOnboardingEvent = (eventName: string, params?: Record<string, any>) => {
     if (!analytics) return;
@@ -156,10 +162,20 @@ export function Onboarding({ open, onComplete, onSkip, onShowTemplates, onShowAI
                 <span className="text-primary font-bold text-sm">3</span>
               </div>
               <div className="flex-1">
-                <p className="font-semibold text-sm mb-1">AI Book Generator ✨</p>
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="font-semibold text-sm">AI Book Generator ✨</p>
+                  {isAiGeneratorPremium && (
+                    <Badge className="text-[10px] uppercase tracking-wide bg-gradient-to-r from-purple-500 to-primary text-white border-0">Premium Feature</Badge>
+                  )}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   Let AI create a complete book outline and generate all chapters automatically
                 </p>
+                {isAiGeneratorPremium && (
+                  <p className="mt-2 text-[11px] text-muted-foreground/80">
+                    Requires a Creator or Premium plan. Upgrade to unlock full-book generation.
+                  </p>
+                )}
               </div>
             </button>
           </div>
