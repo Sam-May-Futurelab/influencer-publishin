@@ -12,8 +12,8 @@ const parseEnvInt = (value: string | undefined, fallback: number): number => {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 };
 
-const CHUNK_CHAR_LIMIT = parseEnvInt(process.env.AUDIOBOOK_CHUNK_CHAR_LIMIT, 2400);
-const PARALLEL_TTS_LIMIT = parseEnvInt(process.env.AUDIOBOOK_MAX_PARALLEL_TTS, 3);
+const CHUNK_CHAR_LIMIT = parseEnvInt(process.env.AUDIOBOOK_CHUNK_CHAR_LIMIT, 1500);
+const PARALLEL_TTS_LIMIT = parseEnvInt(process.env.AUDIOBOOK_MAX_PARALLEL_TTS, 4);
 
 // Helper to split long text into chunks at sentence boundaries
 function splitIntoChunks(text: string, maxLength: number = CHUNK_CHAR_LIMIT): string[] {
@@ -133,7 +133,7 @@ export const generateAudiobook = inngest.createFunction(
           throw new Error('Unable to split text into chunks for synthesis.');
         }
 
-        const model = quality === 'hd' || quality === 'premium' ? 'tts-1-hd' : 'gpt-4o-mini-tts';
+        const model = quality === 'hd' || quality === 'premium' ? 'tts-1-hd' : 'tts-1';
         console.log(`[Inngest] Using model ${model} with concurrency ${PARALLEL_TTS_LIMIT}`);
 
         const audioBuffers = await synthesizeChunksConcurrently(textChunks, {
@@ -149,9 +149,11 @@ export const generateAudiobook = inngest.createFunction(
         const fileName = `audiobooks/${userId}/${projectId}/${chapterId}.mp3`;
         const bucket = adminStorage.bucket();
         const file = bucket.file(fileName);
-
+        const uploadStart = Date.now();
         await file.save(finalAudio, {
           contentType: 'audio/mpeg',
+          public: true,
+          resumable: false,
           metadata: {
             metadata: {
               chapterId,
@@ -162,10 +164,10 @@ export const generateAudiobook = inngest.createFunction(
           },
         });
 
-        await file.makePublic();
-
         const downloadUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-        console.log(`[Inngest] Upload complete: ${downloadUrl}`);
+        console.log(
+          `[Inngest] Upload complete in ${Date.now() - uploadStart}ms: ${downloadUrl}`
+        );
 
         return { downloadUrl, audioSize: finalAudio.length };
       });
@@ -276,8 +278,9 @@ async function synthesizeChunk(chunk: string, context: ChunkContext): Promise<Bu
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
+      const attemptStart = Date.now();
       console.log(
-        `[Inngest] [Worker ${workerIndex + 1}] Synthesizing chunk ${chunkIndex + 1}/${totalChunks} (attempt ${attempt})`
+        `[Inngest] [Worker ${workerIndex + 1}] Synthesizing chunk ${chunkIndex + 1}/${totalChunks} (attempt ${attempt}, ${chunk.length} chars)`
       );
 
       const response = await openai.audio.speech.create({
@@ -289,7 +292,7 @@ async function synthesizeChunk(chunk: string, context: ChunkContext): Promise<Bu
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       console.log(
-        `[Inngest] [Worker ${workerIndex + 1}] Completed chunk ${chunkIndex + 1}/${totalChunks}, size: ${buffer.length} bytes`
+        `[Inngest] [Worker ${workerIndex + 1}] Completed chunk ${chunkIndex + 1}/${totalChunks} in ${Date.now() - attemptStart}ms, size: ${buffer.length} bytes`
       );
       return buffer;
     } catch (error) {

@@ -113,6 +113,15 @@ export function Dashboard({
   
   // AI Book Generator state
   const [showBookGenerator, setShowBookGenerator] = useState(false);
+
+  const filteredProjects = projects.filter((project) =>
+    project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const sortedProjects = [...filteredProjects].sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  );
   
   // Load audiobooks
   useEffect(() => {
@@ -166,13 +175,6 @@ export function Dashboard({
       onSelectProject(migratedProject);
     }
   };
-
-
-  const filteredProjects = projects.filter(project =>
-    project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    project.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   const handleCreateProject = () => {
     if (newProjectTitle.trim()) {
       setPendingProjectTitle(newProjectTitle.trim());
@@ -572,8 +574,9 @@ export function Dashboard({
             ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6" 
             : "space-y-3"
           }>
-            {filteredProjects.map((project, index) => {
+            {sortedProjects.map((project, index) => {
               const stats = getProjectStats(project);
+              const isMostRecent = !searchQuery && index === 0;
               
               return (
                 <motion.div
@@ -603,6 +606,11 @@ export function Dashboard({
                             <h3 className="font-semibold text-lg group-hover:text-primary transition-colors truncate mb-1">
                               {project.title}
                             </h3>
+                            {isMostRecent && (
+                              <Badge variant="outline" className="text-xs mb-1">
+                                Most Recent
+                              </Badge>
+                            )}
                             {project.description && (
                               <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                                 {project.description}
@@ -680,7 +688,7 @@ export function Dashboard({
             })}
           </div>
 
-          {filteredProjects.length === 0 && searchQuery && (
+          {sortedProjects.length === 0 && searchQuery && (
             <div className="text-center py-8 text-muted-foreground">
               <BookOpen size={48} className="mx-auto mb-4 opacity-50" />
               <p>No projects found matching "{searchQuery}"</p>
